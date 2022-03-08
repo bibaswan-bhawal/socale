@@ -1,67 +1,78 @@
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:socale/services/authentication_service.dart';
 
-void main() {
-  runApp(const MyApp());
+import 'injection/injection.dart';
+import 'riverpods/global/user_provider.dart';
+import 'theme/size_config.dart';
+import 'utils/routes.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp();
+  configureDependencies();
+  runApp(ProviderScope(child: const SocaleApp()));
 }
 
-class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+class SocaleApp extends ConsumerStatefulWidget {
+  const SocaleApp({Key? key}) : super(key: key);
+  @override
+  SocaleAppState createState() => SocaleAppState();
+}
+
+class SocaleAppState extends ConsumerState<SocaleApp> {
+  @override
+  void initState() {
+    super.initState();
+    if (locator<AuthenticationService>().isUserLoggedIn) {
+      final userStateNotifier = ref.read(userProvider.notifier);
+
+      userStateNotifier
+          .getUserData(locator<AuthenticationService>().currentUser!.uid);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
-    );
-  }
-}
-
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title}) : super(key: key);
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
+    SystemChrome.setPreferredOrientations([
+      DeviceOrientation.portraitUp,
+    ]);
+    return LayoutBuilder(builder: (context, constraints) {
+      SizeConfig.init(constraints, Orientation.portrait);
+      FirebaseAuth.instance.authStateChanges().listen((user) async {
+        final userStateNotifier = ref.watch(userProvider.notifier);
+        if (user == null) {
+          userStateNotifier.reset();
+          return;
+        }
+        userStateNotifier.getUserData(user.uid);
+      });
+      return FutureBuilder(
+        future: Routes.getInitialRoute(),
+        builder: (context, snapshot) {
+          if (!snapshot.hasData || snapshot.data == null) {
+            return Container();
+          }
+          return GestureDetector(
+            onTap: () {
+              FocusScopeNode currentFocus = FocusScope.of(context);
+              if (!currentFocus.hasPrimaryFocus) {
+                currentFocus.unfocus();
+              }
+              SystemChannels.textInput.invokeMethod('TextInput.hide');
+            },
+            child: GetMaterialApp(
+              title: 'Socale',
+              getPages: Routes.getPages(),
+              initialRoute: snapshot.data as String,
+            ),
+          );
+        },
+      );
     });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headline4,
-            ),
-          ],
-        ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ),
-    );
   }
 }
