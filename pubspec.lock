@@ -197,6 +197,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "3.0.0"
+  dimension:
+    dependency: transitive
+    description:
+      name: dimension
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.1.6"
   equatable:
     dependency: transitive
     description:
@@ -293,6 +300,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.5.5"
+  flutter_class_parser:
+    dependency: transitive
+    description:
+      name: flutter_class_parser
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.2.4"
   flutter_firebase_chat_core:
     dependency: "direct main"
     description:
@@ -548,6 +562,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "1.0.1"
+  morphable_shape:
+    dependency: "direct main"
+    description:
+      name: morphable_shape
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.5.4"
   package_config:
     dependency: transitive
     description:

@@ -4,6 +4,9 @@ class SocaleColors {
   static Color mainShadowColor = Colors.black.withOpacity(0.5);
   static Color primaryHeadingColor = Colors.white;
   static Color supportingTextColor = Color(0xff8F9BB3);
+  static Color bottomNavigationBarColor = Color(0xff1F2124);
+  static Color highlightColor = Color(0xffFD6C00);
+  static Color unHighighlitedBottomBarItemColor = Color(0xff8F9BB3);
 }
 
 class SocaleGradients {
