@@ -1,15 +1,21 @@
 import 'package:flutter/material.dart';
 
+import 'components/chat_screen_app_bar.dart';
+
 class ChatScreen extends StatelessWidget {
-  const ChatScreen({Key? key}) : super(key: key);
+  ChatScreen({Key? key}) : super(key: key);
+  final TextEditingController controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      itemCount: 50,
-      itemBuilder: (context, index) {
-        return ListTile(title: Text(index.toString()));
-      },
+    return Scaffold(
+      appBar: ChatScreenAppBar(),
+      body: ListView.builder(
+        itemCount: 50,
+        itemBuilder: (context, index) {
+          return ListTile(title: Text(index.toString()));
+        },
+      ),
     );
   }
 }

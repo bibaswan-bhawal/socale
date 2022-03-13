@@ -10,7 +10,14 @@ class SocaleTextStyles {
     fontSize: sText * 8,
     fontWeight: FontWeight.bold,
   );
-  static TextStyle loginScreenSupportingText = GoogleFonts.roboto(
+  static TextStyle supportingText = GoogleFonts.roboto(
     color: SocaleColors.supportingTextColor,
+  );
+  static TextStyle textFieldHintText =
+      supportingText.copyWith(color: supportingText.color!.withOpacity(0.5));
+  static TextStyle appBarHeading = GoogleFonts.roboto(
+    color: SocaleColors.highlightColor,
+    fontSize: sText * 4,
+    fontWeight: FontWeight.w700,
   );
 }

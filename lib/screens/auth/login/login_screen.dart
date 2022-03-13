@@ -66,8 +66,7 @@ class LoginScreen extends StatelessWidget {
                                 Gap(height: 2),
                                 Text(
                                   'Boost your social and professional connections with the power of Socale.',
-                                  style: SocaleTextStyles
-                                      .loginScreenSupportingText,
+                                  style: SocaleTextStyles.supportingText,
                                 ),
                                 Gap(height: 4),
                                 HookConsumer(builder: (context, ref, child) {
