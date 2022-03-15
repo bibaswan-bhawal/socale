@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter_firebase_chat_core/flutter_firebase_chat_core.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:injectable/injectable.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 
 @lazySingleton
 class AuthenticationService {
@@ -24,12 +26,30 @@ class AuthenticationService {
 
     // Once signed in, return the UserCredential
     final userCredential = await _firebaseAuth.signInWithCredential(credential);
-    _firebaseFirestore
-        .collection('accounts')
-        .doc(userCredential.user?.uid)
-        .set({
-      'email': userCredential.user?.email,
-    });
+    if (userCredential.additionalUserInfo!.isNewUser) {
+      _firebaseFirestore
+          .collection('accounts')
+          .doc(userCredential.user?.uid)
+          .set({
+        'email': userCredential.user?.email,
+      });
+      final name = userCredential.user!.displayName ?? 'Anonymous';
+      String firstName = name;
+      String lastName = '';
+      if (name.contains(' ')) {
+        firstName = name.substring(0, name.indexOf(' '));
+        lastName = name.substring(name.indexOf(' ') + 1);
+      }
+      await FirebaseChatCore.instance.createUserInFirestore(
+        types.User(
+          firstName: firstName,
+          lastName: lastName,
+          lastSeen: DateTime.now().millisecondsSinceEpoch,
+          id: userCredential.user!.uid, // UID from Firebase Authentication
+          imageUrl: userCredential.user!.photoURL,
+        ),
+      );
+    }
 
     return userCredential;
   }
