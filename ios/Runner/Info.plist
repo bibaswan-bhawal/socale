@@ -2,6 +2,12 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Socale needs access to your photo library for you to be able to send photos to others.</string>
+	<key>NSCameraUsageDescription</key>
+	<string>Socale needs access to your camera for you to be able to send photos and videos to others.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Socale needs access to your microphone for you to be able to record and send videos to others.</string>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -18,15 +24,14 @@
 	<string>APPL</string>
 	<key>CFBundleURLTypes</key>
 	<array>
-	<dict>
-		<key>CFBundleTypeRole</key>
-		<string>Editor</string>
-		<key>CFBundleURLSchemes</key>
-		<array>
-			<!-- Copied from GoogleService-Info.plist key REVERSED_CLIENT_ID -->
-			<string>com.googleusercontent.apps.575550339662-g2kbsvo143h9q4ich450sqobogeoi39k</string>
-		</array>
-	</dict>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>com.googleusercontent.apps.575550339662-g2kbsvo143h9q4ich450sqobogeoi39k</string>
+			</array>
+		</dict>
 	</array>
 	<key>CFBundleShortVersionString</key>
 	<string>$(FLUTTER_BUILD_NAME)</string>

@@ -20,4 +20,9 @@ class SocaleTextStyles {
     fontSize: sText * 4,
     fontWeight: FontWeight.w700,
   );
+  static TextStyle chatHeading = GoogleFonts.inter(
+    color: SocaleColors.chatHeadingTextColor,
+    fontSize: sText * 4,
+    fontWeight: FontWeight.w500,
+  );
 }

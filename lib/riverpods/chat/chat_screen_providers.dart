@@ -6,5 +6,5 @@ final chatScreenChatListProvider = FutureProvider<List>((ref) {
   final filter = ref.watch(chatScreenSearchFilterProvider);
   print(filter);
   // TODO: Complete Firebase filter and data pull logic
-  return [filter];
+  return ['What’s up Saarth?', 'How\'s it going Aamish'];
 });

@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:socale/screens/home/chat/chat_screen/chat_screen.dart';
 import '../injection/injection.dart';
 import '../screens/home/home_screen/home_screen.dart';
 import '../screens/splash_screen/splash_screen.dart';
@@ -20,6 +21,10 @@ class Routes {
       GetPage(
         name: '/home',
         page: () => HomeScreen(),
+      ),
+      GetPage(
+        name: '/chat',
+        page: () => ChatScreen(),
       ),
     ];
   }

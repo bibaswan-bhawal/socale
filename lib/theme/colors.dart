@@ -8,7 +8,8 @@ class SocaleColors {
   static Color highlightColor = Color(0xffFD6C00);
   static Color unHighighlitedBottomBarItemColor = Color(0xff8F9BB3);
   static Color searchBarColor = Color(0xFF2F3136);
-  static Color appBarBackgroundColor = Color(0xFF292B2F);
+  static Color homeBackgroundColor = Color(0xFF292B2F);
+  static Color chatHeadingTextColor = Color(0xFFEEEEEE);
 }
 
 class SocaleGradients {

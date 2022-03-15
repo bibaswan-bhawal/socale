@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:socale/theme/text_styles.dart';
 
-import '../../../../riverpods/chat/chat_screen_providers.dart';
-import '../../../../theme/colors.dart';
-import '../../../../theme/size_config.dart';
-import '../../../components/gap.dart';
+import '../../../../../riverpods/chat/chat_screen_providers.dart';
+import '../../../../../theme/colors.dart';
+import '../../../../../theme/size_config.dart';
+import '../../../../components/gap.dart';
 
 class ChatScreenAppBar extends ConsumerStatefulWidget
     implements PreferredSizeWidget {
@@ -27,7 +27,7 @@ class _ChatScreenAppBarState extends ConsumerState<ChatScreenAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      backgroundColor: SocaleColors.appBarBackgroundColor,
+      backgroundColor: SocaleColors.homeBackgroundColor,
       bottom: PreferredSize(
         preferredSize: Size.fromHeight(sx * (5 + 1 + 5 + 1 + 1) + sText * 5),
         child: Column(
