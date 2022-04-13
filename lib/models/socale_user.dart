@@ -3,11 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class SocaleUser {
   final String uid;
   final String email;
+  final Map<String, dynamic>? lastMessages;
   final DocumentSnapshot? doc;
 
   SocaleUser({
     required this.email,
     required this.uid,
+    this.lastMessages,
     this.doc,
   });
 
@@ -15,6 +17,7 @@ class SocaleUser {
     return SocaleUser(
       uid: '',
       email: '',
+      lastMessages: null,
     );
   }
 
@@ -23,6 +26,7 @@ class SocaleUser {
       return SocaleUser(
         uid: '',
         email: '',
+        lastMessages: null,
       );
     }
     final doc =
@@ -30,6 +34,9 @@ class SocaleUser {
     return SocaleUser(
       uid: uid,
       email: doc["email"],
+      lastMessages: (doc.data()?.containsKey('lastMessages') ?? false)
+          ? doc["lastMessages"]
+          : null,
       doc: doc,
     );
   }

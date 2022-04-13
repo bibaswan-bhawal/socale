@@ -1,5 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-
 import '../../models/socale_user.dart';
 
 class UserStateNotifier extends StateNotifier<SocaleUser> {
@@ -11,6 +11,24 @@ class UserStateNotifier extends StateNotifier<SocaleUser> {
 
   void reset() {
     state = SocaleUser.nullUser();
+  }
+
+  void updateLastMessages(String roomId, String messageId) async {
+    if (state.lastMessages != null &&
+        state.lastMessages!.containsKey(roomId) &&
+        state.lastMessages![roomId] == messageId) {
+      print('Debounced');
+      return;
+    }
+
+    final lastMessages = (state.lastMessages ?? {})..[roomId] = messageId;
+    await FirebaseFirestore.instance
+        .collection('accounts')
+        .doc(state.uid)
+        .update({
+      'lastMessages': lastMessages,
+    });
+    state = await SocaleUser.fromUserId(state.uid);
   }
 }
 

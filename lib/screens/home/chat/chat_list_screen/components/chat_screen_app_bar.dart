@@ -17,7 +17,7 @@ class ChatScreenAppBar extends ConsumerStatefulWidget
 
   @override
   Size get preferredSize =>
-      Size.fromHeight(sx * (5 + 1 + 5 + 1 + 1) + sText * 5 + kToolbarHeight);
+      Size.fromHeight(sx * (5 + 1 + 6 + 1 + 1) + sText * 5 + kToolbarHeight);
 
   @override
   _ChatScreenAppBarState createState() => _ChatScreenAppBarState();
@@ -33,8 +33,9 @@ class _ChatScreenAppBarState extends ConsumerState<ChatScreenAppBar> {
         child: Column(
           children: [
             SizedBox.fromSize(
-              size: Size(sy * 90, sx * 9),
+              size: Size(sy * 90, sx * 10),
               child: SearchBar(
+                minimumChars: 1,
                 cancellationWidget: Text(
                   'Cancel',
                   style: SocaleTextStyles.supportingText,

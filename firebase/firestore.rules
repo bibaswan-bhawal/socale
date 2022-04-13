@@ -6,7 +6,15 @@ service cloud.firestore {
     function isSignedIn() {
       return request.auth != null;
     }
-
+    match /accounts/{userId} {
+    	function isSelf() {
+        return request.auth.uid == userId;
+      }
+    	allow create: if isSelf();
+    	allow delete: if isSelf();
+    	allow read: if isSelf();
+    	allow update: if isSelf();
+    }
     // Rules for the users collection
     match /users/{userId} {
       // Validates user's object format

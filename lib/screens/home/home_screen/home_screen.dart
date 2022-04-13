@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:socale/riverpods/global/tab_provider.dart';
+import 'package:socale/riverpods/global/user_provider.dart';
 import 'package:socale/theme/colors.dart';
 import 'package:socale/utils/enums/tab_item.dart';
 
@@ -13,13 +14,15 @@ class HomeScreen extends ConsumerWidget {
   static List<Widget> screens = [
     ChatListScreen(),
     Center(child: Text('hj')),
-    AccountScreen(),
+    Consumer(builder: (context, ref, child) {
+      final user = ref.watch(userProvider);
+      return AccountScreen(userId: user.uid);
+    })
   ];
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     final tabItem = ref.watch(tabProvider);
-    print(tabItemToIndex[tabItem]!);
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: tabItemToIndex[tabItem]!,
