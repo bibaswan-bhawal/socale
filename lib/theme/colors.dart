@@ -10,6 +10,7 @@ class SocaleColors {
   static Color searchBarColor = Color(0xFF2F3136);
   static Color homeBackgroundColor = Color(0xFF292B2F);
   static Color chatHeadingTextColor = Color(0xFFEEEEEE);
+  static Color selectionColor = Color(0xFFFF7C03);
 }
 
 class SocaleGradients {

@@ -5,7 +5,7 @@ import 'package:socale/riverpods/global/user_provider.dart';
 import 'package:socale/theme/colors.dart';
 import 'package:socale/utils/enums/tab_item.dart';
 
-import '../account/account_screen.dart';
+import '../account/account_screen/account_screen.dart';
 import '../chat/chat_list_screen/chat_list_screen.dart';
 
 class HomeScreen extends ConsumerWidget {

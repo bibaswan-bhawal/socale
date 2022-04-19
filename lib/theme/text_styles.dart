@@ -25,4 +25,9 @@ class SocaleTextStyles {
     fontSize: sText * 4,
     fontWeight: FontWeight.w500,
   );
+  static TextStyle personalityHeading = GoogleFonts.lato(
+    color: Colors.white,
+    fontSize: sText * 4,
+    fontWeight: FontWeight.w600,
+  );
 }

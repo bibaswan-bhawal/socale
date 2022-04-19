@@ -315,12 +315,12 @@ packages:
     source: hosted
     version: "1.5.2"
   flutter_hooks:
-    dependency: transitive
+    dependency: "direct main"
     description:
       name: flutter_hooks
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.18.2+1"
+    version: "0.18.3"
   flutter_link_previewer:
     dependency: transitive
     description:
@@ -408,6 +408,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "7.2.0"
+  glassmorphism:
+    dependency: "direct main"
+    description:
+      name: glassmorphism
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.0.0"
   glob:
     dependency: transitive
     description:
