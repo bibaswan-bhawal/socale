@@ -29,7 +29,7 @@ class Routes {
     ];
   }
 
-  static Future<String> getInitialRoute() async {
+  static String getInitialRoute() {
     if (locator<AuthenticationService>().isUserLoggedIn) {
       return '/home';
     }

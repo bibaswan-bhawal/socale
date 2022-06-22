@@ -1,7 +1,7 @@
 import 'package:flappy_search_bar_ns/flappy_search_bar_ns.dart';
 import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:socale/riverpods/chat/chat_screen_providers.dart';
+import 'package:socale/riverpods/chat/chat_list_screen_providers.dart';
 import 'package:socale/screens/home/chat/chat_list_screen/components/chat_tile.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:socale/theme/text_styles.dart';
@@ -16,7 +16,7 @@ class ChatListScreen extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    final chatListStream = ref.watch(chatScreenChatListProvider.stream);
+    final chatListStream = ref.watch(chatListScreenChatListProvider.stream);
     return Scaffold(
       backgroundColor: SocaleColors.homeBackgroundColor,
       appBar: ChatScreenAppBar(

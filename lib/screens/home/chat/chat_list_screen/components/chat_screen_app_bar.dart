@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:socale/theme/text_styles.dart';
 
-import '../../../../../riverpods/chat/chat_screen_providers.dart';
+import '../../../../../riverpods/chat/chat_list_screen_providers.dart';
 import '../../../../../theme/colors.dart';
 import '../../../../../theme/size_config.dart';
 import '../../../../components/gap.dart';
@@ -59,13 +59,13 @@ class _ChatScreenAppBarState extends ConsumerState<ChatScreenAppBar> {
                 onSearch: (String? text) async {
                   // Updates filter state
                   final filterState =
-                      ref.watch(chatScreenSearchFilterProvider.state);
+                      ref.watch(chatListScreenSearchFilterProvider.state);
                   filterState.update((state) => text ?? state);
                   return <int>[];
                 },
                 onCancelled: () {
                   final filterState =
-                      ref.read(chatScreenSearchFilterProvider.state);
+                      ref.read(chatListScreenSearchFilterProvider.state);
                   filterState.update((state) => '');
                 },
               ),

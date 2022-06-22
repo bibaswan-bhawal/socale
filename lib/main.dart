@@ -51,27 +51,19 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
         }
         userStateNotifier.getUserData(user.uid);
       });
-      return FutureBuilder(
-        future: Routes.getInitialRoute(),
-        builder: (context, snapshot) {
-          if (!snapshot.hasData || snapshot.data == null) {
-            return Container();
+      return GestureDetector(
+        onTap: () {
+          FocusScopeNode currentFocus = FocusScope.of(context);
+          if (!currentFocus.hasPrimaryFocus) {
+            currentFocus.unfocus();
           }
-          return GestureDetector(
-            onTap: () {
-              FocusScopeNode currentFocus = FocusScope.of(context);
-              if (!currentFocus.hasPrimaryFocus) {
-                currentFocus.unfocus();
-              }
-              SystemChannels.textInput.invokeMethod('TextInput.hide');
-            },
-            child: GetMaterialApp(
-              title: 'Socale',
-              getPages: Routes.getPages(),
-              initialRoute: snapshot.data as String,
-            ),
-          );
+          SystemChannels.textInput.invokeMethod('TextInput.hide');
         },
+        child: GetMaterialApp(
+          title: 'Socale',
+          getPages: Routes.getPages(),
+          initialRoute: Routes.getInitialRoute(),
+        ),
       );
     });
   }
