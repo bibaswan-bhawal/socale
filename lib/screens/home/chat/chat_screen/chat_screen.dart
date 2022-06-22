@@ -19,26 +19,26 @@ class ChatScreen extends ConsumerStatefulWidget {
 }
 
 class _ChatScreenState extends ConsumerState<ChatScreen> {
-  // StreamSubscription? _messageStreamSubscription;
-  // void _subscription(List<types.Message> messages) {
-  //   if (messages.isEmpty) return;
-  //   final userNotifier = ref.read(userProvider.notifier);
-  //   userNotifier.updateLastMessages(widget.room.id, messages.first.id);
-  //   print(messages.first);
-  // }
+  StreamSubscription? _messageStreamSubscription;
+  void _subscription(List<types.Message> messages) {
+    if (messages.isEmpty) return;
+    final userNotifier = ref.read(userProvider.notifier);
+    userNotifier.updateLastMessages(widget.room.id, messages.first.id);
+    print(messages.first);
+  }
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   _messageStreamSubscription =
-  //       FirebaseChatCore.instance.messages(widget.room).listen(_subscription);
-  // }
+  @override
+  void initState() {
+    super.initState();
+    _messageStreamSubscription =
+        FirebaseChatCore.instance.messages(widget.room).listen(_subscription);
+  }
 
-  // @override
-  // void dispose() async {
-  //   _messageStreamSubscription?.cancel();
-  //   super.dispose();
-  // }
+  @override
+  void dispose() async {
+    _messageStreamSubscription?.cancel();
+    super.dispose();
+  }
 
   // void _handleImageSelection() async {
   //   final result = await ImagePicker().pickImage(
