@@ -32,6 +32,7 @@ class ChatListScreen extends ConsumerWidget {
                 ),
               );
             }
+            print(snapshot);
             if (!snapshot.hasData) {
               return Center(
                 child: Text(
