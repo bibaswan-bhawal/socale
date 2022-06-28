@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "575550339662",
+    "project_id": "socale-cea9d",
+    "storage_bucket": "socale-cea9d.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:575550339662:android:6f4d96b5f78436887d611f",
+        "android_client_info": {
+          "package_name": "com.socale.socale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "575550339662-gvhdqeg34j3ohe0396ms45cnvlidvhd5.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCw82A-CgWn3nHlFs8NSDdFzwn5nVvpCp4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "575550339662-gvhdqeg34j3ohe0396ms45cnvlidvhd5.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "575550339662-g2kbsvo143h9q4ich450sqobogeoi39k.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "co.socale"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
