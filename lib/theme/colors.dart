@@ -6,7 +6,7 @@ class SocaleColors {
   static Color supportingTextColor = Color(0xff8F9BB3);
   static Color bottomNavigationBarColor = Color(0xff1F2124);
   static Color highlightColor = Color(0xffFD6C00);
-  static Color unHighighlitedBottomBarItemColor = Color(0xff8F9BB3);
+  static Color unHighlightedBottomBarItemColor = Color(0xff8F9BB3);
   static Color searchBarColor = Color(0xFF2F3136);
   static Color homeBackgroundColor = Color(0xFF292B2F);
   static Color chatHeadingTextColor = Color(0xFFEEEEEE);
