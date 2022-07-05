@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../../theme/size_config.dart';
+
 class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onNavBarClicked;
 
@@ -12,55 +14,67 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      width: size.width,
-      height: 66,
-      child: Stack(
-        children: <Widget>[
-          CustomPaint(
-            size: Size(size.width, 66),
-            painter: BNBCustomPainter(),
+    print(sx);
+    return Column(
+      children: [
+        SizedBox(
+          width: size.width,
+          height: sx * 7.12,
+          child: Stack(
+            children: <Widget>[
+              CustomPaint(
+                size: Size(size.width, sx * 7.12),
+                painter: BNBCustomPainter(),
+              ),
+              Center(
+                heightFactor: 0.8,
+                child: OverflowBox(
+                  maxHeight: sx * 8,
+                  child: SvgPicture.asset("assets/icons/center_logo.svg",
+                      height: sx * 7.56, fit: BoxFit.fitHeight),
+                ),
+              ),
+              SizedBox(
+                width: size.width,
+                height: sx * 7.12,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    // TODO: Convert images into icons (although the icons are themselves subjective to change)
+                    IconButton(
+                        onPressed: () {
+                          onNavBarClicked(0);
+                        },
+                        icon: SvgPicture.asset("assets/icons/home_icon.svg")),
+                    IconButton(
+                        onPressed: () {
+                          onNavBarClicked(1);
+                        },
+                        icon: SvgPicture.asset("assets/icons/chat_icon.svg")),
+                    Container(width: size.width * 0.20),
+                    IconButton(
+                        onPressed: () {
+                          // TODO IMPLEMENT INSIGHTS NAVIGATE
+                        },
+                        icon:
+                            SvgPicture.asset("assets/icons/insights_icon.svg")),
+                    IconButton(
+                        onPressed: () {
+                          onNavBarClicked(2);
+                        },
+                        icon: SvgPicture.asset("assets/icons/user_icon.svg"))
+                  ],
+                ),
+              )
+            ],
           ),
-          Center(
-            heightFactor: 0.8,
-            child: OverflowBox(
-              maxHeight: 74,
-              child: SvgPicture.asset("assets/icons/center_logo.svg",
-                  height: 70, fit: BoxFit.fitHeight),
-            ),
-          ),
-          SizedBox(
-            width: size.width,
-            height: 66,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                IconButton(
-                    onPressed: () {
-                      onNavBarClicked(0);
-                    },
-                    icon: SvgPicture.asset("assets/icons/home_icon.svg")),
-                IconButton(
-                    onPressed: () {
-                      onNavBarClicked(1);
-                    },
-                    icon: SvgPicture.asset("assets/icons/chat_icon.svg")),
-                Container(width: size.width * 0.20),
-                IconButton(
-                    onPressed: () {
-                      // TODO IMPLEMENT INSIGHTS NAVIGATE
-                    },
-                    icon: SvgPicture.asset("assets/icons/insights_icon.svg")),
-                IconButton(
-                    onPressed: () {
-                      onNavBarClicked(2);
-                    },
-                    icon: SvgPicture.asset("assets/icons/user_icon.svg"))
-              ],
-            ),
-          )
-        ],
-      ),
+        ),
+        Container(
+          height: sy * 3,
+          width: size.width,
+          color: Color(0xff1F2124),
+        ),
+      ],
     );
   }
 }
