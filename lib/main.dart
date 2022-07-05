@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:socale/services/authentication_service.dart';
 
+import 'firebase_options.dart';
 import 'injection/injection.dart';
 import 'riverpods/global/user_provider.dart';
 import 'theme/size_config.dart';
@@ -13,7 +14,9 @@ import 'utils/routes.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   configureDependencies();
   runApp(ProviderScope(child: const SocaleApp()));
 }

@@ -2,12 +2,8 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>Socale needs access to your photo library for you to be able to send photos to others.</string>
-	<key>NSCameraUsageDescription</key>
-	<string>Socale needs access to your camera for you to be able to send photos and videos to others.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Socale needs access to your microphone for you to be able to record and send videos to others.</string>
+	<key>CADisableMinimumFrameDurationOnPhone</key>
+	<true/>
 	<key>CFBundleDevelopmentRegion</key>
 	<string>$(DEVELOPMENT_LANGUAGE)</string>
 	<key>CFBundleDisplayName</key>
@@ -22,6 +18,10 @@
 	<string>socale</string>
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
+	<key>CFBundleShortVersionString</key>
+	<string>$(FLUTTER_BUILD_NAME)</string>
+	<key>CFBundleSignature</key>
+	<string>????</string>
 	<key>CFBundleURLTypes</key>
 	<array>
 		<dict>
@@ -29,18 +29,20 @@
 			<string>Editor</string>
 			<key>CFBundleURLSchemes</key>
 			<array>
-				<string>com.googleusercontent.apps.575550339662-g2kbsvo143h9q4ich450sqobogeoi39k</string>
+				<string>com.googleusercontent.apps.575550339662-u1l3knousnhms27ccfnmrq0d937nkaph</string>
 			</array>
 		</dict>
 	</array>
-	<key>CFBundleShortVersionString</key>
-	<string>$(FLUTTER_BUILD_NAME)</string>
-	<key>CFBundleSignature</key>
-	<string>????</string>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Socale needs access to your camera for you to be able to send photos and videos to others.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Socale needs access to your microphone for you to be able to record and send videos to others.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>Socale needs access to your photo library for you to be able to send photos to others.</string>
 	<key>UILaunchStoryboardName</key>
 	<string>LaunchScreen</string>
 	<key>UIMainStoryboardFile</key>
@@ -58,7 +60,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>CADisableMinimumFrameDurationOnPhone</key>
-	<true/>
 </dict>
 </plist>
