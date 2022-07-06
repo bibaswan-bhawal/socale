@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_signin_button/button_list.dart';
+import 'package:flutter_signin_button/button_view.dart';
 import 'package:get/get.dart';
+import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:socale/theme/colors.dart';
 import 'package:socale/theme/text_styles.dart';
 import '../../../injection/injection.dart';
@@ -76,21 +79,31 @@ class LoginScreen extends StatelessWidget {
                                   style: SocaleTextStyles.supportingText,
                                 ),
                                 Gap(height: 4),
-                                ElevatedButton(
-                                  onPressed: () async {
-                                    try {
-                                      await locator<AuthenticationService>()
-                                          .signInWithGoogle();
-                                    } on FirebaseAuthException catch (e) {
-                                      Get.snackbar(
-                                        'An error occurred',
-                                        e.message ??
-                                            'Could not log in at this moment',
-                                      );
+                                HookConsumer(builder: (context, ref, child) {
+                                  FirebaseAuth.instance
+                                      .authStateChanges()
+                                      .listen((user) {
+                                    if (user != null) {
+                                      Get.offAllNamed('/home');
                                     }
-                                  },
-                                  child: const Text('Sign in with google'),
-                                ),
+                                  });
+                                  return SignInButton(
+                                    Buttons.Google,
+                                    onPressed: () async {
+                                      try {
+                                        return await locator<
+                                                AuthenticationService>()
+                                            .signInWithGoogle();
+                                      } on FirebaseAuthException catch (e) {
+                                        Get.snackbar(
+                                          'An error occurred',
+                                          e.message ??
+                                              'Could not log in at this moment',
+                                        );
+                                      }
+                                    },
+                                  );
+                                })
                               ],
                             ),
                           ),

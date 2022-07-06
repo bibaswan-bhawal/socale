@@ -26,6 +26,7 @@ class HomeScreen extends ConsumerWidget {
 
     final tabItem = ref.watch(tabProvider);
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           IndexedStack(

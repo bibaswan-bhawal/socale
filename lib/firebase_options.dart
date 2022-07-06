@@ -63,6 +63,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '575550339662',
     projectId: 'socale-cea9d',
     storageBucket: 'socale-cea9d.appspot.com',
+    androidClientId: '575550339662-6u9opcljbltn36clnt6d48soahiar86l.apps.googleusercontent.com',
     iosClientId: '575550339662-u1l3knousnhms27ccfnmrq0d937nkaph.apps.googleusercontent.com',
     iosBundleId: 'co.socale.socale',
   );
