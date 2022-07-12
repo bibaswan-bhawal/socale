@@ -14,9 +14,11 @@ class CustomBottomNavigationBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     double barHeight = 64;
+    double heightShift = 0.8;
 
     if (Platform.isIOS) {
-      barHeight = 73;
+      barHeight = 74;
+      heightShift = 0.6;
     }
 
     return SizedBox(
@@ -29,16 +31,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
             painter: BNBCustomPainter(),
           ),
           Center(
-            heightFactor: 0.8,
+            heightFactor: heightShift,
             child: OverflowBox(
-              maxHeight: 66,
+              maxHeight: barHeight,
               child: SvgPicture.asset("assets/icons/center_logo.svg",
                   height: 64, fit: BoxFit.fitHeight),
             ),
           ),
           SizedBox(
             width: size.width,
-            height: 66,
+            height: barHeight,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
@@ -87,7 +89,7 @@ class BNBCustomPainter extends CustomPainter {
     path.lineTo(0, size.height);
     path.close();
 
-    canvas.drawShadow(path.shift(const Offset(0, -5)), Colors.black, 5, true);
+    canvas.drawShadow(path.shift(const Offset(0, -4)), Colors.black, 5, true);
     canvas.drawPath(path, paint);
   }
 
