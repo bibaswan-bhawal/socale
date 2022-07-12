@@ -40,7 +40,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           ),
           SizedBox(
             width: size.width,
-            height: barHeight,
+            height: 64,
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
