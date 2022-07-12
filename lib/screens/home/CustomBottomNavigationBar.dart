@@ -17,7 +17,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     double heightShift = 0.8;
 
     if (Platform.isIOS) {
-      barHeight = 74;
+      barHeight = 80;
       heightShift = 0.6;
     }
 
