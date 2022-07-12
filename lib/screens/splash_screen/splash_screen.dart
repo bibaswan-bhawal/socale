@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         child: Center(
           child: Image.asset(
-            'assets/images/Socale-Splash-Logo.png',
+            'assets/images/socale_logo_bw.png',
             width: sy * 60,
           ),
         ),

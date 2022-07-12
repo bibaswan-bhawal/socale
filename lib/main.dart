@@ -44,16 +44,20 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
     return LayoutBuilder(builder: (context, constraints) {
       SizeConfig.init(constraints, Orientation.portrait);
       FirebaseAuth.instance.authStateChanges().listen((user) async {
         final userStateNotifier = ref.watch(userProvider.notifier);
+
         if (user == null) {
           userStateNotifier.reset();
           return;
         }
+
         userStateNotifier.getUserData(user.uid);
       });
+
       return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -64,6 +68,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
         },
         child: GetMaterialApp(
           title: 'Socale',
+          debugShowCheckedModeBanner: false,
           getPages: Routes.getPages(),
           initialRoute: Routes.getInitialRoute(),
         ),

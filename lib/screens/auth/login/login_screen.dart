@@ -37,12 +37,12 @@ class LoginScreen extends StatelessWidget {
             children: [
               Gap(height: 2),
               Image.asset(
-                'assets/images/Socale-Splash-Logo.png',
+                'assets/images/socale_logo_bw.png',
                 height: sx * 5,
               ),
               Expanded(
                 flex: 5,
-                child: Image.asset('assets/images/Login-Illustration.png'),
+                child: Image.asset('assets/images/login_illustration.png'),
               ),
               Expanded(
                 flex: 3,

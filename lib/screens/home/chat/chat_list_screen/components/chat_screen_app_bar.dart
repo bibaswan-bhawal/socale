@@ -77,7 +77,7 @@ class _ChatScreenAppBarState extends ConsumerState<ChatScreenAppBar> {
         ),
       ),
       title: Image.asset(
-        'assets/images/Socale-Splash-Logo.png',
+        'assets/images/socale_logo_bw.png',
         height: sx * 5,
       ),
     );
