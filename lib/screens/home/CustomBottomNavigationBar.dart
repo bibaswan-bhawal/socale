@@ -57,12 +57,12 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 Container(width: size.width * 0.20),
                 IconButton(
                     onPressed: () {
-                      onNavBarClicked(2);
+                      onNavBarClicked(3);
                     },
                     icon: SvgPicture.asset("assets/icons/insights_icon.svg")),
                 IconButton(
                     onPressed: () {
-                      onNavBarClicked(3);
+                      onNavBarClicked(2);
                     },
                     icon: SvgPicture.asset("assets/icons/user_icon.svg"))
               ],
