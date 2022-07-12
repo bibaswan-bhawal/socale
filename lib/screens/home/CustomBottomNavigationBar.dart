@@ -16,7 +16,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
     double barHeight = 64;
 
     if (Platform.isIOS) {
-      barHeight = 74;
+      barHeight = 73;
     }
 
     return SizedBox(
