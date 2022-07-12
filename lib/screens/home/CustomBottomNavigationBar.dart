@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'dart:io' show Platform;
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onNavBarClicked;
@@ -12,19 +13,25 @@ class CustomBottomNavigationBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double barHeight = 64;
+
+    if (Platform.isIOS) {
+      barHeight = 74;
+    }
+
     return SizedBox(
       width: size.width,
-      height: 66,
+      height: barHeight,
       child: Stack(
         children: <Widget>[
           CustomPaint(
-            size: Size(size.width, 66),
+            size: Size(size.width, barHeight),
             painter: BNBCustomPainter(),
           ),
           Center(
             heightFactor: 0.8,
             child: OverflowBox(
-              maxHeight: 74,
+              maxHeight: 66,
               child: SvgPicture.asset("assets/icons/center_logo.svg",
                   height: 64, fit: BoxFit.fitHeight),
             ),

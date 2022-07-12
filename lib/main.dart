@@ -17,7 +17,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  SystemChrome.setSystemUIOverlayStyle(
+      SystemUiOverlayStyle(systemNavigationBarColor: const Color(0xff1F2124)));
   configureDependencies();
+
   runApp(ProviderScope(child: const SocaleApp()));
 }
 
