@@ -32,6 +32,7 @@ dependencies:
   amplify_auth_cognito: ^0.6.1
   amplify_datastore: ^0.6.1
   amplify_flutter: ^0.6.1
+  amplify_storage_s3: ^0.6.1
   cloud_firestore: ^3.1.8
   cupertino_icons: ^1.0.2
   firebase_auth: ^3.3.7

@@ -2,6 +2,7 @@ import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -84,9 +85,10 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     final analyticsPlugin = AmplifyAnalyticsPinpoint();
     final authPlugin = AmplifyAuthCognito();
     final api = AmplifyAPI(modelProvider: ModelProvider.instance);
+    final storage = AmplifyStorageS3();
     // You can use addPlugin if you are going to be adding only one plugin
     // await Amplify.addPlugin(authPlugin);
-    await Amplify.addPlugins([authPlugin, analyticsPlugin, api]);
+    await Amplify.addPlugins([authPlugin, analyticsPlugin, api, storage]);
 
     // Once Plugins are added, configure Amplify
     // Note: Amplify can only be configured once.
