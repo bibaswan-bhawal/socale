@@ -10,6 +10,18 @@
       "StackName": "amplify-socale-dev-105154",
       "StackId": "arn:aws:cloudformation:us-west-2:761585288120:stack/amplify-socale-dev-105154/e3204900-0334-11ed-9548-0a31c6bae9ed",
       "AmplifyAppId": "d1t5eal64712ny"
+    },
+    "categories": {
+      "auth": {
+        "undefined": {},
+        "true": {}
+      },
+      "function": {
+        "S3Trigger3d9ab619": {
+          "deploymentBucketName": "amplify-socale-dev-105154-deployment",
+          "s3Key": "amplify-builds/S3Trigger3d9ab619-6d394a49573131684e55-build.zip"
+        }
+      }
     }
   }
 }

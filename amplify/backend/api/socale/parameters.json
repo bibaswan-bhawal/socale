@@ -1,5 +1,6 @@
 {
   "AppSyncApiName": "socale",
   "DynamoDBBillingMode": "PAY_PER_REQUEST",
-  "DynamoDBEnableServerSideEncryption": false
+  "DynamoDBEnableServerSideEncryption": false,
+  "AuthModeLastUpdated": "2022-07-14T06:35:41.643Z"
 }

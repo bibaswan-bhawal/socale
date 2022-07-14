@@ -3,15 +3,21 @@
   "serviceConfiguration": {
     "apiName": "socale",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/Users/AcnoSaga/Code/Apps/Work/socale/amplify/backend/api/socale/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-d2eb3378-fb13-4ce0-8e6d-06c969eee523/amplify/backend/api/socale/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
-      "expirationTime": 7
+      "keyDescription": "api key description",
+      "expirationTime": 30
     },
     "conflictResolution": {
       "defaultResolutionStrategy": {
         "type": "AUTOMERGE"
       }
-    }
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "AWS_IAM"
+      }
+    ]
   }
 }

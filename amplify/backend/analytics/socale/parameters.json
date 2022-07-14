@@ -1,0 +1,21 @@
+{
+    "appName": "socale",
+    "roleName": "pinpointLambdaRole3d8713b3",
+    "cloudformationPolicyName": "cloudformationPolicy3d8713b3",
+    "cloudWatchPolicyName": "cloudWatchPolicy3d8713b3",
+    "pinpointPolicyName": "pinpointPolicy3d8713b3",
+    "authPolicyName": "pinpoint_amplify_3d8713b3",
+    "unauthPolicyName": "pinpoint_amplify_3d8713b3",
+    "authRoleName": {
+        "Ref": "AuthRoleName"
+    },
+    "unauthRoleName": {
+        "Ref": "UnauthRoleName"
+    },
+    "authRoleArn": {
+        "Fn::GetAtt": [
+            "AuthRole",
+            "Arn"
+        ]
+    }
+}

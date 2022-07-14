@@ -1,9 +1,14 @@
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
+import 'package:amplify_api/amplify_api.dart';
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
+import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/authentication_service.dart';
 
 import 'firebase_options.dart';
@@ -11,6 +16,8 @@ import 'injection/injection.dart';
 import 'riverpods/global/user_provider.dart';
 import 'theme/size_config.dart';
 import 'utils/routes.dart';
+
+import 'amplifyconfiguration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -31,6 +38,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   @override
   void initState() {
     super.initState();
+    _configureAmplify();
     if (locator<AuthenticationService>().isUserLoggedIn) {
       final userStateNotifier = ref.read(userProvider.notifier);
 
@@ -69,5 +77,24 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
         ),
       );
     });
+  }
+
+  Future<void> _configureAmplify() async {
+    // Add any Amplify plugins you want to use
+    final analyticsPlugin = AmplifyAnalyticsPinpoint();
+    final authPlugin = AmplifyAuthCognito();
+    final api = AmplifyAPI(modelProvider: ModelProvider.instance);
+    // You can use addPlugin if you are going to be adding only one plugin
+    // await Amplify.addPlugin(authPlugin);
+    await Amplify.addPlugins([authPlugin, analyticsPlugin, api]);
+
+    // Once Plugins are added, configure Amplify
+    // Note: Amplify can only be configured once.
+    try {
+      await Amplify.configure(amplifyconfig);
+    } on AmplifyAlreadyConfiguredException {
+      print(
+          "Tried to reconfigure Amplify; this can occur when your app restarts on Android.");
+    }
   }
 }
