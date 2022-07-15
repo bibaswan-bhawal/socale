@@ -10,26 +10,27 @@ class TranslucentBackground extends StatelessWidget {
 
     return Stack(
       children: [
-        CustomPaint(
-          size: Size(200, 200),
-          painter: CirclePainter(
-              Color(0xFF39EDFF), Color(0xFF0051E1), Offset(0, 100)),
-        ),
-        CustomPaint(
-          size: Size(200, 200),
-          painter: CirclePainter(Color(0xFFEA0BFD), Color(0xFF6503B1),
-              Offset(size.width, size.height - 100)),
-        ),
-        ClipRRect(
-          child: BackdropFilter(
-            filter: ui.ImageFilter.blur(sigmaX: 250.0, sigmaY: 250.0),
-            child: Container(
-              width: size.width,
-              height: size.height,
-              color: Color(0xC1FFFFFF),
-            ),
+        ImageFiltered(
+          imageFilter: ui.ImageFilter.blur(sigmaY: 40, sigmaX: 40),
+          child: Stack(
+            children: [
+              CustomPaint(
+                size: Size(200, 200),
+                painter: CirclePainter(
+                    Color(0xFF39EDFF), Color(0xFF0051E1), Offset(0, 100)),
+              ),
+              CustomPaint(
+                size: Size(200, 200),
+                painter: CirclePainter(Color(0xFFEA0BFD), Color(0xFF6503B1),
+                    Offset(size.width, size.height - 100)),
+              ),
+            ],
           ),
-        )
+        ),
+        CustomPaint(
+          size: size,
+          painter: RectPainter(),
+        ),
       ],
     );
   }
@@ -54,6 +55,22 @@ class CirclePainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     canvas.drawCircle(offset!, size.width, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
+}
+
+class RectPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Paint paint = Paint()
+      ..color = const Color(0xFFFFFFFF).withOpacity(0.7)
+      ..style = PaintingStyle.fill;
+
+    canvas.drawRect(Rect.fromLTRB(0, 0, size.width, size.height), paint);
   }
 
   @override

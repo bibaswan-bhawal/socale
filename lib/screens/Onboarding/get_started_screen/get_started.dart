@@ -121,7 +121,7 @@ class GetStartedScreen extends StatelessWidget {
                       padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
                       child: OutlinedButton(
                         onPressed: () {
-                          Get.offAllNamed('/register');
+                          //Get.offAllNamed('/register');
                         },
                         style: OutlinedButton.styleFrom(
                           fixedSize: Size(size.width - 60, 60),

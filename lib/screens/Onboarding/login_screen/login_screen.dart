@@ -67,25 +67,15 @@ class LoginScreen extends StatelessWidget {
                     ),
                   ),
                   TextFormField(
-                    initialValue: 'Input text',
                     decoration: InputDecoration(
                       labelText: 'Label text',
-                      errorText: 'Error message',
                       border: OutlineInputBorder(),
-                      suffixIcon: Icon(
-                        Icons.error,
-                      ),
                     ),
                   ),
                   TextFormField(
-                    initialValue: 'Input text',
                     decoration: InputDecoration(
                       labelText: 'Label text',
-                      errorText: 'Error message',
                       border: OutlineInputBorder(),
-                      suffixIcon: Icon(
-                        Icons.error,
-                      ),
                     ),
                   ),
                 ],
