@@ -11,8 +11,8 @@ import '../../../services/authentication_service.dart';
 import '../../../theme/size_config.dart';
 import '../../components/gap.dart';
 
-class LoginScreen extends StatelessWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class LoginScreenOld extends StatelessWidget {
+  const LoginScreenOld({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -120,31 +120,3 @@ class LoginScreen extends StatelessWidget {
     );
   }
 }
-
-//Get.offAllNamed('/home');
-
-//HookConsumer(builder: (context, ref, child) {
-//                                   FirebaseAuth.instance
-//                                       .authStateChanges()
-//                                       .listen((user) {
-//                                     if (user != null) {
-//
-//                                     }
-//                                   });
-//                                   return SignInButton(
-//                                     Buttons.Google,
-//                                     onPressed: () async {
-//                                       try {
-//                                         return await locator<
-//                                                 AuthenticationService>()
-//                                             .signInWithGoogle();
-//                                       } on FirebaseAuthException catch (e) {
-//                                         Get.snackbar(
-//                                           'An error occurred',
-//                                           e.message ??
-//                                               'Could not log in at this moment',
-//                                         );
-//                                       }
-//                                     },
-//                                   );
-//                                 }),

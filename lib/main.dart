@@ -17,8 +17,15 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle(systemNavigationBarColor: const Color(0xff1F2124)));
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light));
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
   configureDependencies();
 
   runApp(ProviderScope(child: const SocaleApp()));
@@ -36,7 +43,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     super.initState();
     if (locator<AuthenticationService>().isUserLoggedIn) {
       final userStateNotifier = ref.read(userProvider.notifier);
-
       userStateNotifier
           .getUserData(locator<AuthenticationService>().currentUser!.uid);
     }

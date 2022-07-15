@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Timer timer = Timer(Duration(seconds: 2), () {
-    Get.offAllNamed('/login');
+    Get.offAllNamed('/get_started');
   });
 
   @override
