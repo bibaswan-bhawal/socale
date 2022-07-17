@@ -25,7 +25,17 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.light,
+      systemNavigationBarColor: Colors.transparent,
+      systemNavigationBarIconBrightness: Brightness.light));
+
+  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
   configureDependencies();
+
   runApp(ProviderScope(child: const SocaleApp()));
 }
 
@@ -42,7 +52,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     _configureAmplify();
     if (locator<AuthenticationService>().isUserLoggedIn) {
       final userStateNotifier = ref.read(userProvider.notifier);
-
       userStateNotifier
           .getUserData(locator<AuthenticationService>().currentUser!.uid);
     }
@@ -53,16 +62,20 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     SystemChrome.setPreferredOrientations([
       DeviceOrientation.portraitUp,
     ]);
+
     return LayoutBuilder(builder: (context, constraints) {
       SizeConfig.init(constraints, Orientation.portrait);
       FirebaseAuth.instance.authStateChanges().listen((user) async {
         final userStateNotifier = ref.watch(userProvider.notifier);
+
         if (user == null) {
           userStateNotifier.reset();
           return;
         }
+
         userStateNotifier.getUserData(user.uid);
       });
+
       return GestureDetector(
         onTap: () {
           FocusScopeNode currentFocus = FocusScope.of(context);
@@ -73,6 +86,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
         },
         child: GetMaterialApp(
           title: 'Socale',
+          debugShowCheckedModeBanner: false,
           getPages: Routes.getPages(),
           initialRoute: Routes.getInitialRoute(),
         ),

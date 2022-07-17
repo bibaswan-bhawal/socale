@@ -14,7 +14,7 @@ class SplashScreen extends StatefulWidget {
 
 class _SplashScreenState extends State<SplashScreen> {
   Timer timer = Timer(Duration(seconds: 2), () {
-    Get.offAllNamed('/login');
+    Get.offAllNamed('/get_started');
   });
 
   @override
@@ -32,7 +32,7 @@ class _SplashScreenState extends State<SplashScreen> {
         ),
         child: Center(
           child: Image.asset(
-            'assets/images/Socale-Splash-Logo.png',
+            'assets/images/socale_logo_bw.png',
             width: sy * 60,
           ),
         ),
