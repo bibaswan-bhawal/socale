@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
+import 'package:socale/values/strings.dart';
 
 class RegisterScreen extends StatelessWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -31,7 +32,7 @@ class RegisterScreen extends StatelessWidget {
                   Padding(
                     padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
                     child: Text(
-                      "Hello There...",
+                      StringValues.registerHeading,
                       style: GoogleFonts.poppins(
                           fontSize: 38,
                           fontWeight: FontWeight.bold,
@@ -52,7 +53,7 @@ class RegisterScreen extends StatelessWidget {
                     child: SizedBox(
                       width: 303,
                       child: Text(
-                        "Sign up to start matching",
+                        StringValues.registerDescription,
                         style: GoogleFonts.roboto(
                           fontSize: 18,
                           textStyle: TextStyle(
