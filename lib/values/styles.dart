@@ -42,16 +42,38 @@ class StyleValues {
     fontSize: 14,
     textStyle: TextStyle(
       fontWeight: FontWeight.w500,
-      color: ColorValues.textDescription,
-      letterSpacing: -0.3,
+      color: ColorValues.textHint,
     ),
   );
   static final TextStyle textFieldContentStyle = GoogleFonts.poppins(
     fontSize: 14,
     textStyle: TextStyle(
-      fontWeight: FontWeight.w400,
+      fontWeight: FontWeight.w500,
       color: ColorValues.textDescription,
-      letterSpacing: -0.3,
     ),
+  );
+
+  static final OutlineInputBorder formTextFieldOutlinedBorderFocused =
+      OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10),
+    borderSide: BorderSide(
+      color: const Color(0xFF000000),
+      width: 3,
+    ),
+  );
+
+  static final OutlineInputBorder formTextFieldOutlinedBorderEnabled =
+      OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10),
+    borderSide: BorderSide(
+      color: const Color(0xFF000000),
+      width: 2,
+    ),
+  );
+
+  static final BoxConstraints formTextFieldPrefixIconBoxConstraints =
+      BoxConstraints(
+    minHeight: 18,
+    minWidth: 48,
   );
 }

@@ -9,17 +9,23 @@
       "UnauthRoleName": "amplify-socale-dev-105154-unauthRole",
       "StackName": "amplify-socale-dev-105154",
       "StackId": "arn:aws:cloudformation:us-west-2:761585288120:stack/amplify-socale-dev-105154/e3204900-0334-11ed-9548-0a31c6bae9ed",
-      "AmplifyAppId": "d1t5eal64712ny"
+      "AmplifyAppId": "d1t5eal64712ny",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-socale-dev-105154-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
     },
     "categories": {
       "auth": {
         "undefined": {},
-        "true": {}
+        "true": {},
+        "SocaleAuth": {
+          "facebookAppId": "413220534092388",
+          "googleClientId": "1038363379354-438rslugb563casado20hbsumhp777l3.apps.googleusercontent.com",
+          "appleAppId": "co.socale.socale.ios"
+        }
       },
       "function": {
         "S3Trigger3d9ab619": {
           "deploymentBucketName": "amplify-socale-dev-105154-deployment",
-          "s3Key": "amplify-builds/S3Trigger3d9ab619-6d394a49573131684e55-build.zip"
+          "s3Key": "amplify-builds/S3Trigger3d9ab619-7a627679485a6b4d3656-build.zip"
         }
       }
     }

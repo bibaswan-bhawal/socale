@@ -41,9 +41,6 @@ class Routes {
   }
 
   static String getInitialRoute() {
-    if (locator<AuthenticationService>().isUserLoggedIn) {
-      return '/home';
-    }
     return '/';
   }
 }

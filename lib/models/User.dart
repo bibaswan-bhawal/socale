@@ -31,7 +31,9 @@ class User extends Model {
   static const classType = const _UserModelType();
   final String id;
   final List<UserRoom>? _Rooms;
+  final String? _email;
   final String? _name;
+  final String? _schoolEmail;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -47,9 +49,9 @@ class User extends Model {
     return _Rooms;
   }
   
-  String get name {
+  String get email {
     try {
-      return _name!;
+      return _email!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -60,6 +62,14 @@ class User extends Model {
     }
   }
   
+  String? get name {
+    return _name;
+  }
+  
+  String? get schoolEmail {
+    return _schoolEmail;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -68,13 +78,15 @@ class User extends Model {
     return _updatedAt;
   }
   
-  const User._internal({required this.id, Rooms, required name, createdAt, updatedAt}): _Rooms = Rooms, _name = name, _createdAt = createdAt, _updatedAt = updatedAt;
+  const User._internal({required this.id, Rooms, required email, name, schoolEmail, createdAt, updatedAt}): _Rooms = Rooms, _email = email, _name = name, _schoolEmail = schoolEmail, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory User({String? id, List<UserRoom>? Rooms, required String name}) {
+  factory User({String? id, List<UserRoom>? Rooms, required String email, String? name, String? schoolEmail}) {
     return User._internal(
       id: id == null ? UUID.getUUID() : id,
       Rooms: Rooms != null ? List<UserRoom>.unmodifiable(Rooms) : Rooms,
-      name: name);
+      email: email,
+      name: name,
+      schoolEmail: schoolEmail);
   }
   
   bool equals(Object other) {
@@ -87,7 +99,9 @@ class User extends Model {
     return other is User &&
       id == other.id &&
       DeepCollectionEquality().equals(_Rooms, other._Rooms) &&
-      _name == other._name;
+      _email == other._email &&
+      _name == other._name &&
+      _schoolEmail == other._schoolEmail;
   }
   
   @override
@@ -99,7 +113,9 @@ class User extends Model {
     
     buffer.write("User {");
     buffer.write("id=" + "$id" + ", ");
+    buffer.write("email=" + "$_email" + ", ");
     buffer.write("name=" + "$_name" + ", ");
+    buffer.write("schoolEmail=" + "$_schoolEmail" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -107,11 +123,13 @@ class User extends Model {
     return buffer.toString();
   }
   
-  User copyWith({String? id, List<UserRoom>? Rooms, String? name}) {
+  User copyWith({String? id, List<UserRoom>? Rooms, String? email, String? name, String? schoolEmail}) {
     return User._internal(
       id: id ?? this.id,
       Rooms: Rooms ?? this.Rooms,
-      name: name ?? this.name);
+      email: email ?? this.email,
+      name: name ?? this.name,
+      schoolEmail: schoolEmail ?? this.schoolEmail);
   }
   
   User.fromJson(Map<String, dynamic> json)  
@@ -122,19 +140,23 @@ class User extends Model {
           .map((e) => UserRoom.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
+      _email = json['email'],
       _name = json['name'],
+      _schoolEmail = json['schoolEmail'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'Rooms': _Rooms?.map((UserRoom? e) => e?.toJson()).toList(), 'name': _name, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'Rooms': _Rooms?.map((UserRoom? e) => e?.toJson()).toList(), 'email': _email, 'name': _name, 'schoolEmail': _schoolEmail, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "user.id");
   static final QueryField ROOMS = QueryField(
     fieldName: "Rooms",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (UserRoom).toString()));
+  static final QueryField EMAIL = QueryField(fieldName: "email");
   static final QueryField NAME = QueryField(fieldName: "name");
+  static final QueryField SCHOOLEMAIL = QueryField(fieldName: "schoolEmail");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
     modelSchemaDefinition.pluralName = "Users";
@@ -160,8 +182,20 @@ class User extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: User.NAME,
+      key: User.EMAIL,
       isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: User.NAME,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: User.SCHOOLEMAIL,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     

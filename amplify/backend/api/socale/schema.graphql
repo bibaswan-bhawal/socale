@@ -1,7 +1,9 @@
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   Rooms: [Room] @manyToMany(relationName: "UserRoom")
-  name: String!
+  email: AWSEmail!
+  name: AWSJSON
+  schoolEmail: AWSEmail
 }
 
 type Room @model @auth(rules: [{allow: public}]) {
