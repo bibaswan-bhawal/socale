@@ -7,10 +7,6 @@ import 'package:path_provider/path_provider.dart';
 
 @lazySingleton
 class ImageService {
-  Future<String?> uploadImage() async {
-    return 'https://picsum.photos/200/300';
-  }
-
   Future<bool> uploadProfilePicture(File profilePictureFile) async {
     final tempDir = await getTemporaryDirectory();
     final compressedFile = await FlutterImageCompress.compressAndGetFile(
@@ -21,8 +17,8 @@ class ImageService {
     try {
       final UploadFileResult result = await Amplify.Storage.uploadFile(
           local: compressedFile ?? profilePictureFile,
-          key: (await Amplify.Auth.getCurrentUser())
-              .userId, // TODO: Replace with your user id
+          key:
+              (await Amplify.Auth.getCurrentUser()).userId + "_profile_picture",
           onProgress: (progress) {
             print('Fraction completed: ${progress.getFractionCompleted()}');
           });
