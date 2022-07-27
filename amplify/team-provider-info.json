@@ -14,12 +14,13 @@
     "categories": {
       "auth": {
         "undefined": {},
-        "true": {}
+        "true": {},
+        "SocaleAuth": {}
       },
       "function": {
         "S3Trigger3d9ab619": {
           "deploymentBucketName": "amplify-socale-dev-105154-deployment",
-          "s3Key": "amplify-builds/S3Trigger3d9ab619-6d394a49573131684e55-build.zip"
+          "s3Key": "amplify-builds/S3Trigger3d9ab619-7a627679485a6b4d3656-build.zip"
         }
       }
     }

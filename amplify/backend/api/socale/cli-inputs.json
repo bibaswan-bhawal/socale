@@ -3,7 +3,7 @@
   "serviceConfiguration": {
     "apiName": "socale",
     "serviceName": "AppSync",
-    "gqlSchemaPath": "/tmp/amplify-d2eb3378-fb13-4ce0-8e6d-06c969eee523/amplify/backend/api/socale/schema.graphql",
+    "gqlSchemaPath": "/tmp/amplify-fddfae57-30e6-4f84-9c3b-5094b097fd35/amplify/backend/api/socale/schema.graphql",
     "defaultAuthType": {
       "mode": "API_KEY",
       "keyDescription": "api key description",

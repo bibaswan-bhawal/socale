@@ -1,10 +1,15 @@
+import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:socale/injection/injection.dart';
 
+import '../models/User.dart';
 import '../utils/enums/onboarding_step.dart';
+import 'image_service.dart';
 
 @lazySingleton
 class OnboardingService {
@@ -34,6 +39,13 @@ class OnboardingService {
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.clear();
+  }
+
+  Future<void> setSchoolEmail(String email, String schoolEmail) async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    await box.put('schoolEmail', schoolEmail);
+    await setOnboardingStep(OnboardingStep.academicInclination);
   }
 
   Future<void> setAcademicInclination(int academicInclination) async {
@@ -116,5 +128,66 @@ class OnboardingService {
     final box = await Hive.openBox(userId);
     await box.put('avatarSelection', avatarSelection);
     await setOnboardingStep(OnboardingStep.completed);
+  }
+
+  Future<bool> createOnboardedUser() async {
+    final cognitoUser = await _amplifyCognitoUser;
+    final userId = cognitoUser.userId;
+    final box = await Hive.openBox(userId);
+    if (!_checkIfFieldExistsLocally(box, 'onboardingStep') ||
+        !_checkIfFieldExistsLocally(box, 'schoolEmail') ||
+        !_checkIfFieldExistsLocally(box, 'academicInclination') ||
+        !_checkIfFieldExistsLocally(box, 'firstName') ||
+        !_checkIfFieldExistsLocally(box, 'lastName') ||
+        !_checkIfFieldExistsLocally(box, 'dateOfBirth') ||
+        !_checkIfFieldExistsLocally(box, 'graduationMonth') ||
+        !_checkIfFieldExistsLocally(box, 'major') ||
+        !_checkIfFieldExistsLocally(box, 'academicInterests') ||
+        !_checkIfFieldExistsLocally(box, 'skills') ||
+        !_checkIfFieldExistsLocally(box, 'careerGoals') ||
+        !_checkIfFieldExistsLocally(box, 'selfDescription') ||
+        !_checkIfFieldExistsLocally(box, 'leisureInterests') ||
+        !_checkIfFieldExistsLocally(box, 'idealFriendDescription') ||
+        !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
+        !_checkIfFieldExistsLocally(box, 'avatarSelection')) {
+      return false;
+    }
+    final newUser = User(
+      email: cognitoUser.username,
+      id: userId,
+      schoolEmail: box.get('schoolEmail'),
+      academicInclination: box.get('academicInclination'),
+      firstName: box.get('firstName'),
+      lastName: box.get('lastName'),
+      dateOfBirth: box.get('dateOfBirth'),
+      graduationMonth: box.get('graduationMonth'),
+      major: box.get('major'),
+      academicInterests: box.get('academicInterests'),
+      skills: box.get('skills'),
+      careerGoals: box.get('careerGoals'),
+      selfDescription: box.get('selfDescription'),
+      leisureInterests: box.get('leisureInterests'),
+      idealFriendDescription: box.get('idealFriendDescription'),
+      situationalDecisions: box.get('situationalDecisions'),
+    );
+    File profilePictureFile = (await File((await getTemporaryDirectory()).path)
+        .create())
+      ..writeAsBytesSync(box.get('avatarSelection') as Uint8List);
+    if (await locator<ImageService>()
+        .uploadProfilePicture(profilePictureFile)) {
+      await Amplify.DataStore.save(newUser);
+      return true;
+    }
+    return false;
+  }
+
+  bool _checkIfFieldExistsLocally(Box box, String key) {
+    if (!box.isOpen) {
+      throw Exception('Hive box is not open');
+    }
+    if (box.get(key) == null) {
+      return false;
+    }
+    return true;
   }
 }
