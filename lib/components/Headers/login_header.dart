@@ -26,22 +26,24 @@ class LoginHeader extends StatelessWidget {
           child: Text(
             StringValues.loginHeading,
             style: GoogleFonts.poppins(
-                fontSize: 42,
-                fontWeight: FontWeight.bold,
-                textStyle: TextStyle(
-                  color: const Color(0xFF252525),
-                  shadows: <Shadow>[
-                    Shadow(
-                      offset: Offset(2, 2),
-                      blurRadius: 5,
-                      color: const Color(0x19252525),
-                    ),
-                  ],
-                )),
+              fontSize: 42,
+              fontWeight: FontWeight.bold,
+              textStyle: TextStyle(
+                color: const Color(0xFF252525),
+                shadows: <Shadow>[
+                  Shadow(
+                    offset: Offset(2, 2),
+                    blurRadius: 5,
+                    color: const Color(0x19252525),
+                  ),
+                ],
+                letterSpacing: -1,
+              ),
+            ),
           ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 0, 0, 32),
+          padding: EdgeInsets.fromLTRB(0, 0, 0, 24),
           child: SizedBox(
             width: 303,
             child: Text(

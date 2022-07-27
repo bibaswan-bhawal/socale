@@ -8,9 +8,9 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:socale/models/ModelProvider.dart';
+import 'package:socale/screens/onboarding/email_verification/email_verifcation.dart';
 import 'package:socale/screens/onboarding/get_started_screen/get_started.dart';
 import 'package:socale/screens/splash_screen/splash_screen.dart';
-import 'injection/injection.dart';
 import 'theme/size_config.dart';
 import 'utils/routes.dart';
 import 'amplifyconfiguration.dart';
@@ -25,9 +25,6 @@ void main() async {
       systemNavigationBarIconBrightness: Brightness.light));
 
   SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
-  configureDependencies();
-
   runApp(ProviderScope(child: const SocaleApp()));
 }
 
@@ -39,6 +36,7 @@ class SocaleApp extends StatefulWidget {
 
 class _SocaleAppState extends State<SocaleApp> {
   bool _isAmplifyConfigured = false;
+  bool _isSignedIn = false;
 
   Future<void> _configureAmplify() async {
     final analyticsPlugin = AmplifyAnalyticsPinpoint();
@@ -50,14 +48,23 @@ class _SocaleAppState extends State<SocaleApp> {
       authPlugin,
       analyticsPlugin,
       apiPlugin,
-      storagePlugin,
     ]);
 
     try {
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
+      _attemptAutoLogin();
     } on AmplifyAlreadyConfiguredException {
       print("Tried to reconfigure Amplify.");
+    }
+  }
+
+  Future<void> _attemptAutoLogin() async {
+    try {
+      final sessions = await Amplify.Auth.fetchAuthSession();
+      setState(() => _isSignedIn = sessions.isSignedIn);
+    } catch (e) {
+      rethrow;
     }
   }
 
@@ -89,7 +96,11 @@ class _SocaleAppState extends State<SocaleApp> {
             title: 'Socale',
             debugShowCheckedModeBanner: false,
             getPages: Routes.getPages(),
-            home: _isAmplifyConfigured ? GetStartedScreen() : SplashScreen(),
+            home: _isAmplifyConfigured
+                ? (_isSignedIn
+                    ? EmailVerificationScreen()
+                    : GetStartedScreen()) // Always goes to email verification to check
+                : SplashScreen(),
           ),
         );
       },

@@ -1,7 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:socale/theme/colors.dart';
 import 'package:socale/theme/size_config.dart';
 

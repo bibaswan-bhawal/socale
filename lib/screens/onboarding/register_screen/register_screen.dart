@@ -1,13 +1,15 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/auth/auth_repository.dart';
+import 'package:socale/components/Buttons/ButtonGroups/SocialSignInButtonGroup.dart';
 import 'package:socale/components/Buttons/primary_button.dart';
+import 'package:socale/components/Dividers/signInDivider.dart';
+import 'package:socale/components/Headers/register_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
-import 'package:socale/values/strings.dart';
+import 'package:get/get.dart';
+import 'package:socale/utils/validators.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -29,94 +31,91 @@ class _RegisterScreenState extends State<RegisterScreen> {
       resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
-          TranslucentBackground(),
+          TranslucentBackground(
+            change: true,
+          ),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 80, 0, 0),
+            padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+            child: IconButton(
+              onPressed: () => {Get.offAllNamed('/get_started')},
+              icon: const Icon(Icons.arrow_back_ios_new),
+            ),
+          ),
+          Padding(
+            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SizedBox(
-                    height: 64,
-                    child: Hero(
-                      tag: "logo",
-                      child: SvgPicture.asset(
-                        'assets/icons/socale_logo_color.svg',
-                        height: 64,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 24, 0, 0),
-                    child: Text(
-                      StringValues.registerHeading,
-                      style: GoogleFonts.poppins(
-                          fontSize: 42,
-                          fontWeight: FontWeight.bold,
-                          textStyle: TextStyle(
-                            color: const Color(0xFF252525),
-                            shadows: <Shadow>[
-                              Shadow(
-                                offset: Offset(2, 2),
-                                blurRadius: 5,
-                                color: const Color(0x19252525),
-                              ),
-                            ],
-                          )),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(0, 0, 0, 32),
-                    child: SizedBox(
-                      width: 303,
-                      child: Text(
-                        StringValues.registerDescription,
-                        style: GoogleFonts.roboto(
-                          fontSize: 14,
-                          textStyle: TextStyle(
-                            color: const Color(0xE17A7A7A),
-                            letterSpacing: 0.1,
-                            height: 1.2,
-                          ),
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ),
-                  ),
+                  RegisterHeader(),
                   Form(
                     key: formKey,
                     child: Column(
                       children: [
                         Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                          child: FormTextField(
-                            hint: "Email Address",
-                            icon: "assets/icons/email_icon.svg",
-                            onSave: (value) =>
-                                setState(() => email = value ?? ""),
-                            validator: (value) {
-                              return null;
-                            },
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
+                          child: SizedBox(
+                            height: 80,
+                            child: FormTextField(
+                              hint: "Email Address",
+                              autoFillHints: {'email', 'email address'},
+                              icon: "assets/icons/email_icon.svg",
+                              onSave: (value) =>
+                                  setState(() => email = value ?? ""),
+                              validator: (value) {
+                                return Validators.validateEmail(value);
+                              },
+                            ),
                           ),
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                          child: FormTextField(
-                            hint: "Password",
-                            icon: "assets/icons/lock_icon.svg",
-                            obscureText: true,
-                            onSave: (value) =>
-                                setState(() => password = value ?? ""),
-                            validator: (value) {
-                              return null;
-                            },
+                          child: SizedBox(
+                            height: 80,
+                            child: FormTextField(
+                              hint: "Password",
+                              autoFillHints: {'password'},
+                              icon: "assets/icons/lock_icon.svg",
+                              obscureText: true,
+                              onSave: (value) =>
+                                  setState(() => password = value ?? ""),
+                              validator: (value) {
+                                if (value == null || value.length < 8) {
+                                  return "Please enter a password of at least 8 characters.";
+                                }
+                                return null;
+                              },
+                            ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(20, 20, 20, 20),
+                          padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text:
+                                      'By signing up you agree to the Socale Terms of service & Privacy Policy.',
+                                  style: GoogleFonts.poppins(
+                                      color: Colors.black,
+                                      decoration: TextDecoration.underline,
+                                      fontSize: 12,
+                                      fontWeight: FontWeight.w500,
+                                      letterSpacing: -0.3),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () => {print('Link clicked')},
+                                ),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                           child: PrimaryButton(
                             width: size.width,
                             height: 60,
+                            colors: [Color(0xFF39EDFF), Color(0xFF0051E1)],
                             text: "Register",
                             onClickEventHandler: () => {validateForm()},
                           ),
@@ -124,32 +123,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: PrimaryButton(
-                      width: size.width,
-                      height: 60,
-                      text: "Sign In with Google",
-                      onClickEventHandler: () => {},
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: PrimaryButton(
-                      width: size.width,
-                      height: 60,
-                      text: "Sign In with Facebook",
-                      onClickEventHandler: () => {},
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(20, 10, 20, 10),
-                    child: PrimaryButton(
-                      width: size.width,
-                      height: 60,
-                      text: "Sign In with Apple",
-                      onClickEventHandler: () => {},
-                    ),
+                  SignInDivider(),
+                  SocialSignInButtonGroup(
+                    handler: AuthRepository().signUpWithSocialWebUI,
+                    text: "Sign Up",
                   ),
                 ],
               ),
@@ -168,25 +145,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
       print("Form is valid");
       form.save();
 
-      final result = AuthRepository().signup(email, password);
-      print(result);
+      final result = await AuthRepository().signup(email, password);
+      if (result) {
+        Get.offAllNamed('/email_verification');
+      }
     } else {
       return false;
-    }
-  }
-
-  String? validateEmail(String? value) {
-    if (value == null) {
-      return "Enter valid Email";
-    }
-
-    Pattern pattern =
-        r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$';
-    RegExp regex = RegExp(pattern.toString());
-    if (!regex.hasMatch(value)) {
-      return "Enter Valid Email";
-    } else {
-      return null;
     }
   }
 }

@@ -25,6 +25,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             validator: (value) {
               return null;
             },
+            autoFillHints: [],
           ),
           FormTextField(
             hint: "Name",
@@ -32,6 +33,7 @@ class _DetailsScreenState extends State<DetailsScreen> {
             validator: (value) {
               return null;
             },
+            autoFillHints: [],
           ),
           MaterialButton(onPressed: () => {submitForm()}),
         ],

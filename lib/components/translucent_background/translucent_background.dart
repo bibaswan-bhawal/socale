@@ -4,7 +4,10 @@ import 'package:socale/components/Painters/BackgroundPainter/BackgroundPainter.d
 import 'package:socale/components/Painters/CirclePainter/CirclePainter.dart';
 
 class TranslucentBackground extends StatelessWidget {
-  const TranslucentBackground({Key? key}) : super(key: key);
+  final bool change;
+
+  const TranslucentBackground({Key? key, this.change = false})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -16,7 +19,7 @@ class TranslucentBackground extends StatelessWidget {
           painter: CirclePainter(
             Color(0xFF39EDFF),
             Color(0xFF0051E1),
-            Offset(0, 100),
+            Offset(change ? size.width : 0, 100),
           ),
         ),
         CustomPaint(
@@ -24,15 +27,22 @@ class TranslucentBackground extends StatelessWidget {
           painter: CirclePainter(
             Color(0xFFEA0BFD),
             Color(0xFF6503B1),
-            Offset(size.width, size.height - 100),
+            Offset(change ? 0 : size.width, size.height - 100),
           ),
         ),
-        CupertinoPopupSurface(
-          isSurfacePainted: false,
-          child: CustomPaint(
-            size: size,
-            painter: BackgroundPainter(),
+        Transform.translate(
+          offset: Offset(0, 0),
+          child: SizedBox(
+            width: size.width,
+            height: size.height,
+            child: CupertinoPopupSurface(
+              isSurfacePainted: false,
+            ),
           ),
+        ),
+        CustomPaint(
+          size: Size(size.width, size.height),
+          painter: BackgroundPainter(),
         ),
       ],
     );

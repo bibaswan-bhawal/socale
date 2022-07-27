@@ -18,7 +18,6 @@ class GetStartedScreen extends StatelessWidget {
         statusBarIconBrightness: Brightness.dark,
         systemNavigationBarColor: Colors.transparent,
         systemNavigationBarIconBrightness: Brightness.dark));
-
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
     Size size = MediaQuery.of(context).size;
@@ -29,68 +28,73 @@ class GetStartedScreen extends StatelessWidget {
         children: [
           TranslucentBackground(),
           Padding(
-              padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-              child: Center(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    SizedBox(
-                      height: 54,
-                      child: Hero(
-                        tag: "logo",
-                        child: SvgPicture.asset(
-                          'assets/icons/socale_logo_color.svg',
-                          height: 54,
-                        ),
+            padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+            child: Center(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: 54,
+                    child: Hero(
+                      tag: "logo",
+                      child: SvgPicture.asset(
+                        'assets/icons/socale_logo_color.svg',
+                        height: 54,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                      child: Image.asset(
-                        'assets/images/onboarding_illustration_1.png',
-                        height: size.height / 2.2,
-                      ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                    child: Image.asset(
+                      'assets/images/onboarding_illustration_1.png',
+                      height: size.height / 2.2,
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
+                    child: Text(
+                      StringValues.getStartedHeading,
+                      style: StyleValues.heading2Style,
+                    ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+                    child: SizedBox(
+                      width: 303,
                       child: Text(
-                        StringValues.getStartedHeading,
-                        style: StyleValues.headingStyle,
+                        StringValues.getStartedDescription,
+                        style: StyleValues.description2Style,
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
-                      child: SizedBox(
-                        width: 303,
-                        child: Text(
-                          StringValues.getStartedDescription,
-                          style: StyleValues.descriptionStyle,
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                    child: PrimaryButton(
+                      width: size.width - 60,
+                      height: 60,
+                      colors: [Color(0xFFFD6C00), Color(0xFFFFA133)],
+                      text: "Login",
+                      onClickEventHandler: () => {
+                        Get.toNamed('/login'),
+                      },
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
-                      child: PrimaryButton(
-                        width: size.width - 60,
-                        height: 60,
-                        text: "Login",
-                        onClickEventHandler: () => {Get.offAllNamed('/login')},
-                      ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+                    child: CustomOutlinedButton(
+                      width: size.width - 60,
+                      height: 60,
+                      text: "Register",
+                      onClickEventHandler: () => {
+                        Get.toNamed('/register'),
+                      },
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
-                      child: CustomOutlinedButton(
-                        width: size.width - 60,
-                        height: 60,
-                        text: "Register",
-                        onClickEventHandler: () =>
-                            {Get.offAllNamed('/register')},
-                      ),
-                    ),
-                  ],
-                ),
-              )),
+                  ),
+                ],
+              ),
+            ),
+          ),
         ],
       ),
     );

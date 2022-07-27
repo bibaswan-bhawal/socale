@@ -5,6 +5,7 @@ class PrimaryButton extends StatelessWidget {
   final double width;
   final double height;
   final String text;
+  final List<Color> colors;
   final Function() onClickEventHandler;
 
   const PrimaryButton(
@@ -12,6 +13,7 @@ class PrimaryButton extends StatelessWidget {
       required this.width,
       required this.height,
       required this.text,
+      required this.colors,
       required this.onClickEventHandler})
       : super(key: key);
 
@@ -20,9 +22,10 @@ class PrimaryButton extends StatelessWidget {
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
-            begin: Alignment.topLeft,
-            end: Alignment(0.8, 1),
-            colors: [Color(0xFFFD6C00), Color(0xFFFFA133)]),
+          begin: Alignment.topLeft,
+          end: Alignment(0.8, 1),
+          colors: colors,
+        ),
         borderRadius: BorderRadius.circular(10),
       ),
       child: ElevatedButton(
