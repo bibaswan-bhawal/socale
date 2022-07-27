@@ -1,0 +1,15 @@
+enum OnboardingStep {
+  started,
+  academicInclination,
+  biographics,
+  collegeInfo,
+  academicInterests,
+  skills,
+  careerGoals,
+  selfDescription,
+  leisureInterests,
+  idealFriendDescription,
+  situationalDecisions,
+  avatarSelection,
+  completed,
+}
