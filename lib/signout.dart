@@ -8,14 +8,12 @@ class SignOutScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Center(
-      child: Container(
-        child: ElevatedButton(
-          onPressed: () {
-            AuthRepository().signOutCurrentUser();
-            Get.offAllNamed('/get_started');
-          },
-          child: Text('Sign Out'),
-        ),
+      child: ElevatedButton(
+        onPressed: () {
+          AuthRepository().signOutCurrentUser();
+          Get.offAllNamed('/get_started');
+        },
+        child: Text('Sign Out'),
       ),
     );
   }

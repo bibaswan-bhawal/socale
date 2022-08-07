@@ -8,10 +8,7 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
 import 'package:socale/models/ModelProvider.dart';
-import 'package:socale/screens/onboarding/email_verification/email_verifcation.dart';
-import 'package:socale/screens/onboarding/get_started_screen/get_started.dart';
-import 'package:socale/screens/splash_screen/splash_screen.dart';
-import 'theme/size_config.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/onboarding_screen.dart';
 import 'utils/routes.dart';
 import 'amplifyconfiguration.dart';
 
@@ -20,7 +17,7 @@ void main() async {
 
   SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
       statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
+      statusBarIconBrightness: Brightness.dark,
       systemNavigationBarColor: Colors.transparent,
       systemNavigationBarIconBrightness: Brightness.light));
 
@@ -36,7 +33,6 @@ class SocaleApp extends StatefulWidget {
 
 class _SocaleAppState extends State<SocaleApp> {
   bool _isAmplifyConfigured = false;
-  bool _isSignedIn = false;
 
   Future<void> _configureAmplify() async {
     final analyticsPlugin = AmplifyAnalyticsPinpoint();
@@ -62,7 +58,6 @@ class _SocaleAppState extends State<SocaleApp> {
   Future<void> _attemptAutoLogin() async {
     try {
       final sessions = await Amplify.Auth.fetchAuthSession();
-      setState(() => _isSignedIn = sessions.isSignedIn);
     } catch (e) {
       rethrow;
     }
@@ -80,30 +75,20 @@ class _SocaleAppState extends State<SocaleApp> {
       DeviceOrientation.portraitUp,
     ]);
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        SizeConfig.init(constraints, Orientation.portrait);
-
-        return GestureDetector(
-          onTap: () {
-            FocusScopeNode currentFocus = FocusScope.of(context);
-            if (!currentFocus.hasPrimaryFocus) {
-              currentFocus.unfocus();
-            }
-            SystemChannels.textInput.invokeMethod('TextInput.hide');
-          },
-          child: GetMaterialApp(
-            title: 'Socale',
-            debugShowCheckedModeBanner: false,
-            getPages: Routes.getPages(),
-            home: _isAmplifyConfigured
-                ? (_isSignedIn
-                    ? EmailVerificationScreen()
-                    : GetStartedScreen()) // Always goes to email verification to check
-                : SplashScreen(),
-          ),
-        );
-      },
+    return GestureDetector(
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      child: GetMaterialApp(
+        title: 'Socale',
+        debugShowCheckedModeBanner: false,
+        getPages: Routes.getPages(),
+        home: OnboardingScreen(),
+      ),
     );
   }
 }
+
+// _isAmplifyConfigured
+// ? (_isSignedIn
+// ? EmailVerificationScreen()
+//     : GetStartedScreen()) // Always goes to email verification to check
+// : SplashScreen()

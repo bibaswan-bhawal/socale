@@ -1,11 +1,8 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
-import '../../../components/Buttons/outlined_button.dart';
 import '../../../components/Buttons/primary_button.dart';
 import '../../../components/translucent_background/translucent_background.dart';
 import '../../../utils/validators.dart';
@@ -22,7 +19,7 @@ class EmailVerificationScreen extends StatefulWidget {
 
 class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   final formKey = GlobalKey<FormState>();
-  String currentText = "", email = "";
+  String code = "", email = "";
   bool isVisible = true;
 
   @override
@@ -35,7 +32,8 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
       final isValid = form != null ? form.validate() : false;
       if (isValid) {
         form.save();
-        setState(() => isVisible = false);
+        // TODO: Email is valid send code
+        setState(() => isVisible = false); // Show code input field
       }
     }
 
@@ -93,13 +91,13 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
                                   activeFillColor: Colors.white,
                                 ),
                                 animationDuration: Duration(milliseconds: 300),
-                                onCompleted: (v) {
-                                  print("Completed");
+                                onCompleted: (value) {
+                                  print("Completed code is: " + code);
                                 },
                                 onChanged: (value) {
                                   print(value);
                                   setState(() {
-                                    currentText = value;
+                                    code = value;
                                   });
                                 },
                                 beforeTextPaste: (text) {

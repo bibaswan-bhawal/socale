@@ -65,7 +65,7 @@ class AuthRepository {
 
       print("Is sign up complete: " + result.isSignUpComplete.toString());
       return result.isSignUpComplete;
-    } on UsernameExistsException catch (_, e) {
+    } on UsernameExistsException catch (_) {
       print("User name exists");
       return false;
     }

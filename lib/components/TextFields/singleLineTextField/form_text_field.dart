@@ -39,7 +39,6 @@ class FormTextField extends StatelessWidget {
           icon,
           fit: BoxFit.fitHeight,
         ),
-        fillColor: ColorValues.formTextFieldBackgroundColor,
         filled: true,
         prefixIconConstraints:
             StyleValues.formTextFieldPrefixIconBoxConstraints,

@@ -114,6 +114,14 @@ class StyleValues {
     ),
   );
 
+  static final OutlineInputBorder chipFieldBorder = OutlineInputBorder(
+    borderRadius: BorderRadius.circular(10),
+    borderSide: BorderSide(
+      width: 0,
+      style: BorderStyle.none,
+    ),
+  );
+
   static final BoxConstraints formTextFieldPrefixIconBoxConstraints =
       BoxConstraints(
     minHeight: 18,

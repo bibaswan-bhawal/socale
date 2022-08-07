@@ -38,14 +38,15 @@ class HomeScreen extends ConsumerWidget {
             children: screens,
           ),
           Positioned(
-              bottom: 0,
-              left: 0,
-              child: CustomBottomNavigationBar(
-                size: size,
-                onNavBarClicked: (tab) {
-                  ref.read(tabProvider.state).state = indexToTabItem[tab]!;
-                },
-              ))
+            bottom: 0,
+            left: 0,
+            child: CustomBottomNavigationBar(
+              size: size,
+              onNavBarClicked: (tab) {
+                ref.read(tabProvider.state).state = indexToTabItem[tab]!;
+              },
+            ),
+          ),
         ],
       ),
     );
