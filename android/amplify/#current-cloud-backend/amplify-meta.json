@@ -1,0 +1,162 @@
+{
+  "providers": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-socale-dev-105154-authRole",
+      "UnauthRoleArn": "arn:aws:iam::761585288120:role/amplify-socale-dev-105154-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::761585288120:role/amplify-socale-dev-105154-authRole",
+      "Region": "us-west-2",
+      "DeploymentBucketName": "amplify-socale-dev-105154-deployment",
+      "UnauthRoleName": "amplify-socale-dev-105154-unauthRole",
+      "StackName": "amplify-socale-dev-105154",
+      "StackId": "arn:aws:cloudformation:us-west-2:761585288120:stack/amplify-socale-dev-105154/e3204900-0334-11ed-9548-0a31c6bae9ed",
+      "AmplifyAppId": "d1t5eal64712ny"
+    }
+  },
+  "api": {
+    "socale": {
+      "service": "AppSync",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "output": {
+        "authConfig": {
+          "defaultAuthentication": {
+            "authenticationType": "API_KEY",
+            "apiKeyConfig": {
+              "apiKeyExpirationDays": 30,
+              "description": "api key description"
+            }
+          },
+          "additionalAuthenticationProviders": [
+            {
+              "authenticationType": "AWS_IAM"
+            }
+          ]
+        },
+        "GraphQLAPIIdOutput": "cypmnmbmpra7dh6s6rquk2r4za",
+        "GraphQLAPIEndpointOutput": "https://gat56s2b3nd6xdi5hfvmvxj3cq.appsync-api.us-west-2.amazonaws.com/graphql",
+        "GraphQLAPIKeyOutput": "da2-juupjavcuzgqtb3smjdozbgnxu"
+      },
+      "lastPushTimeStamp": "2022-08-09T17:04:16.443Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-socale-dev-105154-deployment/amplify-cfn-templates/api/cloudformation-template.json",
+        "logicalId": "apisocale"
+      },
+      "lastPushDirHash": "yQd9QCzJZmUCKPRKN88yxCyaZME="
+    }
+  },
+  "auth": {
+    "SocaleAuth": {
+      "service": "Cognito",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [],
+      "customAuth": false,
+      "frontendAuthConfig": {
+        "socialProviders": [
+          "FACEBOOK",
+          "GOOGLE",
+          "APPLE"
+        ],
+        "usernameAttributes": [
+          "EMAIL"
+        ],
+        "signupAttributes": [
+          "EMAIL"
+        ],
+        "passwordProtectionSettings": {
+          "passwordPolicyMinLength": 8,
+          "passwordPolicyCharacters": []
+        },
+        "mfaConfiguration": "OFF",
+        "mfaTypes": [
+          "SMS"
+        ],
+        "verificationMechanisms": [
+          "EMAIL"
+        ]
+      },
+      "output": {
+        "GoogleWebClient": "1038363379354-438rslugb563casado20hbsumhp777l3.apps.googleusercontent.com",
+        "UserPoolId": "us-west-2_micwer9uL",
+        "AppClientIDWeb": "6u1i8fgoa1lso4tisdmf587svh",
+        "AppClientID": "5t2fiunjbjgnke167piv0inra8",
+        "AppleWebClient": "co.socale.socale.ios",
+        "HostedUIDomain": "socale98cab975-98cab975-dev",
+        "FacebookWebClient": "413220534092388",
+        "IdentityPoolId": "us-west-2:65b88962-16cd-4270-9b83-d5778125994d",
+        "UserPoolArn": "arn:aws:cognito-idp:us-west-2:761585288120:userpool/us-west-2_micwer9uL",
+        "IdentityPoolName": "socale98cab975_identitypool_98cab975__dev",
+        "OAuthMetadata": "{\"AllowedOAuthFlows\":[\"code\"],\"AllowedOAuthScopes\":[\"phone\",\"email\",\"openid\",\"profile\",\"aws.cognito.signin.user.admin\"],\"CallbackURLs\":[\"socale://\"],\"LogoutURLs\":[\"socale://\"]}",
+        "UserPoolName": "socale98cab975_userpool_98cab975"
+      },
+      "lastPushTimeStamp": "2022-08-09T17:04:16.358Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-socale-dev-105154-deployment/amplify-cfn-templates/auth/SocaleAuth-cloudformation-template.json",
+        "logicalId": "authSocaleAuth"
+      }
+    }
+  },
+  "analytics": {
+    "socale": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation",
+      "output": {
+        "appName": "socale-dev",
+        "Region": "us-west-2",
+        "Id": "c0756fd17b1f418cac0905a7acb10f31"
+      },
+      "lastPushTimeStamp": "2022-08-09T17:04:16.361Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-socale-dev-105154-deployment/amplify-cfn-templates/analytics/pinpoint-cloudformation-template.json",
+        "logicalId": "analyticssocale"
+      }
+    }
+  },
+  "function": {
+    "S3Trigger3d9ab619": {
+      "service": "Lambda",
+      "providerPlugin": "awscloudformation",
+      "build": true,
+      "output": {
+        "Region": "us-west-2",
+        "Arn": "arn:aws:lambda:us-west-2:761585288120:function:S3Trigger3d9ab619-dev",
+        "Name": "S3Trigger3d9ab619-dev",
+        "LambdaExecutionRole": "S3Trigger3d9ab619LambdaRole3d9ab619-dev"
+      },
+      "lastPushTimeStamp": "2022-08-09T17:04:16.363Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-socale-dev-105154-deployment/amplify-cfn-templates/function/S3Trigger3d9ab619-cloudformation-template.json",
+        "logicalId": "functionS3Trigger3d9ab619"
+      },
+      "s3Bucket": {
+        "deploymentBucketName": "amplify-socale-dev-105154-deployment",
+        "s3Key": "amplify-builds/S3Trigger3d9ab619-7a627679485a6b4d3656-build.zip"
+      }
+    }
+  },
+  "storage": {
+    "images": {
+      "service": "S3",
+      "providerPlugin": "awscloudformation",
+      "dependsOn": [
+        {
+          "category": "function",
+          "resourceName": "S3Trigger3d9ab619",
+          "attributes": [
+            "Name",
+            "Arn",
+            "LambdaExecutionRole"
+          ]
+        }
+      ],
+      "output": {
+        "BucketName": "socale178ce0589f2d4ee9ba4f74026e48d99a105154-dev",
+        "Region": "us-west-2"
+      },
+      "lastPushTimeStamp": "2022-08-09T17:04:16.365Z",
+      "providerMetadata": {
+        "s3TemplateURL": "https://s3.amazonaws.com/amplify-socale-dev-105154-deployment/amplify-cfn-templates/storage/cloudformation-template.json",
+        "logicalId": "storageimages"
+      }
+    }
+  }
+}

@@ -1,0 +1,40 @@
+type User @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  rooms: [Room] @manyToMany(relationName: "UserRoom")
+  email: AWSEmail!
+  name: AWSJSON
+  schoolEmail: AWSEmail!
+  academicInclination: Int!
+  firstName: String!
+  lastName: String
+  dateOfBirth: AWSDate!
+  graduationMonth: AWSDate!
+  major: [String!]!
+  minor: [String]!
+  academicInterests: [String!]!
+  skills: [String!]!
+  careerGoals: [String!]!
+  selfDescription: [String!]!
+  leisureInterests: [String]!
+  idealFriendDescription: String!
+  situationalDecisions: [Int!]!
+  college: String!
+  matches: [String]!
+  publicKey: String!
+  privateKey: [Int!]!
+}
+
+type Room @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  messages: [Message!] @hasMany
+  users: [User!] @manyToMany(relationName: "UserRoom")
+}
+
+type Message @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  room: Room @belongsTo
+  encryptedText: String!
+  author: User @hasOne
+  createdAt: AWSDateTime!
+}
+ 
