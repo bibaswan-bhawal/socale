@@ -9,12 +9,15 @@ class ChipInputField<T> extends StatefulWidget {
   final List<String> values;
   final String textInputLabel;
   final double width;
+  final List<String> list;
+
   ChipInputField({
     Key? key,
     required this.onChanged,
     required this.values,
     required this.textInputLabel,
     required this.width,
+    required this.list,
   }) : super(key: key);
 
   @override
@@ -27,13 +30,14 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
   final LayerLink _layerLink = LayerLink();
 
   late OverlayEntry _overlayEntry;
-  List<String> _searchResults = majorsMinorOptionsList;
+  late List<String> _searchResults;
   bool _isFocused = false;
 
   @override
   void initState() {
     super.initState();
     _focusNode.addListener(_onFocusChange);
+    _searchResults = widget.list;
   }
 
   @override
@@ -98,96 +102,98 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        CompositedTransformTarget(
-          link: _layerLink,
-          child: Container(
-            width: widget.width,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                bottomRight: Radius.circular(_isFocused ? 0 : 10),
-                bottomLeft: Radius.circular(_isFocused ? 0 : 10),
-                topLeft: Radius.circular(10),
-                topRight: Radius.circular(10),
+    return SizedBox(
+      height: 52,
+      child: Column(
+        children: [
+          CompositedTransformTarget(
+            link: _layerLink,
+            child: Container(
+              width: widget.width,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  bottomRight: Radius.circular(_isFocused ? 0 : 10),
+                  bottomLeft: Radius.circular(_isFocused ? 0 : 10),
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                color: Color(0xFFB7B0B0).withOpacity(0.25),
               ),
-              color: Color(0xFFB7B0B0).withOpacity(0.25),
-            ),
-            child: Padding(
-              padding: const EdgeInsets.only(left: 12, top: 2, bottom: 2),
-              child: ScrollConfiguration(
-                behavior: const ScrollBehavior().copyWith(overscroll: false),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.horizontal,
-                  physics: ClampingScrollPhysics(),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      ChipList(
-                        values: widget.values,
-                        chipBuilder: (String value) {
-                          return Padding(
-                            padding: EdgeInsets.only(left: 0, right: 5),
-                            child: Chip(
-                              label: Text(
-                                value,
-                                style: GoogleFonts.poppins(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600,
-                                  fontSize: 12,
-                                  letterSpacing: -0.3,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 10, top: 2),
+                child: ScrollConfiguration(
+                  behavior: const ScrollBehavior().copyWith(overscroll: false),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.horizontal,
+                    physics: ClampingScrollPhysics(),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        ChipList(
+                          values: widget.values,
+                          chipBuilder: (String value) {
+                            return Padding(
+                              padding: EdgeInsets.only(left: 0, right: 5),
+                              child: Chip(
+                                label: Text(
+                                  value,
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontSize: 12,
+                                    letterSpacing: -0.3,
+                                  ),
                                 ),
+                                backgroundColor: Color(0xFFFFA133),
+                                deleteIconColor: Colors.white,
+                                onDeleted: () {
+                                  widget.values.remove(value);
+                                  widget.onChanged(widget.values);
+                                },
                               ),
-                              backgroundColor: Color(0xFFFFA133),
-                              deleteIconColor: Colors.white,
-                              onDeleted: () {
-                                widget.values.remove(value);
-                                widget.onChanged(widget.values);
+                            );
+                          },
+                        ),
+                        Container(
+                          padding: EdgeInsets.only(left: 5),
+                          constraints: BoxConstraints(
+                              minWidth:
+                                  widget.values.isEmpty ? widget.width : 200),
+                          child: IntrinsicWidth(
+                            child: TextField(
+                              focusNode: _focusNode,
+                              controller: _fieldText,
+                              decoration: InputDecoration(
+                                hintText: widget.values.isEmpty
+                                    ? widget.textInputLabel
+                                    : '',
+                                hintStyle: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.w500,
+                                    color: ColorValues.elementColor
+                                        .withOpacity(0.7),
+                                    fontSize: 14),
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (value) {
+                                print(value);
+                                setState(() => _searchResults = widget.list
+                                    .where((element) => element
+                                        .toLowerCase()
+                                        .contains(value.toLowerCase()))
+                                    .toList());
                               },
                             ),
-                          );
-                        },
-                      ),
-                      Container(
-                        padding: EdgeInsets.only(left: 5),
-                        constraints: BoxConstraints(
-                            minWidth:
-                                widget.values.isEmpty ? widget.width : 200),
-                        child: IntrinsicWidth(
-                          child: TextField(
-                            focusNode: _focusNode,
-                            controller: _fieldText,
-                            decoration: InputDecoration(
-                              hintText: widget.values.isEmpty
-                                  ? widget.textInputLabel
-                                  : '',
-                              hintStyle: GoogleFonts.poppins(
-                                  fontWeight: FontWeight.w500,
-                                  color:
-                                      ColorValues.elementColor.withOpacity(0.7),
-                                  fontSize: 14),
-                              border: InputBorder.none,
-                            ),
-                            onChanged: (value) {
-                              print(value);
-                              setState(() => _searchResults =
-                                  majorsMinorOptionsList
-                                      .where((element) => element
-                                          .toLowerCase()
-                                          .contains(value.toLowerCase()))
-                                      .toList());
-                            },
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

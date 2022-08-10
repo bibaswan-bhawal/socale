@@ -2,24 +2,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/chips/category_chip_select/category_chip_select_input.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/options/skills.dart';
 import 'package:socale/values/colors.dart';
 
-class SkillsPage extends StatefulWidget {
-  const SkillsPage({Key? key}) : super(key: key);
+class FriendPage extends StatefulWidget {
+  const FriendPage({Key? key}) : super(key: key);
 
   @override
-  State<SkillsPage> createState() => _SkillsPageState();
+  State<FriendPage> createState() => _FriendPageState();
 }
 
-class _SkillsPageState extends State<SkillsPage> {
-  List<String> skills = [];
+class _FriendPageState extends State<FriendPage> {
+  String friend = "";
 
-  onChanged(List<String> skillsSelected) {
-    setState(() => skills = skillsSelected);
-    onboardingService.setSkills(skills);
+  onChanged(value) {
+    setState(() => friend = value);
+    onboardingService.setIdealFriendDescription(value);
   }
 
   @override
@@ -38,7 +36,7 @@ class _SkillsPageState extends State<SkillsPage> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'List your ',
+                        text: 'What are your ',
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: 32,
@@ -46,7 +44,7 @@ class _SkillsPageState extends State<SkillsPage> {
                         ),
                       ),
                       TextSpan(
-                        text: 'Skills',
+                        text: 'Hobbies?',
                         style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -65,7 +63,7 @@ class _SkillsPageState extends State<SkillsPage> {
               child: Padding(
                 padding: EdgeInsets.only(left: 30),
                 child: Text(
-                  "I am great at...",
+                  "In my free time I like to...",
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w400,
                     fontSize: 18,
@@ -75,14 +73,14 @@ class _SkillsPageState extends State<SkillsPage> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(
-                top: 40.0,
-              ),
-              child: CategoryChipSelectInput(
-                height: size.height - 354,
-                width: size.width,
-                onChange: onChanged,
-                map: skillsOptionsList,
+              padding: const EdgeInsets.only(top: 40.0, left: 30, right: 30),
+              child: TextField(
+                keyboardType: TextInputType.multiline,
+                minLines: 1, //Normal textInputField will be displayed
+                maxLines: 5,
+                decoration:
+                    InputDecoration(hintText: "What is your ideal friend?"),
+                onChanged: onChanged,
               ),
             )
           ],

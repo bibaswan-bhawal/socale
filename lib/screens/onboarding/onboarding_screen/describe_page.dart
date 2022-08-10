@@ -2,24 +2,24 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/chips/category_chip_select/category_chip_select_input.dart';
+import 'package:socale/components/chips/category_chip_select/category_chip_select_input_list.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/options/skills.dart';
+import 'package:socale/utils/options/describe.dart';
 import 'package:socale/values/colors.dart';
 
-class SkillsPage extends StatefulWidget {
-  const SkillsPage({Key? key}) : super(key: key);
+class DescribePage extends StatefulWidget {
+  const DescribePage({Key? key}) : super(key: key);
 
   @override
-  State<SkillsPage> createState() => _SkillsPageState();
+  State<DescribePage> createState() => _DescribePageState();
 }
 
-class _SkillsPageState extends State<SkillsPage> {
-  List<String> skills = [];
+class _DescribePageState extends State<DescribePage> {
+  List<String> describe = [];
 
   onChanged(List<String> skillsSelected) {
-    setState(() => skills = skillsSelected);
-    onboardingService.setSkills(skills);
+    setState(() => describe = skillsSelected);
+    onboardingService.setSelfDescription(describe);
   }
 
   @override
@@ -38,7 +38,7 @@ class _SkillsPageState extends State<SkillsPage> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'List your ',
+                        text: 'You are ',
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: 32,
@@ -46,7 +46,7 @@ class _SkillsPageState extends State<SkillsPage> {
                         ),
                       ),
                       TextSpan(
-                        text: 'Skills',
+                        text: 'Unique!',
                         style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class _SkillsPageState extends State<SkillsPage> {
               child: Padding(
                 padding: EdgeInsets.only(left: 30),
                 child: Text(
-                  "I am great at...",
+                  "I would describe myself as...",
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w400,
                     fontSize: 18,
@@ -78,11 +78,11 @@ class _SkillsPageState extends State<SkillsPage> {
               padding: const EdgeInsets.only(
                 top: 40.0,
               ),
-              child: CategoryChipSelectInput(
+              child: CategoryChipSelectInputList(
                 height: size.height - 354,
                 width: size.width,
                 onChange: onChanged,
-                map: skillsOptionsList,
+                list: descriptionOptionList,
               ),
             )
           ],

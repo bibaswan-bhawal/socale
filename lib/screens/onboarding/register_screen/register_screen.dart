@@ -1,3 +1,5 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,6 +11,10 @@ import 'package:socale/components/Headers/register_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:get/get.dart';
+import 'package:socale/screens/onboarding/email_verification_screen/email_verification_screen.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/signout.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/validators.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -25,6 +31,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Amplify.DataStore.clear();
+
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -125,7 +133,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   SignInDivider(),
                   SocialSignInButtonGroup(
-                    handler: AuthRepository().signUpWithSocialWebUI,
+                    handler: handleSocialSignIn,
                     text: "Sign Up",
                   ),
                 ],
@@ -137,18 +145,41 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
+  handleSocialSignIn(AuthProvider oAuth) async {
+    bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
+    getNextPage(isSignedIn);
+  }
+
+  getNextPage(bool isSignedIn) async {
+    if (isSignedIn) {
+      bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
+      OnboardingStep currentStep = await onboardingService.getOnboardingStep();
+      if (!isOnboardingDone) {
+        if (currentStep == OnboardingStep.started) {
+          Get.offAllNamed('/email_verification');
+          return;
+        } else {
+          Get.offAllNamed('/onboarding');
+          return;
+        }
+      } else {
+        Get.offAllNamed('/sign_out');
+        return;
+      }
+    } else {
+      print("Error Sign Up");
+      return;
+    }
+  }
+
   validateForm() async {
-    print("Registering User");
     final form = formKey.currentState;
     final isValid = form != null ? form.validate() : false;
     if (isValid) {
-      print("Form is valid");
       form.save();
 
-      final result = await AuthRepository().signup(email, password);
-      if (result) {
-        Get.offAllNamed('/email_verification');
-      }
+      final isSignedIn = await AuthRepository().signup(email, password);
+      getNextPage(isSignedIn);
     } else {
       return false;
     }

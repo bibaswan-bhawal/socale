@@ -10,6 +10,10 @@ import 'package:socale/components/Headers/login_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:get/get.dart';
+import 'package:socale/screens/onboarding/email_verification_screen/email_verification_screen.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/signout.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
@@ -123,7 +127,7 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   SignInDivider(),
                   SocialSignInButtonGroup(
-                    handler: AuthRepository().signInWithSocialWebUI,
+                    handler: handleSocialSignIn,
                     text: "Sign In",
                   ),
                 ],
@@ -135,26 +139,39 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
+  handleSocialSignIn(AuthProvider oAuth) async {
+    bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
+    getNextPage(isSignedIn);
+  }
+
+  getNextPage(bool isSignedIn) async {
+    if (isSignedIn) {
+      bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
+      OnboardingStep currentStep = await onboardingService.getOnboardingStep();
+      if (isOnboardingDone) {
+        if (currentStep == OnboardingStep.started) {
+          Get.offAllNamed('/email_verification');
+        } else {
+          Get.offAllNamed('/onboarding');
+        }
+      } else {
+        Get.offAllNamed('/sign_out');
+      }
+    } else {
+      print("Error Sign in");
+    }
+  }
+
   validateForm() async {
     final form = formKey.currentState;
     final isValid = form != null ? form.validate() : false;
     if (isValid) {
       form.save();
 
-      AuthRepository().login(email, password);
+      bool isSignedIn = await AuthRepository().login(email, password);
+      getNextPage(isSignedIn);
     } else {
       return false;
-    }
-  }
-
-  Future<void> signInUser(String username, String password) async {
-    try {
-      final result = await Amplify.Auth.signIn(
-        username: username,
-        password: password,
-      );
-    } on AuthException catch (e) {
-      print(e.message);
     }
   }
 }

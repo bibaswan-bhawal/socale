@@ -1,34 +1,37 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/TextFields/chip_input/chip_input_text_field.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/options/colleges.dart';
+import 'package:socale/utils/options/major_minor.dart';
 import 'package:socale/values/colors.dart';
 import 'package:socale/values/styles.dart';
 
 class AcademicsPage extends StatefulWidget {
-  const AcademicsPage({required Key key}) : super(key: key);
+  final PageController pageController;
+  final GlobalKey<FormState> majorKey;
+  final GlobalKey<FormState> minorKey;
+  final GlobalKey<FormState> collegeKey;
+  final Function(List<String>?) majorOnSave;
+  final Function(List<String>?) minorOnSave;
+  final Function(List<String>?) collegeOnSave;
+
+  const AcademicsPage({
+    Key? key,
+    required this.pageController,
+    required this.majorKey,
+    required this.minorKey,
+    required this.collegeKey,
+    required this.majorOnSave,
+    required this.minorOnSave,
+    required this.collegeOnSave,
+  }) : super(key: key);
 
   @override
   State<AcademicsPage> createState() => AcademicsPageState();
 }
 
 class AcademicsPageState extends State<AcademicsPage> {
-  final _controller = PageController(initialPage: 0);
-  final _majorKey = GlobalKey<FormState>();
-  final _minorKey = GlobalKey<FormState>();
-
-  late List _majors = [];
-  late List _minors = [];
-
-  void nextPage() {
-    _controller.nextPage(
-        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
-  void previousPage() {
-    _controller.previousPage(
-        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-  }
-
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
@@ -54,7 +57,8 @@ class AcademicsPageState extends State<AcademicsPage> {
                     style: GoogleFonts.poppins(
                       fontSize: 32,
                       fontWeight: FontWeight.bold,
-                      foreground: Paint()..shader = ColorValues.socaleOrange,
+                      foreground: Paint()
+                        ..shader = ColorValues.socaleOrangeGradient,
                     ),
                   ),
                 ],
@@ -71,37 +75,76 @@ class AcademicsPageState extends State<AcademicsPage> {
         ),
         Expanded(
           child: PageView(
-            controller: _controller,
+            controller: widget.pageController,
             physics: NeverScrollableScrollPhysics(),
             children: [
-              Form(
-                key: _majorKey,
-                child: ChipInputTextField(
-                  width: size.width - 48,
-                  textInputLabel: "Majors",
-                  decoration: InputDecoration(
-                    border: StyleValues.chipFieldBorder,
+              SizedBox(
+                height: 100,
+                child: Form(
+                  key: widget.majorKey,
+                  child: SizedBox(
+                    height: 20,
+                    width: size.width,
+                    child: ChipInputTextField(
+                      list: majorsMinorOptionsList,
+                      width: size.width - 48,
+                      textInputLabel: "Majors",
+                      decoration: InputDecoration(
+                        border: StyleValues.chipFieldBorder,
+                      ),
+                      validator: (values) {
+                        if (values == null) {
+                          return "Please select at least one major";
+                        }
+                        if (values.isEmpty) {
+                          return "Please add at least one major";
+                        }
+
+                        return null;
+                      },
+                      onSaved: widget.majorOnSave,
+                    ),
                   ),
-                  validator: (values) =>
-                      (values?.length ?? 0) < 3 ? 'Please add a major' : null,
-                  onSaved: (values) {
-                    _majors = values!;
-                  },
                 ),
               ),
               Form(
-                key: _minorKey,
+                key: widget.minorKey,
                 child: ChipInputTextField(
+                  list: majorsMinorOptionsList,
                   width: size.width - 48,
                   textInputLabel: "Minor",
                   decoration: InputDecoration(
                     border: StyleValues.chipFieldBorder,
                   ),
-                  validator: (values) =>
-                      (values?.length ?? 0) < 3 ? 'Please add a minor' : null,
-                  onSaved: (values) {
-                    _minors = values!;
+                  validator: (values) => null,
+                  onSaved: widget.minorOnSave,
+                ),
+              ),
+              Form(
+                key: widget.collegeKey,
+                child: ChipInputTextField(
+                  list: collegesOptionsList,
+                  width: size.width - 48,
+                  textInputLabel: "colleges",
+                  decoration: InputDecoration(
+                    border: StyleValues.chipFieldBorder,
+                  ),
+                  validator: (values) {
+                    if (values == null) {
+                      return "Please select a college";
+                    }
+
+                    if (values.isEmpty) {
+                      return "Please select a college";
+                    }
+
+                    if (values.length > 1) {
+                      return "Please only add one college";
+                    }
+
+                    return null;
                   },
+                  onSaved: widget.collegeOnSave,
                 ),
               ),
             ],

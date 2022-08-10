@@ -4,22 +4,22 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/chips/category_chip_select/category_chip_select_input.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/options/skills.dart';
+import 'package:socale/utils/options/careers.dart';
 import 'package:socale/values/colors.dart';
 
-class SkillsPage extends StatefulWidget {
-  const SkillsPage({Key? key}) : super(key: key);
+class CareersPage extends StatefulWidget {
+  const CareersPage({Key? key}) : super(key: key);
 
   @override
-  State<SkillsPage> createState() => _SkillsPageState();
+  State<CareersPage> createState() => _CareersPageState();
 }
 
-class _SkillsPageState extends State<SkillsPage> {
-  List<String> skills = [];
+class _CareersPageState extends State<CareersPage> {
+  List<String> careers = [];
 
   onChanged(List<String> skillsSelected) {
-    setState(() => skills = skillsSelected);
-    onboardingService.setSkills(skills);
+    setState(() => careers = skillsSelected);
+    onboardingService.setCareerGoals(careers);
   }
 
   @override
@@ -38,7 +38,7 @@ class _SkillsPageState extends State<SkillsPage> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'List your ',
+                        text: 'Your Career ',
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: 32,
@@ -46,7 +46,7 @@ class _SkillsPageState extends State<SkillsPage> {
                         ),
                       ),
                       TextSpan(
-                        text: 'Skills',
+                        text: 'Goals?',
                         style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -65,7 +65,7 @@ class _SkillsPageState extends State<SkillsPage> {
               child: Padding(
                 padding: EdgeInsets.only(left: 30),
                 child: Text(
-                  "I am great at...",
+                  "I see myself as a...",
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w400,
                     fontSize: 18,
@@ -82,7 +82,7 @@ class _SkillsPageState extends State<SkillsPage> {
                 height: size.height - 354,
                 width: size.width,
                 onChange: onChanged,
-                map: skillsOptionsList,
+                map: careersOptionsList,
               ),
             )
           ],

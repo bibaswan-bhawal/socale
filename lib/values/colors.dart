@@ -12,8 +12,9 @@ class ColorValues {
   static const Color googleColor = Color(0xFFFFFFFF);
   static const Color facebookColor = Color(0xFF1877F2);
   static const Color appleColor = Color(0xFF000000);
+  static const Color socaleOrange = Color(0xFFFD6C00);
 
-  static final Shader socaleOrange = LinearGradient(
+  static final Shader socaleOrangeGradient = LinearGradient(
     colors: <Color>[Color(0xFFFD6C00), Color(0xFFFFA133)],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 }

@@ -151,14 +151,14 @@ class Room extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Room.MESSAGES,
-      isRequired: false,
+      isRequired: true,
       ofModelName: (Message).toString(),
       associatedKey: Message.ROOM
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Room.USERS,
-      isRequired: false,
+      isRequired: true,
       ofModelName: (UserRoom).toString(),
       associatedKey: UserRoom.ROOM
     ));

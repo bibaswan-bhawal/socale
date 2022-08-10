@@ -41,7 +41,8 @@ class IntroPage extends StatelessWidget {
                       style: GoogleFonts.poppins(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
-                        foreground: Paint()..shader = ColorValues.socaleOrange,
+                        foreground: Paint()
+                          ..shader = ColorValues.socaleOrangeGradient,
                       ),
                     ),
                   ],

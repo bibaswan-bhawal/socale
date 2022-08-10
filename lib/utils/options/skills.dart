@@ -80,7 +80,7 @@ final Map<String, List<String>> skillsOptionsList = {
     'Machine Learning',
     'Statistical Analysis and Data Mining',
     'Data Engineering',
-    'Java Development',
+    'Java',
     'Big Data and Big Data Analysis',
     'Augmented and Virtual Reality',
     'Web Architecture and Development Framework'

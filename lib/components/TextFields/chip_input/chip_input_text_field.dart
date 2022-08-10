@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 import 'chip_input_field.dart';
 
-class ChipInputTextField<T> extends FormField<List<T>> {
+class ChipInputTextField<T> extends FormField<List<String>> {
   final InputDecoration decoration;
   final String textInputLabel;
   final double width;
+  final List<String> list;
 
-  ChipInputTextField(
-      {Key? key,
-      required this.textInputLabel,
-      required this.width,
-      this.decoration = const InputDecoration(),
-      FormFieldSetter<List>? onSaved,
-      FormFieldValidator<List>? validator})
-      : super(
+  ChipInputTextField({
+    Key? key,
+    required this.textInputLabel,
+    required this.width,
+    this.decoration = const InputDecoration(),
+    required FormFieldSetter<List<String>>? onSaved,
+    required FormFieldValidator<List<String>>? validator,
+    required this.list,
+  }) : super(
           key: key,
           onSaved: onSaved,
           validator: validator,
@@ -24,11 +26,13 @@ class ChipInputTextField<T> extends FormField<List<T>> {
             );
 
             return InputDecorator(
-              decoration:
-                  effectiveDecoration.copyWith(errorText: field.errorText),
+              decoration: effectiveDecoration.copyWith(
+                errorText: field.errorText,
+              ),
               isEmpty: field.value?.isEmpty ?? true,
               child: ChipInputField(
                 width: width,
+                list: list,
                 textInputLabel: textInputLabel,
                 values: field.value?.map((e) => e.toString()).toList() ?? [],
                 onChanged: field.didChange,

@@ -1,11 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:get/get.dart';
 import 'package:socale/components/Buttons/primary_button.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/academic_interests_page.dart';
 import 'package:socale/screens/onboarding/onboarding_screen/academics_page.dart';
 import 'package:socale/screens/onboarding/onboarding_screen/basics_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/career_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/describe_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/friendPage.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/hobbies_page.dart';
 import 'package:socale/screens/onboarding/onboarding_screen/intro_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/question_five_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/question_four_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/question_one_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/question_three_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen/question_two_page.dart';
 import 'package:socale/screens/onboarding/onboarding_screen/skills_page.dart';
+import 'package:socale/services/onboarding_service.dart';
 
 class OnboardingScreen extends StatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -15,18 +26,52 @@ class OnboardingScreen extends StatefulWidget {
 }
 
 class _OnboardingScreenState extends State<OnboardingScreen> {
-  final GlobalObjectKey<AcademicsPageState> _detailsKey =
-      GlobalObjectKey<AcademicsPageState>("f");
-  final _controller = PageController(initialPage: 0);
+  final _pageController = PageController();
+  final _academicsDetailsPageController = PageController(keepPage: true);
+  final _bucket = PageStorageBucket();
+
+  final _majorKey = GlobalKey<FormState>();
+  final _minorKey = GlobalKey<FormState>();
+  final _collegeKey = GlobalKey<FormState>();
+
   int index = 0;
   int detailsIndex = 0;
+
+  List<String> _major = [];
+  List<String> _minor = [];
+  List<String> _college = [];
+  List<int> situationalQuestions = [20, 20, 20, 20, 20];
+
+  void majorOnSave(value) {
+    _major = value;
+  }
+
+  void minorOnSave(value) {
+    if (value == null) {
+      _minor = [];
+      return;
+    }
+
+    _minor = value;
+  }
+
+  void collegeOnSave(value) {
+    print(value);
+    _college = value;
+    onboardingService.setCollegeInfo(_major, _minor, _college);
+  }
+
+  void situationalQuestionsCallback(double value, int pos) {
+    print(value);
+    situationalQuestions[pos] = value.toInt();
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
-      resizeToAvoidBottomInset: true,
+      resizeToAvoidBottomInset: index == 2,
       body: Stack(
         children: [
           TranslucentBackground(),
@@ -40,15 +85,45 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                     SizedBox(
                       height: size.height - 100,
                       child: PageView(
-                        controller: _controller,
+                        controller: _pageController,
                         physics: NeverScrollableScrollPhysics(),
                         children: [
                           IntroPage(),
                           BasicsPage(),
-                          AcademicsPage(
-                            key: _detailsKey,
+                          PageStorage(
+                            bucket: _bucket,
+                            child: AcademicsPage(
+                              key: PageStorageKey<String>('pageOne'),
+                              pageController: _academicsDetailsPageController,
+                              majorKey: _majorKey,
+                              minorKey: _minorKey,
+                              collegeKey: _collegeKey,
+                              collegeOnSave: collegeOnSave,
+                              majorOnSave: majorOnSave,
+                              minorOnSave: minorOnSave,
+                            ),
                           ),
                           SkillsPage(),
+                          CareersPage(),
+                          DescribePage(),
+                          AcademicInterestsPage(),
+                          HobbiesPage(),
+                          FriendPage(),
+                          QuestionOnePage(
+                            onChange: situationalQuestionsCallback,
+                          ),
+                          QuestionTwoPage(
+                            onChange: situationalQuestionsCallback,
+                          ),
+                          QuestionThreePage(
+                            onChange: situationalQuestionsCallback,
+                          ),
+                          QuestionFourPage(
+                            onChange: situationalQuestionsCallback,
+                          ),
+                          QuestionFivePage(
+                            onChange: situationalQuestionsCallback,
+                          )
                         ],
                         onPageChanged: (value) => setState(() => index = value),
                       ),
@@ -60,17 +135,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         height: 60,
                         colors: [Color(0xFFFD6C00), Color(0xFFFFA133)],
                         text: "Continue",
-                        onClickEventHandler: () {
-                          if (_controller.page == 2 && detailsIndex != 1) {
-                            _detailsKey.currentState?.nextPage();
-                            detailsIndex++;
-                            return;
-                          }
-                          detailsIndex = 0;
-                          _controller.nextPage(
-                              curve: Curves.easeInOut,
-                              duration: Duration(milliseconds: 300));
-                        },
+                        onClickEventHandler: onNextClickHandler,
                       ),
                     ),
                   ],
@@ -79,17 +144,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                   Padding(
                     padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
                     child: IconButton(
-                      onPressed: () {
-                        if (_controller.page == 2 && detailsIndex == 1) {
-                          _detailsKey.currentState?.previousPage();
-                          detailsIndex--;
-                          return;
-                        }
-                        detailsIndex = 0;
-                        _controller.previousPage(
-                            curve: Curves.easeInOut,
-                            duration: Duration(milliseconds: 300));
-                      },
+                      onPressed: onPreviousClickHandler,
                       icon: const Icon(Icons.arrow_back_ios_new),
                     ),
                   ),
@@ -103,5 +158,76 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
         ],
       ),
     );
+  }
+
+  onNextClickHandler() {
+    if (_pageController.page == 2 &&
+        _academicsDetailsPageController.page != 2) {
+      if (_academicsDetailsPageController.page == 0) {
+        final form = _majorKey.currentState;
+        final isValid = form != null ? form.validate() : false;
+        if (isValid) {
+          form.save();
+          _academicsDetailsPageController.nextPage(
+              duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        }
+      }
+
+      if (_academicsDetailsPageController.page == 1) {
+        final form = _minorKey.currentState;
+        final isValid = form != null ? form.validate() : false;
+        if (isValid) {
+          form.save();
+          _academicsDetailsPageController.nextPage(
+              duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        }
+      }
+      return;
+    }
+
+    if (_pageController.page == 2) {
+      if (_academicsDetailsPageController.page == 2) {
+        final form = _collegeKey.currentState;
+        final isValid = form != null ? form.validate() : false;
+        if (isValid) {
+          form.save();
+
+          _pageController.nextPage(
+              duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        }
+        return;
+      }
+    }
+
+    if (_pageController.page == 13) {
+      onboardingService.setSituationalDecisions(situationalQuestions);
+      onboardingService.setAcademicInclination(100);
+      uploadUser();
+      return;
+    }
+
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+  }
+
+  uploadUser() async {
+    await onboardingService.createOnboardedUser();
+    // if (await onboardingService.checkIfUserIsOnboarded()) {
+    //   Get.offAllNamed('/onboarding');
+    // } else {
+    //   Get.offAllNamed('/get_started');
+    // }
+  }
+
+  onPreviousClickHandler() {
+    if (_pageController.page == 2 &&
+        _academicsDetailsPageController.page != 0) {
+      _academicsDetailsPageController.previousPage(
+          duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      return;
+    }
+
+    _pageController.previousPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 }

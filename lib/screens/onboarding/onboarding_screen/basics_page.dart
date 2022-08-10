@@ -4,6 +4,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/values/colors.dart';
 import 'package:socale/values/styles.dart';
 import 'package:intl/intl.dart';
@@ -16,20 +17,36 @@ class BasicsPage extends StatefulWidget {
 }
 
 class _BasicsPageState extends State<BasicsPage> {
-  DateTime birthDate = DateTime(2000, 6, 15);
-  DateTime gradDate = DateTime(2025, 6);
+  DateTime _birthDate = DateTime(2000, 6, 15);
+  DateTime _gradDate = DateTime(2025, 6);
+  String _firstName = "";
+  String _lastName = "";
+
+  onChangeFirstName(value) {
+    setState(() => _firstName = value);
+    onboardingService.setBiographics(
+        _firstName, _lastName, _birthDate, _gradDate);
+  }
+
+  onChangeLastName(value) {
+    setState(() => _lastName = value);
+    onboardingService.setBiographics(
+        _firstName, _lastName, _birthDate, _gradDate);
+  }
 
   Future<void> _showMaterialBirthDatePicker() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: birthDate,
+      initialDate: _birthDate,
       firstDate: DateTime(1900, 1),
       lastDate: DateTime.now(),
       confirmText: 'Select',
     );
 
-    if (picked != null && picked != birthDate) {
-      setState(() => {birthDate = picked});
+    if (picked != null && picked != _birthDate) {
+      setState(() => {_birthDate = picked});
+      onboardingService.setBiographics(
+          _firstName, _lastName, _birthDate, _gradDate);
     }
   }
 
@@ -43,11 +60,13 @@ class _BasicsPageState extends State<BasicsPage> {
           child: CupertinoDatePicker(
             mode: CupertinoDatePickerMode.date,
             onDateTimeChanged: (value) {
-              if (value != birthDate) {
-                setState(() => {value = birthDate});
+              if (value != _birthDate) {
+                setState(() => {value = _birthDate});
+                onboardingService.setBiographics(
+                    _firstName, _lastName, _birthDate, _gradDate);
               }
             },
-            initialDateTime: birthDate,
+            initialDateTime: _birthDate,
           ),
         );
       },
@@ -57,14 +76,16 @@ class _BasicsPageState extends State<BasicsPage> {
   Future<void> _showMaterialGradDatePicker() async {
     final DateTime? picked = await showDatePicker(
       context: context,
-      initialDate: gradDate,
+      initialDate: _gradDate,
       firstDate: DateTime.now(),
       lastDate: DateTime(2100, 1),
       confirmText: 'Select',
     );
 
-    if (picked != null && picked != gradDate) {
-      setState(() => {gradDate = picked});
+    if (picked != null && picked != _gradDate) {
+      setState(() => {_gradDate = picked});
+      onboardingService.setBiographics(
+          _firstName, _lastName, _birthDate, _gradDate);
     }
   }
 
@@ -78,11 +99,13 @@ class _BasicsPageState extends State<BasicsPage> {
           child: CupertinoDatePicker(
             mode: CupertinoDatePickerMode.date,
             onDateTimeChanged: (value) {
-              if (value != gradDate) {
-                setState(() => {value = gradDate});
+              if (value != _gradDate) {
+                setState(() => {value = _gradDate});
+                onboardingService.setBiographics(
+                    _firstName, _lastName, _birthDate, _gradDate);
               }
             },
-            initialDateTime: gradDate,
+            initialDateTime: _gradDate,
           ),
         );
       },
@@ -115,7 +138,8 @@ class _BasicsPageState extends State<BasicsPage> {
                       style: GoogleFonts.poppins(
                         fontSize: 32,
                         fontWeight: FontWeight.bold,
-                        foreground: Paint()..shader = ColorValues.socaleOrange,
+                        foreground: Paint()
+                          ..shader = ColorValues.socaleOrangeGradient,
                       ),
                     ),
                     TextSpan(
@@ -139,7 +163,8 @@ class _BasicsPageState extends State<BasicsPage> {
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(left: 15, right: 15, top: 60),
-                    child: TextFormField(
+                    child: TextField(
+                      onChanged: onChangeFirstName,
                       style: StyleValues.textFieldContentStyle,
                       cursorColor: ColorValues.elementColor,
                       decoration: InputDecoration(
@@ -167,7 +192,8 @@ class _BasicsPageState extends State<BasicsPage> {
                 Center(
                   child: Padding(
                     padding: EdgeInsets.only(left: 15, right: 15, top: 30),
-                    child: TextFormField(
+                    child: TextField(
+                      onChanged: onChangeLastName,
                       style: StyleValues.textFieldContentStyle,
                       cursorColor: ColorValues.elementColor,
                       decoration: InputDecoration(
@@ -227,7 +253,7 @@ class _BasicsPageState extends State<BasicsPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          birthDate.day.toString(),
+                          _birthDate.day.toString(),
                           style: GoogleFonts.roboto(
                             color: ColorValues.elementColor,
                             fontWeight: FontWeight.w500,
@@ -243,7 +269,7 @@ class _BasicsPageState extends State<BasicsPage> {
                           color: ColorValues.elementColor,
                         ),
                         Text(
-                          DateFormat.MMMM().format(birthDate),
+                          DateFormat.MMMM().format(_birthDate),
                           style: GoogleFonts.roboto(
                             color: ColorValues.elementColor,
                             fontWeight: FontWeight.w500,
@@ -259,7 +285,7 @@ class _BasicsPageState extends State<BasicsPage> {
                           color: ColorValues.elementColor,
                         ),
                         Text(
-                          birthDate.year.toString(),
+                          _birthDate.year.toString(),
                           style: GoogleFonts.roboto(
                             color: ColorValues.elementColor,
                             fontWeight: FontWeight.w500,
@@ -304,7 +330,7 @@ class _BasicsPageState extends State<BasicsPage> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          DateFormat.MMMM().format(gradDate),
+                          DateFormat.MMMM().format(_gradDate),
                           style: GoogleFonts.roboto(
                             color: ColorValues.elementColor,
                             fontWeight: FontWeight.w500,
@@ -320,7 +346,7 @@ class _BasicsPageState extends State<BasicsPage> {
                           color: ColorValues.elementColor,
                         ),
                         Text(
-                          gradDate.year.toString(),
+                          _gradDate.year.toString(),
                           style: GoogleFonts.roboto(
                             color: ColorValues.elementColor,
                             fontWeight: FontWeight.w500,

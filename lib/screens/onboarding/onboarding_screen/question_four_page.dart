@@ -2,24 +2,22 @@
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/chips/category_chip_select/category_chip_select_input.dart';
-import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/options/skills.dart';
 import 'package:socale/values/colors.dart';
 
-class SkillsPage extends StatefulWidget {
-  const SkillsPage({Key? key}) : super(key: key);
+class QuestionFourPage extends StatefulWidget {
+  final Function(double, int) onChange;
+  const QuestionFourPage({Key? key, required this.onChange}) : super(key: key);
 
   @override
-  State<SkillsPage> createState() => _SkillsPageState();
+  State<QuestionFourPage> createState() => _QuestionFourPageState();
 }
 
-class _SkillsPageState extends State<SkillsPage> {
-  List<String> skills = [];
+class _QuestionFourPageState extends State<QuestionFourPage> {
+  double _currentSliderValue = 20;
 
-  onChanged(List<String> skillsSelected) {
-    setState(() => skills = skillsSelected);
-    onboardingService.setSkills(skills);
+  onChanged(value) {
+    setState(() => _currentSliderValue = value);
+    widget.onChange(value, 3);
   }
 
   @override
@@ -33,12 +31,12 @@ class _SkillsPageState extends State<SkillsPage> {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: EdgeInsets.only(top: 100, left: 30),
+                padding: EdgeInsets.only(top: 100, left: 30, right: 30),
                 child: RichText(
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'List your ',
+                        text: "Let's get to know you ",
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: 32,
@@ -46,7 +44,7 @@ class _SkillsPageState extends State<SkillsPage> {
                         ),
                       ),
                       TextSpan(
-                        text: 'Skills',
+                        text: 'better!',
                         style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
@@ -63,26 +61,38 @@ class _SkillsPageState extends State<SkillsPage> {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: EdgeInsets.only(left: 30),
+                padding: EdgeInsets.only(left: 30, right: 30, top: 5),
                 child: Text(
-                  "I am great at...",
+                  "How much does this following statement describe you?",
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.w400,
-                    fontSize: 18,
+                    fontSize: 16,
                     color: Color(0xFF606060),
                   ),
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 40.0,
+            Center(
+              child: Padding(
+                padding: EdgeInsets.only(top: 100, left: 40, right: 40),
+                child: Text(
+                  "You usually follow your head more than your heart when making decisions.",
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 20,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
               ),
-              child: CategoryChipSelectInput(
-                height: size.height - 354,
-                width: size.width,
-                onChange: onChanged,
-                map: skillsOptionsList,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(top: 40.0, left: 30, right: 30),
+              child: Slider(
+                value: _currentSliderValue,
+                max: 100,
+                divisions: 5,
+                label: _currentSliderValue.round().toString(),
+                onChanged: onChanged,
               ),
             )
           ],
