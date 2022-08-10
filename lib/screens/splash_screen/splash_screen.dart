@@ -1,12 +1,21 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:socale/theme/colors.dart';
-import 'package:socale/theme/size_config.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light));
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+
+    var size = MediaQuery.of(context).size;
+
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
@@ -15,7 +24,7 @@ class SplashScreen extends StatelessWidget {
         child: Center(
           child: Image.asset(
             'assets/images/socale_logo_bw.png',
-            width: sy * 60,
+            width: size.width / 2,
           ),
         ),
       ),

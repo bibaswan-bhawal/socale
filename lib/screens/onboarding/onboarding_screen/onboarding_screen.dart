@@ -62,7 +62,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   void situationalQuestionsCallback(double value, int pos) {
-    print(value);
+    if (value == 0) {
+      situationalQuestions[pos] = 1;
+      return;
+    }
+
     situationalQuestions[pos] = value.toInt();
   }
 
@@ -211,12 +215,11 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
   }
 
   uploadUser() async {
-    await onboardingService.createOnboardedUser();
-    // if (await onboardingService.checkIfUserIsOnboarded()) {
-    //   Get.offAllNamed('/onboarding');
-    // } else {
-    //   Get.offAllNamed('/get_started');
-    // }
+    if (await onboardingService.createOnboardedUser()) {
+      Get.offAllNamed('/sign_out');
+    } else {
+      Get.offAllNamed('/get_started');
+    }
   }
 
   onPreviousClickHandler() {

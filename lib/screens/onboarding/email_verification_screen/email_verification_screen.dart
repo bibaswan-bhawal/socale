@@ -66,7 +66,7 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     }
 
     Size size = MediaQuery.of(context).size;
-
+    print(onboardingService.otp);
     return WillPopScope(
       onWillPop: _willPopScope,
       child: Scaffold(

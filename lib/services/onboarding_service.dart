@@ -1,11 +1,11 @@
-import 'dart:io';
+import 'dart:async';
 import 'dart:math';
 import 'dart:typed_data';
 
+import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:socale/auth/auth_repository.dart';
 
 import '../models/User.dart';
@@ -18,13 +18,15 @@ class OnboardingService {
   int? otp;
 
   Future<bool> checkIfUserIsOnboarded() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final user = await Amplify.DataStore.query(
-      User.classType,
-      where: User.ID.eq(userId),
-    );
+    final userId = (await Amplify.Auth.getCurrentUser()).userId;
+    final request = ModelQueries.get(User.classType, userId);
+    final response = await Amplify.API.query(request: request).response;
 
-    return user.isNotEmpty;
+    if (response.data == null) {
+      return false;
+    }
+
+    return true;
   }
 
   Future<OnboardingStep> getOnboardingStep() async {
@@ -211,30 +213,25 @@ class OnboardingService {
       idealFriendDescription: box.get('idealFriendDescription'),
       situationalDecisions: box.get('situationalDecisions'),
       college: box.get('college')[0],
-      minor: [],
+      minor: box.get('minor'),
       publicKey: 'htrthrt',
       privateKey: [53453],
       matches: [],
       rooms: [],
     );
 
-    // try {
-    //   await Amplify.DataStore.clear();
-    // } on Exception catch (error) {
-    //   print('Error clearing DataStore: $error');
-    // }
-
-    // try {
-    //   final posts = await Amplify.DataStore.query(User.classType);
-    //   print('Users: $posts');
-    // } on DataStoreException catch (e) {
-    //   print('Query failed: $e');
-    // }
-
     try {
-      await Amplify.DataStore.save(newUser);
+      final request = ModelMutations.create(newUser);
+      final response = await Amplify.API.mutate(request: request).response;
+
+      if (response.data != null) {
+        return true;
+      } else {
+        return false;
+      }
     } on Exception catch (error) {
       print('Error saving to DataStore: $error');
+      return false;
     }
 
     // File profilePictureFile = (await File((await getTemporaryDirectory()).path)
@@ -244,7 +241,6 @@ class OnboardingService {
     //
     //   return true;
     // }
-    return true;
   }
 
   bool _checkIfFieldExistsLocally(Box box, String key) {

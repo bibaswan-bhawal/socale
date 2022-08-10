@@ -10,9 +10,7 @@ import 'package:socale/components/Headers/login_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:get/get.dart';
-import 'package:socale/screens/onboarding/email_verification_screen/email_verification_screen.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/signout.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/validators.dart';
 
@@ -148,17 +146,22 @@ class _LoginScreenState extends State<LoginScreen> {
     if (isSignedIn) {
       bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
       OnboardingStep currentStep = await onboardingService.getOnboardingStep();
-      if (isOnboardingDone) {
+      if (!isOnboardingDone) {
         if (currentStep == OnboardingStep.started) {
           Get.offAllNamed('/email_verification');
+          return;
         } else {
           Get.offAllNamed('/onboarding');
+          return;
         }
       } else {
+        print("sign out");
         Get.offAllNamed('/sign_out');
+        return;
       }
     } else {
-      print("Error Sign in");
+      print("Error Sign Up");
+      return;
     }
   }
 

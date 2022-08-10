@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
@@ -9,7 +11,6 @@ import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:hooks_riverpod/hooks_riverpod.dart';
-import 'package:socale/auth/auth_repository.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/onboarding/email_verification_screen/email_verification_screen.dart';
 import 'package:socale/screens/onboarding/get_started_screen/get_started_screen.dart';
@@ -25,14 +26,6 @@ import 'amplifyconfiguration.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.dark,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light));
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
   await dotenv.load(fileName: "assets/.env");
   configureDependencies();
   await Hive.initFlutter();
@@ -48,6 +41,7 @@ class SocaleApp extends StatefulWidget {
 class _SocaleAppState extends State<SocaleApp> {
   bool _isAmplifyConfigured = false;
   bool _isSignedIn = false;
+  String _userId = '';
   Widget? _initialPage;
 
   Future<void> _configureAmplify() async {
@@ -55,8 +49,9 @@ class _SocaleAppState extends State<SocaleApp> {
     final authPlugin = AmplifyAuthCognito();
     final apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
     final storagePlugin = AmplifyStorageS3();
-    final dataStorePlugin =
-        AmplifyDataStore(modelProvider: ModelProvider.instance);
+    final dataStorePlugin = AmplifyDataStore(
+      modelProvider: ModelProvider.instance,
+    );
 
     await Amplify.addPlugins([
       authPlugin,
@@ -73,17 +68,14 @@ class _SocaleAppState extends State<SocaleApp> {
       await getInitialPage();
     } on AmplifyAlreadyConfiguredException {
       print("Tried to reconfigure Amplify.");
-    } on NotAuthorizedException {
-      print("bob");
     }
   }
 
   Future<void> _attemptAutoLogin() async {
     try {
-      final sessions = await Amplify.Auth.fetchAuthSession(
-          options: CognitoSessionOptions(getAWSCredentials: false));
-      setState(() => _isSignedIn = sessions.isSignedIn);
-    } on NotAuthorizedException catch (e) {
+      final session = await Amplify.Auth.fetchAuthSession();
+      setState(() => _isSignedIn = session.isSignedIn);
+    } on NotAuthorizedException catch (_) {
       print("error");
     }
   }

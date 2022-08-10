@@ -1,4 +1,4 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'dart:async';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -11,9 +11,7 @@ import 'package:socale/components/Headers/register_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:get/get.dart';
-import 'package:socale/screens/onboarding/email_verification_screen/email_verification_screen.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/signout.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/validators.dart';
 
@@ -25,14 +23,13 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  StreamSubscription<HubEvent>? stream;
   final formKey = GlobalKey<FormState>();
   String email = "", password = "";
   bool isSignUpComplete = false;
 
   @override
   Widget build(BuildContext context) {
-    Amplify.DataStore.clear();
-
     Size size = MediaQuery.of(context).size;
 
     return Scaffold(
@@ -145,11 +142,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     );
   }
 
-  handleSocialSignIn(AuthProvider oAuth) async {
-    bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
-    getNextPage(isSignedIn);
-  }
-
   getNextPage(bool isSignedIn) async {
     if (isSignedIn) {
       bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
@@ -163,6 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return;
         }
       } else {
+        print("sign out");
         Get.offAllNamed('/sign_out');
         return;
       }
@@ -172,13 +165,18 @@ class _RegisterScreenState extends State<RegisterScreen> {
     }
   }
 
+  handleSocialSignIn(AuthProvider oAuth) async {
+    bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
+    getNextPage(isSignedIn);
+  }
+
   validateForm() async {
     final form = formKey.currentState;
     final isValid = form != null ? form.validate() : false;
     if (isValid) {
       form.save();
 
-      final isSignedIn = await AuthRepository().signup(email, password);
+      var isSignedIn = await AuthRepository().signup(email, password);
       getNextPage(isSignedIn);
     } else {
       return false;

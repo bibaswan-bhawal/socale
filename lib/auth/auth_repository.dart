@@ -57,6 +57,9 @@ class AuthRepository {
       return result.isSignUpComplete;
     } on UsernameExistsException catch (_) {
       return false;
+    } on AuthException catch (e) {
+      print(e.message);
+      return false;
     }
   }
 
