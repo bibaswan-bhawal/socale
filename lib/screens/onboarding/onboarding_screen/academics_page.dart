@@ -40,7 +40,7 @@ class AcademicsPageState extends State<AcademicsPage> {
       children: [
         Center(
           child: Padding(
-            padding: EdgeInsets.fromLTRB(40, 80, 40, 0),
+            padding: EdgeInsets.fromLTRB(40, 70, 40, 0),
             child: RichText(
               text: TextSpan(
                 children: [

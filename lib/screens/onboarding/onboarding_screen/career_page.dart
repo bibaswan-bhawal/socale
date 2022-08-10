@@ -33,7 +33,7 @@ class _CareersPageState extends State<CareersPage> {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: EdgeInsets.only(top: 100, left: 30),
+                padding: EdgeInsets.only(top: 90, left: 30),
                 child: RichText(
                   text: TextSpan(
                     children: [

@@ -33,7 +33,7 @@ class _AcademicInterestsPageState extends State<AcademicInterestsPage> {
             Align(
               alignment: Alignment.topLeft,
               child: Padding(
-                padding: EdgeInsets.only(top: 80, left: 30, right: 5),
+                padding: EdgeInsets.only(top: 70, left: 30, right: 5),
                 child: RichText(
                   text: TextSpan(
                     children: [
