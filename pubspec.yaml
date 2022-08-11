@@ -46,6 +46,8 @@ dependencies:
   encrypt: ^5.0.1
   flutter:
     sdk: flutter
+  animations: ^2.0.3
+  colorful_safe_area: ^0.3.0
 
 dev_dependencies:
   flutter_lints: ^1.0.0

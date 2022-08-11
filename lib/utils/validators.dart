@@ -42,4 +42,9 @@ class Validators {
       return "Please enter a UCSD email";
     }
   }
+
+  static String? validatePassword(String? password) {
+    if (password != null && password.length > 8) return null;
+    return "Please enter a password of at least 8 characters.";
+  }
 }

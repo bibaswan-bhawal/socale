@@ -22,8 +22,6 @@ class _FriendPageState extends State<FriendPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: SizedBox(
         child: Column(
@@ -36,7 +34,7 @@ class _FriendPageState extends State<FriendPage> {
                   text: TextSpan(
                     children: [
                       TextSpan(
-                        text: 'What are your ',
+                        text: 'What is your ideal ',
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: 32,
@@ -44,7 +42,7 @@ class _FriendPageState extends State<FriendPage> {
                         ),
                       ),
                       TextSpan(
-                        text: 'Hobbies?',
+                        text: 'friend?',
                         style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,

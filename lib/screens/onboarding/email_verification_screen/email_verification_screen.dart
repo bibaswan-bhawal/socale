@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:socale/screens/onboarding/email_verification_screen/email_verification_header.dart';
 import 'package:socale/screens/onboarding/email_verification_screen/email_verification_pager.dart';
@@ -20,6 +21,18 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
   final pageController = PageController();
 
   String _email = "";
+
+  @override
+  void initState() {
+    super.initState();
+
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness: Brightness.light,
+        systemNavigationBarColor: Colors.transparent,
+        systemNavigationBarIconBrightness: Brightness.light));
+    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -78,31 +91,42 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
               child: SingleChildScrollView(
                 physics: NeverScrollableScrollPhysics(),
                 reverse: true,
-                child: Column(
-                  children: [
-                    EmailVerificationHeader(size: size),
-                    EmailVerificationPager(
-                      formEmailKey: formEmailKey,
-                      formCodeKey: formCodeKey,
-                      pageController: pageController,
-                      onSavedEmail: onSavedEmail,
-                      onSavedCode: onSavedCode,
-                    ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 25),
-                      child: PrimaryButton(
-                        width: size.width,
-                        height: 60,
-                        colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
-                        text: "Verify",
-                        onClickEventHandler: onClickEventHandler,
+                child: SizedBox(
+                  height: size.height,
+                  child: Stack(
+                    children: [
+                      Column(
+                        children: [
+                          EmailVerificationHeader(size: size),
+                          Flexible(
+                            fit: FlexFit.loose,
+                            child: EmailVerificationPager(
+                              formEmailKey: formEmailKey,
+                              formCodeKey: formCodeKey,
+                              pageController: pageController,
+                              onSavedEmail: onSavedEmail,
+                              onSavedCode: onSavedCode,
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.only(
-                          bottom: MediaQuery.of(context).viewInsets.bottom),
-                    ),
-                  ],
+                      Positioned(
+                        bottom: 0,
+                        left: 0,
+                        right: 0,
+                        child: Padding(
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 25),
+                          child: PrimaryButton(
+                            width: size.width,
+                            height: 60,
+                            colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
+                            text: "Verify",
+                            onClickEventHandler: onClickEventHandler,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ),

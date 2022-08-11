@@ -17,7 +17,7 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'Smoking',
     'Going out with Friends'
   ],
-  'Gym': [],
+  '🏋 Gym': [],
   'Sports': [
     'Fencing',
     'Golf',

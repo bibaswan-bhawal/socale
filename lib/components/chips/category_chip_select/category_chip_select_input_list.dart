@@ -5,15 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 class CategoryChipSelectInputList extends StatefulWidget {
   final List<String> list;
   final Function onChange;
-  final double height, width;
 
-  const CategoryChipSelectInputList(
-      {Key? key,
-      required this.list,
-      required this.onChange,
-      required this.height,
-      required this.width})
-      : super(key: key);
+  const CategoryChipSelectInputList({
+    Key? key,
+    required this.list,
+    required this.onChange,
+  }) : super(key: key);
 
   @override
   State<CategoryChipSelectInputList> createState() =>
@@ -56,6 +53,8 @@ class _CategoryChipSelectInputListState
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
     return Column(
       children: [
         Padding(
@@ -109,7 +108,7 @@ class _CategoryChipSelectInputListState
                 child: Material(
                   elevation: 4.0,
                   child: SizedBox(
-                    width: widget.width - 64,
+                    width: size.width - 64,
                     child: ListView.builder(
                       padding: const EdgeInsets.all(0.0),
                       itemCount: options.length,
@@ -129,9 +128,7 @@ class _CategoryChipSelectInputListState
             },
           ),
         ),
-        SizedBox(
-          height: widget.height - 48,
-          width: widget.width,
+        Flexible(
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(left: 35, top: 32, right: 20),

@@ -8,49 +8,100 @@ import 'package:socale/components/Buttons/primary_button.dart';
 import 'package:socale/components/Dividers/signInDivider.dart';
 import 'package:socale/components/Headers/login_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
-import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:get/get.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final Function() back;
+
+  const LoginScreen({Key? key, required this.back}) : super(key: key);
 
   @override
   State<LoginScreen> createState() => _LoginScreenState();
 }
 
 class _LoginScreenState extends State<LoginScreen> {
-  final formKey = GlobalKey<FormState>();
+  final _formKey = GlobalKey<FormState>();
+  String _email = "", _password = "";
 
-  String email = "", password = "";
+  updateEmail(value) {
+    setState(() => _email = value);
+  }
+
+  updatePassword(value) {
+    setState(() => _password = value);
+  }
+
+  validateForm() async {
+    final form = _formKey.currentState;
+    final isValid = form != null ? form.validate() : false;
+    if (isValid) {
+      form.save();
+
+      bool isSignedIn = await AuthRepository().login(_email, _password);
+      getNextPage(isSignedIn);
+    } else {
+      return false;
+    }
+  }
+
+  handleSocialSignIn(AuthProvider oAuth) async {
+    bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
+    getNextPage(isSignedIn);
+  }
+
+  getNextPage(bool isSignedIn) async {
+    if (isSignedIn) {
+      bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
+      OnboardingStep currentStep = await onboardingService.getOnboardingStep();
+      if (!isOnboardingDone) {
+        if (currentStep == OnboardingStep.started) {
+          Get.offAllNamed('/email_verification');
+          return;
+        } else {
+          Get.offAllNamed('/onboarding');
+          return;
+        }
+      } else {
+        print("sign out");
+        Get.offAllNamed('/sign_out');
+        return;
+      }
+    } else {
+      print("Error Sign Up");
+      return;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     Size size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      body: Stack(
+    return WillPopScope(
+      onWillPop: () async {
+        widget.back();
+        return false;
+      },
+      child: Stack(
         children: [
-          TranslucentBackground(),
           Padding(
-            padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+            padding: EdgeInsets.fromLTRB(15, 30, 0, 0),
             child: IconButton(
-              onPressed: () => {Get.offAllNamed('/get_started')},
+              onPressed: widget.back,
               icon: const Icon(Icons.arrow_back_ios_new),
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 50, 0, 0),
+            padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   LoginHeader(),
                   Form(
-                    key: formKey,
+                    key: _formKey,
                     child: Column(
                       children: [
                         Padding(
@@ -61,8 +112,7 @@ class _LoginScreenState extends State<LoginScreen> {
                               hint: "Email Address",
                               autoFillHints: {'email', 'email address'},
                               icon: "assets/icons/email_icon.svg",
-                              onSave: (value) =>
-                                  setState(() => email = value ?? ""),
+                              onSave: updateEmail,
                               validator: (value) {
                                 return Validators.validateEmail(value);
                               },
@@ -70,7 +120,7 @@ class _LoginScreenState extends State<LoginScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
+                          padding: EdgeInsets.fromLTRB(20, 0, 20, 0),
                           child: SizedBox(
                             height: 80,
                             child: FormTextField(
@@ -78,19 +128,13 @@ class _LoginScreenState extends State<LoginScreen> {
                               autoFillHints: {'password'},
                               icon: "assets/icons/lock_icon.svg",
                               obscureText: true,
-                              onSave: (value) =>
-                                  setState(() => password = value ?? ""),
-                              validator: (value) {
-                                if (value == null || value.length < 8) {
-                                  return "Please enter a password of at least 8 characters.";
-                                }
-                                return null;
-                              },
+                              onSave: updatePassword,
+                              validator: Validators.validatePassword,
                             ),
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(70, 10, 70, 0),
+                          padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
                           child: RichText(
                             text: TextSpan(
                               children: [
@@ -103,7 +147,9 @@ class _LoginScreenState extends State<LoginScreen> {
                                       fontWeight: FontWeight.w500,
                                       letterSpacing: -0.3),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () => {print('Link clicked')},
+                                    ..onTap = () => {
+                                          // implement onClick
+                                        },
                                 ),
                               ],
                             ),
@@ -135,46 +181,5 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
     );
-  }
-
-  handleSocialSignIn(AuthProvider oAuth) async {
-    bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
-    getNextPage(isSignedIn);
-  }
-
-  getNextPage(bool isSignedIn) async {
-    if (isSignedIn) {
-      bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
-      OnboardingStep currentStep = await onboardingService.getOnboardingStep();
-      if (!isOnboardingDone) {
-        if (currentStep == OnboardingStep.started) {
-          Get.offAllNamed('/email_verification');
-          return;
-        } else {
-          Get.offAllNamed('/onboarding');
-          return;
-        }
-      } else {
-        print("sign out");
-        Get.offAllNamed('/sign_out');
-        return;
-      }
-    } else {
-      print("Error Sign Up");
-      return;
-    }
-  }
-
-  validateForm() async {
-    final form = formKey.currentState;
-    final isValid = form != null ? form.validate() : false;
-    if (isValid) {
-      form.save();
-
-      bool isSignedIn = await AuthRepository().login(email, password);
-      getNextPage(isSignedIn);
-    } else {
-      return false;
-    }
   }
 }

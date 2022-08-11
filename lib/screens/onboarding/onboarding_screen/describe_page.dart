@@ -29,6 +29,7 @@ class _DescribePageState extends State<DescribePage> {
     return SafeArea(
       child: SizedBox(
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Align(
               alignment: Alignment.topLeft,
@@ -74,17 +75,17 @@ class _DescribePageState extends State<DescribePage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 40.0,
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 40.0,
+                ),
+                child: CategoryChipSelectInputList(
+                  onChange: onChanged,
+                  list: descriptionOptionList,
+                ),
               ),
-              child: CategoryChipSelectInputList(
-                height: size.height - 354,
-                width: size.width,
-                onChange: onChanged,
-                list: descriptionOptionList,
-              ),
-            )
+            ),
           ],
         ),
       ),

@@ -11,19 +11,22 @@ class EmailVerificationHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Image.asset(
-          'assets/images/onboarding_illustration_2.png',
-          height: size.height / 2.2,
+        Padding(
+          padding: EdgeInsets.only(top: 50),
+          child: Image.asset(
+            'assets/images/onboarding_illustration_2.png',
+            height: size.height / 2.2,
+          ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 25, 0, 0),
+          padding: EdgeInsets.only(top: 25),
           child: Text(
             StringValues.emailVerificationHeading,
             style: StyleValues.heading1Style,
           ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 10, 0, 0),
+          padding: EdgeInsets.only(bottom: 20),
           child: SizedBox(
             width: 280,
             child: Text(

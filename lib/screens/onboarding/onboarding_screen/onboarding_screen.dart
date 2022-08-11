@@ -82,58 +82,79 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
           SingleChildScrollView(
             physics: NeverScrollableScrollPhysics(),
             reverse: true,
-            child: Stack(
-              children: [
-                Column(
-                  children: [
-                    SizedBox(
-                      height: size.height - 100,
-                      child: PageView(
-                        controller: _pageController,
-                        physics: NeverScrollableScrollPhysics(),
-                        children: [
-                          IntroPage(),
-                          BasicsPage(),
-                          PageStorage(
-                            bucket: _bucket,
-                            child: AcademicsPage(
-                              key: PageStorageKey<String>('pageOne'),
-                              pageController: _academicsDetailsPageController,
-                              majorKey: _majorKey,
-                              minorKey: _minorKey,
-                              collegeKey: _collegeKey,
-                              collegeOnSave: collegeOnSave,
-                              majorOnSave: majorOnSave,
-                              minorOnSave: minorOnSave,
+            child: SizedBox(
+              height: size.height,
+              child: Stack(
+                children: [
+                  Column(
+                    children: [
+                      SizedBox(
+                        height: size.height - 100,
+                        child: PageView(
+                          controller: _pageController,
+                          physics: NeverScrollableScrollPhysics(),
+                          children: [
+                            IntroPage(),
+                            BasicsPage(),
+                            PageStorage(
+                              bucket: _bucket,
+                              child: AcademicsPage(
+                                key: PageStorageKey<String>('pageOne'),
+                                pageController: _academicsDetailsPageController,
+                                majorKey: _majorKey,
+                                minorKey: _minorKey,
+                                collegeKey: _collegeKey,
+                                collegeOnSave: collegeOnSave,
+                                majorOnSave: majorOnSave,
+                                minorOnSave: minorOnSave,
+                              ),
                             ),
-                          ),
-                          SkillsPage(),
-                          CareersPage(),
-                          DescribePage(),
-                          AcademicInterestsPage(),
-                          HobbiesPage(),
-                          FriendPage(),
-                          QuestionOnePage(
-                            onChange: situationalQuestionsCallback,
-                          ),
-                          QuestionTwoPage(
-                            onChange: situationalQuestionsCallback,
-                          ),
-                          QuestionThreePage(
-                            onChange: situationalQuestionsCallback,
-                          ),
-                          QuestionFourPage(
-                            onChange: situationalQuestionsCallback,
-                          ),
-                          QuestionFivePage(
-                            onChange: situationalQuestionsCallback,
-                          )
-                        ],
-                        onPageChanged: (value) => setState(() => index = value),
+                            SkillsPage(),
+                            CareersPage(),
+                            DescribePage(),
+                            AcademicInterestsPage(),
+                            HobbiesPage(),
+                            FriendPage(),
+                            QuestionOnePage(
+                              onChange: situationalQuestionsCallback,
+                            ),
+                            QuestionTwoPage(
+                              onChange: situationalQuestionsCallback,
+                            ),
+                            QuestionThreePage(
+                              onChange: situationalQuestionsCallback,
+                            ),
+                            QuestionFourPage(
+                              onChange: situationalQuestionsCallback,
+                            ),
+                            QuestionFivePage(
+                              onChange: situationalQuestionsCallback,
+                            )
+                          ],
+                          onPageChanged: (value) =>
+                              setState(() => index = value),
+                        ),
+                      ),
+                    ],
+                  ),
+                  if (index > 0)
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
+                      child: IconButton(
+                        onPressed: onPreviousClickHandler,
+                        icon: const Icon(Icons.arrow_back_ios_new),
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.fromLTRB(20, 0, 20, 20),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
+                  ),
+                  Positioned(
+                    bottom: 0,
+                    right: 0,
+                    left: 0,
+                    child: Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 40),
                       child: PrimaryButton(
                         width: size.width,
                         height: 60,
@@ -142,21 +163,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onClickEventHandler: onNextClickHandler,
                       ),
                     ),
-                  ],
-                ),
-                if (index > 0)
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(10, 50, 0, 0),
-                    child: IconButton(
-                      onPressed: onPreviousClickHandler,
-                      icon: const Icon(Icons.arrow_back_ios_new),
-                    ),
                   ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      bottom: MediaQuery.of(context).viewInsets.bottom),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         ],

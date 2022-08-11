@@ -74,15 +74,15 @@ class _AcademicInterestsPageState extends State<AcademicInterestsPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 40.0,
-              ),
-              child: CategoryChipSelectInput(
-                height: size.height - 382,
-                width: size.width,
-                onChange: onChanged,
-                map: academicInterestsOptionsList,
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(
+                  top: 40.0,
+                ),
+                child: CategoryChipSelectInput(
+                  onChange: onChanged,
+                  map: academicInterestsOptionsList,
+                ),
               ),
             )
           ],

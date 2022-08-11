@@ -5,15 +5,12 @@ import 'package:google_fonts/google_fonts.dart';
 class CategoryChipSelectInput extends StatefulWidget {
   final Map<String, List<String>> map;
   final Function onChange;
-  final double height, width;
 
-  const CategoryChipSelectInput(
-      {Key? key,
-      required this.map,
-      required this.onChange,
-      required this.height,
-      required this.width})
-      : super(key: key);
+  const CategoryChipSelectInput({
+    Key? key,
+    required this.map,
+    required this.onChange,
+  }) : super(key: key);
 
   @override
   State<CategoryChipSelectInput> createState() =>
@@ -42,8 +39,11 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
   }
 
   Color backgroundColor(bool isCategory, bool isSelected) {
+    if (isCategory) {
+      return Color(0xFF636363).withOpacity(0.15);
+    }
+
     if (isSelected) return Color(0xFFFFA133);
-    if (isCategory) return Color(0xFF636363).withOpacity(0.15);
     return Color(0xFFFFA133).withOpacity(0.40);
   }
 
@@ -60,6 +60,8 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
 
   @override
   Widget build(BuildContext context) {
+    var size = MediaQuery.of(context).size;
+
     return Column(
       children: [
         Padding(
@@ -113,7 +115,7 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
                 child: Material(
                   elevation: 4.0,
                   child: SizedBox(
-                    width: widget.width - 64,
+                    width: size.width - 64,
                     child: ListView.builder(
                       padding: const EdgeInsets.all(0.0),
                       itemCount: options.length,
@@ -133,9 +135,7 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
             },
           ),
         ),
-        SizedBox(
-          height: widget.height - 48,
-          width: widget.width,
+        Flexible(
           child: SingleChildScrollView(
             child: Padding(
               padding: EdgeInsets.only(left: 35, top: 32, right: 20),
@@ -167,11 +167,15 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
                           bool isCategory = widget.map.containsKey(key);
 
                           if (skillsSelected.contains(key)) {
-                            setState(() => skillsSelected.remove(key));
-                            widget.onChange(skillsSelected);
+                            if (!isCategory) {
+                              setState(() => skillsSelected.remove(key));
+                              widget.onChange(skillsSelected);
+                            }
                           } else {
-                            setState(() => skillsSelected.add(key));
-                            widget.onChange(skillsSelected);
+                            if (!isCategory) {
+                              setState(() => skillsSelected.add(key));
+                              widget.onChange(skillsSelected);
+                            }
                           }
 
                           if (isCategory) {

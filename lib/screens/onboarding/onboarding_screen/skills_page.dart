@@ -24,11 +24,10 @@ class _SkillsPageState extends State<SkillsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: SizedBox(
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Align(
               alignment: Alignment.topLeft,
@@ -74,17 +73,15 @@ class _SkillsPageState extends State<SkillsPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 40.0,
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: CategoryChipSelectInput(
+                  onChange: onChanged,
+                  map: skillsOptionsList,
+                ),
               ),
-              child: CategoryChipSelectInput(
-                height: size.height - 354,
-                width: size.width,
-                onChange: onChanged,
-                map: skillsOptionsList,
-              ),
-            )
+            ),
           ],
         ),
       ),

@@ -9,7 +9,7 @@ class BackgroundPainter extends CustomPainter {
       ..color = const Color(0xFFFFFFFF).withOpacity(0.90)
       ..style = PaintingStyle.fill;
 
-    canvas.drawRect(Rect.fromLTRB(-10, -10, size.width, size.height), paint);
+    canvas.drawRect(Rect.largest, paint);
   }
 
   @override

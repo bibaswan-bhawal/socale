@@ -24,11 +24,10 @@ class _HobbiesPageState extends State<HobbiesPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: SizedBox(
         child: Column(
+          mainAxisSize: MainAxisSize.max,
           children: [
             Align(
               alignment: Alignment.topLeft,
@@ -74,17 +73,15 @@ class _HobbiesPageState extends State<HobbiesPage> {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.only(
-                top: 40.0,
+            Flexible(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 40.0),
+                child: CategoryChipSelectInput(
+                  onChange: onChanged,
+                  map: hobbiesOptionsList,
+                ),
               ),
-              child: CategoryChipSelectInput(
-                height: size.height - 402,
-                width: size.width,
-                onChange: onChanged,
-                map: hobbiesOptionsList,
-              ),
-            )
+            ),
           ],
         ),
       ),
