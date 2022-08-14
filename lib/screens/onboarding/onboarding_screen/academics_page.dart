@@ -100,6 +100,10 @@ class AcademicsPageState extends State<AcademicsPage> {
                           return "Please add at least one major";
                         }
 
+                        if (values.length > 2) {
+                          return "Please add only 2 majors";
+                        }
+
                         return null;
                       },
                       onSaved: widget.majorOnSave,
