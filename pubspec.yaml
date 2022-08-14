@@ -20,18 +20,13 @@ dependencies:
   amplify_storage_s3: ^0.6.1
   cloud_firestore: ^3.1.8
   cupertino_icons: ^1.0.2
-  firebase_auth: ^3.3.7
-  firebase_core: ^1.12.0
   flappy_search_bar_ns: ^2.0.2
-  flutter_firebase_chat_core: ^1.5.2
   flutter_hooks: ^0.18.3
-  flutter_signin_button: ^2.0.0
   flutter_svg: ^1.1.1+1
   get: ^4.6.1
   get_it: ^7.2.0
   glassmorphism: ^3.0.0
   google_fonts: ^2.3.1
-  google_sign_in: ^5.2.4
   hooks_riverpod: ^1.0.3
   image_picker: ^0.8.4+11
   infinite_scroll_pagination: ^3.1.0

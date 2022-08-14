@@ -18,13 +18,6 @@ class GetStartedScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.dark,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.dark));
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-
     Size size = MediaQuery.of(context).size;
 
     return Stack(

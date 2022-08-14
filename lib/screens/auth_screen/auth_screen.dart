@@ -1,11 +1,13 @@
 import 'package:animations/animations.dart';
 import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:socale/screens/auth_screen/get_started_screen/get_started_screen.dart';
 import 'package:socale/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:socale/screens/auth_screen/register_screen/register_screen.dart';
 import 'package:socale/utils/enums/auth_pages.dart';
+import 'dart:io';
 
 class AuthScreen extends StatefulWidget {
   final AuthPages initialScreen;
@@ -24,6 +26,19 @@ class _AuthScreenState extends State<AuthScreen> {
   initState() {
     super.initState();
     _currentScreen = widget.initialScreen;
+
+    if (Platform.isIOS) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark.copyWith(
+        statusBarColor: Colors.transparent,
+      ));
+    } else if (Platform.isAndroid) {
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark,
+          systemNavigationBarColor: Colors.transparent,
+          systemNavigationBarIconBrightness: Brightness.dark));
+      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    }
   }
 
   getScreen(value) {
