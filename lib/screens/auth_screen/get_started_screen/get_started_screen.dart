@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:socale/components/Buttons/outlined_button.dart';
 import 'package:socale/components/Buttons/primary_button.dart';
-import 'package:socale/components/translucent_background/translucent_background.dart';
-import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/values/strings.dart';
 import 'package:socale/values/styles.dart';
 

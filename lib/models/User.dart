@@ -30,7 +30,6 @@ import 'package:flutter/foundation.dart';
 class User extends Model {
   static const classType = const _UserModelType();
   final String id;
-  final List<UserRoom>? _rooms;
   final String? _email;
   final String? _schoolEmail;
   final int? _academicInclination;
@@ -51,6 +50,8 @@ class User extends Model {
   final List<String>? _matches;
   final String? _publicKey;
   final List<int>? _privateKey;
+  final List<Message>? _messages;
+  final List<UserRoom>? _userRoom;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -60,10 +61,6 @@ class User extends Model {
   @override
   String getId() {
     return id;
-  }
-  
-  List<UserRoom>? get rooms {
-    return _rooms;
   }
   
   String get email {
@@ -317,6 +314,14 @@ class User extends Model {
     }
   }
   
+  List<Message>? get messages {
+    return _messages;
+  }
+  
+  List<UserRoom>? get userRoom {
+    return _userRoom;
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -325,12 +330,11 @@ class User extends Model {
     return _updatedAt;
   }
   
-  const User._internal({required this.id, rooms, required email, required schoolEmail, required academicInclination, required firstName, lastName, required dateOfBirth, required graduationMonth, required major, required minor, required academicInterests, required skills, required careerGoals, required selfDescription, required leisureInterests, required idealFriendDescription, required situationalDecisions, required college, required matches, required publicKey, required privateKey, createdAt, updatedAt}): _rooms = rooms, _email = email, _schoolEmail = schoolEmail, _academicInclination = academicInclination, _firstName = firstName, _lastName = lastName, _dateOfBirth = dateOfBirth, _graduationMonth = graduationMonth, _major = major, _minor = minor, _academicInterests = academicInterests, _skills = skills, _careerGoals = careerGoals, _selfDescription = selfDescription, _leisureInterests = leisureInterests, _idealFriendDescription = idealFriendDescription, _situationalDecisions = situationalDecisions, _college = college, _matches = matches, _publicKey = publicKey, _privateKey = privateKey, _createdAt = createdAt, _updatedAt = updatedAt;
+  const User._internal({required this.id, required email, required schoolEmail, required academicInclination, required firstName, lastName, required dateOfBirth, required graduationMonth, required major, required minor, required academicInterests, required skills, required careerGoals, required selfDescription, required leisureInterests, required idealFriendDescription, required situationalDecisions, required college, required matches, required publicKey, required privateKey, messages, userRoom, createdAt, updatedAt}): _email = email, _schoolEmail = schoolEmail, _academicInclination = academicInclination, _firstName = firstName, _lastName = lastName, _dateOfBirth = dateOfBirth, _graduationMonth = graduationMonth, _major = major, _minor = minor, _academicInterests = academicInterests, _skills = skills, _careerGoals = careerGoals, _selfDescription = selfDescription, _leisureInterests = leisureInterests, _idealFriendDescription = idealFriendDescription, _situationalDecisions = situationalDecisions, _college = college, _matches = matches, _publicKey = publicKey, _privateKey = privateKey, _messages = messages, _userRoom = userRoom, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory User({String? id, List<UserRoom>? rooms, required String email, required String schoolEmail, required int academicInclination, required String firstName, String? lastName, required TemporalDate dateOfBirth, required TemporalDate graduationMonth, required List<String> major, required List<String> minor, required List<String> academicInterests, required List<String> skills, required List<String> careerGoals, required List<String> selfDescription, required List<String> leisureInterests, required String idealFriendDescription, required List<int> situationalDecisions, required String college, required List<String> matches, required String publicKey, required List<int> privateKey}) {
+  factory User({String? id, required String email, required String schoolEmail, required int academicInclination, required String firstName, String? lastName, required TemporalDate dateOfBirth, required TemporalDate graduationMonth, required List<String> major, required List<String> minor, required List<String> academicInterests, required List<String> skills, required List<String> careerGoals, required List<String> selfDescription, required List<String> leisureInterests, required String idealFriendDescription, required List<int> situationalDecisions, required String college, required List<String> matches, required String publicKey, required List<int> privateKey, List<Message>? messages, List<UserRoom>? userRoom}) {
     return User._internal(
       id: id == null ? UUID.getUUID() : id,
-      rooms: rooms != null ? List<UserRoom>.unmodifiable(rooms) : rooms,
       email: email,
       schoolEmail: schoolEmail,
       academicInclination: academicInclination,
@@ -350,7 +354,9 @@ class User extends Model {
       college: college,
       matches: matches != null ? List<String>.unmodifiable(matches) : matches,
       publicKey: publicKey,
-      privateKey: privateKey != null ? List<int>.unmodifiable(privateKey) : privateKey);
+      privateKey: privateKey != null ? List<int>.unmodifiable(privateKey) : privateKey,
+      messages: messages != null ? List<Message>.unmodifiable(messages) : messages,
+      userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom);
   }
   
   bool equals(Object other) {
@@ -362,7 +368,6 @@ class User extends Model {
     if (identical(other, this)) return true;
     return other is User &&
       id == other.id &&
-      DeepCollectionEquality().equals(_rooms, other._rooms) &&
       _email == other._email &&
       _schoolEmail == other._schoolEmail &&
       _academicInclination == other._academicInclination &&
@@ -382,7 +387,9 @@ class User extends Model {
       _college == other._college &&
       DeepCollectionEquality().equals(_matches, other._matches) &&
       _publicKey == other._publicKey &&
-      DeepCollectionEquality().equals(_privateKey, other._privateKey);
+      DeepCollectionEquality().equals(_privateKey, other._privateKey) &&
+      DeepCollectionEquality().equals(_messages, other._messages) &&
+      DeepCollectionEquality().equals(_userRoom, other._userRoom);
   }
   
   @override
@@ -421,10 +428,9 @@ class User extends Model {
     return buffer.toString();
   }
   
-  User copyWith({String? id, List<UserRoom>? rooms, String? email, String? schoolEmail, int? academicInclination, String? firstName, String? lastName, TemporalDate? dateOfBirth, TemporalDate? graduationMonth, List<String>? major, List<String>? minor, List<String>? academicInterests, List<String>? skills, List<String>? careerGoals, List<String>? selfDescription, List<String>? leisureInterests, String? idealFriendDescription, List<int>? situationalDecisions, String? college, List<String>? matches, String? publicKey, List<int>? privateKey}) {
+  User copyWith({String? id, String? email, String? schoolEmail, int? academicInclination, String? firstName, String? lastName, TemporalDate? dateOfBirth, TemporalDate? graduationMonth, List<String>? major, List<String>? minor, List<String>? academicInterests, List<String>? skills, List<String>? careerGoals, List<String>? selfDescription, List<String>? leisureInterests, String? idealFriendDescription, List<int>? situationalDecisions, String? college, List<String>? matches, String? publicKey, List<int>? privateKey, List<Message>? messages, List<UserRoom>? userRoom}) {
     return User._internal(
       id: id ?? this.id,
-      rooms: rooms ?? this.rooms,
       email: email ?? this.email,
       schoolEmail: schoolEmail ?? this.schoolEmail,
       academicInclination: academicInclination ?? this.academicInclination,
@@ -444,17 +450,13 @@ class User extends Model {
       college: college ?? this.college,
       matches: matches ?? this.matches,
       publicKey: publicKey ?? this.publicKey,
-      privateKey: privateKey ?? this.privateKey);
+      privateKey: privateKey ?? this.privateKey,
+      messages: messages ?? this.messages,
+      userRoom: userRoom ?? this.userRoom);
   }
   
   User.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _rooms = json['rooms'] is List
-        ? (json['rooms'] as List)
-          .where((e) => e?['serializedData'] != null)
-          .map((e) => UserRoom.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
-          .toList()
-        : null,
       _email = json['email'],
       _schoolEmail = json['schoolEmail'],
       _academicInclination = (json['academicInclination'] as num?)?.toInt(),
@@ -475,17 +477,26 @@ class User extends Model {
       _matches = json['matches']?.cast<String>(),
       _publicKey = json['publicKey'],
       _privateKey = (json['privateKey'] as List?)?.map((e) => (e as num).toInt()).toList(),
+      _messages = json['messages'] is List
+        ? (json['messages'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => Message.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
+      _userRoom = json['userRoom'] is List
+        ? (json['userRoom'] as List)
+          .where((e) => e?['serializedData'] != null)
+          .map((e) => UserRoom.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
+          .toList()
+        : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'rooms': _rooms?.map((UserRoom? e) => e?.toJson()).toList(), 'email': _email, 'schoolEmail': _schoolEmail, 'academicInclination': _academicInclination, 'firstName': _firstName, 'lastName': _lastName, 'dateOfBirth': _dateOfBirth?.format(), 'graduationMonth': _graduationMonth?.format(), 'major': _major, 'minor': _minor, 'academicInterests': _academicInterests, 'skills': _skills, 'careerGoals': _careerGoals, 'selfDescription': _selfDescription, 'leisureInterests': _leisureInterests, 'idealFriendDescription': _idealFriendDescription, 'situationalDecisions': _situationalDecisions, 'college': _college, 'matches': _matches, 'publicKey': _publicKey, 'privateKey': _privateKey, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'email': _email, 'schoolEmail': _schoolEmail, 'academicInclination': _academicInclination, 'firstName': _firstName, 'lastName': _lastName, 'dateOfBirth': _dateOfBirth?.format(), 'graduationMonth': _graduationMonth?.format(), 'major': _major, 'minor': _minor, 'academicInterests': _academicInterests, 'skills': _skills, 'careerGoals': _careerGoals, 'selfDescription': _selfDescription, 'leisureInterests': _leisureInterests, 'idealFriendDescription': _idealFriendDescription, 'situationalDecisions': _situationalDecisions, 'college': _college, 'matches': _matches, 'publicKey': _publicKey, 'privateKey': _privateKey, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "user.id");
-  static final QueryField ROOMS = QueryField(
-    fieldName: "rooms",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (UserRoom).toString()));
+  static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField EMAIL = QueryField(fieldName: "email");
   static final QueryField SCHOOLEMAIL = QueryField(fieldName: "schoolEmail");
   static final QueryField ACADEMICINCLINATION = QueryField(fieldName: "academicInclination");
@@ -506,6 +517,12 @@ class User extends Model {
   static final QueryField MATCHES = QueryField(fieldName: "matches");
   static final QueryField PUBLICKEY = QueryField(fieldName: "publicKey");
   static final QueryField PRIVATEKEY = QueryField(fieldName: "privateKey");
+  static final QueryField MESSAGES = QueryField(
+    fieldName: "messages",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Message).toString()));
+  static final QueryField USERROOM = QueryField(
+    fieldName: "userRoom",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (UserRoom).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
     modelSchemaDefinition.pluralName = "Users";
@@ -522,13 +539,6 @@ class User extends Model {
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: User.ROOMS,
-      isRequired: false,
-      ofModelName: (UserRoom).toString(),
-      associatedKey: UserRoom.USER
-    ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: User.EMAIL,
@@ -658,6 +668,20 @@ class User extends Model {
       isRequired: true,
       isArray: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.collection, ofModelName: describeEnum(ModelFieldTypeEnum.int))
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: User.MESSAGES,
+      isRequired: true,
+      ofModelName: (Message).toString(),
+      associatedKey: Message.AUTHOR
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: User.USERROOM,
+      isRequired: false,
+      ofModelName: (UserRoom).toString(),
+      associatedKey: UserRoom.USER
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

@@ -79,54 +79,42 @@ class _EmailVerificationScreenState extends State<EmailVerificationScreen> {
     }
 
     Size size = MediaQuery.of(context).size;
-    print(onboardingService.otp);
     return WillPopScope(
       onWillPop: _willPopScope,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        resizeToAvoidBottomInset: true,
         body: Stack(
           children: [
             TranslucentBackground(),
-            SafeArea(
-              child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
-                reverse: true,
-                child: SizedBox(
-                  height: size.height,
-                  child: Stack(
-                    children: [
-                      Column(
-                        children: [
-                          EmailVerificationHeader(size: size),
-                          Flexible(
-                            fit: FlexFit.loose,
-                            child: EmailVerificationPager(
-                              formEmailKey: formEmailKey,
-                              formCodeKey: formCodeKey,
-                              pageController: pageController,
-                              onSavedEmail: onSavedEmail,
-                              onSavedCode: onSavedCode,
-                            ),
-                          ),
-                        ],
+            SingleChildScrollView(
+              reverse: true,
+              child: SizedBox(
+                height: size.height,
+                width: size.width,
+                child: Column(
+                  children: [
+                    EmailVerificationHeader(size: size),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: EmailVerificationPager(
+                        formEmailKey: formEmailKey,
+                        formCodeKey: formCodeKey,
+                        pageController: pageController,
+                        onSavedEmail: onSavedEmail,
+                        onSavedCode: onSavedCode,
                       ),
-                      Positioned(
-                        bottom: 0,
-                        left: 0,
-                        right: 0,
-                        child: Padding(
-                          padding: EdgeInsets.fromLTRB(20, 0, 20, 25),
-                          child: PrimaryButton(
-                            width: size.width,
-                            height: 60,
-                            colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
-                            text: "Verify",
-                            onClickEventHandler: onClickEventHandler,
-                          ),
-                        ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(20, 0, 20, 25),
+                      child: PrimaryButton(
+                        width: size.width,
+                        height: 60,
+                        colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
+                        text: "Verify",
+                        onClickEventHandler: onClickEventHandler,
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
               ),
             ),

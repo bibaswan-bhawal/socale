@@ -3,7 +3,7 @@ final List<String> collegesOptionsList = [
   'Seventh',
   'Eighth',
   'Muir',
-  'Marshal',
+  'Marshall',
   'ERC',
   'Warren',
   'Revelle'

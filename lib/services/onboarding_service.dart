@@ -217,7 +217,6 @@ class OnboardingService {
       publicKey: 'htrthrt',
       privateKey: [53453],
       matches: [],
-      rooms: [],
     );
 
     try {

@@ -4,17 +4,16 @@ import 'dart:io' show Platform;
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onNavBarClicked;
+  final Size size;
 
   const CustomBottomNavigationBar(
       {Key? key, required this.size, required this.onNavBarClicked})
       : super(key: key);
 
-  final Size size;
-
   @override
   Widget build(BuildContext context) {
-    double barHeight = 64;
-    double heightShift = 0.8;
+    double barHeight = 74;
+    double heightShift = 0.7;
 
     if (Platform.isIOS) {
       barHeight = 84;
@@ -34,8 +33,17 @@ class CustomBottomNavigationBar extends StatelessWidget {
             heightFactor: heightShift,
             child: OverflowBox(
               maxHeight: barHeight,
-              child: SvgPicture.asset("assets/icons/center_logo.svg",
-                  height: 64, fit: BoxFit.fitHeight),
+              child: IconButton(
+                iconSize: 64,
+                onPressed: () {
+                  onNavBarClicked(2);
+                },
+                icon: SvgPicture.asset(
+                  "assets/icons/center_logo.svg",
+                  height: 64,
+                  fit: BoxFit.fitHeight,
+                ),
+              ),
             ),
           ),
           SizedBox(
@@ -62,7 +70,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                     icon: SvgPicture.asset("assets/icons/insights_icon.svg")),
                 IconButton(
                     onPressed: () {
-                      onNavBarClicked(2);
+                      onNavBarClicked(4);
                     },
                     icon: SvgPicture.asset("assets/icons/user_icon.svg"))
               ],

@@ -1,6 +1,5 @@
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
-  rooms: [Room] @manyToMany(relationName: "UserRoom")
   email: AWSEmail!
   schoolEmail: AWSEmail!
   academicInclination: Int!
@@ -21,19 +20,33 @@ type User @model @auth(rules: [{allow: public}]) {
   matches: [String]!
   publicKey: String!
   privateKey: [Int!]!
+  messages: [Message!] @hasMany
+  userRoom: [UserRoom] @hasMany(indexName: "byUser", fields: ["id"])
 }
+
+type UserRoom
+@model
+
+@auth(rules: [{allow: public}]) {
+  id: ID!
+  userID: ID! @index(name: "byUser", sortKeyFields: ["roomID"])
+  roomID: ID! @index(name: "byRoom", sortKeyFields: ["userID"])
+  user: User @belongsTo(fields: ["userID"])
+  room: Room @belongsTo(fields: ["roomID"])
+}
+
 
 type Room @model @auth(rules: [{allow: public}]) {
   id: ID!
   messages: [Message!] @hasMany
-  users: [User!] @manyToMany(relationName: "UserRoom")
+  userRoom: [UserRoom!] @hasMany(indexName: "byRoom", fields: ["id"])
 }
 
 type Message @model @auth(rules: [{allow: public}]) {
   id: ID!
   room: Room @belongsTo
   encryptedText: String!
-  author: User @hasOne
+  author: User! @belongsTo
   createdAt: AWSDateTime!
 }
- 
+  

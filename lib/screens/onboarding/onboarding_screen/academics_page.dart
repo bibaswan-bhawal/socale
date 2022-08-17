@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/TextFields/chip_input/chip_input_text_field.dart';
-import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/options/colleges.dart';
 import 'package:socale/utils/options/major_minor.dart';
 import 'package:socale/values/colors.dart';

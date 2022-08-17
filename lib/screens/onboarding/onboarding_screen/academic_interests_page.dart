@@ -24,8 +24,6 @@ class _AcademicInterestsPageState extends State<AcademicInterestsPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: SizedBox(
         child: Column(

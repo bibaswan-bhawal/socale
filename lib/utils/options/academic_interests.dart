@@ -1,5 +1,5 @@
 final Map<String, List<String>> academicInterestsOptionsList = {
-  'Computer & Electrical Engineering': [
+  '🔌 Computer & Electrical Engineering': [
     'Electronics',
     'Computer Hardware Systems',
     'Distributed Computing',
@@ -12,7 +12,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Photonics',
     'Electromagnetics'
   ],
-  'Mechanical & Structural Engineering': [
+  '🖇 Mechanical & Structural Engineering': [
     'Mechatronics',
     'Robotics',
     'Structural analysis',
@@ -22,7 +22,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Civil Engineering',
     'Architecture'
   ],
-  'Bio-Engineering': [
+  '🩺 Bio-Engineering': [
     'Biomedical Engineering',
     'Biotechnology',
     'Nanotechnology',
@@ -30,7 +30,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Biomechanical Engineering',
     'Biochemistry'
   ],
-  'Finance': [
+  '💸 Finance': [
     'Stocks',
     'Investment Banking',
     'Private Equity',
@@ -38,33 +38,33 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Risk Management',
     'Entrepreneurship'
   ],
-  'Accounting': [
+  '🗃 Accounting': [
     'Managerial Accounting',
     'Financial Accounting',
     'Merchandising',
     'Insurance',
     'Actuarial'
   ],
-  'Management Consulting': [
+  '👔 Management Consulting': [
     'Business Management',
     'Corporate Strategy',
     'Product Management',
     'Product Development'
   ],
-  'Business Law and Ethics': [
+  '🏦 Business Law and Ethics': [
     'Bankruptcy Law',
     'Government Policy and Regulation',
     'Intellectual Property',
     'Underwriting'
   ],
-  'Advertising': [
+  '📢 Advertising': [
     'Marketing',
     'Market Research',
     'Social Media',
     'Sales and Marketing',
     'Customer Strategy'
   ],
-  'Law': [
+  '⚖️ Law': [
     'Constitutional Law',
     'Civil Rights Law',
     'Criminal Law',
@@ -77,7 +77,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Real Estate Law',
     'Tax Law'
   ],
-  'Teaching': [
+  '🎓 Teaching': [
     'English & Foreign Languages:',
     'Linguistics',
     'Creative Writing',
@@ -85,7 +85,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Literature',
     'Rhetoric'
   ],
-  'Art': [
+  '🖌 Art': [
     'Music',
     'Drawing',
     'Painting',
@@ -97,7 +97,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Acting/Modeling',
     'Interior Design'
   ],
-  'Civics & Gov': [
+  '🏛 Civics & Gov': [
     'Civil Rights & Activism',
     'Non-Profits',
     'Government & Politics',
@@ -105,7 +105,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Social Welfare',
     'Public Health'
   ],
-  'History': [
+  '🏺 History': [
     'World History',
     'American History',
     'Journalist',
@@ -116,18 +116,18 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Ethnic Studies',
     'Gender Studies'
   ],
-  'Philosophy': [
+  '💡 Philosophy': [
     'Theoretical Philosophy',
     'Practical Philosophy',
     'Logic',
     'History of Philosophy.'
   ],
-  'Business': [
+  '💰 Business': [
     'International Relations',
     'Human Resources',
     'Public Relations'
   ],
-  'Psychology': [
+  '🧘 Psychology': [
     'Clinical psychology',
     'Psychiatrist',
     'Guidance Counseling',
@@ -136,7 +136,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Customer Service',
     'Community Worker'
   ],
-  'Computer Science': [
+  '💻 Computer Science': [
     'Cyber Security',
     'Video Game Development',
     'Blockchain Development',
@@ -144,7 +144,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'IoT',
     'HCI'
   ],
-  'Data Science': [
+  '‍📈 Data Science': [
     'Data Analytics',
     'Data Visualization',
     'Data Engineering',
@@ -156,7 +156,7 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Quantitative Finance',
     'Bioinformatics'
   ],
-  'Math': [
+  '📝 Math': [
     'Algebra',
     'Number Theory',
     'Geometry',
@@ -166,14 +166,14 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Statistics',
     'Logic'
   ],
-  'Creative Tech': [
+  '🖼️ Creative Tech': [
     'UI Design',
     'UX Research',
     'Graphic Design',
     '3D Asset Design',
     'UX Design'
   ],
-  'Biology': [
+  '🔬 Biology': [
     'Molecular Biology',
     'Anatomy',
     'Dentistry',
@@ -185,21 +185,21 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Zoology',
     'Ecology'
   ],
-  'Chemistry': [
+  '⚗️ Chemistry': [
     'Organic Chemistry',
     'Biochemistry',
     'Inorganic Chemistry',
     'Analytical Chemistry',
     'Physical Chemistry'
   ],
-  'Physics': [
+  '🍎 Physics': [
     'Quantum Physics',
     'Classical Physics & Mechanics',
     'Optics',
     'Thermodynamics',
     'Relativity'
   ],
-  'Earth': [
+  '🌍 Earth': [
     'Geology',
     'Seismology',
     'Astronomy',

@@ -16,7 +16,7 @@ class AuthRepository {
     try {
       final result = await Amplify.Auth.signInWithWebUI(provider: provider);
       return result.isSignedIn;
-    } on AmplifyException catch (e) {
+    } on AmplifyException catch (_) {
       return false;
     }
   }
@@ -25,7 +25,7 @@ class AuthRepository {
     try {
       final result = await Amplify.Auth.signInWithWebUI(provider: provider);
       return result.isSignedIn;
-    } on AmplifyException catch (e) {
+    } on AmplifyException catch (_) {
       return false;
     }
   }

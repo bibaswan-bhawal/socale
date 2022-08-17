@@ -1,5 +1,5 @@
 final Map<String, List<String>> hobbiesOptionsList = {
-  'Outdoors': [
+  '🌳 Outdoors': [
     'Hiking',
     'Climbing',
     'Fishing',
@@ -9,16 +9,16 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'Biking',
     'Gardening'
   ],
-  'Exploration': ['Traveling', 'Exploring'],
-  'Food': ['Boba', 'Cooking'],
-  'Socializing': [
+  '✈️ Exploration': ['Traveling', 'Exploring'],
+  '🍟 Food': ['Boba', 'Cooking'],
+  '🍻 Socializing': [
     'Partying & Clubbing',
     'Drinking',
     'Smoking',
     'Going out with Friends'
   ],
-  '🏋 Gym': [],
-  'Sports': [
+  '💪 Gym': [],
+  '⛳ Sports': [
     'Fencing',
     'Golf',
     'Martial Arts',
@@ -43,8 +43,8 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'Badminton',
     'Football'
   ],
-  'Self Care': ['Yoga', 'Meditation', 'Skincare'],
-  'Games': [
+  '🎍 Self Care': ['Yoga', 'Meditation', 'Skincare'],
+  '🎲 Games': [
     'Bowling',
     'Chess',
     'Board Games',
@@ -52,7 +52,7 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'Puzzles',
     'Computer Games'
   ],
-  'Movies & Shows': [
+  '🍿 Movies & Shows': [
     'Action',
     'Drama',
     'Comedy',
@@ -67,7 +67,7 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'Noir',
     'Psychological'
   ],
-  'Music': [
+  '🎧 Music': [
     'Hip-hop/Rap',
     'Rock',
     'Alt/Indie',
@@ -83,7 +83,7 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'Blues',
     'Folk'
   ],
-  'Fashion': [
+  '👜 Fashion': [
     'Streetwear',
     'Vintage/Workwear',
     'High-end/Designer',
@@ -96,21 +96,21 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'DIY',
     'Chic'
   ],
-  'Adventure': [
+  '🪂 Adventure': [
     'Skydiving',
     'Rafting',
     'Scuba Diving',
     'Paragliding',
     'Theme Parks'
   ],
-  'Learning': [
+  '💡 Learning': [
     'Reading',
     'Podcasts',
     'Networking',
     'Journaling',
     'Storywriting'
   ],
-  'Creative': [
+  '🎨 Creative': [
     'Animation',
     'Photography',
     'Videography',
@@ -120,9 +120,9 @@ final Map<String, List<String>> hobbiesOptionsList = {
     'Painting',
     'Music'
   ],
-  'Cars': [],
-  'Animals': [],
-  'Video Games': [
+  '🏎️ Cars': [],
+  '🦄 Animals': [],
+  '🕹️ Video Games': [
     'League of Legends',
     'Smash Bros / Smash Ultimate',
     'Minecraft',

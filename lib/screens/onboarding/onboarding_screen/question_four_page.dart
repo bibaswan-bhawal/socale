@@ -22,8 +22,6 @@ class _QuestionFourPageState extends State<QuestionFourPage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: SizedBox(
         child: Column(

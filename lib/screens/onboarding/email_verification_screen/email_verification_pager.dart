@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
-import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/validators.dart';
 import 'package:socale/values/colors.dart';
 
@@ -28,8 +27,6 @@ class EmailVerificationPager extends StatefulWidget {
 class _EmailVerificationPagerState extends State<EmailVerificationPager> {
   @override
   Widget build(BuildContext context) {
-    Size size = MediaQuery.of(context).size;
-
     return PageView(
       physics: NeverScrollableScrollPhysics(),
       controller: widget.pageController,
@@ -120,7 +117,7 @@ class _EmailVerificationPagerState extends State<EmailVerificationPager> {
       fieldHeight: 40,
       fieldWidth: 40,
       activeColor: Colors.black,
-      selectedColor: ColorValues.socaleOrange,
+      selectedColor: ColorValues.socaleDarkOrange,
       inactiveColor: Colors.black,
     );
   }

@@ -31,7 +31,7 @@ class Room extends Model {
   static const classType = const _RoomModelType();
   final String id;
   final List<Message>? _messages;
-  final List<UserRoom>? _users;
+  final List<UserRoom>? _userRoom;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -47,8 +47,8 @@ class Room extends Model {
     return _messages;
   }
   
-  List<UserRoom>? get users {
-    return _users;
+  List<UserRoom>? get userRoom {
+    return _userRoom;
   }
   
   TemporalDateTime? get createdAt {
@@ -59,13 +59,13 @@ class Room extends Model {
     return _updatedAt;
   }
   
-  const Room._internal({required this.id, messages, users, createdAt, updatedAt}): _messages = messages, _users = users, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Room._internal({required this.id, messages, userRoom, createdAt, updatedAt}): _messages = messages, _userRoom = userRoom, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Room({String? id, List<Message>? messages, List<UserRoom>? users}) {
+  factory Room({String? id, List<Message>? messages, List<UserRoom>? userRoom}) {
     return Room._internal(
       id: id == null ? UUID.getUUID() : id,
       messages: messages != null ? List<Message>.unmodifiable(messages) : messages,
-      users: users != null ? List<UserRoom>.unmodifiable(users) : users);
+      userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom);
   }
   
   bool equals(Object other) {
@@ -78,7 +78,7 @@ class Room extends Model {
     return other is Room &&
       id == other.id &&
       DeepCollectionEquality().equals(_messages, other._messages) &&
-      DeepCollectionEquality().equals(_users, other._users);
+      DeepCollectionEquality().equals(_userRoom, other._userRoom);
   }
   
   @override
@@ -97,11 +97,11 @@ class Room extends Model {
     return buffer.toString();
   }
   
-  Room copyWith({String? id, List<Message>? messages, List<UserRoom>? users}) {
+  Room copyWith({String? id, List<Message>? messages, List<UserRoom>? userRoom}) {
     return Room._internal(
       id: id ?? this.id,
       messages: messages ?? this.messages,
-      users: users ?? this.users);
+      userRoom: userRoom ?? this.userRoom);
   }
   
   Room.fromJson(Map<String, dynamic> json)  
@@ -112,8 +112,8 @@ class Room extends Model {
           .map((e) => Message.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
-      _users = json['users'] is List
-        ? (json['users'] as List)
+      _userRoom = json['userRoom'] is List
+        ? (json['userRoom'] as List)
           .where((e) => e?['serializedData'] != null)
           .map((e) => UserRoom.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
@@ -122,15 +122,15 @@ class Room extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'users': _users?.map((UserRoom? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "room.id");
+  static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField MESSAGES = QueryField(
     fieldName: "messages",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Message).toString()));
-  static final QueryField USERS = QueryField(
-    fieldName: "users",
+  static final QueryField USERROOM = QueryField(
+    fieldName: "userRoom",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (UserRoom).toString()));
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Room";
@@ -157,7 +157,7 @@ class Room extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: Room.USERS,
+      key: Room.USERROOM,
       isRequired: true,
       ofModelName: (UserRoom).toString(),
       associatedKey: UserRoom.ROOM

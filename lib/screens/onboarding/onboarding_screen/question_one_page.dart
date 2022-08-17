@@ -22,8 +22,6 @@ class _QuestionOnePageState extends State<QuestionOnePage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: SizedBox(
         child: Column(

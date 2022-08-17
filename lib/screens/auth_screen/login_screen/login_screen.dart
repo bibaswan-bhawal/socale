@@ -65,8 +65,7 @@ class _LoginScreenState extends State<LoginScreen> {
           return;
         }
       } else {
-        print("sign out");
-        Get.offAllNamed('/sign_out');
+        Get.offAllNamed('/main');
         return;
       }
     } else {

@@ -145,10 +145,6 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         icon: const Icon(Icons.arrow_back_ios_new),
                       ),
                     ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                        bottom: MediaQuery.of(context).viewInsets.bottom),
-                  ),
                   Positioned(
                     bottom: 0,
                     right: 0,
@@ -163,6 +159,10 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
                         onClickEventHandler: onNextClickHandler,
                       ),
                     ),
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                        bottom: MediaQuery.of(context).viewInsets.bottom),
                   ),
                 ],
               ),
@@ -225,9 +225,9 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   uploadUser() async {
     if (await onboardingService.createOnboardedUser()) {
-      Get.offAllNamed('/sign_out');
+      Get.offAllNamed('/main');
     } else {
-      Get.offAllNamed('/get_started');
+      Get.offAllNamed('/auth');
     }
   }
 

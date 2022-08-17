@@ -42,30 +42,12 @@ class UserRoom extends Model {
     return id;
   }
   
-  User get user {
-    try {
-      return _user!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  User? get user {
+    return _user;
   }
   
-  Room get room {
-    try {
-      return _room!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  Room? get room {
+    return _room;
   }
   
   TemporalDateTime? get createdAt {
@@ -76,9 +58,9 @@ class UserRoom extends Model {
     return _updatedAt;
   }
   
-  const UserRoom._internal({required this.id, required user, required room, createdAt, updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
+  const UserRoom._internal({required this.id, user, room, createdAt, updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory UserRoom({String? id, required User user, required Room room}) {
+  factory UserRoom({String? id, User? user, Room? room}) {
     return UserRoom._internal(
       id: id == null ? UUID.getUUID() : id,
       user: user,
@@ -138,7 +120,7 @@ class UserRoom extends Model {
     'id': id, 'user': _user?.toJson(), 'room': _room?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "userRoom.id");
+  static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField USER = QueryField(
     fieldName: "user",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
@@ -149,18 +131,29 @@ class UserRoom extends Model {
     modelSchemaDefinition.name = "UserRoom";
     modelSchemaDefinition.pluralName = "UserRooms";
     
+    modelSchemaDefinition.authRules = [
+      AuthRule(
+        authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ])
+    ];
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: UserRoom.USER,
-      isRequired: true,
+      isRequired: false,
       targetName: "userID",
       ofModelName: (User).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: UserRoom.ROOM,
-      isRequired: true,
+      isRequired: false,
       targetName: "roomID",
       ofModelName: (Room).toString()
     ));

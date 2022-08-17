@@ -12,7 +12,8 @@ class ColorValues {
   static const Color googleColor = Color(0xFFFFFFFF);
   static const Color facebookColor = Color(0xFF1877F2);
   static const Color appleColor = Color(0xFF000000);
-  static const Color socaleOrange = Color(0xFFFD6C00);
+  static const Color socaleDarkOrange = Color(0xFFFD6C00);
+  static const Color socaleOrange = Color(0xFFFFA133);
 
   static final Shader socaleOrangeGradient = LinearGradient(
     colors: <Color>[Color(0xFFFD6C00), Color(0xFFFFA133)],

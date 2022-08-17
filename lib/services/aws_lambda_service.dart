@@ -42,14 +42,10 @@ class AWSLambdaService {
     final resp = await signedRequest.send();
     final respBody = await resp.decodeBody();
 
-    if (respBody is! String) {
-      final responseMap = JsonDecoder().convert(respBody);
-      print(responseMap);
-      if (responseMap.containsKey('success') && responseMap["success"]) {
-        return true;
-      }
-    } else {
-      print(respBody);
+    final responseMap = JsonDecoder().convert(respBody);
+    print(responseMap);
+    if (responseMap.containsKey('success') && responseMap["success"]) {
+      return true;
     }
 
     return false;

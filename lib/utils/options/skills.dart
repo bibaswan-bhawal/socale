@@ -1,5 +1,5 @@
 final Map<String, List<String>> skillsOptionsList = {
-  'Analytical': [
+  '📈 Analytical': [
     'Analytical Reasoning',
     'Consulting',
     'Critical Thinking',
@@ -7,7 +7,7 @@ final Map<String, List<String>> skillsOptionsList = {
     'Problem Solving',
     'Research'
   ],
-  'Business': [
+  '💼 Business': [
     'Administration',
     'Business Analysis',
     'Business Development',
@@ -17,7 +17,7 @@ final Map<String, List<String>> skillsOptionsList = {
     'Economics',
     'Business Strategy'
   ],
-  'Communication': [
+  '🌐 Communication': [
     'Editing',
     'Newsletters',
     'Nonverbal Communication',
@@ -26,7 +26,7 @@ final Map<String, List<String>> skillsOptionsList = {
     'Active Listening',
     'Video Production'
   ],
-  'Management': [
+  '🗄 Management': [
     'Coaching',
     'Delegating Tasks',
     'Leadership',
@@ -35,7 +35,7 @@ final Map<String, List<String>> skillsOptionsList = {
     'Relationship Management',
     'Strategic Planning'
   ],
-  'Marketing': [
+  '🚀 Marketing': [
     'Affiliate Marketing',
     'Channel Marketing',
     'Content Marketing',
@@ -51,7 +51,7 @@ final Map<String, List<String>> skillsOptionsList = {
     'SEO/SEM and Search Engine Marketing',
     'Marketing Management'
   ],
-  'People Skills': [
+  '🤝 People Skills': [
     'Adaptability',
     'Collaboration',
     'Creativity',
@@ -63,7 +63,7 @@ final Map<String, List<String>> skillsOptionsList = {
     'Social Skills',
     'Decision-making'
   ],
-  'Information Technology (IT)': [
+  '‍💻 Information Technology (IT)': [
     'Cloud Computing',
     'Data Presentation',
     'Content Management',

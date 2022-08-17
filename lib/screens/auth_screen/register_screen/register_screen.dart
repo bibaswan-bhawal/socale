@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
@@ -156,7 +155,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           return;
         }
       } else {
-        Get.offAllNamed('/sign_out');
+        Get.offAllNamed('/main');
         return;
       }
     } else {
@@ -167,7 +166,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
 
   handleSocialSignIn(AuthProvider oAuth) async {
     bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
-    //getNextPage(isSignedIn);
+    getNextPage(isSignedIn);
   }
 
   validateForm() async {
@@ -175,9 +174,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
     final isValid = form != null ? form.validate() : false;
     if (isValid) {
       form.save();
-
       var isSignedIn = await AuthRepository().signup(_email, _password);
-      //getNextPage(isSignedIn);
+      getNextPage(isSignedIn);
     } else {
       return false;
     }

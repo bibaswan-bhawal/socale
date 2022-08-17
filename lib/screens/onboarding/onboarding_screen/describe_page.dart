@@ -24,8 +24,6 @@ class _DescribePageState extends State<DescribePage> {
 
   @override
   Widget build(BuildContext context) {
-    var size = MediaQuery.of(context).size;
-
     return SafeArea(
       child: SizedBox(
         child: Column(

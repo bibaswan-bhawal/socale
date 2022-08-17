@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/TextFields/chip_input/chip_list.dart';
-import 'package:socale/utils/options/major_minor.dart';
 import 'package:socale/values/colors.dart';
 
 class ChipInputField<T> extends StatefulWidget {
@@ -59,16 +58,13 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
   }
 
   OverlayEntry _createOverlayEntry() {
-    RenderBox renderBox = context.findRenderObject() as RenderBox;
-    var offset = renderBox.localToGlobal(Offset.zero);
-
     return OverlayEntry(
       builder: (context) => Positioned(
         width: widget.width,
         child: CompositedTransformFollower(
           link: _layerLink,
           showWhenUnlinked: false,
-          offset: Offset(0.0, 52.0),
+          offset: Offset(0.0, 50.0),
           child: Container(
             constraints: BoxConstraints(maxHeight: 200),
             height: _searchResults.length * 56,
@@ -87,6 +83,7 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
                   return ListTile(
                     title: Text(_searchResults[index]),
                     onTap: () {
+                      _fieldText.clear();
                       widget.values.add(_searchResults[index]);
                       widget.onChanged(widget.values);
                     },
@@ -175,7 +172,6 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
                                 border: InputBorder.none,
                               ),
                               onChanged: (value) {
-                                print(value);
                                 setState(() => _searchResults = widget.list
                                     .where((element) => element
                                         .toLowerCase()

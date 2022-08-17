@@ -1,12 +1,12 @@
 final Map<String, List<String>> careersOptionsList = {
-  'Business': [
+  '💼 Business': [
     'Accountant or actuary',
     'Business executives',
     'Business owner',
     'Business salesperson or buyer',
     'Hospitality Management'
   ],
-  'Creative': [
+  '🎨 Creative': [
     'Actor',
     'Artist',
     'Chef',
@@ -16,13 +16,13 @@ final Map<String, List<String>> careersOptionsList = {
     'Architect',
     'Urban planner'
   ],
-  'Education ': [
+  '🏫 Education ': [
     'School administrator',
     'School teacher',
     'School counselor',
     'Social, welfare, or recreation worker'
   ],
-  'Science': [
+  '🔬 Science': [
     'Clinical Psychologist',
     'Dentist or Orthodontist',
     'Dietitian or nutritionist',
@@ -35,15 +35,15 @@ final Map<String, List<String>> careersOptionsList = {
     'Therapist',
     'Veterinarian'
   ],
-  'Government': [
+  '🗳️ Government': [
     'Foreign Relations',
     'Law enforcement officer',
     'Lawyer or Judge',
     'Military Service',
     'Policymaker'
   ],
-  'Technology': ['Computer programmer', 'Data analyst', 'Engineer'],
-  'Civil': [
+  '‍💻 Technology': ['Computer programmer', 'Data analyst', 'Engineer'],
+  '🏗️ Civil': [
     'Conservationist or forester',
     'Farmer or rancher',
     'Laborer (unskilled)',

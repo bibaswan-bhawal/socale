@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:socale/theme/colors.dart';
+import 'package:socale/values/colors.dart';
 
 class SplashScreen extends StatelessWidget {
   const SplashScreen({Key? key}) : super(key: key);
@@ -14,17 +14,15 @@ class SplashScreen extends StatelessWidget {
         systemNavigationBarIconBrightness: Brightness.light));
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 
-    var size = MediaQuery.of(context).size;
-
     return Scaffold(
       body: Container(
         decoration: BoxDecoration(
-          gradient: SocaleGradients.mainBackgroundGradient,
+          color: ColorValues.socaleOrange,
         ),
         child: Center(
           child: Image.asset(
-            'assets/images/socale_logo_bw.png',
-            width: size.width / 2,
+            'assets/images/socale_logo_splash.png',
+            width: 1152,
           ),
         ),
       ),

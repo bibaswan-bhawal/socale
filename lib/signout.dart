@@ -13,7 +13,7 @@ class SignOutScreen extends StatelessWidget {
         onPressed: () {
           onboardingService.clearAll();
           AuthRepository().signOutCurrentUser();
-          Get.offAllNamed('/get_started');
+          Get.offAllNamed('/auth');
         },
         child: Text('Sign Out'),
       ),
