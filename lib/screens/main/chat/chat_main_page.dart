@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -37,21 +39,26 @@ class _ChatListPageState extends State<ChatListPage> {
   onItemClick(int index) async {
     Room? room = await getRoom(userList[index].id);
 
-    // Navigator.of(context).push(
-    //   PageRouteBuilder(
-    //     pageBuilder: (context, animation, secondaryAnimation) =>
-    //         ChatScreenProvider(
-    //       room: room,
-    //     ),
-    //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    //       return SharedAxisTransition(
-    //           animation: animation,
-    //           secondaryAnimation: secondaryAnimation,
-    //           child: child,
-    //           transitionType: SharedAxisTransitionType.horizontal);
-    //     },
-    //   ),
-    // );
+    if (room == null) {
+      print("Could not fetch room");
+      return;
+    } else {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) =>
+              ChatScreenProvider(
+            room: room,
+          ),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.horizontal,
+                child: child);
+          },
+        ),
+      );
+    }
   }
 
   buildListScreen(Size size) {
@@ -98,7 +105,7 @@ class _ChatListPageState extends State<ChatListPage> {
                     ),
                   ),
                   title: Text(
-                    userList[index].firstName + " " + userList[index].lastName!,
+                    "${userList[index].firstName} ${userList[index].lastName!}",
                     style: GoogleFonts.poppins(
                       color: Color(0xFFFFFFFF),
                       fontWeight: FontWeight.w500,

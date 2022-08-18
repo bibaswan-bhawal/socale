@@ -16,7 +16,8 @@ class AuthRepository {
     try {
       final result = await Amplify.Auth.signInWithWebUI(provider: provider);
       return result.isSignedIn;
-    } on AmplifyException catch (_) {
+    } catch (e) {
+      print(e);
       return false;
     }
   }
@@ -25,7 +26,8 @@ class AuthRepository {
     try {
       final result = await Amplify.Auth.signInWithWebUI(provider: provider);
       return result.isSignedIn;
-    } on AmplifyException catch (_) {
+    } catch (e) {
+      print(e);
       return false;
     }
   }
@@ -38,6 +40,7 @@ class AuthRepository {
       );
       return result.isSignedIn;
     } catch (e) {
+      print(e);
       return false;
     }
   }
@@ -65,7 +68,9 @@ class AuthRepository {
 
   Future<void> signOutCurrentUser() async {
     try {
-      await Amplify.Auth.signOut();
+      await Amplify.Auth.signOut(
+        options: const SignOutOptions(globalSignOut: true),
+      );
     } on AuthException catch (e) {
       print(e.message);
     }

@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /*
 * Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 *
@@ -23,7 +25,6 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
-
 /** This is an auto generated class representing the UserRoom type in your schema. */
 @immutable
 class UserRoom extends Model {
@@ -36,147 +37,157 @@ class UserRoom extends Model {
 
   @override
   getInstanceType() => classType;
-  
+
   @override
   String getId() {
     return id;
   }
-  
+
   User? get user {
     return _user;
   }
-  
+
   Room? get room {
     return _room;
   }
-  
+
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
-  
+
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-  
-  const UserRoom._internal({required this.id, user, room, createdAt, updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
-  
+
+  const UserRoom._internal({required this.id, user, room, createdAt, updatedAt})
+      : _user = user,
+        _room = room,
+        _createdAt = createdAt,
+        _updatedAt = updatedAt;
+
   factory UserRoom({String? id, User? user, Room? room}) {
     return UserRoom._internal(
-      id: id == null ? UUID.getUUID() : id,
-      user: user,
-      room: room);
+        id: id == null ? UUID.getUUID() : id, user: user, room: room);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is UserRoom &&
-      id == other.id &&
-      _user == other._user &&
-      _room == other._room;
+        id == other.id &&
+        _user == other._user &&
+        _room == other._room;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("UserRoom {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
     buffer.write("room=" + (_room != null ? _room!.toString() : "null") + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write("createdAt=" +
+        (_createdAt != null ? _createdAt!.format() : "null") +
+        ", ");
+    buffer.write(
+        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
+
   UserRoom copyWith({String? id, User? user, Room? room}) {
     return UserRoom._internal(
-      id: id ?? this.id,
-      user: user ?? this.user,
-      room: room ?? this.room);
+        id: id ?? this.id, user: user ?? this.user, room: room ?? this.room);
   }
-  
-  UserRoom.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _user = json['user']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
-        : null,
-      _room = json['room']?['serializedData'] != null
-        ? Room.fromJson(new Map<String, dynamic>.from(json['room']['serializedData']))
-        : null,
-      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
-  
+
+  UserRoom.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _user = json['user']?['serializedData'] != null
+            ? User.fromJson(
+                new Map<String, dynamic>.from(json['user']['serializedData']))
+            : null,
+        _room = json['room']?['serializedData'] != null
+            ? Room.fromJson(
+                new Map<String, dynamic>.from(json['room']['serializedData']))
+            : null,
+        _createdAt = json['createdAt'] != null
+            ? TemporalDateTime.fromString(json['createdAt'])
+            : null,
+        _updatedAt = json['updatedAt'] != null
+            ? TemporalDateTime.fromString(json['updatedAt'])
+            : null;
+
   Map<String, dynamic> toJson() => {
-    'id': id, 'user': _user?.toJson(), 'room': _room?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
-  };
+        'id': id,
+        'user': _user?.toJson(),
+        'room': _room?.toJson(),
+        'createdAt': _createdAt?.format(),
+        'updatedAt': _updatedAt?.format()
+      };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField USER = QueryField(
-    fieldName: "user",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
+      fieldName: "user",
+      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
+          ofModelName: (User).toString()));
   static final QueryField ROOM = QueryField(
-    fieldName: "room",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));
-  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+      fieldName: "room",
+      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
+          ofModelName: (Room).toString()));
+  static var schema =
+      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "UserRoom";
     modelSchemaDefinition.pluralName = "UserRooms";
-    
+
     modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ])
+      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
+        ModelOperation.CREATE,
+        ModelOperation.UPDATE,
+        ModelOperation.DELETE,
+        ModelOperation.READ
+      ])
     ];
-    
+
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-    
+
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: UserRoom.USER,
-      isRequired: false,
-      targetName: "userID",
-      ofModelName: (User).toString()
-    ));
-    
+        key: UserRoom.USER,
+        isRequired: false,
+        targetName: "userID",
+        ofModelName: (User).toString()));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: UserRoom.ROOM,
-      isRequired: false,
-      targetName: "roomID",
-      ofModelName: (Room).toString()
-    ));
-    
+        key: UserRoom.ROOM,
+        isRequired: false,
+        targetName: "roomID",
+        ofModelName: (Room).toString()));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
+        fieldName: 'createdAt',
+        isRequired: false,
+        isReadOnly: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
+        fieldName: 'updatedAt',
+        isRequired: false,
+        isReadOnly: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
   });
 }
 
 class _UserRoomModelType extends ModelType<UserRoom> {
   const _UserRoomModelType();
-  
+
   @override
   UserRoom fromJson(Map<String, dynamic> jsonData) {
     return UserRoom.fromJson(jsonData);

@@ -18,7 +18,7 @@ class ImageService {
       final UploadFileResult result = await Amplify.Storage.uploadFile(
           local: compressedFile ?? profilePictureFile,
           key:
-              (await Amplify.Auth.getCurrentUser()).userId + "_profile_picture",
+              "${(await Amplify.Auth.getCurrentUser()).userId}_profile_picture",
           onProgress: (progress) {
             print('Fraction completed: ${progress.getFractionCompleted()}');
           });

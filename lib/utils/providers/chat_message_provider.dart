@@ -8,9 +8,7 @@ class ChatMessagesProvider extends StateNotifier<List<Message>> {
   final List<Message> _messageList = [];
   int page = 0;
 
-  ChatMessagesProvider(Room _room)
-      : room = _room,
-        super([]) {
+  ChatMessagesProvider(this.room) : super([]) {
     requestMessages();
     chatService
         .listenToNewMessages(room, DateTime.now())

@@ -17,10 +17,10 @@ class _MatchPageState extends State<MatchPage> {
 
     Widget buildCard(context) {
       final provider = Provider.of<CardProvider>(context);
-      final _text = provider.text;
+      List<String> textList = provider.text;
 
       return Stack(
-        children: _text
+        children: textList
             .map(
               (text) => Container(
                 padding: EdgeInsets.symmetric(horizontal: 15),
@@ -29,7 +29,7 @@ class _MatchPageState extends State<MatchPage> {
                 child: MatchCard(
                   size: Size(size.width, size.height * 0.75),
                   text: text,
-                  isFront: _text.last == text,
+                  isFront: textList.last == text,
                 ),
               ),
             )

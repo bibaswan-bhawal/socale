@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 /*
 * Copyright 2021 Amazon.com, Inc. or its affiliates. All Rights Reserved.
 *
@@ -23,7 +25,6 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
-
 /** This is an auto generated class representing the Message type in your schema. */
 @immutable
 class Message extends Model {
@@ -37,193 +38,226 @@ class Message extends Model {
 
   @override
   getInstanceType() => classType;
-  
+
   @override
   String getId() {
     return id;
   }
-  
+
   Room? get room {
     return _room;
   }
-  
+
   String get encryptedText {
     try {
       return _encryptedText!;
-    } catch(e) {
+    } catch (e) {
       throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   User get author {
     try {
       return _author!;
-    } catch(e) {
+    } catch (e) {
       throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   TemporalDateTime get createdAt {
     try {
       return _createdAt!;
-    } catch(e) {
+    } catch (e) {
       throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
+          AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion: AmplifyExceptionMessages
+              .codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString());
     }
   }
-  
+
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-  
-  const Message._internal({required this.id, room, required encryptedText, required author, required createdAt, updatedAt}): _room = room, _encryptedText = encryptedText, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
-  
-  factory Message({String? id, Room? room, required String encryptedText, required User author, required TemporalDateTime createdAt}) {
+
+  const Message._internal(
+      {required this.id,
+      room,
+      required encryptedText,
+      required author,
+      required createdAt,
+      updatedAt})
+      : _room = room,
+        _encryptedText = encryptedText,
+        _author = author,
+        _createdAt = createdAt,
+        _updatedAt = updatedAt;
+
+  factory Message(
+      {String? id,
+      Room? room,
+      required String encryptedText,
+      required User author,
+      required TemporalDateTime createdAt}) {
     return Message._internal(
-      id: id == null ? UUID.getUUID() : id,
-      room: room,
-      encryptedText: encryptedText,
-      author: author,
-      createdAt: createdAt);
+        id: id == null ? UUID.getUUID() : id,
+        room: room,
+        encryptedText: encryptedText,
+        author: author,
+        createdAt: createdAt);
   }
-  
+
   bool equals(Object other) {
     return this == other;
   }
-  
+
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
     return other is Message &&
-      id == other.id &&
-      _room == other._room &&
-      _encryptedText == other._encryptedText &&
-      _author == other._author &&
-      _createdAt == other._createdAt;
+        id == other.id &&
+        _room == other._room &&
+        _encryptedText == other._encryptedText &&
+        _author == other._author &&
+        _createdAt == other._createdAt;
   }
-  
+
   @override
   int get hashCode => toString().hashCode;
-  
+
   @override
   String toString() {
     var buffer = new StringBuffer();
-    
+
     buffer.write("Message {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("room=" + (_room != null ? _room!.toString() : "null") + ", ");
     buffer.write("encryptedText=" + "$_encryptedText" + ", ");
-    buffer.write("author=" + (_author != null ? _author!.toString() : "null") + ", ");
-    buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
+    buffer.write(
+        "author=" + (_author != null ? _author!.toString() : "null") + ", ");
+    buffer.write("createdAt=" +
+        (_createdAt != null ? _createdAt!.format() : "null") +
+        ", ");
+    buffer.write(
+        "updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-    
+
     return buffer.toString();
   }
-  
-  Message copyWith({String? id, Room? room, String? encryptedText, User? author, TemporalDateTime? createdAt}) {
+
+  Message copyWith(
+      {String? id,
+      Room? room,
+      String? encryptedText,
+      User? author,
+      TemporalDateTime? createdAt}) {
     return Message._internal(
-      id: id ?? this.id,
-      room: room ?? this.room,
-      encryptedText: encryptedText ?? this.encryptedText,
-      author: author ?? this.author,
-      createdAt: createdAt ?? this.createdAt);
+        id: id ?? this.id,
+        room: room ?? this.room,
+        encryptedText: encryptedText ?? this.encryptedText,
+        author: author ?? this.author,
+        createdAt: createdAt ?? this.createdAt);
   }
-  
-  Message.fromJson(Map<String, dynamic> json)  
-    : id = json['id'],
-      _room = json['room']?['serializedData'] != null
-        ? Room.fromJson(new Map<String, dynamic>.from(json['room']['serializedData']))
-        : null,
-      _encryptedText = json['encryptedText'],
-      _author = json['author']?['serializedData'] != null
-        ? User.fromJson(new Map<String, dynamic>.from(json['author']['serializedData']))
-        : null,
-      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
-  
+
+  Message.fromJson(Map<String, dynamic> json)
+      : id = json['id'],
+        _room = json['room']?['serializedData'] != null
+            ? Room.fromJson(
+                new Map<String, dynamic>.from(json['room']['serializedData']))
+            : null,
+        _encryptedText = json['encryptedText'],
+        _author = json['author']?['serializedData'] != null
+            ? User.fromJson(
+                new Map<String, dynamic>.from(json['author']['serializedData']))
+            : null,
+        _createdAt = json['createdAt'] != null
+            ? TemporalDateTime.fromString(json['createdAt'])
+            : null,
+        _updatedAt = json['updatedAt'] != null
+            ? TemporalDateTime.fromString(json['updatedAt'])
+            : null;
+
   Map<String, dynamic> toJson() => {
-    'id': id, 'room': _room?.toJson(), 'encryptedText': _encryptedText, 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
-  };
+        'id': id,
+        'room': _room?.toJson(),
+        'encryptedText': _encryptedText,
+        'author': _author?.toJson(),
+        'createdAt': _createdAt?.format(),
+        'updatedAt': _updatedAt?.format()
+      };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField ROOM = QueryField(
-    fieldName: "room",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));
-  static final QueryField ENCRYPTEDTEXT = QueryField(fieldName: "encryptedText");
+      fieldName: "room",
+      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
+          ofModelName: (Room).toString()));
+  static final QueryField ENCRYPTEDTEXT =
+      QueryField(fieldName: "encryptedText");
   static final QueryField AUTHOR = QueryField(
-    fieldName: "author",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
+      fieldName: "author",
+      fieldType: ModelFieldType(ModelFieldTypeEnum.model,
+          ofModelName: (User).toString()));
   static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
-  static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
+  static var schema =
+      Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Message";
     modelSchemaDefinition.pluralName = "Messages";
-    
+
     modelSchemaDefinition.authRules = [
-      AuthRule(
-        authStrategy: AuthStrategy.PUBLIC,
-        operations: [
-          ModelOperation.CREATE,
-          ModelOperation.UPDATE,
-          ModelOperation.DELETE,
-          ModelOperation.READ
-        ])
+      AuthRule(authStrategy: AuthStrategy.PUBLIC, operations: [
+        ModelOperation.CREATE,
+        ModelOperation.UPDATE,
+        ModelOperation.DELETE,
+        ModelOperation.READ
+      ])
     ];
-    
+
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-    
+
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Message.ROOM,
-      isRequired: false,
-      targetName: "roomMessagesId",
-      ofModelName: (Room).toString()
-    ));
-    
+        key: Message.ROOM,
+        isRequired: false,
+        targetName: "roomMessagesId",
+        ofModelName: (Room).toString()));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Message.ENCRYPTEDTEXT,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
-    ));
-    
+        key: Message.ENCRYPTEDTEXT,
+        isRequired: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.string)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Message.AUTHOR,
-      isRequired: true,
-      targetName: "userMessagesId",
-      ofModelName: (User).toString()
-    ));
-    
+        key: Message.AUTHOR,
+        isRequired: true,
+        targetName: "userMessagesId",
+        ofModelName: (User).toString()));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Message.CREATEDAT,
-      isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
+        key: Message.CREATEDAT,
+        isRequired: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
+
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
+        fieldName: 'updatedAt',
+        isRequired: false,
+        isReadOnly: true,
+        ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
   });
 }
 
 class _MessageModelType extends ModelType<Message> {
   const _MessageModelType();
-  
+
   @override
   Message fromJson(Map<String, dynamic> jsonData) {
     return Message.fromJson(jsonData);

@@ -19,9 +19,9 @@ class _MainAppState extends State<MainApp> {
   final PageController _pageController = PageController(initialPage: 2);
 
   handleBottomNavigationClick(value) {
-    final _pageDistance = (_pageController.page! - value).abs();
+    final pageDistance = (_pageController.page! - value).abs();
 
-    if (_pageDistance == 1) {
+    if (pageDistance == 1) {
       _pageController.animateToPage(value,
           duration: Duration(milliseconds: 300),
           curve: Curves.easeInOutCubicEmphasized);

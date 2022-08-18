@@ -227,7 +227,8 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     if (await onboardingService.createOnboardedUser()) {
       Get.offAllNamed('/main');
     } else {
-      Get.offAllNamed('/auth');
+      print("FAILED TO CREATE USER");
+      //Get.offAllNamed('/auth');
     }
   }
 

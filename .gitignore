@@ -31,10 +31,7 @@
 .pub/
 /build/
 
-# Web related
-lib/generated_plugin_registrant.dart
-
-# Symbolication related
+ Symbolication related
 app.*.symbols
 
 # Obfuscation related

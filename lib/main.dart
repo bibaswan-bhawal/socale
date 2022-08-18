@@ -1,3 +1,5 @@
+// ignore_for_file: library_private_types_in_public_api
+
 import 'dart:async';
 
 import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
@@ -46,7 +48,6 @@ class _SocaleAppState extends State<SocaleApp> {
   int _pageIndex = 0;
 
   Future<void> _configureAmplify() async {
-    final analyticsPlugin = AmplifyAnalyticsPinpoint();
     final authPlugin = AmplifyAuthCognito();
     final apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
     final storagePlugin = AmplifyStorageS3();
@@ -56,7 +57,6 @@ class _SocaleAppState extends State<SocaleApp> {
 
     await Amplify.addPlugins([
       authPlugin,
-      analyticsPlugin,
       apiPlugin,
       storagePlugin,
       dataStorePlugin,
@@ -65,7 +65,6 @@ class _SocaleAppState extends State<SocaleApp> {
     try {
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
-      await Amplify.DataStore.clear();
       await _attemptAutoLogin();
       await getInitialPage();
     } on AmplifyAlreadyConfiguredException {
@@ -88,13 +87,6 @@ class _SocaleAppState extends State<SocaleApp> {
     _configureAmplify();
   }
 
-  Color getColor() {
-    if (initialPage.length == 1) return Color(0xFFFFFFFF);
-    return initialPage[1]! is AuthScreen
-        ? Colors.transparent
-        : Color(0xFFFFFFFF);
-  }
-
   @override
   Widget build(BuildContext context) {
     SystemChrome.setPreferredOrientations([
@@ -105,7 +97,7 @@ class _SocaleAppState extends State<SocaleApp> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetMaterialApp(
         theme: ThemeData(
-          canvasColor: getColor(),
+          canvasColor: Colors.transparent,
         ),
         title: 'Socale',
         debugShowCheckedModeBanner: false,
@@ -120,9 +112,9 @@ class _SocaleAppState extends State<SocaleApp> {
               Animation<double> secondaryAnimation,
             ) {
               return FadeThroughTransition(
-                child: child,
                 animation: primaryAnimation,
                 secondaryAnimation: secondaryAnimation,
+                child: child,
               );
             },
             child: initialPage[_pageIndex],

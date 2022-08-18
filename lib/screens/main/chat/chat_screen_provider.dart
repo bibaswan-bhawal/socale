@@ -1,9 +1,7 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/Message.dart';
 import 'package:socale/models/Room.dart';
-import 'package:socale/models/User.dart';
 import 'package:socale/services/chat_service.dart';
 import 'package:socale/utils/providers/chat_message_provider.dart';
 
@@ -24,8 +22,9 @@ class _ChatScreenProviderState extends ConsumerState<ChatScreenProvider> {
   @override
   Widget build(BuildContext context) {
     List<Message> messages = ref.watch(chatMessagesProvider(widget.room));
-    print("ROOM ID: " + widget.room.toString());
+
     return Scaffold(
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Stack(
           children: [
@@ -39,7 +38,7 @@ class _ChatScreenProviderState extends ConsumerState<ChatScreenProvider> {
                   String userEmail = messages[index].author.email;
 
                   return ListTile(
-                    title: Text(message + " - " + userEmail),
+                    title: Text("$message - $userEmail"),
                   );
                 },
               ),
@@ -50,7 +49,7 @@ class _ChatScreenProviderState extends ConsumerState<ChatScreenProvider> {
               right: 20,
               child: TextField(
                 onSubmitted: (value) {
-                  //chatService.sendMessage(value, widget.room);
+                  chatService.sendMessage(value, widget.room);
                 },
                 decoration: InputDecoration(
                   hintText: "Type text",

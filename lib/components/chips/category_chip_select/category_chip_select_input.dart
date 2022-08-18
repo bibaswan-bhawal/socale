@@ -42,18 +42,18 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
 
   Color backgroundColor(String option) {
     if (categoryAdded.contains(option) || skillsSelected.contains(option)) {
-      return Color(0xFFFFA133);
+      return Color(0xFFFFAE50);
     }
 
     if (categorySelected.contains(option)) {
-      return Color(0xFFFFA133).withOpacity(0.8);
+      return Color(0xFFFFB660);
     }
 
     if (widget.map.containsKey(option)) {
-      return Color(0xFF636363).withOpacity(0.15);
+      return Color(0xFFE9E8E8);
     }
 
-    return Color(0xFFFFA133).withOpacity(0.40);
+    return Color(0xFFFFD9AE);
   }
 
   Color textColor(String option) {

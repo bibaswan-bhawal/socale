@@ -1,5 +1,4 @@
 import 'package:animations/animations.dart';
-import 'package:colorful_safe_area/colorful_safe_area.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
@@ -93,10 +92,11 @@ class _AuthScreenState extends State<AuthScreen> {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     }
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           TranslucentBackground(),
-          ColorfulSafeArea(
+          SafeArea(
             child: PageTransitionSwitcher(
               duration: const Duration(milliseconds: 300),
               reverse: _reverse,
@@ -106,10 +106,10 @@ class _AuthScreenState extends State<AuthScreen> {
                 Animation<double> secondaryAnimation,
               ) {
                 return SharedAxisTransition(
-                  child: child,
                   animation: primaryAnimation,
                   secondaryAnimation: secondaryAnimation,
                   transitionType: SharedAxisTransitionType.horizontal,
+                  child: child,
                 );
               },
               child: getScreen(_currentScreen),

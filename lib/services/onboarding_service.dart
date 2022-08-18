@@ -166,6 +166,9 @@ class OnboardingService {
     final cognitoUser = await _amplifyCognitoUser;
     final userId = cognitoUser.userId;
     final box = await Hive.openBox(userId);
+
+    print(box);
+
     if (!_checkIfFieldExistsLocally(box, 'onboardingStep') ||
         !_checkIfFieldExistsLocally(box, 'schoolEmail') ||
         !_checkIfFieldExistsLocally(box, 'academicInclination') ||
@@ -182,6 +185,7 @@ class OnboardingService {
         !_checkIfFieldExistsLocally(box, 'idealFriendDescription') ||
         !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
         !_checkIfFieldExistsLocally(box, 'college')) {
+      print("something missing");
       return false;
     }
 
@@ -189,6 +193,7 @@ class OnboardingService {
         await AuthRepository().fetchCurrentUserAttributes();
 
     if (attributes == null) {
+      print("failed to get atrributes");
       return false;
     }
 
@@ -224,8 +229,10 @@ class OnboardingService {
       final response = await Amplify.API.mutate(request: request).response;
 
       if (response.data != null) {
+        print("user added");
         return true;
       } else {
+        print("user failed");
         return false;
       }
     } on Exception catch (error) {
