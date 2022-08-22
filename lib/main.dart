@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -14,6 +13,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:socale/auth/auth_repository.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
@@ -23,6 +23,7 @@ import 'package:socale/screens/splash_screen/splash_screen.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/get_it_instance.dart';
+import 'package:socale/utils/providers/providers.dart';
 import 'utils/routes.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'amplifyconfiguration.dart';
@@ -35,13 +36,13 @@ void main() async {
   runApp(ProviderScope(child: SocaleApp()));
 }
 
-class SocaleApp extends StatefulWidget {
+class SocaleApp extends ConsumerStatefulWidget {
   const SocaleApp({Key? key}) : super(key: key);
   @override
   _SocaleAppState createState() => _SocaleAppState();
 }
 
-class _SocaleAppState extends State<SocaleApp> {
+class _SocaleAppState extends ConsumerState<SocaleApp> {
   List<Widget?> initialPage = [SplashScreen()];
   bool _isAmplifyConfigured = false;
   bool _isSignedIn = false;
@@ -75,6 +76,10 @@ class _SocaleAppState extends State<SocaleApp> {
   Future<void> _attemptAutoLogin() async {
     try {
       final session = await Amplify.Auth.fetchAuthSession();
+      if (session.isSignedIn == true) {
+        authRepository.startAuthStreamListener();
+        Amplify.DataStore.start();
+      }
       setState(() => _isSignedIn = session.isSignedIn);
     } on NotAuthorizedException catch (_) {
       throw ("error");
@@ -84,6 +89,7 @@ class _SocaleAppState extends State<SocaleApp> {
   @override
   void initState() {
     super.initState();
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
     _configureAmplify();
   }
 
@@ -94,7 +100,9 @@ class _SocaleAppState extends State<SocaleApp> {
     ]);
 
     return GestureDetector(
-      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      onTap: () {
+        FocusManager.instance.primaryFocus?.unfocus();
+      },
       child: GetMaterialApp(
         theme: ThemeData(
           canvasColor: Colors.transparent,
@@ -132,6 +140,9 @@ class _SocaleAppState extends State<SocaleApp> {
         OnboardingStep currentStep =
             await onboardingService.getOnboardingStep();
         if (isOnBoardingComplete) {
+          final user = await Amplify.Auth.getCurrentUser();
+          ref.read(userAsyncController.notifier).setUser(user.userId);
+          ref.read(matchAsyncController.notifier).setMatches(user.userId);
           initialPage.insert(1, MainApp());
           setState(() => _pageIndex = 1);
         } else if (currentStep == OnboardingStep.started) {

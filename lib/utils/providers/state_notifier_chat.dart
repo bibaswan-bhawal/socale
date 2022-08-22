@@ -10,11 +10,7 @@ class ChatMessagesProvider extends StateNotifier<List<Message>> {
 
   ChatMessagesProvider(this.room) : super([]) {
     requestMessages();
-    chatService
-        .listenToNewMessages(room, DateTime.now())
-        .listen((newMessagesList) {
-      state = List.from(newMessagesList)..addAll(_messageList);
-    });
+    chatService.listenToNewMessages(room, DateTime.now());
   }
 
   Future<bool> requestMessages() async {
@@ -27,9 +23,3 @@ class ChatMessagesProvider extends StateNotifier<List<Message>> {
     return true;
   }
 }
-
-final chatMessagesProvider =
-    StateNotifierProvider.family<ChatMessagesProvider, List<Message>, Room>(
-        (ref, room) {
-  return ChatMessagesProvider(room);
-});

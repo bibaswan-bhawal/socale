@@ -1,64 +1,78 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/models/Room.dart';
 import 'package:socale/models/User.dart';
+import 'package:socale/screens/main/chat/chat_page.dart';
 import 'package:socale/screens/main/chat/chat_screen_provider.dart';
+import 'package:socale/services/aws_lambda_service.dart';
 import 'package:socale/services/chat_service.dart';
 import 'package:socale/services/fetch_service.dart';
+import 'package:socale/utils/providers/providers.dart';
 
-class ChatListPage extends StatefulWidget {
+class ChatListPage extends ConsumerStatefulWidget {
   const ChatListPage({Key? key}) : super(key: key);
 
   @override
-  State<ChatListPage> createState() => _ChatListPageState();
+  ConsumerState<ChatListPage> createState() => _ChatListPageState();
 }
 
-class _ChatListPageState extends State<ChatListPage> {
+class _ChatListPageState extends ConsumerState<ChatListPage> {
   List<User> userList = [];
-
+  List<Room> roomList = [];
   @override
   void initState() {
     super.initState();
-    getUsers();
   }
 
-  getUsers() async {
-    for (User user in (await FetchService().fetchAllUsers())!) {
-      setState(() => userList.add(user));
-    }
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getRooms();
   }
 
-  getRoom(String otherUserId) async {
-    Room? room = await chatService.getRoom(otherUserId);
-    return room;
+  getRooms() async {
+    final userState = ref.watch(userAsyncController);
+    userState.whenData((User user) async {
+      print("got user rooms");
+      List<Room> rooms = await fetchService.fetchAllRoomsForUser(user);
+      List<User> _roomUsers = [];
+
+      for (Room room in rooms) {
+        List<User> roomUsers = await chatService.getUsersByRoom(room);
+
+        User toAdd =
+            roomUsers.where((otherUser) => otherUser.id != user.id).first;
+        _roomUsers.add(toAdd);
+      }
+
+      setState(() => userList = _roomUsers);
+      setState(() => roomList = rooms);
+    });
   }
 
-  onItemClick(int index) async {
-    Room? room = await getRoom(userList[index].id);
+  onItemClick(int index) {
+    Room room = roomList[index];
 
-    if (room == null) {
-      print("Could not fetch room");
-      return;
-    } else {
-      Navigator.of(context).push(
-        PageRouteBuilder(
-          pageBuilder: (context, animation, secondaryAnimation) =>
-              ChatScreenProvider(
-            room: room,
-          ),
-          transitionsBuilder: (context, animation, secondaryAnimation, child) {
-            return SharedAxisTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.horizontal,
-                child: child);
-          },
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => ChatPage(
+          room: room,
         ),
-      );
-    }
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.horizontal,
+              child: child);
+        },
+      ),
+    );
   }
 
   buildListScreen(Size size) {
@@ -84,7 +98,7 @@ class _ChatListPageState extends State<ChatListPage> {
           child: Padding(
             padding: EdgeInsets.only(left: 10),
             child: ListView.separated(
-              itemCount: userList.length,
+              itemCount: roomList.length,
               separatorBuilder: (context, index) {
                 return Padding(
                   padding: EdgeInsets.only(left: 80),
@@ -105,7 +119,7 @@ class _ChatListPageState extends State<ChatListPage> {
                     ),
                   ),
                   title: Text(
-                    "${userList[index].firstName} ${userList[index].lastName!}",
+                    "${userList[index].firstName} ${userList[index].lastName}",
                     style: GoogleFonts.poppins(
                       color: Color(0xFFFFFFFF),
                       fontWeight: FontWeight.w500,

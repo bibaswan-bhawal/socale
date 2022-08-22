@@ -12,7 +12,7 @@ class SettingsPage extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           onboardingService.clearAll();
-          AuthRepository().signOutCurrentUser();
+          authRepository.signOutCurrentUser();
           Get.offAllNamed('/auth');
         },
         child: Text('Sign Out'),

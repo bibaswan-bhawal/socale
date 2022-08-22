@@ -1,3 +1,9 @@
+type Match @model @auth(rules: [{allow: public}]) {
+  id: ID!
+  matchingPercentage: String
+  user: User @hasOne
+}
+
 type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   email: AWSEmail!
@@ -24,17 +30,13 @@ type User @model @auth(rules: [{allow: public}]) {
   userRoom: [UserRoom] @hasMany(indexName: "byUser", fields: ["id"])
 }
 
-type UserRoom
-@model
-
-@auth(rules: [{allow: public}]) {
+type UserRoom @model @auth(rules: [{allow: public}]) {
   id: ID!
   userID: ID! @index(name: "byUser", sortKeyFields: ["roomID"])
   roomID: ID! @index(name: "byRoom", sortKeyFields: ["userID"])
   user: User @belongsTo(fields: ["userID"])
   room: Room @belongsTo(fields: ["roomID"])
 }
-
 
 type Room @model @auth(rules: [{allow: public}]) {
   id: ID!
@@ -49,4 +51,4 @@ type Message @model @auth(rules: [{allow: public}]) {
   author: User! @belongsTo
   createdAt: AWSDateTime!
 }
-  
+ 

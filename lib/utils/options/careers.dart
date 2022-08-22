@@ -21,6 +21,7 @@ final Map<String, List<String>> careersOptionsList = {
     'School teacher',
     'School counselor',
     'Social, welfare, or recreation worker'
+        'Professorship'
   ],
   '🔬 Science': [
     'Clinical Psychologist',

@@ -12,7 +12,7 @@ class _InsightsPageState extends State<InsightsPage> {
   Widget build(BuildContext context) {
     return Center(
       child: Text(
-        "Insights Page",
+        "This page is still under development",
         style: TextStyle(
           color: Color(0xFFFFFFFF),
         ),

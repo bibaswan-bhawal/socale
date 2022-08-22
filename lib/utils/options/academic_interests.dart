@@ -15,10 +15,10 @@ final Map<String, List<String>> academicInterestsOptionsList = {
   '🖇 Mechanical & Structural Engineering': [
     'Mechatronics',
     'Robotics',
-    'Structural analysis',
-    'Thermodynamics',
-    'Vehicle engineering',
-    'Aerospace engineering',
+    'Structural Analysis',
+    'Thermodynamics & Heat Transfer',
+    'Vehicle Engineering',
+    'Aerospace Engineering',
     'Civil Engineering',
     'Architecture'
   ],
@@ -77,8 +77,8 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Real Estate Law',
     'Tax Law'
   ],
-  '🎓 Teaching': [
-    'English & Foreign Languages:',
+  '🎓 Teaching': ['Teaching'],
+  '🌐 English & Foreign Languages:': [
     'Linguistics',
     'Creative Writing',
     'Reading & Communication',
@@ -119,8 +119,8 @@ final Map<String, List<String>> academicInterestsOptionsList = {
   '💡 Philosophy': [
     'Theoretical Philosophy',
     'Practical Philosophy',
-    'Logic',
-    'History of Philosophy.'
+    'Philisophical Logic',
+    'History of Philosophy'
   ],
   '💰 Business': [
     'International Relations',

@@ -61,7 +61,8 @@ class _BasicsPageState extends State<BasicsPage> {
             mode: CupertinoDatePickerMode.date,
             onDateTimeChanged: (value) {
               if (value != _birthDate) {
-                setState(() => {value = _birthDate});
+                print(value);
+                setState(() => {_birthDate = value});
                 onboardingService.setBiographics(
                     _firstName, _lastName, _birthDate, _gradDate);
               }
@@ -100,7 +101,7 @@ class _BasicsPageState extends State<BasicsPage> {
             mode: CupertinoDatePickerMode.date,
             onDateTimeChanged: (value) {
               if (value != _gradDate) {
-                setState(() => {value = _gradDate});
+                setState(() => {_gradDate = value});
                 onboardingService.setBiographics(
                     _firstName, _lastName, _birthDate, _gradDate);
               }

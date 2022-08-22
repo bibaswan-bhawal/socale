@@ -43,7 +43,34 @@ class AWSLambdaService {
     final respBody = await resp.decodeBody();
 
     final responseMap = JsonDecoder().convert(respBody);
-    print(responseMap);
+    if (responseMap.containsKey('success') && responseMap["success"]) {
+      return true;
+    }
+
+    return false;
+  }
+
+  Future<bool> getMatches(String id) async {
+    final request = AWSHttpRequest(
+      method: AWSHttpMethod.post,
+      uri: Uri.https(
+          '7uetyhcxradhyc3zz6um6foj440lcbdy.lambda-url.us-west-2.on.aws', '/', {
+        'userId': id,
+      }),
+      headers: const {
+        AWSHeaders.contentType: 'application/x-amz-json-1.1',
+      },
+      body: json.encode({'userId': id}).codeUnits,
+    );
+
+    final signedRequest = await signer.sign(
+      request,
+      credentialScope: scope,
+    );
+    final resp = await signedRequest.send();
+    final respBody = await resp.decodeBody();
+
+    final responseMap = JsonDecoder().convert(respBody);
     if (responseMap.containsKey('success') && responseMap["success"]) {
       return true;
     }

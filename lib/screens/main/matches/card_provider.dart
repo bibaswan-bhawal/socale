@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
-enum CardStatus { like, dislike, superlike }
+import '../../../utils/providers/providers.dart';
+
+enum CardStatus { like, dislike }
 
 class CardProvider extends ChangeNotifier {
   List<String> _text = [];
   Offset _position = Offset.zero;
-
+  WidgetRef? ref;
   bool _isDragging = false;
   Size _screenSize = Size.zero;
   double _angle = 0;
@@ -17,6 +20,10 @@ class CardProvider extends ChangeNotifier {
 
   CardProvider() {
     resetUsers();
+  }
+
+  void setRef(WidgetRef ref) {
+    this.ref = ref;
   }
 
   void setScreenSize(Size screenSize) {
@@ -50,10 +57,6 @@ class CardProvider extends ChangeNotifier {
         print("dislike");
         dislike();
         return;
-      case CardStatus.superlike:
-        print("superlike");
-        superlike();
-        return;
       default:
         _position = Offset.zero;
         _angle = 0;
@@ -64,12 +67,15 @@ class CardProvider extends ChangeNotifier {
   }
 
   Future _nextCard() async {
-    if (_text.isEmpty) return;
-
-    await Future.delayed(Duration(milliseconds: 200));
-    _text.removeLast();
-    notifyListeners();
-    resetPosition();
+    if (ref != null) {
+      final matchesProvider = ref!.watch(matchAsyncController);
+      if (matchesProvider.value!.isEmpty) return;
+      print("remove");
+      await Future.delayed(Duration(milliseconds: 200));
+      ref!.read(matchAsyncController.notifier).removeMatch();
+      notifyListeners();
+      resetPosition();
+    }
   }
 
   void like() {
@@ -84,20 +90,12 @@ class CardProvider extends ChangeNotifier {
     _nextCard();
   }
 
-  void superlike() {
-    _angle = 0;
-    _position += Offset(0, -_screenSize.height);
-    _nextCard();
-  }
-
   CardStatus? getStatus() {
     final x = _position.dx;
-    final y = _position.dy;
 
     const delta = 100;
-    if (y <= -delta / 2) {
-      return CardStatus.superlike;
-    } else if (x >= delta) {
+
+    if (x >= delta) {
       return CardStatus.like;
     } else if (x <= -delta) {
       return CardStatus.dislike;
@@ -105,6 +103,8 @@ class CardProvider extends ChangeNotifier {
 
     return null;
   }
+
+  void getMatches() {}
 
   void resetUsers() {
     _text = <String>[
