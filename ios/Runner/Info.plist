@@ -19,7 +19,11 @@
 	<key>CFBundlePackageType</key>
 	<string>APPL</string>
 	<key>CFBundleShortVersionString</key>
+<<<<<<< HEAD
 	<string>$(FLUTTER_BUILD_NAME)</string>
+=======
+	<string>$(MARKETING_VERSION)</string>
+>>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
 	<key>CFBundleSignature</key>
 	<string>????</string>
 	<key>CFBundleURLTypes</key>
@@ -32,7 +36,11 @@
 		</dict>
 	</array>
 	<key>CFBundleVersion</key>
+<<<<<<< HEAD
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
+=======
+	<string>$(CURRENT_PROJECT_VERSION)</string>
+>>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>

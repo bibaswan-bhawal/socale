@@ -5,11 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 class CategoryChipSelectInputList extends StatefulWidget {
   final List<String> list;
   final Function onChange;
+  final String searchText;
 
   const CategoryChipSelectInputList({
     Key? key,
     required this.list,
     required this.onChange,
+    required this.searchText,
   }) : super(key: key);
 
   @override
@@ -37,8 +39,8 @@ class _CategoryChipSelectInputListState
   }
 
   Color backgroundColor(bool isSelected) {
-    if (isSelected) return Color(0xFFFFA133);
-    return Color(0xFF636363).withOpacity(0.15);
+    if (isSelected) return Color(0xFFFFAE50);
+    return Color(0xFFE9E8E8);
   }
 
   Color textColor(bool isSelected) {
@@ -69,7 +71,7 @@ class _CategoryChipSelectInputListState
               return TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
-                  hintText: "Search for skills",
+                  hintText: widget.searchText,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(style: BorderStyle.none, width: 0),
@@ -160,8 +162,10 @@ class _CategoryChipSelectInputListState
                             setState(() => skillsSelected.remove(key));
                             widget.onChange(skillsSelected);
                           } else {
-                            setState(() => skillsSelected.add(key));
-                            widget.onChange(skillsSelected);
+                            if (skillsSelected.length < 5) {
+                              setState(() => skillsSelected.add(key));
+                              widget.onChange(skillsSelected);
+                            }
                           }
                         },
                       ),

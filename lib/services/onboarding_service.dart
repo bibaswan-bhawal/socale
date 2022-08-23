@@ -167,7 +167,7 @@ class OnboardingService {
     final userId = cognitoUser.userId;
     final box = await Hive.openBox(userId);
 
-    print(box);
+    print(box.toMap().toString());
 
     if (!_checkIfFieldExistsLocally(box, 'onboardingStep') ||
         !_checkIfFieldExistsLocally(box, 'schoolEmail') ||
@@ -185,7 +185,6 @@ class OnboardingService {
         !_checkIfFieldExistsLocally(box, 'idealFriendDescription') ||
         !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
         !_checkIfFieldExistsLocally(box, 'college')) {
-      print("something missing");
       return false;
     }
 
@@ -193,14 +192,15 @@ class OnboardingService {
         await AuthRepository().fetchCurrentUserAttributes();
 
     if (attributes == null) {
-      print("failed to get atrributes");
+      print("failed to get attributes");
       return false;
     }
 
     final newUser = User(
       email: attributes
-          .where((element) => element.userAttributeKey.toString() == 'email')
-          .elementAt(0)
+          .where((element) =>
+              element.userAttributeKey == CognitoUserAttributeKey.email)
+          .first
           .value,
       id: userId,
       schoolEmail: box.get('schoolEmail'),

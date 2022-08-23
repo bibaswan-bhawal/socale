@@ -1155,7 +1155,7 @@ packages:
       name: visibility_detector
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.3.3"
+    version: "0.2.2"
   vm_service:
     dependency: transitive
     description:

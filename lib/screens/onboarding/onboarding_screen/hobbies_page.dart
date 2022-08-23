@@ -77,6 +77,7 @@ class _HobbiesPageState extends State<HobbiesPage> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: CategoryChipSelectInput(
+                  searchText: "Search for hobbies",
                   onChange: onChanged,
                   map: hobbiesOptionsList,
                 ),
