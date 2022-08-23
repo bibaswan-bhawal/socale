@@ -36,6 +36,7 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   int index = 0;
   int detailsIndex = 0;
+  bool isLoading = false;
 
   List<String> _major = [];
   List<String> _minor = [];
@@ -213,10 +214,39 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
     }
 
     if (_pageController.page == 13) {
-      onboardingService.setSituationalDecisions(situationalQuestions);
-      onboardingService.setAcademicInclination(100);
-      uploadUser();
-      return;
+      if (!isLoading) {
+        setState(() => isLoading = true);
+
+        FocusManager.instance.primaryFocus?.unfocus();
+        final loadingSnackBar = SnackBar(
+          duration: Duration(days: 365),
+          content: Row(
+            children: [
+              Expanded(
+                child: Text(
+                  "Saving profile data",
+                  textAlign: TextAlign.left,
+                ),
+              ),
+              SizedBox(
+                height: 18,
+                width: 18,
+                child: CircularProgressIndicator(
+                  strokeWidth: 2,
+                ),
+              ),
+            ],
+          ),
+        );
+
+        ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
+
+        onboardingService.setSituationalDecisions(situationalQuestions);
+        onboardingService.setAcademicInclination(100);
+        uploadUser();
+        return;
+      }
     }
 
     _pageController.nextPage(
@@ -225,22 +255,35 @@ class _OnboardingScreenState extends State<OnboardingScreen> {
 
   uploadUser() async {
     if (await onboardingService.createOnboardedUser()) {
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
       Get.offAllNamed('/main');
     } else {
-      print("FAILED TO CREATE USER");
-      //Get.offAllNamed('/auth');
+      setState(() => isLoading = false);
+      FocusManager.instance.primaryFocus?.unfocus();
+      final loadingSnackBar = SnackBar(
+        duration: Duration(days: 365),
+        content: Text(
+          "Something went wrong when saving your profile data",
+          textAlign: TextAlign.center,
+        ),
+      );
+
+      ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
     }
   }
 
   onPreviousClickHandler() {
-    if (_pageController.page == 2 &&
-        _academicsDetailsPageController.page != 0) {
-      _academicsDetailsPageController.previousPage(
-          duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
-      return;
-    }
+    if (!isLoading) {
+      if (_pageController.page == 2 &&
+          _academicsDetailsPageController.page != 0) {
+        _academicsDetailsPageController.previousPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        return;
+      }
 
-    _pageController.previousPage(
-        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      _pageController.previousPage(
+          duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    }
   }
 }

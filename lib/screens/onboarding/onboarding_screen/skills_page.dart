@@ -77,6 +77,7 @@ class _SkillsPageState extends State<SkillsPage> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: CategoryChipSelectInput(
+                  searchText: "Search for skills",
                   onChange: onChanged,
                   map: skillsOptionsList,
                 ),

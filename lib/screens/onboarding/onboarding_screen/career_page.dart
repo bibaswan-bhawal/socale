@@ -77,6 +77,7 @@ class _CareersPageState extends State<CareersPage> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 40.0),
                 child: CategoryChipSelectInput(
+                  searchText: "Search for career goals",
                   onChange: onChanged,
                   map: careersOptionsList,
                 ),

@@ -79,6 +79,7 @@ class _DescribePageState extends State<DescribePage> {
                   top: 40.0,
                 ),
                 child: CategoryChipSelectInputList(
+                  searchText: "Search",
                   onChange: onChanged,
                   list: descriptionOptionList,
                 ),

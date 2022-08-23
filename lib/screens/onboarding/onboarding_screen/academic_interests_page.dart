@@ -78,6 +78,7 @@ class _AcademicInterestsPageState extends State<AcademicInterestsPage> {
                   top: 40.0,
                 ),
                 child: CategoryChipSelectInput(
+                  searchText: "search for academic interests",
                   onChange: onChanged,
                   map: academicInterestsOptionsList,
                 ),

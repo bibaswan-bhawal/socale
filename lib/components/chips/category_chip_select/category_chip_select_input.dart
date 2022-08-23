@@ -5,11 +5,13 @@ import 'package:google_fonts/google_fonts.dart';
 class CategoryChipSelectInput extends StatefulWidget {
   final Map<String, List<String>> map;
   final Function onChange;
+  final String searchText;
 
   const CategoryChipSelectInput({
     Key? key,
     required this.map,
     required this.onChange,
+    required this.searchText,
   }) : super(key: key);
 
   @override
@@ -33,7 +35,6 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
 
     widget.map.forEach((key, value) {
       options.add(key);
-      autocompleteList.add(key);
       for (var element in value) {
         autocompleteList.add(element);
       }
@@ -172,7 +173,7 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
               return TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
-                  hintText: "Search for skills",
+                  hintText: widget.searchText,
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(50),
                     borderSide: BorderSide(style: BorderStyle.none, width: 0),
@@ -200,10 +201,16 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
               });
             },
             onSelected: (String selection) {
-              setState(() => skillsSelected.addIf(
-                  !skillsSelected.contains(selection), selection));
-              widget.onChange(skillsSelected);
-              textEditingController.clear();
+              if (!skillsSelected.contains(selection)) {
+                setState(() => skillsSelected.add(selection));
+                String cat = widget.map.keys
+                    .where((key) => widget.map[key]!.contains(selection))
+                    .first;
+                setState(() =>
+                    categoryAdded.addIf(!categoryAdded.contains(cat), cat));
+                widget.onChange(skillsSelected);
+                textEditingController.clear();
+              }
             },
             optionsViewBuilder: (context, onAutoCompleteSelect, options) {
               return Align(
