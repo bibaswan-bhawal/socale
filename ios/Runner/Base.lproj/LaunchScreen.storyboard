@@ -18,17 +18,8 @@
                     <view key="view" contentMode="scaleToFill" id="Ze5-6b-2t3">
                         <rect key="frame" x="0.0" y="0.0" width="414" height="896"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-<<<<<<< HEAD
                         <color key="backgroundColor" red="1" green="0.63137254901960782" blue="0.20000000000000001" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
-=======
-                        <subviews>
-                            <imageView clipsSubviews="YES" userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" image="LaunchBackground" translatesAutoresizingMaskIntoConstraints="NO" id="4Q7-2K-piR">
-                                <rect key="frame" x="87" y="384" width="240" height="128"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                            </imageView>
-                        </subviews>
-                        <color key="backgroundColor" red="1" green="0.63137254901960782" blue="0.20000000000000001" alpha="1" colorSpace="calibratedRGB"/>
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
+
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="iYj-Kq-Ea1" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -36,10 +27,4 @@
             <point key="canvasLocation" x="76.811594202898561" y="251.11607142857142"/>
         </scene>
     </scenes>
-<<<<<<< HEAD
-=======
-    <resources>
-        <image name="LaunchBackground" width="1" height="1"/>
-    </resources>
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
 </document>
