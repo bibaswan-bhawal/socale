@@ -122,13 +122,9 @@ final Map<String, List<String>> academicInterestsOptionsList = {
     'Philisophical Logic',
     'History of Philosophy'
   ],
-  '💰 Business': [
-    'International Relations',
-    'Human Resources',
-    'Public Relations'
-  ],
+  '💰 Business': ['International Relations', 'Human Resources', 'Public Relations'],
   '🧘 Psychology': [
-    'Clinical psychology',
+    'Clinical Psychology',
     'Psychiatrist',
     'Guidance Counseling',
     'Marriage Counseling',

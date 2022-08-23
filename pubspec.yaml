@@ -35,7 +35,7 @@ dependencies:
   encrypt: ^5.0.1
   animations: ^2.0.3
   provider: ^6.0.3
-  flutter_chat_ui: ^1.5.8
+  flutter_chat_ui: ^1.6.4
   flutter_chat_types: ^3.4.5
   flutter_launcher_icons: ^0.10.0
   flutter:
@@ -59,7 +59,6 @@ flutter_icons:
   image_path_ios: "assets/logo_ios.png"
   image_path_android: "assets/logo_android.png"
   min_sdk_android: 24 # android min sdk min:16, default 21
-
 
 flutter:
   uses-material-design: true

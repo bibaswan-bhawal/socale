@@ -439,7 +439,7 @@ packages:
       name: flutter_chat_ui
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "1.5.8"
+    version: "1.6.4"
   flutter_dotenv:
     dependency: "direct main"
     description:
@@ -472,7 +472,7 @@ packages:
       name: flutter_link_previewer
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "2.6.6"
+    version: "3.0.1"
   flutter_linkify:
     dependency: transitive
     description:
@@ -863,7 +863,7 @@ packages:
       name: photo_view
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "0.13.0"
+    version: "0.14.0"
   pin_code_fields:
     dependency: "direct main"
     description:

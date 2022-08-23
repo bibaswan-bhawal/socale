@@ -83,6 +83,8 @@ class _SocaleAppState extends ConsumerState<SocaleApp> {
       setState(() => _isSignedIn = session.isSignedIn);
     } on NotAuthorizedException catch (_) {
       throw ("error");
+    } on UserNotFoundException catch (_) {
+      setState(() => _isSignedIn = false);
     }
   }
 
@@ -135,10 +137,8 @@ class _SocaleAppState extends ConsumerState<SocaleApp> {
   getInitialPage() async {
     if (_isAmplifyConfigured) {
       if (_isSignedIn) {
-        bool isOnBoardingComplete =
-            await onboardingService.checkIfUserIsOnboarded();
-        OnboardingStep currentStep =
-            await onboardingService.getOnboardingStep();
+        bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
+        OnboardingStep currentStep = await onboardingService.getOnboardingStep();
         if (isOnBoardingComplete) {
           final user = await Amplify.Auth.getCurrentUser();
           ref.read(userAsyncController.notifier).setUser(user.userId);

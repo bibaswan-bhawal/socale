@@ -78,7 +78,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   handleSocialSignIn(AuthProvider oAuth) async {
-    FocusManager.instance.primaryFocus?.unfocus();
+    // FocusManager.instance.primaryFocus?.unfocus();
     bool isSignedIn = await AuthRepository().signInWithSocialWebUI(oAuth);
     userSignedInHandler(isSignedIn);
   }
@@ -180,8 +180,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            VerifyEmailScreen(
+        pageBuilder: (context, animation, secondaryAnimation) => VerifyEmailScreen(
           email: _email,
           password: _password,
         ),
