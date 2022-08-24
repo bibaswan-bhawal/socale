@@ -12,8 +12,8 @@ class ChatService {
   Future<List<User>> getUsersByRoom(Room room) async {
     List<User> users = [];
 
-    List<UserRoom> userRooms = await Amplify.DataStore.query(UserRoom.classType,
-        where: UserRoom.ROOM.eq(room.id));
+    List<UserRoom> userRooms =
+        await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.ROOM.eq(room.id));
 
     for (UserRoom userRoom in userRooms) {
       users.add(userRoom.user!);
@@ -42,9 +42,8 @@ class ChatService {
 
     final response = await Amplify.API.query(request: request).response;
     Map<String, dynamic> data = jsonDecode(response.data);
-    List<dynamic> users = data['listUserRooms']['items']
-        .map((room) => room['user']['id'].toString())
-        .toList();
+    List<dynamic> users =
+        data['listUserRooms']['items'].map((room) => room['user']['id'].toString()).toList();
 
     return users.map((e) => e.toString()).toList();
   }
@@ -69,9 +68,8 @@ class ChatService {
 
     final response = await Amplify.API.query(request: request).response;
     Map<String, dynamic> data = jsonDecode(response.data);
-    List<dynamic> rooms = data['listUserRooms']['items']
-        .map((room) => room['room']['id'].toString())
-        .toList();
+    List<dynamic> rooms =
+        data['listUserRooms']['items'].map((room) => room['room']['id'].toString()).toList();
 
     return rooms.map((e) => e.toString()).toList();
   }
@@ -90,11 +88,9 @@ class ChatService {
 
     await Amplify.DataStore.save(room);
 
-    await Amplify.DataStore.save(
-        UserRoom(user: await _getUserById(userId), room: room));
+    await Amplify.DataStore.save(UserRoom(user: await _getUserById(userId), room: room));
 
-    await Amplify.DataStore.save(
-        UserRoom(user: await _getUserById(otherUserId), room: room));
+    await Amplify.DataStore.save(UserRoom(user: await _getUserById(otherUserId), room: room));
 
     return room;
   }
@@ -129,7 +125,7 @@ class ChatService {
         return response.data;
       }
     }
-
+    print(commonRooms);
     return await _createRoom(otherUserId);
   }
 

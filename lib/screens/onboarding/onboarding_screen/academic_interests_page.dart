@@ -19,6 +19,7 @@ class _AcademicInterestsPageState extends State<AcademicInterestsPage> {
 
   onChanged(List<String> values) {
     setState(() => academicInterests = values);
+    print('tot');
     onboardingService.setAcademicInterests(values);
   }
 
@@ -48,8 +49,7 @@ class _AcademicInterestsPageState extends State<AcademicInterestsPage> {
                         style: GoogleFonts.poppins(
                           fontSize: 32,
                           fontWeight: FontWeight.bold,
-                          foreground: Paint()
-                            ..shader = ColorValues.socaleOrangeGradient,
+                          foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
                         ),
                       ),
                     ],

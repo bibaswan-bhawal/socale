@@ -361,11 +361,8 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< HEAD
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-=======
-				CURRENT_PROJECT_VERSION = 1;
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
+				CURRENT_PROJECT_VERSION = 2;
+				DEVELOPMENT_TEAM = 7PAJ7AJZFH;
 				DEVELOPMENT_TEAM = 7PAJ7AJZFH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -374,10 +371,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-<<<<<<< HEAD
-=======
 				MARKETING_VERSION = 0.0.1;
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
 				PRODUCT_BUNDLE_IDENTIFIER = com.socale.socale;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -505,11 +499,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< HEAD
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-=======
-				CURRENT_PROJECT_VERSION = 1;
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 7PAJ7AJZFH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -518,10 +508,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-<<<<<<< HEAD
-=======
 				MARKETING_VERSION = 0.0.1;
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
 				PRODUCT_BUNDLE_IDENTIFIER = com.socale.socale;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -541,11 +528,7 @@
 				CLANG_ENABLE_MODULES = YES;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< HEAD
-				CURRENT_PROJECT_VERSION = "$(FLUTTER_BUILD_NUMBER)";
-=======
-				CURRENT_PROJECT_VERSION = 1;
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
+				CURRENT_PROJECT_VERSION = 2;
 				DEVELOPMENT_TEAM = 7PAJ7AJZFH;
 				ENABLE_BITCODE = NO;
 				INFOPLIST_FILE = Runner/Info.plist;
@@ -554,10 +537,7 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-<<<<<<< HEAD
-=======
 				MARKETING_VERSION = 0.0.1;
->>>>>>> 328d6f63ee1292a328b80ec2d6893a19744b7e1d
 				PRODUCT_BUNDLE_IDENTIFIER = com.socale.socale;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";

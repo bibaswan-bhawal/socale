@@ -85,8 +85,8 @@ class OnboardingService {
     await setOnboardingStep(OnboardingStep.biographics);
   }
 
-  Future<void> setBiographics(String firstName, String lastName,
-      DateTime dateOfBirth, DateTime graduationMonth) async {
+  Future<void> setBiographics(
+      String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('firstName', firstName);
@@ -96,8 +96,7 @@ class OnboardingService {
     await setOnboardingStep(OnboardingStep.collegeInfo);
   }
 
-  Future<void> setCollegeInfo(
-      List<String> major, List<String> minor, List<String> college) async {
+  Future<void> setCollegeInfo(List<String> major, List<String> minor, List<String> college) async {
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('major', major);
@@ -188,18 +187,16 @@ class OnboardingService {
       return false;
     }
 
-    List<AuthUserAttribute>? attributes =
-        await AuthRepository().fetchCurrentUserAttributes();
+    List<AuthUserAttribute>? attributes = await AuthRepository().fetchCurrentUserAttributes();
 
     if (attributes == null) {
       print("failed to get attributes");
       return false;
     }
-
+    print(attributes.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email));
     final newUser = User(
       email: attributes
-          .where((element) =>
-              element.userAttributeKey == CognitoUserAttributeKey.email)
+          .where((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
           .first
           .value,
       id: userId,
