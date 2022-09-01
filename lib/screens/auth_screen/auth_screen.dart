@@ -10,8 +10,7 @@ import 'dart:io';
 
 class AuthScreen extends StatefulWidget {
   final AuthPages initialScreen;
-  const AuthScreen({Key? key, this.initialScreen = AuthPages.getStarted})
-      : super(key: key);
+  const AuthScreen({Key? key, this.initialScreen = AuthPages.getStarted}) : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();

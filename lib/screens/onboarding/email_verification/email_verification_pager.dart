@@ -4,19 +4,19 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/utils/validators.dart';
-import 'package:socale/values/colors.dart';
+import 'package:socale/values/styles.dart';
 
 class EmailVerificationPager extends StatefulWidget {
-  final GlobalObjectKey<FormState> formEmailKey, formCodeKey;
   final PageController pageController;
-  final Function(String?) onSavedCode, onSavedEmail;
+  final GlobalObjectKey<FormState> formEmailKey, formOptKey;
+  final Function(String?) onOtpSaved, onSavedEmail;
 
   const EmailVerificationPager({
     Key? key,
-    required this.formEmailKey,
-    required this.formCodeKey,
     required this.pageController,
-    required this.onSavedCode,
+    required this.formEmailKey,
+    required this.formOptKey,
+    required this.onOtpSaved,
     required this.onSavedEmail,
   }) : super(key: key);
 
@@ -25,11 +25,18 @@ class EmailVerificationPager extends StatefulWidget {
 }
 
 class _EmailVerificationPagerState extends State<EmailVerificationPager> {
+  final _optFocusNode = FocusNode();
+
   @override
   Widget build(BuildContext context) {
     return PageView(
-      physics: NeverScrollableScrollPhysics(),
       controller: widget.pageController,
+      onPageChanged: (page) {
+        if (page == 1) {
+          _optFocusNode.requestFocus();
+        }
+      },
+      physics: NeverScrollableScrollPhysics(),
       children: [
         Form(
           key: widget.formEmailKey,
@@ -49,76 +56,54 @@ class _EmailVerificationPagerState extends State<EmailVerificationPager> {
         Column(
           children: [
             Form(
-              key: widget.formCodeKey,
+              key: widget.formOptKey,
               child: Padding(
                 padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
                 child: PinCodeTextField(
+                  focusNode: _optFocusNode,
                   length: 4,
                   useHapticFeedback: true,
-                  pinTheme: getPinTheme(),
+                  pinTheme: StyleValues.optPinTheme,
                   hintCharacter: "0",
                   animationType: AnimationType.none,
-                  onCompleted: onComplete,
-                  onChanged: onChange,
                   validator: Validators.validateCode,
-                  onSaved: widget.onSavedCode,
+                  onSaved: widget.onOtpSaved,
                   autovalidateMode: AutovalidateMode.disabled,
                   autoFocus: true,
                   autoDismissKeyboard: true,
                   appContext: context,
-                  beforeTextPaste: beforeTextPaste,
                   errorTextSpace: 20,
+                  onChanged: (String value) {},
                 ),
               ),
             ),
-            Padding(
-              padding: EdgeInsets.fromLTRB(70, 0, 70, 20),
-              child: RichText(
-                text: TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'Resend Code',
-                      style: GoogleFonts.poppins(
-                          color: Colors.black,
-                          decoration: TextDecoration.underline,
-                          fontSize: 14,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.3),
-                      recognizer: TapGestureRecognizer()
-                        ..onTap = () {
-                          widget.pageController.previousPage(
-                            duration: Duration(milliseconds: 300),
-                            curve: Curves.easeInOut,
-                          );
-                        },
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'Resend Code',
+                    style: GoogleFonts.poppins(
+                      color: Colors.black,
+                      decoration: TextDecoration.underline,
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -0.3,
                     ),
-                  ],
-                ),
-                textAlign: TextAlign.center,
+                    recognizer: TapGestureRecognizer()
+                      ..onTap = () {
+                        widget.pageController.previousPage(
+                          duration: Duration(milliseconds: 500),
+                          curve: Curves.easeInOut,
+                        );
+                      },
+                  ),
+                ],
               ),
+              textAlign: TextAlign.center,
             ),
           ],
         ),
       ],
-    );
-  }
-
-  onComplete(value) {}
-  onChange(value) {}
-
-  bool beforeTextPaste(value) {
-    return int.tryParse(value!) != null ? true : false;
-  }
-
-  getPinTheme() {
-    return PinTheme(
-      shape: PinCodeFieldShape.underline,
-      borderRadius: BorderRadius.circular(5),
-      fieldHeight: 40,
-      fieldWidth: 40,
-      activeColor: Colors.black,
-      selectedColor: ColorValues.socaleDarkOrange,
-      inactiveColor: Colors.black,
     );
   }
 }

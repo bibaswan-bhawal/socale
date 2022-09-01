@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:socale/values/colors.dart';
 
 class StyleValues {
@@ -78,8 +79,7 @@ class StyleValues {
     ),
   );
 
-  static final OutlineInputBorder formTextFieldOutlinedBorderFocused =
-      OutlineInputBorder(
+  static final OutlineInputBorder formTextFieldOutlinedBorderFocused = OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(
       color: ColorValues.elementColor,
@@ -87,8 +87,7 @@ class StyleValues {
     ),
   );
 
-  static final OutlineInputBorder formTextFieldOutlinedBorderError =
-      OutlineInputBorder(
+  static final OutlineInputBorder formTextFieldOutlinedBorderError = OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(
       color: ColorValues.textFieldError,
@@ -96,8 +95,7 @@ class StyleValues {
     ),
   );
 
-  static final OutlineInputBorder formTextFieldOutlinedBorderErrorEnabled =
-      OutlineInputBorder(
+  static final OutlineInputBorder formTextFieldOutlinedBorderErrorEnabled = OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(
       color: ColorValues.textFieldError,
@@ -105,8 +103,7 @@ class StyleValues {
     ),
   );
 
-  static final OutlineInputBorder formTextFieldOutlinedBorderEnabled =
-      OutlineInputBorder(
+  static final OutlineInputBorder formTextFieldOutlinedBorderEnabled = OutlineInputBorder(
     borderRadius: BorderRadius.circular(10),
     borderSide: BorderSide(
       color: ColorValues.elementColor,
@@ -122,9 +119,18 @@ class StyleValues {
     ),
   );
 
-  static final BoxConstraints formTextFieldPrefixIconBoxConstraints =
-      BoxConstraints(
+  static final BoxConstraints formTextFieldPrefixIconBoxConstraints = BoxConstraints(
     minHeight: 18,
     minWidth: 48,
+  );
+
+  static final PinTheme optPinTheme = PinTheme(
+    shape: PinCodeFieldShape.underline,
+    borderRadius: BorderRadius.circular(5),
+    fieldHeight: 40,
+    fieldWidth: 40,
+    activeColor: Colors.black,
+    selectedColor: ColorValues.socaleDarkOrange,
+    inactiveColor: Colors.black,
   );
 }

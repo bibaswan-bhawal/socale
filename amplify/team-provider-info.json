@@ -14,7 +14,11 @@
     "categories": {
       "auth": {
         "undefined": {},
-        "true": {},
+        "true": {
+          "facebookAppId": "413220534092388",
+          "googleClientId": "1038363379354-438rslugb563casado20hbsumhp777l3.apps.googleusercontent.com",
+          "appleAppId": "co.socale.socale.ios"
+        },
         "SocaleAuth": {
           "facebookAppId": "413220534092388",
           "googleClientId": "1038363379354-438rslugb563casado20hbsumhp777l3.apps.googleusercontent.com",

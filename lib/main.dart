@@ -1,7 +1,6 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'dart:async';
 
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -17,8 +16,7 @@ import 'package:socale/auth/auth_repository.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
-import 'package:socale/screens/onboarding/email_verification_screen/email_verification_screen.dart';
-import 'package:socale/screens/onboarding/onboarding_screen/onboarding_screen.dart';
+import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/splash_screen/splash_screen.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
@@ -39,28 +37,28 @@ void main() async {
 class SocaleApp extends ConsumerStatefulWidget {
   const SocaleApp({Key? key}) : super(key: key);
   @override
-  _SocaleAppState createState() => _SocaleAppState();
+  SocaleAppState createState() => SocaleAppState();
 }
 
-class _SocaleAppState extends ConsumerState<SocaleApp> {
+class SocaleAppState extends ConsumerState<SocaleApp> {
   List<Widget?> initialPage = [SplashScreen()];
   bool _isAmplifyConfigured = false;
   bool _isSignedIn = false;
   int _pageIndex = 0;
 
   Future<void> _configureAmplify() async {
-    final authPlugin = AmplifyAuthCognito();
-    final apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
-    final storagePlugin = AmplifyStorageS3();
-    final dataStorePlugin = AmplifyDataStore(
-      modelProvider: ModelProvider.instance,
-    );
+    //AmplifyAnalyticsPinpoint analyticsPlugin = AmplifyAnalyticsPinpoint();
+    AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
+    AmplifyAPI apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
+    AmplifyStorageS3 storagePlugin = AmplifyStorageS3();
+    AmplifyDataStore dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
 
     await Amplify.addPlugins([
       authPlugin,
       apiPlugin,
       storagePlugin,
       dataStorePlugin,
+      //analyticsPlugin,
     ]);
 
     try {
@@ -78,7 +76,8 @@ class _SocaleAppState extends ConsumerState<SocaleApp> {
       final session = await Amplify.Auth.fetchAuthSession();
       if (session.isSignedIn == true) {
         authRepository.startAuthStreamListener();
-        Amplify.DataStore.start();
+        await ref.read(userAttributesAsyncController.notifier).setAttributes();
+        await Amplify.DataStore.start();
       }
       setState(() => _isSignedIn = session.isSignedIn);
     } on NotAuthorizedException catch (_) {
@@ -138,15 +137,13 @@ class _SocaleAppState extends ConsumerState<SocaleApp> {
     if (_isAmplifyConfigured) {
       if (_isSignedIn) {
         bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
-        OnboardingStep currentStep = await onboardingService.getOnboardingStep();
+
         if (isOnBoardingComplete) {
           final user = await Amplify.Auth.getCurrentUser();
           ref.read(userAsyncController.notifier).setUser(user.userId);
           ref.read(matchAsyncController.notifier).setMatches(user.userId);
+
           initialPage.insert(1, MainApp());
-          setState(() => _pageIndex = 1);
-        } else if (currentStep == OnboardingStep.started) {
-          initialPage.insert(1, EmailVerificationScreen());
           setState(() => _pageIndex = 1);
         } else {
           initialPage.insert(1, OnboardingScreen());

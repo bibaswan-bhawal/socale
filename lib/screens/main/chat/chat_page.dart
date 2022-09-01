@@ -1,13 +1,10 @@
 import 'dart:async';
-import 'dart:convert';
-import 'dart:math';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart' as chat_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/chat_service.dart';
 
@@ -52,9 +49,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   getMessages() {
-    _stream = Amplify.DataStore.observeQuery(Message.classType,
-            where: Message.ROOM.eq(widget.room.id),
-            sortBy: [Message.CREATEDAT.descending()])
+    _stream = Amplify.DataStore.observeQuery(Message.classType, where: Message.ROOM.eq(widget.room.id), sortBy: [Message.CREATEDAT.descending()])
         .listen((QuerySnapshot<Message> snapshot) {
       if (snapshot.isSynced) {
         List<types.Message> messages = [];
@@ -63,13 +58,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           messages.add(
             types.TextMessage(
               id: message.id,
-              author: _users
-                  .where((element) => element.id == message.author.id)
-                  .first,
+              author: _users.where((element) => element.id == message.author.id).first,
               roomId: widget.room.id,
               text: message.encryptedText,
-              createdAt:
-                  message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
+              createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
             ),
           );
         }

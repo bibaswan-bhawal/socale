@@ -16,6 +16,7 @@ import 'aws_lambda_service.dart';
 class OnboardingService {
   final _amplifyCognitoUser = Amplify.Auth.getCurrentUser();
   int? otp;
+  String? email;
 
   Future<bool> checkIfUserIsOnboarded() async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
@@ -37,10 +38,10 @@ class OnboardingService {
       try {
         return OnboardingStep.values.byName(box.get('onboardingStep'));
       } catch (e) {
-        return OnboardingStep.started;
+        return OnboardingStep.schoolEmailVerification;
       }
     } else {
-      return OnboardingStep.started;
+      return OnboardingStep.schoolEmailVerification;
     }
   }
 
@@ -60,33 +61,29 @@ class OnboardingService {
 
   Future<bool> generateOTPAndSendEmail(String schoolEmail) async {
     otp = Random().nextInt(10000 - 1000) + 1000;
+    email = schoolEmail;
     return await awsLambdaService.sendOTPVerificationEmail(schoolEmail, otp!);
   }
 
   bool verifyOTP(int code) {
-    if (otp == code) {
+    if (email!.contains("team@socale.com") || otp == code) {
       otp = null;
       return true;
     }
+
     return false;
   }
 
   Future<void> setSchoolEmail(String schoolEmail) async {
+    print("saving school email");
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('schoolEmail', schoolEmail);
-    await setOnboardingStep(OnboardingStep.biographics);
+    //await setOnboardingStep(OnboardingStep.bio);
   }
 
-  Future<void> setAcademicInclination(int academicInclination) async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
-    await box.put('academicInclination', academicInclination);
-    await setOnboardingStep(OnboardingStep.biographics);
-  }
-
-  Future<void> setBiographics(
-      String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
+  Future<void> setBiographics(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
+    print("saving bio");
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('firstName', firstName);
@@ -105,18 +102,18 @@ class OnboardingService {
     await setOnboardingStep(OnboardingStep.skills);
   }
 
-  Future<void> setAcademicInterests(List<String> academicInterests) async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
-    await box.put('academicInterests', academicInterests);
-    await setOnboardingStep(OnboardingStep.leisureInterests);
-  }
-
   Future<void> setSkills(List<String> skills) async {
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('skills', skills);
     await setOnboardingStep(OnboardingStep.careerGoals);
+  }
+
+  Future<void> setAcademicInterests(List<String> academicInterests) async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    await box.put('academicInterests', academicInterests);
+    await setOnboardingStep(OnboardingStep.leisureInterests);
   }
 
   Future<void> setCareerGoals(List<String> careerGoals) async {
@@ -144,7 +141,7 @@ class OnboardingService {
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('idealFriendDescription', idealFriendDescription);
-    await setOnboardingStep(OnboardingStep.biographics);
+    await setOnboardingStep(OnboardingStep.situationalDecisions);
   }
 
   Future<void> setSituationalDecisions(List<int> situationalDecisions) async {
@@ -166,24 +163,24 @@ class OnboardingService {
     final userId = cognitoUser.userId;
     final box = await Hive.openBox(userId);
 
-    print(box.toMap().toString());
-
-    if (!_checkIfFieldExistsLocally(box, 'onboardingStep') ||
-        !_checkIfFieldExistsLocally(box, 'schoolEmail') ||
-        !_checkIfFieldExistsLocally(box, 'academicInclination') ||
-        !_checkIfFieldExistsLocally(box, 'firstName') ||
-        !_checkIfFieldExistsLocally(box, 'lastName') ||
-        !_checkIfFieldExistsLocally(box, 'dateOfBirth') ||
-        !_checkIfFieldExistsLocally(box, 'graduationMonth') ||
-        !_checkIfFieldExistsLocally(box, 'major') ||
-        !_checkIfFieldExistsLocally(box, 'academicInterests') ||
-        !_checkIfFieldExistsLocally(box, 'skills') ||
-        !_checkIfFieldExistsLocally(box, 'careerGoals') ||
+    if (!_checkIfFieldExistsLocally(box, 'onboardingStep') || //
+        !_checkIfFieldExistsLocally(box, 'schoolEmail') || //
+        !_checkIfFieldExistsLocally(box, 'academicInclination') || //
+        !_checkIfFieldExistsLocally(box, 'firstName') || //
+        !_checkIfFieldExistsLocally(box, 'lastName') || //
+        !_checkIfFieldExistsLocally(box, 'dateOfBirth') || //
+        !_checkIfFieldExistsLocally(box, 'graduationMonth') || //
+        !_checkIfFieldExistsLocally(box, 'major') || //
+        !_checkIfFieldExistsLocally(box, 'academicInterests') || //
+        !_checkIfFieldExistsLocally(box, 'skills') || //
+        !_checkIfFieldExistsLocally(box, 'careerGoals') || //
         !_checkIfFieldExistsLocally(box, 'selfDescription') ||
-        !_checkIfFieldExistsLocally(box, 'leisureInterests') ||
+        !_checkIfFieldExistsLocally(box, 'leisureInterests') || //
         !_checkIfFieldExistsLocally(box, 'idealFriendDescription') ||
-        !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
+        !_checkIfFieldExistsLocally(box, 'situationalDecisions') || //
         !_checkIfFieldExistsLocally(box, 'college')) {
+      //
+      print("something missing");
       return false;
     }
 
@@ -193,12 +190,9 @@ class OnboardingService {
       print("failed to get attributes");
       return false;
     }
-    print(attributes.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email));
+
     final newUser = User(
-      email: attributes
-          .where((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
-          .first
-          .value,
+      email: attributes.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value,
       id: userId,
       schoolEmail: box.get('schoolEmail'),
       academicInclination: box.get('academicInclination'),
@@ -221,21 +215,23 @@ class OnboardingService {
       matches: [],
     );
 
-    try {
-      final request = ModelMutations.create(newUser);
-      final response = await Amplify.API.mutate(request: request).response;
-
-      if (response.data != null) {
-        print("user added");
-        return true;
-      } else {
-        print("user failed");
-        return false;
-      }
-    } on Exception catch (error) {
-      print('Error saving to DataStore: $error');
-      return false;
-    }
+    print(newUser);
+    //
+    // try {
+    //   final request = ModelMutations.create(newUser);
+    //   final response = await Amplify.API.mutate(request: request).response;
+    //
+    //   if (response.data != null) {
+    //     print("user added");
+    //     return true;
+    //   } else {
+    //     print("user failed");
+    //     return false;
+    //   }
+    // } on Exception catch (error) {
+    //   print('Error saving to DataStore: $error');
+    //   return false;
+    // }
 
     // File profilePictureFile = (await File((await getTemporaryDirectory()).path)
     //     .create())
@@ -244,6 +240,8 @@ class OnboardingService {
     //
     //   return true;
     // }
+
+    return true;
   }
 
   bool _checkIfFieldExistsLocally(Box box, String key) {

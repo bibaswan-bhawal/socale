@@ -4,15 +4,16 @@ import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/auth/auth_repository.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/ButtonGroups/SocialSignInButtonGroup.dart';
-import 'package:socale/components/Buttons/primary_button.dart';
+import 'package:socale/components/Buttons/primary_loading_button.dart';
 import 'package:socale/components/Dividers/signInDivider.dart';
 import 'package:socale/components/Headers/login_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:get/get.dart';
+import 'package:socale/components/snackbar/auth_snackbars.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/providers/providers.dart';
@@ -35,166 +36,54 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   updateEmail(value) => setState(() => _email = value);
   updatePassword(value) => setState(() => _password = value);
 
-  void somethingWrong() {
-    setState(() => isLoading = false);
-    final errorSnackBar = SnackBar(
-      content: Text(
-        "Something went wrong signing in, please try again.",
-        textAlign: TextAlign.center,
-      ),
-    );
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
-  }
-
-  void userNotFound() {
-    setState(() => isLoading = false);
-    final errorSnackBar = SnackBar(
-      content: Text(
-        "We could not find your account please sign up.",
-        textAlign: TextAlign.center,
-      ),
-    );
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
-  }
-
-  emailSignInHandler() async {
+  // Handlers
+  void emailSignInHandler() async {
     FocusManager.instance.primaryFocus?.unfocus();
-    final loadingSnackBar = SnackBar(
-      duration: Duration(days: 365),
-      content: Row(
-        children: [
-          Expanded(
-            child: Text(
-              "Signing in",
-              textAlign: TextAlign.left,
-            ),
-          ),
-          SizedBox(
-            height: 18,
-            width: 18,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-            ),
-          ),
-        ],
-      ),
-    );
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
 
     if (!isLoading) {
-      setState(() => isLoading = true);
+      // Validate input data and try signing in
       final form = _formKey.currentState;
       final isValid = form != null ? form.validate() : false;
 
       if (isValid) {
         form.save();
-
-        try {
-          final result = await authRepository.login(_email, _password);
-          if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            Navigator.of(context).push(
-              PageRouteBuilder(
-                pageBuilder: (context, animation, secondaryAnimation) =>
-                    VerifyEmailScreen(
-                  email: _email,
-                  password: _password,
-                ),
-                transitionsBuilder:
-                    (context, animation, secondaryAnimation, child) {
-                  return SharedAxisTransition(
-                      animation: animation,
-                      secondaryAnimation: secondaryAnimation,
-                      transitionType: SharedAxisTransitionType.horizontal,
-                      child: child);
-                },
-              ),
-            );
-          } else {
-            userSignedInHandler(result.isSignedIn);
-          }
-        } on UserNotFoundException catch (_) {
-          print("user does not exist");
-          userNotFound();
-        }
+        setState(() => isLoading = true);
+        trySignIn();
       } else {
         setState(() => isLoading = false);
-        return false;
       }
     }
   }
 
-  socialSignInHandler(AuthProvider oAuth) async {
-    FocusManager.instance.primaryFocus?.unfocus();
-    final loadingSnackBar = SnackBar(
-      duration: Duration(days: 365),
-      content: Row(
-        children: [
-          Expanded(
-            child: Text(
-              "Signing in",
-              textAlign: TextAlign.left,
-            ),
-          ),
-          SizedBox(
-            height: 18,
-            width: 18,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-            ),
-          ),
-        ],
+  // Navigators
+  void goToVerifySignUpEmail() {
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => VerifyEmailScreen(
+          email: _email,
+          password: _password,
+        ),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SharedAxisTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            transitionType: SharedAxisTransitionType.horizontal,
+            child: child,
+          );
+        },
       ),
     );
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
-
-    if (!isLoading) {
-      setState(() => isLoading = true);
-      userSignedInHandler(await authRepository.signInWithSocialWebUI(oAuth));
-    }
   }
 
-  userSignedInHandler(bool isSignedIn) async {
-    if (isSignedIn) {
-      setState(() => isLoading = false);
-      authRepository.startAuthStreamListener();
-      Amplify.DataStore.start();
-      getNextPage();
-    } else {
-      somethingWrong();
-    }
-  }
-
-  getNextPage() async {
+  void checkIfOnboarded() async {
     bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
-    OnboardingStep currentStep = await onboardingService.getOnboardingStep();
 
     if (isOnboardingDone) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       final user = await Amplify.Auth.getCurrentUser();
       await ref.read(userAsyncController.notifier).setUser(user.userId);
-      ref.watch(userAsyncController).when(
-            data: (_) {
-              Get.offAllNamed('/main');
-            },
-            error: (err, _) {
-              somethingWrong();
-            },
-            loading: () {},
-          );
-      return;
-    } else if (currentStep == OnboardingStep.started) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      Get.offAllNamed('/email_verification');
+      Get.offAllNamed('/main');
       return;
     } else {
       if (!mounted) return;
@@ -202,6 +91,43 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       Get.offAllNamed('/onboarding');
       return;
     }
+  }
+
+  void trySignIn() async {
+    try {
+      final result = await authService.signIn(_email, _password); // try signing in user.
+
+      if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
+        goToVerifySignUpEmail(); // user exists but isn't verified navigate to verify email page
+      } else {
+        userDataLoader(result.isSignedIn); // user is signed in load data
+      }
+    } on NotAuthorizedException catch (_) {
+      setState(() => isLoading = false);
+      authSnackBar.userNotAuthorizedSnackBar(context);
+    } on UserNotFoundException catch (_) {
+      setState(() => isLoading = false);
+      authSnackBar.userNotFoundSnackBar(context);
+    } on AuthException catch (_) {
+      setState(() => isLoading = false);
+      authSnackBar.defaultErrorMessageSnack(context);
+    }
+  }
+
+  void userDataLoader(bool isSignedIn) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    if (isSignedIn) {
+      //authAnalytics.recordUserSignIn(); // record user signed in
+      await Amplify.DataStore.start(); // load user data
+      await ref.read(userAttributesAsyncController.notifier).setAttributes();
+      checkIfOnboarded();
+    }
+  }
+
+  socialSignInHandler(AuthProvider oAuth) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    setState(() => isLoading = false);
   }
 
   @override
@@ -245,6 +171,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               validator: (value) {
                                 return Validators.validateEmail(value);
                               },
+                              textInputAction: TextInputAction.next,
                             ),
                           ),
                         ),
@@ -259,6 +186,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                               obscureText: true,
                               onSave: updatePassword,
                               validator: Validators.validatePassword,
+                              textInputAction: TextInputAction.done,
                             ),
                           ),
                         ),
@@ -287,7 +215,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
-                          child: PrimaryButton(
+                          child: PrimaryLoadingButton(
+                            isLoading: isLoading,
                             width: size.width,
                             height: 60,
                             colors: [Color(0xFFFD6C00), Color(0xFFFFA133)],

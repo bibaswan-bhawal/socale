@@ -1,7 +1,7 @@
 enum OnboardingStep {
+  schoolEmailVerification,
   started,
-  academicInclination,
-  biographics,
+  bio,
   collegeInfo,
   academicInterests,
   skills,

@@ -1,16 +1,11 @@
 // ignore_for_file: use_build_context_synchronously
 
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/ModelProvider.dart';
-import 'package:socale/models/Room.dart';
-import 'package:socale/models/User.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
-import 'package:socale/screens/main/chat/chat_screen_provider.dart';
-import 'package:socale/services/aws_lambda_service.dart';
 import 'package:socale/services/chat_service.dart';
 import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/providers/providers.dart';
@@ -46,8 +41,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
       for (Room room in rooms) {
         List<User> roomUsers = await chatService.getUsersByRoom(room);
 
-        User toAdd =
-            roomUsers.where((otherUser) => otherUser.id != user.id).first;
+        User toAdd = roomUsers.where((otherUser) => otherUser.id != user.id).first;
         _roomUsers.add(toAdd);
       }
 
@@ -66,10 +60,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
         ),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SharedAxisTransition(
-              animation: animation,
-              secondaryAnimation: secondaryAnimation,
-              transitionType: SharedAxisTransitionType.horizontal,
-              child: child);
+              animation: animation, secondaryAnimation: secondaryAnimation, transitionType: SharedAxisTransitionType.horizontal, child: child);
         },
       ),
     );

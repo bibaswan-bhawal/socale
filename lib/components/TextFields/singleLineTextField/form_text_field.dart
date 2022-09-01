@@ -10,6 +10,7 @@ class FormTextField extends StatelessWidget {
   final Iterable<String> autoFillHints;
   final String? Function(String?)? validator;
   final Function(String?)? onSave;
+  final TextInputAction textInputAction;
 
   const FormTextField({
     Key? key,
@@ -19,17 +20,20 @@ class FormTextField extends StatelessWidget {
     required this.autoFillHints,
     this.obscureText = false,
     this.icon = "",
+    this.textInputAction = TextInputAction.done,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return TextFormField(
+      textInputAction: textInputAction,
       scrollPadding: EdgeInsets.only(bottom: 40),
       obscureText: obscureText,
       autofillHints: autoFillHints,
       onSaved: onSave,
       validator: validator,
       style: StyleValues.textFieldContentStyle,
+      cursorHeight: 21,
       cursorColor: ColorValues.elementColor,
       cursorRadius: Radius.circular(5),
       decoration: InputDecoration(

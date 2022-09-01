@@ -3,12 +3,12 @@ import 'package:socale/values/strings.dart';
 import 'package:socale/values/styles.dart';
 
 class EmailVerificationHeader extends StatelessWidget {
-  final Size size;
-  const EmailVerificationHeader({Key? key, required this.size})
-      : super(key: key);
+  const EmailVerificationHeader({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     return Column(
       children: [
         Padding(

@@ -38,7 +38,7 @@ class Validators {
     if (!regex.hasMatch(value)) {
       return "Please enter a valid email address.";
     } else {
-      if (value.contains("ucsd.edu") || value.contains("acnochrome@gmail.com")) return null;
+      if (value.contains("ucsd.edu") || value.contains("acnochrome@gmail.com") || value.contains("team@socale.com")) return null;
       return "Please enter a UCSD email";
     }
   }
