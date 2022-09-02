@@ -496,7 +496,7 @@ class User extends Model {
     'id': id, 'email': _email, 'schoolEmail': _schoolEmail, 'academicInclination': _academicInclination, 'firstName': _firstName, 'lastName': _lastName, 'dateOfBirth': _dateOfBirth?.format(), 'graduationMonth': _graduationMonth?.format(), 'major': _major, 'minor': _minor, 'academicInterests': _academicInterests, 'skills': _skills, 'careerGoals': _careerGoals, 'selfDescription': _selfDescription, 'leisureInterests': _leisureInterests, 'idealFriendDescription': _idealFriendDescription, 'situationalDecisions': _situationalDecisions, 'college': _college, 'matches': _matches, 'publicKey': _publicKey, 'privateKey': _privateKey, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "id");
+  static final QueryField ID = QueryField(fieldName: "user.id");
   static final QueryField EMAIL = QueryField(fieldName: "email");
   static final QueryField SCHOOLEMAIL = QueryField(fieldName: "schoolEmail");
   static final QueryField ACADEMICINCLINATION = QueryField(fieldName: "academicInclination");
