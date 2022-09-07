@@ -25,8 +25,8 @@ class ChipInputField<T> extends StatefulWidget {
 
 class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
   final FocusNode _focusNode = FocusNode();
-  final TextEditingController _fieldText = TextEditingController();
   final LayerLink _layerLink = LayerLink();
+  final TextEditingController _fieldText = TextEditingController();
 
   late OverlayEntry _overlayEntry;
   late List<String> _searchResults;
@@ -84,8 +84,10 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
                     title: Text(_searchResults[index]),
                     onTap: () {
                       _fieldText.clear();
-                      widget.values.add(_searchResults[index]);
-                      widget.onChanged(widget.values);
+                      if (!widget.values.contains(_searchResults[index])) {
+                        widget.values.add(_searchResults[index]);
+                        widget.onChanged(widget.values);
+                      }
                     },
                   );
                 },
@@ -153,30 +155,20 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 5),
-                          constraints: BoxConstraints(
-                              minWidth:
-                                  widget.values.isEmpty ? widget.width : 200),
+                          constraints: BoxConstraints(minWidth: widget.values.isEmpty ? widget.width : 200),
                           child: IntrinsicWidth(
                             child: TextField(
                               focusNode: _focusNode,
                               controller: _fieldText,
                               decoration: InputDecoration(
-                                hintText: widget.values.isEmpty
-                                    ? widget.textInputLabel
-                                    : '',
-                                hintStyle: GoogleFonts.poppins(
-                                    fontWeight: FontWeight.w500,
-                                    color: ColorValues.elementColor
-                                        .withOpacity(0.7),
-                                    fontSize: 14),
+                                hintText: widget.textInputLabel,
+                                hintStyle:
+                                    GoogleFonts.poppins(fontWeight: FontWeight.w500, color: ColorValues.elementColor.withOpacity(0.7), fontSize: 14),
                                 border: InputBorder.none,
                               ),
                               onChanged: (value) {
-                                setState(() => _searchResults = widget.list
-                                    .where((element) => element
-                                        .toLowerCase()
-                                        .contains(value.toLowerCase()))
-                                    .toList());
+                                setState(() =>
+                                    _searchResults = widget.list.where((element) => element.toLowerCase().contains(value.toLowerCase())).toList());
                               },
                             ),
                           ),

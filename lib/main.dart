@@ -18,6 +18,7 @@ import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/splash_screen/splash_screen.dart';
+import 'package:socale/screens/test.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/get_it_instance.dart';
@@ -84,6 +85,8 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       throw ("error");
     } on UserNotFoundException catch (_) {
       setState(() => _isSignedIn = false);
+    } on AuthException catch (_) {
+      print("Hello");
     }
   }
 

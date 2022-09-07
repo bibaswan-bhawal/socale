@@ -74,16 +74,93 @@ class OnboardingService {
     return false;
   }
 
+  Future<String?> getSchoolEmail() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('schoolEmail');
+    return data;
+  }
+
+  Future<List?> getBio() async {
+    List data = [];
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    data.add(await box.get('firstName'));
+    data.add(await box.get('lastName'));
+    data.add(await box.get('dateOfBirth'));
+    data.add(await box.get('graduationMonth'));
+    return data;
+  }
+
+  Future<List?> getCollegeInfo() async {
+    List data = [];
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    data.add(await box.get('major'));
+    data.add(await box.get('minor'));
+    data.add(await box.get('college'));
+    return data;
+  }
+
+  Future<List<String>?> getSkills() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('skills');
+    return data;
+  }
+
+  Future<List<String>?> getAcademicInterests() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('academicInterests');
+    return data;
+  }
+
+  Future<List<String>?> getCareerGoals() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('careerGoals');
+    return data;
+  }
+
+  Future<List<String>?> getSelfDescription() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('selfDescription');
+    return data;
+  }
+
+  Future<List<String>?> getHobbies() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('leisureInterests');
+    return data;
+  }
+
+  Future<String?> getFriendDescription() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('idealFriendDescription');
+    return data;
+  }
+
+  Future<List<int>?> getSituationalDecisions() async {
+    final userId = (await _amplifyCognitoUser).userId;
+    final box = await Hive.openBox(userId);
+    final data = await box.get('situationalDecisions');
+    return data;
+  }
+
   Future<void> setSchoolEmail(String schoolEmail) async {
-    print("saving school email");
+    print("Saving school email");
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('schoolEmail', schoolEmail);
-    //await setOnboardingStep(OnboardingStep.bio);
+    await setOnboardingStep(OnboardingStep.bio);
   }
 
-  Future<void> setBiographics(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
-    print("saving bio");
+  Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
+    print("Saving bio");
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('firstName', firstName);
@@ -93,7 +170,13 @@ class OnboardingService {
     await setOnboardingStep(OnboardingStep.collegeInfo);
   }
 
-  Future<void> setCollegeInfo(List<String> major, List<String> minor, List<String> college) async {
+  Future<void> setCollegeInfo(List<String> major, List<String> minor, String college) async {
+    print("Saving College info");
+
+    if (major.length > 2 || major.isEmpty || minor.length > 2 || college.isEmpty) {
+      throw ("College info wrong");
+    }
+
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('major', major);
@@ -103,20 +186,38 @@ class OnboardingService {
   }
 
   Future<void> setSkills(List<String> skills) async {
+    print("Saving skills");
+
+    if (skills.length < 3 || skills.length > 5) {
+      throw ("skills list wrong length.");
+    }
+
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('skills', skills);
-    await setOnboardingStep(OnboardingStep.careerGoals);
+    await setOnboardingStep(OnboardingStep.academicInterests);
   }
 
   Future<void> setAcademicInterests(List<String> academicInterests) async {
+    print("Saving Academic Interests");
+
+    if (academicInterests.length < 3 || academicInterests.length > 5) {
+      throw ("Academic Interests list wrong length.");
+    }
+
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('academicInterests', academicInterests);
-    await setOnboardingStep(OnboardingStep.leisureInterests);
+    await setOnboardingStep(OnboardingStep.careerGoals);
   }
 
   Future<void> setCareerGoals(List<String> careerGoals) async {
+    print("Saving Career Goals");
+
+    if (careerGoals.length < 3 || careerGoals.length > 5) {
+      throw ("Career Goals list wrong length.");
+    }
+
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('careerGoals', careerGoals);
@@ -124,13 +225,25 @@ class OnboardingService {
   }
 
   Future<void> setSelfDescription(List<String> selfDescription) async {
+    print("Saving Self Description");
+
+    if (selfDescription.length < 3 || selfDescription.length > 5) {
+      throw ("Self description list wrong length.");
+    }
+
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('selfDescription', selfDescription);
-    await setOnboardingStep(OnboardingStep.academicInterests);
+    await setOnboardingStep(OnboardingStep.leisureInterests);
   }
 
   Future<void> setLeisureInterests(List<String> leisureInterests) async {
+    print("saved hobbies");
+
+    if (leisureInterests.length < 3 || leisureInterests.length > 5) {
+      throw ("Hobbies list wrong length.");
+    }
+
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('leisureInterests', leisureInterests);
@@ -138,6 +251,11 @@ class OnboardingService {
   }
 
   Future<void> setIdealFriendDescription(String idealFriendDescription) async {
+    print("saved friend description");
+
+    if (idealFriendDescription.isEmpty || idealFriendDescription.length > 1000) {
+      throw ("description empty or to large");
+    }
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('idealFriendDescription', idealFriendDescription);
@@ -145,16 +263,15 @@ class OnboardingService {
   }
 
   Future<void> setSituationalDecisions(List<int> situationalDecisions) async {
+    print("saving situational questions");
+
+    if (situationalDecisions.isEmpty || situationalDecisions.length != 5) {
+      throw ("situational questions not correct");
+    }
+
     final userId = (await _amplifyCognitoUser).userId;
     final box = await Hive.openBox(userId);
     await box.put('situationalDecisions', situationalDecisions);
-    await setOnboardingStep(OnboardingStep.avatarSelection);
-  }
-
-  Future<void> setAvatarSelection(Uint8List avatarSelection) async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
-    await box.put('avatarSelection', avatarSelection);
     await setOnboardingStep(OnboardingStep.completed);
   }
 
@@ -208,7 +325,7 @@ class OnboardingService {
       leisureInterests: box.get('leisureInterests'),
       idealFriendDescription: box.get('idealFriendDescription'),
       situationalDecisions: box.get('situationalDecisions'),
-      college: box.get('college')[0],
+      college: box.get('college'),
       minor: box.get('minor'),
       publicKey: 'htrthrt',
       privateKey: [53453],
