@@ -10,6 +10,5 @@ enum OnboardingStep {
   leisureInterests,
   idealFriendDescription,
   situationalDecisions,
-  avatarSelection,
   completed,
 }

@@ -6,17 +6,20 @@ class CategoryChipSelectInput extends StatefulWidget {
   final Map<String, List<String>> map;
   final Function onChange;
   final String searchText;
+  final List<String> initValue;
+  final bool gotData;
 
   const CategoryChipSelectInput({
     Key? key,
     required this.map,
     required this.onChange,
     required this.searchText,
+    required this.initValue,
+    required this.gotData,
   }) : super(key: key);
 
   @override
-  State<CategoryChipSelectInput> createState() =>
-      _CategoryChipSelectInputState();
+  State<CategoryChipSelectInput> createState() => _CategoryChipSelectInputState();
 }
 
 class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
@@ -29,16 +32,33 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
   TextEditingController textEditingController = TextEditingController();
   FocusNode focusNode = FocusNode();
 
+  bool gotData = false;
+
   @override
   void initState() {
     super.initState();
-
+    setInitValue();
     widget.map.forEach((key, value) {
       options.add(key);
       for (var element in value) {
         autocompleteList.add(element);
       }
     });
+  }
+
+  void setInitValue() {
+    for (String item in widget.initValue) {
+      if (!widget.map.keys.contains(item)) {
+        var key = widget.map.keys.firstWhere((element) => widget.map[element]!.contains(item));
+        if (!categoryAdded.contains(key)) {
+          categoryAdded.add(key);
+        }
+      }
+
+      if (!skillsSelected.contains(item)) {
+        skillsSelected.add(item);
+      }
+    }
   }
 
   Color backgroundColor(String option) {
@@ -58,9 +78,7 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
   }
 
   Color textColor(String option) {
-    if (skillsSelected.contains(option) ||
-        categorySelected.contains(option) ||
-        categoryAdded.contains(option)) {
+    if (skillsSelected.contains(option) || categorySelected.contains(option) || categoryAdded.contains(option)) {
       return Color(0xFFFFFFFF);
     }
 
@@ -73,90 +91,130 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
     return 0.25;
   }
 
+  void _onSelected(String selection) {
+    if (!skillsSelected.contains(selection)) {
+      setState(() => skillsSelected.add(selection));
+      String cat = widget.map.keys.where((key) => widget.map[key]!.contains(selection)).first;
+      setState(() => categoryAdded.addIf(!categoryAdded.contains(cat), cat));
+
+      setState(() => options.clear());
+      setState(() => categorySelected.clear());
+      setState(() => categorySelected.add(cat));
+
+      setState(() => widget.map.forEach((key, value) {
+            options.add(key);
+          }));
+
+      var index = options.indexOf(cat);
+
+      setState(
+        () => widget.map[cat]?.forEach(
+          (element) {
+            if (index + 1 == options.length) {
+              options.add(element);
+            } else {
+              options.insert(index + 1, element);
+            }
+          },
+        ),
+      );
+
+      widget.onChange(skillsSelected);
+      textEditingController.clear();
+    }
+  }
+
+  void _onClickEventHandler(int i) {
+    String key = options[i];
+    bool isCategory = widget.map.containsKey(key);
+
+    if (skillsSelected.contains(key)) {
+      if (!isCategory) {
+        setState(() => skillsSelected.remove(key));
+        widget.onChange(skillsSelected);
+        String g = widget.map.keys.firstWhere((element) => widget.map[element]!.contains(key));
+
+        var delKey = true;
+
+        for (String element in widget.map[g]!) {
+          if (skillsSelected.contains(element)) {
+            delKey = false;
+          }
+        }
+
+        if (delKey) {
+          setState(() => categoryAdded.remove(g));
+        }
+      } else {
+        if (widget.map[key]!.isEmpty) {
+          setState(() => skillsSelected.remove(key));
+          widget.onChange(skillsSelected);
+        }
+      }
+    } else {
+      if (skillsSelected.length < 5) {
+        if (!isCategory) {
+          setState(() => skillsSelected.add(key));
+          var k = widget.map.keys.firstWhere((element) => widget.map[element]!.contains(key));
+
+          if (!categoryAdded.contains(k)) {
+            setState(() => categoryAdded.add(k));
+          }
+          widget.onChange(skillsSelected);
+        } else {
+          if (widget.map[key]!.isEmpty) {
+            setState(() => skillsSelected.add(key));
+            widget.onChange(skillsSelected);
+          }
+        }
+      }
+    }
+
+    if (isCategory && widget.map[key]!.isNotEmpty) {
+      setState(() => options.clear());
+      var unselect = false;
+
+      if (categorySelected.contains(key)) {
+        unselect = true;
+      }
+
+      setState(() => categorySelected.clear());
+
+      if (!unselect) {
+        setState(() => categorySelected.add(key));
+      }
+
+      setState(() => widget.map.forEach((key, value) {
+            options.add(key);
+          }));
+
+      var index = options.indexOf(key);
+
+      if (!unselect) {
+        setState(
+          () => widget.map[key]?.forEach(
+            (element) {
+              if (index + 1 == options.length) {
+                options.add(element);
+              } else {
+                options.insert(index + 1, element);
+              }
+            },
+          ),
+        );
+      }
+    }
+
+    print(skillsSelected);
+  }
+
   @override
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    onClickEventHandler(int i) {
-      String key = options[i];
-      bool isCategory = widget.map.containsKey(key);
-
-      if (skillsSelected.contains(key)) {
-        if (!isCategory) {
-          setState(() => skillsSelected.remove(key));
-          widget.onChange(skillsSelected);
-          String g = widget.map.keys
-              .firstWhere((element) => widget.map[element]!.contains(key));
-
-          var delKey = true;
-
-          for (String element in widget.map[g]!) {
-            if (skillsSelected.contains(element)) {
-              delKey = false;
-            }
-          }
-
-          if (delKey) {
-            setState(() => categoryAdded.remove(g));
-          }
-        } else {
-          if (widget.map[key]!.isEmpty) {
-            setState(() => skillsSelected.remove(key));
-          }
-        }
-      } else {
-        if (skillsSelected.length < 5) {
-          if (!isCategory) {
-            setState(() => skillsSelected.add(key));
-            var k = widget.map.keys
-                .firstWhere((element) => widget.map[element]!.contains(key));
-
-            if (!categoryAdded.contains(k)) {
-              setState(() => categoryAdded.add(k));
-            }
-            widget.onChange(skillsSelected);
-          } else {
-            if (widget.map[key]!.isEmpty) {
-              setState(() => skillsSelected.add(key));
-            }
-          }
-        }
-      }
-
-      if (isCategory && widget.map[key]!.isNotEmpty) {
-        setState(() => options.clear());
-        var unselect = false;
-
-        if (categorySelected.contains(key)) {
-          unselect = true;
-        }
-
-        setState(() => categorySelected.clear());
-
-        if (!unselect) {
-          setState(() => categorySelected.add(key));
-        }
-
-        setState(() => widget.map.forEach((key, value) {
-              options.add(key);
-            }));
-
-        var index = options.indexOf(key);
-
-        if (!unselect) {
-          setState(
-            () => widget.map[key]?.forEach(
-              (element) {
-                if (index + 1 == options.length) {
-                  options.add(element);
-                } else {
-                  options.insert(index + 1, element);
-                }
-              },
-            ),
-          );
-        }
-      }
+    if (!gotData) {
+      setState(() => gotData = widget.gotData);
+      setInitValue();
     }
 
     return Column(
@@ -166,10 +224,8 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
           child: RawAutocomplete<String>(
             textEditingController: textEditingController,
             focusNode: focusNode,
-            fieldViewBuilder: (BuildContext context,
-                TextEditingController textEditingController,
-                FocusNode focusNode,
-                VoidCallback onFieldSubmitted) {
+            fieldViewBuilder:
+                (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
               return TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
@@ -195,28 +251,15 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
                 return const Iterable<String>.empty();
               }
               return autocompleteList.where((String option) {
-                return option
-                    .toLowerCase()
-                    .contains(textEditingValue.text.toLowerCase());
+                return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
               });
             },
-            onSelected: (String selection) {
-              if (!skillsSelected.contains(selection)) {
-                setState(() => skillsSelected.add(selection));
-                String cat = widget.map.keys
-                    .where((key) => widget.map[key]!.contains(selection))
-                    .first;
-                setState(() =>
-                    categoryAdded.addIf(!categoryAdded.contains(cat), cat));
-                widget.onChange(skillsSelected);
-                textEditingController.clear();
-              }
-            },
+            onSelected: _onSelected,
             optionsViewBuilder: (context, onAutoCompleteSelect, options) {
               return Align(
                 alignment: Alignment.topLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(top: 10, left: 3),
+                  padding: EdgeInsets.only(top: 10),
                   child: Material(
                     borderRadius: BorderRadius.circular(15),
                     color: Color(0xFFFFFFFF),
@@ -231,9 +274,7 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
                           final String option = options.elementAt(index);
                           return ListTile(
                             title: Text(option),
-                            onTap: () {
-                              onAutoCompleteSelect(option);
-                            },
+                            onTap: () => onAutoCompleteSelect(option),
                           );
                         },
                       ),
@@ -245,11 +286,13 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
           ),
         ),
         Flexible(
-          child: SizedBox(
+          child: Container(
+            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
             width: size.width,
-            child: SingleChildScrollView(
-              child: Padding(
-                padding: EdgeInsets.only(left: 35, top: 32, right: 20),
+            child: ScrollConfiguration(
+              behavior: MaterialScrollBehavior().copyWith(overscroll: false),
+              child: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Wrap(
                   children: [
                     for (int i = 0; i < options.length; i++)
@@ -268,7 +311,7 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
                             ),
                           ),
                           backgroundColor: backgroundColor(options[i]),
-                          onPressed: () => onClickEventHandler(i),
+                          onPressed: () => _onClickEventHandler(i),
                         ),
                       ),
                   ],
