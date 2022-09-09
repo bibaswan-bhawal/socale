@@ -1,12 +1,9 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/match_card/match_card.dart';
-import 'package:socale/screens/main/matches/card_provider.dart';
 import 'package:socale/utils/providers/providers.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:flutter/material.dart';
-
-import 'package:provider/provider.dart' as p;
 
 class MatchPage extends ConsumerStatefulWidget {
   const MatchPage({Key? key}) : super(key: key);
@@ -24,8 +21,6 @@ class _MatchPageState extends ConsumerState<MatchPage> {
   @override
   void initState() {
     super.initState();
-    final provider = p.Provider.of<CardProvider>(context, listen: false);
-    provider.setRef(ref);
     getMatches();
   }
 
@@ -34,51 +29,53 @@ class _MatchPageState extends ConsumerState<MatchPage> {
     final matchesProvider = ref.watch(matchAsyncController);
     var size = MediaQuery.of(context).size;
 
-    Widget buildCard(context) {
-      final provider = p.Provider.of<CardProvider>(context);
-      List<Widget> list = [];
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Center(
+          child: CarouselSlider(
+            options: CarouselOptions(
+              height: constraints.maxHeight,
+              viewportFraction: 1,
+            ),
+            items: matchesProvider.when(
+              data: (data) {
+                List<Widget> list = [];
+                data.forEach((key, value) {
+                  print(key.id);
+                  list.add(
+                    Container(
+                      padding: EdgeInsets.symmetric(horizontal: 15),
+                      child: MatchCard(
+                        size: Size(constraints.maxWidth * 0.90, constraints.maxHeight * 0.8),
+                        user: key,
+                        match: value,
+                        isFront: true,
+                      ),
+                    ),
+                  );
+                });
 
-      if (matchesProvider.hasValue) {
-        list = [];
-        if (matchesProvider.value!.isNotEmpty) {
-          matchesProvider.value!.forEach(
-            (user, match) {
-              list.add(
-                Container(
-                  padding: EdgeInsets.symmetric(horizontal: 15),
-                  width: size.width,
-                  height: size.height * 0.75,
-                  child: MatchCard(
-                    size: Size(size.width, size.height * 0.75),
-                    user: user,
-                    match: match,
-                    isFront: matchesProvider.value!.keys.last == user,
+                print(list.length);
+                return list;
+              },
+              loading: () {
+                return [
+                  SizedBox(
+                    width: 54,
+                    height: 54,
+                    child: CircularProgressIndicator(),
                   ),
-                ),
-              );
-            },
-          );
-        } else {
-          list = [
-            Text(
-              "No more matches",
-              style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 24),
-            )
-          ];
-        }
-      } else if (matchesProvider.isLoading) {
-        list = [
-          CircularProgressIndicator(),
-        ];
-      }
-
-      return Stack(
-        children: list,
-      );
-    }
-
-    return Center(
-      child: buildCard(context),
+                ];
+              },
+              error: (Object error, StackTrace? stackTrace) {
+                return [
+                  Text("error fetching matches"),
+                ];
+              },
+            ),
+          ),
+        );
+      },
     );
   }
 }

@@ -18,6 +18,7 @@ class FetchService {
   Future<User> fetchUserById(String userId) async {
     final request = ModelQueries.get(User.classType, userId);
     final response = await Amplify.API.query(request: request).response;
+    print(response.errors);
     return response.data!;
   }
 

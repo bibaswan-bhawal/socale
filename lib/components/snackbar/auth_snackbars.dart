@@ -80,6 +80,19 @@ class AuthSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
   }
 
+  void currentlyNotSupportedSnack(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    final errorSnackBar = SnackBar(
+      content: Text(
+        "Social sign isn't currently supported",
+        textAlign: TextAlign.center,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+  }
+
   void dismissSnackBar(context) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }

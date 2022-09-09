@@ -4,6 +4,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
 import 'package:socale/services/chat_service.dart';
@@ -100,17 +101,13 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
               },
               itemBuilder: (context, index) {
                 return ListTile(
-                  tileColor: Color(0xFF292B2F),
-                  leading: Container(
-                    width: 48,
-                    height: 48,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Color(0xFF000000),
-                    ),
+                  tileColor: Color(0xFF000000),
+                  leading: CircleAvatar(
+                    radius: 32,
+                    child: Image.asset('assets/images/avatars/${userList[index].avatar}'),
                   ),
                   title: Text(
-                    "${userList[index].firstName} ${userList[index].lastName}",
+                    userList[index].anonymousUsername,
                     style: GoogleFonts.poppins(
                       color: Color(0xFFFFFFFF),
                       fontWeight: FontWeight.w500,
@@ -118,7 +115,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                     ),
                   ),
                   subtitle: Text(
-                    userList[index].email,
+                    "Message",
                     style: GoogleFonts.roboto(
                       color: Color(0xA8FFFFFF),
                       fontWeight: FontWeight.w400,
@@ -139,15 +136,10 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    return Container(
-      width: size.width,
-      height: size.height,
-      color: Color(0xFF292B2F),
-      child: SafeArea(
-        child: Padding(
-          padding: EdgeInsets.only(bottom: 58),
-          child: buildListScreen(size),
-        ),
+    return KeyboardSafeArea(
+      child: Padding(
+        padding: EdgeInsets.only(bottom: 58),
+        child: buildListScreen(size),
       ),
     );
   }

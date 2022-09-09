@@ -160,7 +160,7 @@ class Message extends Model {
     'id': id, 'room': _room?.toJson(), 'encryptedText': _encryptedText, 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
-  static final QueryField ID = QueryField(fieldName: "message.id");
+  static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField ROOM = QueryField(
     fieldName: "room",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));

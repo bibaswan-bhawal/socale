@@ -9,6 +9,8 @@ import 'package:socale/models/User.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
+import 'package:socale/utils/options/username_adjectives.dart';
+import 'package:socale/utils/options/username_nouns.dart';
 import 'aws_lambda_service.dart';
 
 @lazySingleton
@@ -293,6 +295,7 @@ class OnboardingService {
         !_checkIfFieldExistsLocally(box, 'selfDescription') ||
         !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
         !_checkIfFieldExistsLocally(box, 'skills')) {
+      print(box.toMap().toString());
       print("something missing");
       return false;
     }
@@ -303,6 +306,8 @@ class OnboardingService {
       print("failed to get attributes");
       return false;
     }
+
+    String anonymousUsername = "${usernameAdjectives[Random().nextInt(394)]} ${usernameNouns[Random().nextInt(224)]}";
 
     final newUser = User(
       id: id,
@@ -324,6 +329,7 @@ class OnboardingService {
       situationalDecisions: box.get('situationalDecisions'),
       avatar: box.get('avatar'),
       matches: [],
+      anonymousUsername: anonymousUsername,
     );
 
     print(newUser);

@@ -57,6 +57,8 @@ main() {
         selfDescription: const [],
         situationalDecisions: const [],
         skills: const [],
+        anonymousUsername: 'bob',
+        avatar: 'Artist Raccoon.png',
       );
 
       final user2 = User(
@@ -76,6 +78,8 @@ main() {
         selfDescription: const [],
         situationalDecisions: const [],
         skills: const [],
+        anonymousUsername: 'bib',
+        avatar: 'Artist Raccoon.png',
       );
 
       final room1 = Room();

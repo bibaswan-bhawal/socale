@@ -80,6 +80,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      onboardingService.clearAll();
       Get.offAllNamed('/onboarding');
       return;
     }

@@ -126,6 +126,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      onboardingService.clearAll();
       Get.offAllNamed('/onboarding');
       return;
     }
@@ -145,9 +146,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   handleSocialSignUp(AuthProvider oAuth) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
-    if (isLoading) {
-      bool isSignedIn = await authService.signUpWithSocialWebUI(oAuth);
-      userDataLoader(isSignedIn);
+    if (!isLoading) {
+      authSnackBar.currentlyNotSupportedSnack(context);
+
+      // bool isSignedIn = await authService.signUpWithSocialWebUI(oAuth);
+      // userDataLoader(isSignedIn);
     }
   }
 

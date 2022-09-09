@@ -30,7 +30,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
           Center(
             heightFactor: heightShift,
             child: OverflowBox(
-              maxHeight: barHeight,
+              maxHeight: 400,
               child: IconButton(
                 iconSize: 64,
                 onPressed: () {
@@ -38,8 +38,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 },
                 icon: SvgPicture.asset(
                   "assets/icons/center_logo.svg",
-                  height: 64,
-                  fit: BoxFit.fitHeight,
+                  fit: BoxFit.fitWidth,
                 ),
               ),
             ),

@@ -25,6 +25,8 @@ class MatchStateProvider extends StateNotifier<AsyncValue<Map<User, Match>>> {
       currentUser = await fetchService.fetchUserById(id);
     }
 
+    print(currentUser.matches);
+
     for (String userId in currentUser.matches) {
       User user = await fetchService.fetchUserById(userId);
       Match match = await fetchService.fetchMatch("${id}_$userId");

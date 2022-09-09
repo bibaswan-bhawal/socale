@@ -7,7 +7,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "auth": {
-        "SocaleAuth": {
+        "socalebc55fdf5": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
             "HostedUIDomain": "string",
@@ -16,10 +16,7 @@ export type AmplifyDependentResourcesAttributes = {
             "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
-            "AppClientID": "string",
-            "GoogleWebClient": "string",
-            "FacebookWebClient": "string",
-            "AppleWebClient": "string"
+            "AppClientID": "string"
         }
     },
     "analytics": {

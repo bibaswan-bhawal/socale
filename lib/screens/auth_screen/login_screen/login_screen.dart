@@ -12,6 +12,7 @@ import 'package:socale/components/Headers/login_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:get/get.dart';
 import 'package:socale/components/snackbar/auth_snackbars.dart';
+import 'package:socale/components/snackbar/onboarding_snackbars.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
@@ -87,6 +88,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+      onboardingService.clearAll();
       Get.offAllNamed('/onboarding');
       return;
     }
@@ -127,9 +129,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   socialSignInHandler(AuthProvider oAuth) async {
     FocusManager.instance.primaryFocus?.unfocus();
 
-    if (isLoading) {
-      bool isSignedIn = await authService.signInWithSocialWebUI(oAuth);
-      userDataLoader(isSignedIn);
+    if (!isLoading) {
+      authSnackBar.currentlyNotSupportedSnack(context);
+      // bool isSignedIn = await authService.signInWithSocialWebUI(oAuth);
+      // userDataLoader(isSignedIn);
     }
   }
 
