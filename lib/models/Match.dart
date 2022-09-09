@@ -127,7 +127,7 @@ class Match extends Model {
     'id': id, 'matchingPercentage': _matchingPercentage, 'user': _user?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'matchUserId': _matchUserId
   };
 
-  static final QueryField ID = QueryField(fieldName: "id");
+  static final QueryField ID = QueryField(fieldName: "match.id");
   static final QueryField MATCHINGPERCENTAGE = QueryField(fieldName: "matchingPercentage");
   static final QueryField USER = QueryField(
     fieldName: "user",
