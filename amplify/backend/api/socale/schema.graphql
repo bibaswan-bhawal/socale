@@ -8,26 +8,24 @@ type User @model @auth(rules: [{allow: public}]) {
   id: ID!
   email: AWSEmail!
   schoolEmail: AWSEmail!
-  academicInclination: Int!
   firstName: String!
   lastName: String
   dateOfBirth: AWSDate!
   graduationMonth: AWSDate!
   major: [String!]!
   minor: [String]!
-  academicInterests: [String!]!
+  college: String!
   skills: [String!]!
   careerGoals: [String!]!
   selfDescription: [String!]!
   leisureInterests: [String]!
   idealFriendDescription: String!
   situationalDecisions: [Int!]!
-  college: String!
-  matches: [String]!
-  publicKey: String!
-  privateKey: [Int!]!
+  academicInterests: [String!]!
+  avatar: String
   messages: [Message!] @hasMany
   userRoom: [UserRoom] @hasMany(indexName: "byUser", fields: ["id"])
+  matches: [String]!
 }
 
 type UserRoom @model @auth(rules: [{allow: public}]) {

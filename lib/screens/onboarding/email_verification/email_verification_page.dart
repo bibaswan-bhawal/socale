@@ -64,7 +64,7 @@ class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
       return false;
     }
 
-    return true;
+    return false;
   }
 
   @override
@@ -75,44 +75,47 @@ class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
 
     return WillPopScope(
       onWillPop: _willPopScope,
-      child: Stack(
-        children: [
-          SingleChildScrollView(
-            reverse: true,
-            physics: NeverScrollableScrollPhysics(),
-            child: SizedBox(
-              width: size.width,
-              height: size.height,
-              child: Column(
-                children: [
-                  EmailVerificationHeader(),
-                  Flexible(
-                    fit: FlexFit.loose,
-                    child: EmailVerificationPager(
-                      pageController: _formPageController,
-                      formEmailKey: _formEmailKey,
-                      formOptKey: _formOtpKey,
-                      onSavedEmail: _onEmailSaved,
-                      onOtpSaved: _onOtpSaved,
+      child: Scaffold(
+        resizeToAvoidBottomInset: true,
+        body: Stack(
+          children: [
+            SingleChildScrollView(
+              reverse: true,
+              physics: NeverScrollableScrollPhysics(),
+              child: SizedBox(
+                width: size.width,
+                height: size.height,
+                child: Column(
+                  children: [
+                    EmailVerificationHeader(),
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: EmailVerificationPager(
+                        pageController: _formPageController,
+                        formEmailKey: _formEmailKey,
+                        formOptKey: _formOtpKey,
+                        onSavedEmail: _onEmailSaved,
+                        onOtpSaved: _onOtpSaved,
+                      ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-          Positioned(
-            bottom: 20,
-            left: 20,
-            right: 20,
-            child: PrimaryButton(
-              width: size.width,
-              height: 60,
-              colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
-              text: "Verify",
-              onClickEventHandler: _onClickEventHandler, // onClickEventHandler,
+            Positioned(
+              bottom: 20,
+              left: 20,
+              right: 20,
+              child: PrimaryButton(
+                width: size.width,
+                height: 60,
+                colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
+                text: "Verify",
+                onClickEventHandler: _onClickEventHandler, // onClickEventHandler,
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

@@ -4,11 +4,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/auth/auth_repository.dart';
-import 'package:socale/components/Buttons/primary_button.dart';
+import 'package:socale/components/Buttons/primary_loading_button.dart';
+import 'package:socale/components/snackbar/auth_snackbars.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
@@ -27,131 +27,61 @@ class VerifyEmailScreen extends ConsumerStatefulWidget {
 class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   bool isLoading = false;
 
-  getNextPage() async {
+  void trySignIn() async {
+    if (!isLoading) {
+      setState(() => isLoading = true);
+
+      try {
+        final result = await authService.signIn(widget.email, widget.password); // try signing in user.
+
+        if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
+          setState(() => isLoading = false);
+          if (mounted) authSnackBar.emailNotVerifiedSnack(context);
+        } else {
+          userDataLoader(result.isSignedIn); // user is signed in load data
+        }
+      } on NotAuthorizedException catch (_) {
+        setState(() => isLoading = false);
+        authService.signOutCurrentUser();
+        authSnackBar.userNotAuthorizedSnackBar(context);
+      } on UserNotFoundException catch (_) {
+        setState(() => isLoading = false);
+        authService.signOutCurrentUser();
+        authSnackBar.userNotFoundSnackBar(context);
+      } on AuthException catch (_) {
+        setState(() => isLoading = false);
+        authService.signOutCurrentUser();
+        authSnackBar.defaultErrorMessageSnack(context);
+      }
+    }
+  }
+
+  void userDataLoader(bool isSignedIn) async {
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    if (isSignedIn) {
+      //authAnalytics.recordUserSignIn(); // record user signed in
+      await Amplify.DataStore.start(); // load user data
+      await ref.read(userAttributesAsyncController.notifier).setAttributes();
+      checkIfOnboarded();
+    }
+  }
+
+  void checkIfOnboarded() async {
     bool isOnboardingDone = await onboardingService.checkIfUserIsOnboarded();
-    OnboardingStep currentStep = await onboardingService.getOnboardingStep();
 
     if (isOnboardingDone) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
       final user = await Amplify.Auth.getCurrentUser();
       await ref.read(userAsyncController.notifier).setUser(user.userId);
-      ref.watch(userAsyncController).when(
-            data: (_) {
-              Get.offAllNamed('/main');
-            },
-            error: (err, _) {
-              somethingWrong();
-            },
-            loading: () {},
-          );
-      return;
-    } else if (currentStep == OnboardingStep.started) {
-      if (!mounted) return;
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
-      Get.offAllNamed('/email_verification');
+      Get.offAllNamed('/main');
       return;
     } else {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-
       Get.offAllNamed('/onboarding');
       return;
-    }
-  }
-
-  void somethingWrong() {
-    setState(() => isLoading = false);
-    final errorSnackBar = SnackBar(
-      content: Text(
-        "Something went wrong signing in, please try again.",
-        textAlign: TextAlign.center,
-      ),
-    );
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
-  }
-
-  userSignedInHandler(bool isSignedIn) async {
-    if (isSignedIn) {
-      setState(() => isLoading = false);
-      print("user signed in: ${widget.email} ${widget.password}");
-      authRepository.startAuthStreamListener();
-      Amplify.DataStore.start();
-      getNextPage();
-    } else {
-      setState(() => isLoading = false);
-      final errorSnackBar = SnackBar(
-        content: Text(
-          "Something went wrong signing in, please try again.",
-          textAlign: TextAlign.center,
-        ),
-      );
-
-      ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
-    }
-  }
-
-  signIn() async {
-    final loadingSnackBar = SnackBar(
-      duration: Duration(days: 365),
-      content: Row(
-        children: [
-          Expanded(
-            child: Text(
-              "Verifying Email",
-              textAlign: TextAlign.left,
-            ),
-          ),
-          SizedBox(
-            height: 18,
-            width: 18,
-            child: CircularProgressIndicator(
-              strokeWidth: 2,
-            ),
-          ),
-        ],
-      ),
-    );
-
-    ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
-
-    if (!isLoading) {
-      setState(() => isLoading = true);
-      await authRepository.signOutCurrentUser();
-      final user = await Amplify.Auth.fetchAuthSession();
-      if (!user.isSignedIn) {
-        try {
-          final result =
-              await authRepository.login(widget.email, widget.password);
-
-          if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
-            setState(() => isLoading = false);
-            final notVerifiedSnackBar = SnackBar(
-              content: Text(
-                "Email not verified",
-                textAlign: TextAlign.left,
-              ),
-            );
-
-            if (!mounted) return;
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            ScaffoldMessenger.of(context).showSnackBar(notVerifiedSnackBar);
-          } else {
-            if (result.isSignedIn) {
-              userSignedInHandler(result.isSignedIn);
-            }
-          }
-        } on AuthException catch (_) {
-          somethingWrong();
-        }
-      } else {
-        signIn();
-      }
     }
   }
 
@@ -194,8 +124,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
-                              foreground: Paint()
-                                ..shader = ColorValues.socaleOrangeGradient,
+                              foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
                             ),
                           ),
                         ],
@@ -230,18 +159,18 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
             left: 0,
             child: Padding(
               padding: EdgeInsets.fromLTRB(20, 0, 20, 40),
-              child: PrimaryButton(
+              child: PrimaryLoadingButton(
                 width: size.width,
                 height: 60,
                 colors: [Color(0xFFFD6C00), Color(0xFFFFA133)],
                 text: "Sign In",
-                onClickEventHandler: signIn,
+                onClickEventHandler: trySignIn,
+                isLoading: isLoading,
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           ),
         ],
       ),

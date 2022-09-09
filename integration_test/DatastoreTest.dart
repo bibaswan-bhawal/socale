@@ -42,7 +42,6 @@ main() {
 
       final user1 = User(
         firstName: 'user 1',
-        academicInclination: 0,
         academicInterests: const [],
         careerGoals: const [],
         college: '',
@@ -54,8 +53,6 @@ main() {
         major: const [],
         matches: const [],
         minor: const [],
-        privateKey: const [],
-        publicKey: '',
         schoolEmail: '',
         selfDescription: const [],
         situationalDecisions: const [],
@@ -64,7 +61,6 @@ main() {
 
       final user2 = User(
         firstName: 'user 2',
-        academicInclination: 0,
         academicInterests: const [],
         careerGoals: const [],
         college: '',
@@ -76,8 +72,6 @@ main() {
         major: const [],
         matches: const [],
         minor: const [],
-        privateKey: const [],
-        publicKey: '',
         schoolEmail: '',
         selfDescription: const [],
         situationalDecisions: const [],

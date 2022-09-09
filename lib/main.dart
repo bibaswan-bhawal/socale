@@ -1,6 +1,5 @@
 import 'dart:async';
 
-import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -12,15 +11,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:socale/auth/auth_repository.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/splash_screen/splash_screen.dart';
-import 'package:socale/screens/test.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/get_it_instance.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'utils/routes.dart';
@@ -76,7 +73,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     try {
       final session = await Amplify.Auth.fetchAuthSession();
       if (session.isSignedIn == true) {
-        authRepository.startAuthStreamListener();
+        authService.startAuthStreamListener();
         await ref.read(userAttributesAsyncController.notifier).setAttributes();
         await Amplify.DataStore.start();
       }

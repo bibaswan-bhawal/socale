@@ -1,22 +1,28 @@
 import 'dart:async';
 import 'dart:math';
-import 'dart:typed_data';
 
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
-import 'package:socale/auth/auth_repository.dart';
-
-import '../models/User.dart';
-import '../utils/enums/onboarding_fields.dart';
+import 'package:socale/models/User.dart';
+import 'package:socale/services/auth_service.dart';
+import 'package:socale/services/fetch_service.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'aws_lambda_service.dart';
 
 @lazySingleton
 class OnboardingService {
+  final String boxName = 'onboardingData';
+
   final _amplifyCognitoUser = Amplify.Auth.getCurrentUser();
   int? otp;
   String? email;
+  String? id;
+
+  OnboardingService() {
+    Hive.openBox(boxName);
+  }
 
   Future<bool> checkIfUserIsOnboarded() async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
@@ -30,32 +36,8 @@ class OnboardingService {
     return true;
   }
 
-  Future<OnboardingStep> getOnboardingStep() async {
-    final userId = (await _amplifyCognitoUser).userId;
-
-    if (await Hive.boxExists(userId)) {
-      final box = await Hive.openBox(userId);
-      try {
-        return OnboardingStep.values.byName(box.get('onboardingStep'));
-      } catch (e) {
-        return OnboardingStep.schoolEmailVerification;
-      }
-    } else {
-      return OnboardingStep.schoolEmailVerification;
-    }
-  }
-
-  Future<void> setOnboardingStep(OnboardingStep step) async {
-    final userId = (await _amplifyCognitoUser).userId;
-
-    final box = await Hive.openBox(userId);
-    await box.put('onboardingStep', step.name);
-  }
-
   Future<void> clearAll() async {
-    final userId = (await _amplifyCognitoUser).userId;
-
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.clear();
   }
 
@@ -74,17 +56,18 @@ class OnboardingService {
     return false;
   }
 
-  Future<String?> getSchoolEmail() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
-    final data = await box.get('schoolEmail');
+  // getters
+
+  String? getSchoolEmail() {
+    final box = Hive.box(boxName);
+    final data = box.get('schoolEmail');
     return data;
   }
 
   Future<List?> getBio() async {
     List data = [];
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+
+    final box = await Hive.openBox(boxName);
     data.add(await box.get('firstName'));
     data.add(await box.get('lastName'));
     data.add(await box.get('dateOfBirth'));
@@ -94,8 +77,8 @@ class OnboardingService {
 
   Future<List?> getCollegeInfo() async {
     List data = [];
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+
+    final box = await Hive.openBox(boxName);
     data.add(await box.get('major'));
     data.add(await box.get('minor'));
     data.add(await box.get('college'));
@@ -103,71 +86,83 @@ class OnboardingService {
   }
 
   Future<List<String>?> getSkills() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     final data = await box.get('skills');
     return data;
   }
 
   Future<List<String>?> getAcademicInterests() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     final data = await box.get('academicInterests');
     return data;
   }
 
   Future<List<String>?> getCareerGoals() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     final data = await box.get('careerGoals');
     return data;
   }
 
   Future<List<String>?> getSelfDescription() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     final data = await box.get('selfDescription');
     return data;
   }
 
   Future<List<String>?> getHobbies() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     final data = await box.get('leisureInterests');
     return data;
   }
 
   Future<String?> getFriendDescription() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     final data = await box.get('idealFriendDescription');
     return data;
   }
 
   Future<List<int>?> getSituationalDecisions() async {
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     final data = await box.get('situationalDecisions');
     return data;
   }
 
+  String? getAvatar() {
+    final box = Hive.box(boxName);
+    final data = box.get('avatar');
+    return data;
+  }
+
+  Future<OnboardingStep> getOnboardingStep() async {
+    if (await Hive.boxExists(boxName)) {
+      final box = await Hive.openBox(boxName);
+      try {
+        return OnboardingStep.values.byName(box.get('onboardingStep'));
+      } catch (e) {
+        return OnboardingStep.schoolEmailVerification;
+      }
+    } else {
+      return OnboardingStep.schoolEmailVerification;
+    }
+  }
+
+  // setters
+
   Future<void> setSchoolEmail(String schoolEmail) async {
     print("Saving school email");
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+
+    final box = await Hive.openBox(boxName);
     await box.put('schoolEmail', schoolEmail);
-    await setOnboardingStep(OnboardingStep.bio);
   }
 
   Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
     print("Saving bio");
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+
+    final box = await Hive.openBox(boxName);
     await box.put('firstName', firstName);
     await box.put('lastName', lastName);
     await box.put('dateOfBirth', dateOfBirth);
     await box.put('graduationMonth', graduationMonth);
-    await setOnboardingStep(OnboardingStep.collegeInfo);
   }
 
   Future<void> setCollegeInfo(List<String> major, List<String> minor, String college) async {
@@ -177,12 +172,10 @@ class OnboardingService {
       throw ("College info wrong");
     }
 
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('major', major);
     await box.put('minor', minor);
     await box.put('college', college);
-    await setOnboardingStep(OnboardingStep.skills);
   }
 
   Future<void> setSkills(List<String> skills) async {
@@ -192,10 +185,8 @@ class OnboardingService {
       throw ("skills list wrong length.");
     }
 
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('skills', skills);
-    await setOnboardingStep(OnboardingStep.academicInterests);
   }
 
   Future<void> setAcademicInterests(List<String> academicInterests) async {
@@ -205,10 +196,8 @@ class OnboardingService {
       throw ("Academic Interests list wrong length.");
     }
 
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('academicInterests', academicInterests);
-    await setOnboardingStep(OnboardingStep.careerGoals);
   }
 
   Future<void> setCareerGoals(List<String> careerGoals) async {
@@ -218,10 +207,8 @@ class OnboardingService {
       throw ("Career Goals list wrong length.");
     }
 
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('careerGoals', careerGoals);
-    await setOnboardingStep(OnboardingStep.selfDescription);
   }
 
   Future<void> setSelfDescription(List<String> selfDescription) async {
@@ -231,10 +218,8 @@ class OnboardingService {
       throw ("Self description list wrong length.");
     }
 
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('selfDescription', selfDescription);
-    await setOnboardingStep(OnboardingStep.leisureInterests);
   }
 
   Future<void> setLeisureInterests(List<String> leisureInterests) async {
@@ -244,10 +229,8 @@ class OnboardingService {
       throw ("Hobbies list wrong length.");
     }
 
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('leisureInterests', leisureInterests);
-    await setOnboardingStep(OnboardingStep.idealFriendDescription);
   }
 
   Future<void> setIdealFriendDescription(String idealFriendDescription) async {
@@ -256,10 +239,8 @@ class OnboardingService {
     if (idealFriendDescription.isEmpty || idealFriendDescription.length > 1000) {
       throw ("description empty or to large");
     }
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('idealFriendDescription', idealFriendDescription);
-    await setOnboardingStep(OnboardingStep.situationalDecisions);
   }
 
   Future<void> setSituationalDecisions(List<int> situationalDecisions) async {
@@ -269,39 +250,54 @@ class OnboardingService {
       throw ("situational questions not correct");
     }
 
-    final userId = (await _amplifyCognitoUser).userId;
-    final box = await Hive.openBox(userId);
+    final box = await Hive.openBox(boxName);
     await box.put('situationalDecisions', situationalDecisions);
-    await setOnboardingStep(OnboardingStep.completed);
+  }
+
+  Future<void> setAvatar(String avatar) async {
+    print("saving avatar");
+
+    if (avatar.isEmpty) {
+      throw ("avatar url not provided correctly");
+    }
+
+    final box = await Hive.openBox(boxName);
+    await box.put('avatar', avatar);
+  }
+
+  void setOnboardingStep(OnboardingStep step) {
+    final box = Hive.box(boxName);
+    box.put('onboardingStep', step.name);
   }
 
   Future<bool> createOnboardedUser() async {
     final cognitoUser = await _amplifyCognitoUser;
-    final userId = cognitoUser.userId;
-    final box = await Hive.openBox(userId);
+    id = cognitoUser.userId;
 
-    if (!_checkIfFieldExistsLocally(box, 'onboardingStep') || //
-        !_checkIfFieldExistsLocally(box, 'schoolEmail') || //
-        !_checkIfFieldExistsLocally(box, 'academicInclination') || //
-        !_checkIfFieldExistsLocally(box, 'firstName') || //
-        !_checkIfFieldExistsLocally(box, 'lastName') || //
-        !_checkIfFieldExistsLocally(box, 'dateOfBirth') || //
-        !_checkIfFieldExistsLocally(box, 'graduationMonth') || //
-        !_checkIfFieldExistsLocally(box, 'major') || //
-        !_checkIfFieldExistsLocally(box, 'academicInterests') || //
-        !_checkIfFieldExistsLocally(box, 'skills') || //
-        !_checkIfFieldExistsLocally(box, 'careerGoals') || //
-        !_checkIfFieldExistsLocally(box, 'selfDescription') ||
-        !_checkIfFieldExistsLocally(box, 'leisureInterests') || //
+    final box = await Hive.openBox(boxName);
+
+    if (!_checkIfFieldExistsLocally(box, 'academicInterests') ||
+        !_checkIfFieldExistsLocally(box, 'avatar') ||
+        !_checkIfFieldExistsLocally(box, 'careerGoals') ||
+        !_checkIfFieldExistsLocally(box, 'college') ||
+        !_checkIfFieldExistsLocally(box, 'dateOfBirth') ||
+        !_checkIfFieldExistsLocally(box, 'firstName') ||
+        !_checkIfFieldExistsLocally(box, 'graduationMonth') ||
         !_checkIfFieldExistsLocally(box, 'idealFriendDescription') ||
-        !_checkIfFieldExistsLocally(box, 'situationalDecisions') || //
-        !_checkIfFieldExistsLocally(box, 'college')) {
-      //
+        !_checkIfFieldExistsLocally(box, 'lastName') ||
+        !_checkIfFieldExistsLocally(box, 'leisureInterests') ||
+        !_checkIfFieldExistsLocally(box, 'major') ||
+        !_checkIfFieldExistsLocally(box, 'minor') ||
+        !_checkIfFieldExistsLocally(box, 'onboardingStep') ||
+        !_checkIfFieldExistsLocally(box, 'schoolEmail') ||
+        !_checkIfFieldExistsLocally(box, 'selfDescription') ||
+        !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
+        !_checkIfFieldExistsLocally(box, 'skills')) {
       print("something missing");
       return false;
     }
 
-    List<AuthUserAttribute>? attributes = await AuthRepository().fetchCurrentUserAttributes();
+    List<AuthUserAttribute>? attributes = await fetchService.fetchCurrentUserAttributes();
 
     if (attributes == null) {
       print("failed to get attributes");
@@ -309,54 +305,65 @@ class OnboardingService {
     }
 
     final newUser = User(
+      id: id,
       email: attributes.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value,
-      id: userId,
       schoolEmail: box.get('schoolEmail'),
-      academicInclination: box.get('academicInclination'),
       firstName: box.get('firstName'),
       lastName: box.get('lastName'),
       dateOfBirth: TemporalDate(box.get('dateOfBirth')),
       graduationMonth: TemporalDate(box.get('graduationMonth')),
       major: box.get('major'),
-      academicInterests: box.get('academicInterests'),
+      minor: box.get('minor'),
+      college: box.get('college'),
       skills: box.get('skills'),
+      academicInterests: box.get('academicInterests'),
       careerGoals: box.get('careerGoals'),
       selfDescription: box.get('selfDescription'),
       leisureInterests: box.get('leisureInterests'),
       idealFriendDescription: box.get('idealFriendDescription'),
       situationalDecisions: box.get('situationalDecisions'),
-      college: box.get('college'),
-      minor: box.get('minor'),
-      publicKey: 'htrthrt',
-      privateKey: [53453],
+      avatar: box.get('avatar'),
       matches: [],
     );
 
     print(newUser);
-    //
-    // try {
-    //   final request = ModelMutations.create(newUser);
-    //   final response = await Amplify.API.mutate(request: request).response;
-    //
-    //   if (response.data != null) {
-    //     print("user added");
-    //     return true;
-    //   } else {
-    //     print("user failed");
-    //     return false;
-    //   }
-    // } on Exception catch (error) {
-    //   print('Error saving to DataStore: $error');
-    //   return false;
-    // }
 
-    // File profilePictureFile = (await File((await getTemporaryDirectory()).path)
-    //     .create())
-    //   ..writeAsBytesSync(box.get('avatarSelection') as Uint8List);
-    // if (await imageService.uploadProfilePicture(profilePictureFile)) {
-    //
-    //   return true;
-    // }
+    try {
+      var request = ModelMutations.update(newUser);
+      var response = await Amplify.API.mutate(request: request).response;
+
+      if (response.errors.isNotEmpty && response.errors.first.message.contains("No existing item found in the data source")) {
+        request = ModelMutations.create(newUser);
+        response = await Amplify.API.mutate(request: request).response;
+      }
+
+      if (response.data != null) {
+        print("user added");
+        return true;
+      } else {
+        print(response.errors);
+        print("user failed");
+        return false;
+      }
+    } on Exception catch (error) {
+      print('Error saving user: $error');
+      return false;
+    }
+  }
+
+  Future<bool> generateMatches() async {
+    if (id == null) {
+      return false;
+    }
+
+    await Amplify.DataStore.stop();
+    final response = await awsLambdaService.getMatches(id!);
+    await Amplify.DataStore.start();
+
+    if (response == false) {
+      print("Couldn't create matches");
+      return false;
+    }
 
     return true;
   }

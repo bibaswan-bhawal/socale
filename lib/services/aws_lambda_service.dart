@@ -5,25 +5,25 @@ import 'package:aws_signature_v4/aws_signature_v4.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AWSLambdaService {
-  static AWSSigV4Signer signer = AWSSigV4Signer(
-    credentialsProvider: AWSCredentialsProvider(
-      AWSCredentials(
-        dotenv.get('AWS_ACCESS_KEY_ID'),
-        dotenv.get('AWS_SECRET_ACCESS_KEY'),
-      ),
-    ),
-  );
-  static const region = 'us-west-2';
-  final scope = AWSCredentialScope(
-    region: region,
-    service: AWSService.lambda,
-  );
-
   Future<bool> sendOTPVerificationEmail(String email, int otp) async {
+    AWSSigV4Signer signer = AWSSigV4Signer(
+      credentialsProvider: AWSCredentialsProvider(
+        AWSCredentials(
+          dotenv.get('AWS_ACCESS_KEY_ID'),
+          dotenv.get('AWS_SECRET_ACCESS_KEY'),
+        ),
+      ),
+    );
+
+    const region = 'us-west-2';
+    final scope = AWSCredentialScope(
+      region: region,
+      service: AWSService.lambda,
+    );
+
     final request = AWSHttpRequest(
       method: AWSHttpMethod.post,
-      uri: Uri.https(
-          '77fbkbndbv3ftq3lj57bfjmfx40ndxrj.lambda-url.us-west-2.on.aws', '/', {
+      uri: Uri.https('77fbkbndbv3ftq3lj57bfjmfx40ndxrj.lambda-url.us-west-2.on.aws', '/', {
         'email': email,
         'otp': otp.toString(),
       }),
@@ -51,10 +51,24 @@ class AWSLambdaService {
   }
 
   Future<bool> getMatches(String id) async {
+    AWSSigV4Signer signer = AWSSigV4Signer(
+      credentialsProvider: AWSCredentialsProvider(
+        AWSCredentials(
+          dotenv.get('AWS_ACCESS_KEY_ID'),
+          dotenv.get('AWS_SECRET_ACCESS_KEY'),
+        ),
+      ),
+    );
+
+    const region = 'us-west-2';
+    final scope = AWSCredentialScope(
+      region: region,
+      service: AWSService.lambda,
+    );
+
     final request = AWSHttpRequest(
       method: AWSHttpMethod.post,
-      uri: Uri.https(
-          '7uetyhcxradhyc3zz6um6foj440lcbdy.lambda-url.us-west-2.on.aws', '/', {
+      uri: Uri.https('7uetyhcxradhyc3zz6um6foj440lcbdy.lambda-url.us-west-2.on.aws', '/', {
         'userId': id,
       }),
       headers: const {
@@ -69,6 +83,8 @@ class AWSLambdaService {
     );
     final resp = await signedRequest.send();
     final respBody = await resp.decodeBody();
+
+    print(respBody);
 
     final responseMap = JsonDecoder().convert(respBody);
     if (responseMap.containsKey('success') && responseMap["success"]) {

@@ -5,6 +5,16 @@ import 'package:socale/models/ModelProvider.dart';
 class FetchService {
   final _db = Amplify.DataStore;
 
+  Future<List<AuthUserAttribute>?> fetchCurrentUserAttributes() async {
+    try {
+      final result = await Amplify.Auth.fetchUserAttributes();
+      return result;
+    } on AuthException catch (e) {
+      print(e.message);
+      return null;
+    }
+  }
+
   Future<User> fetchUserById(String userId) async {
     final request = ModelQueries.get(User.classType, userId);
     final response = await Amplify.API.query(request: request).response;
@@ -30,8 +40,7 @@ class FetchService {
   Future<List<Room>> fetchAllRoomsForUser(User user) async {
     List<Room> rooms = [];
 
-    final userRooms = await Amplify.DataStore.query(UserRoom.classType,
-        where: UserRoom.USER.eq(user.id));
+    final userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.USER.eq(user.id));
 
     for (UserRoom userRoom in userRooms) {
       if (userRoom.room != null) {

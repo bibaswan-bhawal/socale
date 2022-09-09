@@ -36,7 +36,7 @@ class _MatchPageState extends ConsumerState<MatchPage> {
 
     Widget buildCard(context) {
       final provider = p.Provider.of<CardProvider>(context);
-      List<Widget> list = [Text("BOB")];
+      List<Widget> list = [];
 
       if (matchesProvider.hasValue) {
         list = [];
@@ -62,10 +62,7 @@ class _MatchPageState extends ConsumerState<MatchPage> {
           list = [
             Text(
               "No more matches",
-              style: GoogleFonts.poppins(
-                  color: Colors.white,
-                  fontWeight: FontWeight.w500,
-                  fontSize: 24),
+              style: GoogleFonts.poppins(color: Colors.white, fontWeight: FontWeight.w500, fontSize: 24),
             )
           ];
         }

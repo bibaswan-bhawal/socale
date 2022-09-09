@@ -67,6 +67,19 @@ class AuthSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(loadingSnackBar);
   }
 
+  void emailNotVerifiedSnack(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    final errorSnackBar = SnackBar(
+      content: Text(
+        "Email not verified",
+        textAlign: TextAlign.center,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+  }
+
   void dismissSnackBar(context) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
   }

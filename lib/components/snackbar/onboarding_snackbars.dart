@@ -78,6 +78,19 @@ class OnboardingSnackBar {
 
     ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
   }
+
+  void errorCreatingUserSnack(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    final errorSnackBar = SnackBar(
+      content: Text(
+        "There was an error saving your user, try again",
+        textAlign: TextAlign.left,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+  }
 }
 
 final onboardingSnackBar = OnboardingSnackBar();

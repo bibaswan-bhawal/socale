@@ -2,8 +2,16 @@ import 'dart:async';
 
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:get/get.dart';
+import 'package:socale/services/onboarding_service.dart';
 
 class AuthService {
+  void startAuthStreamListener() {
+    StreamSubscription<HubEvent> hubSubscription = Amplify.Hub.listen<dynamic, AuthHubEvent>(HubChannel.Auth, (hubEvent) {
+      print(hubEvent.eventName);
+    });
+  }
+
   Future<bool> signInWithSocialWebUI(AuthProvider provider) async {
     try {
       final result = await Amplify.Auth.signInWithWebUI(provider: provider);
@@ -62,6 +70,9 @@ class AuthService {
       final SignOutResult res = await Amplify.Auth.signOut(
         options: const SignOutOptions(globalSignOut: true),
       );
+
+      Get.offAllNamed('/auth');
+      onboardingService.clearAll();
     } on SignedOutException catch (e) {
       throw ("Error could not sign out");
     } on AuthException catch (e) {

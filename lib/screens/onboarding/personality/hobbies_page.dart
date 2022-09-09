@@ -8,6 +8,8 @@ import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/components/snackbar/onboarding_snackbars.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/onboarding/providers/personality_data_provider.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/options/hobbies.dart';
 import 'package:socale/values/colors.dart';
 
@@ -31,11 +33,13 @@ class _HobbiesPageState extends ConsumerState<HobbiesPage> {
     }
 
     dataNotifier.uploadHobbies();
+    onboardingService.setOnboardingStep(OnboardingStep.idealFriendDescription);
     _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   Future<bool> _onBackPress() async {
     FocusManager.instance.primaryFocus?.unfocus();
+    onboardingService.setOnboardingStep(OnboardingStep.selfDescription);
     _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }
@@ -60,10 +64,7 @@ class _HobbiesPageState extends ConsumerState<HobbiesPage> {
                 left: 10,
                 top: 20,
                 child: IconButton(
-                  onPressed: () {
-                    FocusManager.instance.primaryFocus?.unfocus();
-                    _pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
-                  },
+                  onPressed: _onBackPress,
                   icon: const Icon(Icons.arrow_back_ios_new),
                 ),
               ),

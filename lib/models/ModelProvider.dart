@@ -34,7 +34,7 @@ export 'UserRoom.dart';
 
 class ModelProvider implements ModelProviderInterface {
   @override
-  String version = "4f244140fe954e95c2b8f2f014e057c6";
+  String version = "2b265b144a44e6e5bc26b7f2809d86e1";
   @override
   List<ModelSchema> modelSchemas = [Match.schema, Message.schema, Room.schema, User.schema, UserRoom.schema];
   static final ModelProvider _instance = ModelProvider();

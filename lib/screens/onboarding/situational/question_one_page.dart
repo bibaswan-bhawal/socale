@@ -6,6 +6,8 @@ import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/onboarding/providers/situational_data_provider.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/values/colors.dart';
 
 class QuestionOnePage extends ConsumerStatefulWidget {
@@ -23,6 +25,7 @@ class _QuestionOnePageState extends ConsumerState<QuestionOnePage> {
   }
 
   Future<bool> _onBackPress() async {
+    onboardingService.setOnboardingStep(OnboardingStep.idealFriendDescription);
     _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }

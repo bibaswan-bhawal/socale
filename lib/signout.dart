@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:socale/auth/auth_repository.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 
 class SignOutScreen extends StatelessWidget {
@@ -12,7 +12,7 @@ class SignOutScreen extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           onboardingService.clearAll();
-          AuthRepository().signOutCurrentUser();
+          authService.signOutCurrentUser();
           Get.offAllNamed('/auth');
         },
         child: Text('Sign Out'),

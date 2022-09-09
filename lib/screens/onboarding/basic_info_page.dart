@@ -11,6 +11,8 @@ import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/screens/onboarding/providers/basic_data_provider.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/values/colors.dart';
 import 'package:socale/values/styles.dart';
 import 'package:intl/intl.dart';
@@ -114,11 +116,13 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
     if (isValid) {
       final dataNotifier = ref.read(basicDataProvider.notifier);
       dataNotifier.saveData();
+      onboardingService.setOnboardingStep(OnboardingStep.collegeInfo);
       _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     }
   }
 
   Future<bool> _onBackPress() async {
+    onboardingService.setOnboardingStep(OnboardingStep.started);
     _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }

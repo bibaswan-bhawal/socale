@@ -15,7 +15,6 @@ import 'package:socale/components/snackbar/auth_snackbars.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/validators.dart';
 
@@ -127,7 +126,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   socialSignInHandler(AuthProvider oAuth) async {
     FocusManager.instance.primaryFocus?.unfocus();
-    setState(() => isLoading = false);
+
+    if (isLoading) {
+      bool isSignedIn = await authService.signInWithSocialWebUI(oAuth);
+      userDataLoader(isSignedIn);
+    }
   }
 
   @override

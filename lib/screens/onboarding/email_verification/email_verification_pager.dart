@@ -25,17 +25,10 @@ class EmailVerificationPager extends StatefulWidget {
 }
 
 class _EmailVerificationPagerState extends State<EmailVerificationPager> {
-  final _optFocusNode = FocusNode();
-
   @override
   Widget build(BuildContext context) {
     return PageView(
       controller: widget.pageController,
-      onPageChanged: (page) {
-        if (page == 1) {
-          _optFocusNode.requestFocus();
-        }
-      },
       physics: NeverScrollableScrollPhysics(),
       children: [
         Form(
@@ -60,7 +53,6 @@ class _EmailVerificationPagerState extends State<EmailVerificationPager> {
               child: Padding(
                 padding: EdgeInsets.fromLTRB(80, 20, 80, 20),
                 child: PinCodeTextField(
-                  focusNode: _optFocusNode,
                   length: 4,
                   useHapticFeedback: true,
                   pinTheme: StyleValues.optPinTheme,
@@ -77,29 +69,27 @@ class _EmailVerificationPagerState extends State<EmailVerificationPager> {
                 ),
               ),
             ),
-            RichText(
-              text: TextSpan(
-                children: [
-                  TextSpan(
-                    text: 'Resend Code',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      decoration: TextDecoration.underline,
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: -0.3,
+            GestureDetector(
+              onTap: () {
+                widget.pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+              },
+              child: RichText(
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Resend Code',
+                      style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        decoration: TextDecoration.underline,
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.3,
+                      ),
                     ),
-                    recognizer: TapGestureRecognizer()
-                      ..onTap = () {
-                        widget.pageController.previousPage(
-                          duration: Duration(milliseconds: 500),
-                          curve: Curves.easeInOut,
-                        );
-                      },
-                  ),
-                ],
+                  ],
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
             ),
           ],
         ),

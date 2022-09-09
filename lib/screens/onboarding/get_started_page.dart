@@ -3,6 +3,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/primary_button.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/values/colors.dart';
 
 class GetStartPage extends ConsumerStatefulWidget {
@@ -21,6 +23,7 @@ class _GetStartPageState extends ConsumerState<GetStartPage> {
   }
 
   void _onClickEventHandler() {
+    onboardingService.setOnboardingStep(OnboardingStep.bio);
     _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 

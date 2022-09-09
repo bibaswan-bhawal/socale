@@ -6,9 +6,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onNavBarClicked;
   final Size size;
 
-  const CustomBottomNavigationBar(
-      {Key? key, required this.size, required this.onNavBarClicked})
-      : super(key: key);
+  const CustomBottomNavigationBar({Key? key, required this.size, required this.onNavBarClicked}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -52,27 +50,31 @@ class CustomBottomNavigationBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
+                // IconButton(
+                //   onPressed: () {
+                //     onNavBarClicked(0);
+                //   },
+                //   icon: SvgPicture.asset("assets/icons/home_icon.svg"),
+                // ),
                 IconButton(
-                    onPressed: () {
-                      onNavBarClicked(0);
-                    },
-                    icon: SvgPicture.asset("assets/icons/home_icon.svg")),
-                IconButton(
-                    onPressed: () {
-                      onNavBarClicked(1);
-                    },
-                    icon: SvgPicture.asset("assets/icons/chat_icon.svg")),
+                  onPressed: () {
+                    onNavBarClicked(1);
+                  },
+                  icon: SvgPicture.asset("assets/icons/chat_icon.svg"),
+                ),
                 Container(width: size.width * 0.20),
+                // IconButton(
+                //   onPressed: () {
+                //     onNavBarClicked(3);
+                //   },
+                //   icon: SvgPicture.asset("assets/icons/insights_icon.svg"),
+                // ),
                 IconButton(
-                    onPressed: () {
-                      onNavBarClicked(3);
-                    },
-                    icon: SvgPicture.asset("assets/icons/insights_icon.svg")),
-                IconButton(
-                    onPressed: () {
-                      onNavBarClicked(4);
-                    },
-                    icon: SvgPicture.asset("assets/icons/user_icon.svg"))
+                  onPressed: () {
+                    onNavBarClicked(4);
+                  },
+                  icon: SvgPicture.asset("assets/icons/user_icon.svg"),
+                )
               ],
             ),
           )

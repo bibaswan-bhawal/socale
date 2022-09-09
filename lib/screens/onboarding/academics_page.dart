@@ -7,6 +7,8 @@ import 'package:socale/components/TextFields/dropdown_input_field/dropdown_input
 import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/onboarding/providers/academic_data_provider.dart';
+import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/options/colleges.dart';
 import 'package:socale/utils/options/major_minor.dart';
 import 'package:socale/values/colors.dart';
@@ -57,6 +59,7 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
 
       if (isValid) {
         dataNotifier.setData();
+        onboardingService.setOnboardingStep(OnboardingStep.skills);
         _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }
     }
@@ -64,6 +67,7 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
 
   Future<bool> _onBackPress() async {
     if (_secondPageController.page! > 0) {
+      onboardingService.setOnboardingStep(OnboardingStep.bio);
       _secondPageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       return false;
     }
