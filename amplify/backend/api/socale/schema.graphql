@@ -9,7 +9,7 @@ type User @model @auth(rules: [{ allow: public }]) {
 	email: AWSEmail!
 	schoolEmail: AWSEmail!
 	firstName: String!
-	lastName: String
+	lastName: String!
 	dateOfBirth: AWSDate!
 	graduationMonth: AWSDate!
 	major: [String!]!
@@ -22,8 +22,9 @@ type User @model @auth(rules: [{ allow: public }]) {
 	idealFriendDescription: String!
 	situationalDecisions: [Int!]!
 	academicInterests: [String!]!
-	avatar: String
+	avatar: String!
 	anonymousUsername: String!
+	introMatchingCompleted: Boolean!
 	messages: [Message!] @hasMany
 	userRoom: [UserRoom] @hasMany(indexName: "byUser", fields: ["id"])
 	matches: [String]!

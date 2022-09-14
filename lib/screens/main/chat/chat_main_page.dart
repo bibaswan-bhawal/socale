@@ -10,6 +10,7 @@ import 'package:socale/screens/main/chat/chat_page.dart';
 import 'package:socale/services/chat_service.dart';
 import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/providers/providers.dart';
+import 'package:socale/values/colors.dart';
 
 class ChatListPage extends ConsumerStatefulWidget {
   const ChatListPage({Key? key}) : super(key: key);
@@ -21,10 +22,6 @@ class ChatListPage extends ConsumerStatefulWidget {
 class _ChatListPageState extends ConsumerState<ChatListPage> {
   List<User> userList = [];
   List<Room> roomList = [];
-  @override
-  void initState() {
-    super.initState();
-  }
 
   @override
   void didChangeDependencies() {
@@ -68,67 +65,42 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
   }
 
   buildListScreen(Size size) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Padding(
-          padding: EdgeInsets.only(left: 20, top: 20),
-          child: Text(
-            "Chats",
+    return ListView.separated(
+      itemCount: roomList.length,
+      separatorBuilder: (context, index) {
+        return Padding(
+          padding: EdgeInsets.only(left: 80),
+          child: Divider(
+            color: Color(0x2FFFFFFF),
+          ),
+        );
+      },
+      itemBuilder: (context, index) {
+        return ListTile(
+          tileColor: Color(0xFF292B2F),
+          leading: CircleAvatar(
+            radius: 32,
+            child: Image.asset('assets/images/avatars/${userList[index].avatar}'),
+          ),
+          title: Text(
+            userList[index].anonymousUsername,
             style: GoogleFonts.poppins(
-              fontSize: 32,
-              fontWeight: FontWeight.w500,
-              letterSpacing: -0.3,
               color: Color(0xFFFFFFFF),
+              fontWeight: FontWeight.w500,
+              fontSize: 14,
             ),
           ),
-        ),
-        Divider(
-          color: Color(0x8AFFFFFF),
-        ),
-        Expanded(
-          child: Padding(
-            padding: EdgeInsets.only(left: 10),
-            child: ListView.separated(
-              itemCount: roomList.length,
-              separatorBuilder: (context, index) {
-                return Padding(
-                  padding: EdgeInsets.only(left: 80),
-                  child: Divider(
-                    color: Color(0x2FFFFFFF),
-                  ),
-                );
-              },
-              itemBuilder: (context, index) {
-                return ListTile(
-                  tileColor: Color(0xFF000000),
-                  leading: CircleAvatar(
-                    radius: 32,
-                    child: Image.asset('assets/images/avatars/${userList[index].avatar}'),
-                  ),
-                  title: Text(
-                    userList[index].anonymousUsername,
-                    style: GoogleFonts.poppins(
-                      color: Color(0xFFFFFFFF),
-                      fontWeight: FontWeight.w500,
-                      fontSize: 14,
-                    ),
-                  ),
-                  subtitle: Text(
-                    "Message",
-                    style: GoogleFonts.roboto(
-                      color: Color(0xA8FFFFFF),
-                      fontWeight: FontWeight.w400,
-                      fontSize: 14,
-                    ),
-                  ),
-                  onTap: () => onItemClick(index),
-                );
-              },
+          subtitle: Text(
+            "Hey we should share our...",
+            style: GoogleFonts.roboto(
+              color: Color(0xA8FFFFFF),
+              fontWeight: FontWeight.w400,
+              fontSize: 14,
             ),
           ),
-        )
-      ],
+          onTap: () => onItemClick(index),
+        );
+      },
     );
   }
 
@@ -136,10 +108,112 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
   Widget build(BuildContext context) {
     var size = MediaQuery.of(context).size;
 
-    return KeyboardSafeArea(
-      child: Padding(
-        padding: EdgeInsets.only(bottom: 58),
-        child: buildListScreen(size),
+    return DefaultTabController(
+      length: 2,
+      initialIndex: 1,
+      child: Scaffold(
+        resizeToAvoidBottomInset: false,
+        body: KeyboardSafeArea(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              return Column(
+                children: [
+                  SizedBox(
+                    height: 100,
+                    width: constraints.maxWidth,
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: Column(
+                        children: [
+                          Image.asset('assets/images/socale_logo_bw.png', width: 100),
+                        ],
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: SizedBox(
+                      width: size.width * 0.9,
+                      height: 40,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: "Search",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(style: BorderStyle.none, width: 0),
+                          ),
+                          fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
+                          filled: true,
+                          isCollapsed: true,
+                          contentPadding: EdgeInsets.only(top: 10),
+                        ),
+                      ),
+                    ),
+                  ),
+                  TabBar(
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          "Your Network",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            color: ColorValues.textOnDark,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                      Tab(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'New Matches',
+                                style: GoogleFonts.poppins(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  foreground: Paint()
+                                    ..shader = LinearGradient(
+                                      colors: <Color>[Color(0xFFE0BEF0), Color(0xFFE0BEF0)],
+                                    ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                                ),
+                              ),
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    width: constraints.maxWidth,
+                    height: constraints.maxHeight - 198,
+                    child: TabBarView(
+                      children: [
+                        Center(
+                          child: SizedBox(
+                            width: 250,
+                            child: Text(
+                              "Build out your network to see them here",
+                              textAlign: TextAlign.center,
+                              style: GoogleFonts.poppins(
+                                color: ColorValues.textOnDark,
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                        ),
+                        buildListScreen(size),
+                      ],
+                    ),
+                  ),
+                ],
+              );
+            },
+          ),
+        ),
       ),
     );
   }

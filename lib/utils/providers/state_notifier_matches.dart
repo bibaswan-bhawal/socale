@@ -1,5 +1,6 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:hive/hive.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/aws_lambda_service.dart';
 import 'package:socale/services/fetch_service.dart';
@@ -24,8 +25,6 @@ class MatchStateProvider extends StateNotifier<AsyncValue<Map<User, Match>>> {
 
       currentUser = await fetchService.fetchUserById(id);
     }
-
-    print(currentUser.matches);
 
     for (String userId in currentUser.matches) {
       User user = await fetchService.fetchUserById(userId);

@@ -42,6 +42,7 @@ main() {
 
       final user1 = User(
         firstName: 'user 1',
+        lastName: 'Bob',
         academicInterests: const [],
         careerGoals: const [],
         college: '',
@@ -58,11 +59,13 @@ main() {
         situationalDecisions: const [],
         skills: const [],
         anonymousUsername: 'bob',
+        introMatchingCompleted: false,
         avatar: 'Artist Raccoon.png',
       );
 
       final user2 = User(
         firstName: 'user 2',
+        lastName: 'Bob',
         academicInterests: const [],
         careerGoals: const [],
         college: '',
@@ -79,6 +82,7 @@ main() {
         situationalDecisions: const [],
         skills: const [],
         anonymousUsername: 'bib',
+        introMatchingCompleted: false,
         avatar: 'Artist Raccoon.png',
       );
 

@@ -61,9 +61,13 @@ class OnboardingService {
   // getters
 
   String? getSchoolEmail() {
-    final box = Hive.box(boxName);
-    final data = box.get('schoolEmail');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('schoolEmail');
+      return data;
+    }
+
+    return null;
   }
 
   Future<List?> getBio() async {
@@ -328,6 +332,7 @@ class OnboardingService {
       idealFriendDescription: box.get('idealFriendDescription'),
       situationalDecisions: box.get('situationalDecisions'),
       avatar: box.get('avatar'),
+      introMatchingCompleted: false,
       matches: [],
       anonymousUsername: anonymousUsername,
     );

@@ -43,6 +43,10 @@ dependencies:
   flutter:
     sdk: flutter
   carousel_slider: ^4.1.1
+  uuid: 3.0.6
+  firebase_messaging: ^13.0.1
+  firebase_core: ^1.22.0
+  flutter_local_notifications: ^9.9.1
 
 dev_dependencies:
   flutter_lints: ^2.0.1

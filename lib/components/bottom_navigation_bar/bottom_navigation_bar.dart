@@ -34,7 +34,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               child: IconButton(
                 iconSize: 64,
                 onPressed: () {
-                  onNavBarClicked(2);
+                  onNavBarClicked(1);
                 },
                 icon: SvgPicture.asset(
                   "assets/icons/center_logo.svg",
@@ -49,28 +49,16 @@ class CustomBottomNavigationBar extends StatelessWidget {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                // IconButton(
-                //   onPressed: () {
-                //     onNavBarClicked(0);
-                //   },
-                //   icon: SvgPicture.asset("assets/icons/home_icon.svg"),
-                // ),
                 IconButton(
                   onPressed: () {
-                    onNavBarClicked(1);
+                    onNavBarClicked(0);
                   },
                   icon: SvgPicture.asset("assets/icons/chat_icon.svg"),
                 ),
                 Container(width: size.width * 0.20),
-                // IconButton(
-                //   onPressed: () {
-                //     onNavBarClicked(3);
-                //   },
-                //   icon: SvgPicture.asset("assets/icons/insights_icon.svg"),
-                // ),
                 IconButton(
                   onPressed: () {
-                    onNavBarClicked(4);
+                    onNavBarClicked(2);
                   },
                   icon: SvgPicture.asset("assets/icons/user_icon.svg"),
                 )

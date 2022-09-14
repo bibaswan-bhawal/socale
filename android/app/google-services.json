@@ -39,10 +39,10 @@
               "client_type": 3
             },
             {
-              "client_id": "575550339662-g2kbsvo143h9q4ich450sqobogeoi39k.apps.googleusercontent.com",
+              "client_id": "575550339662-3aeb8j48h4lc9kui3jga0p01hd0dr422.apps.googleusercontent.com",
               "client_type": 2,
               "ios_info": {
-                "bundle_id": "co.socale"
+                "bundle_id": "com.socale.socale"
               }
             }
           ]

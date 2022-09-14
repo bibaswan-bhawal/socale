@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart' as chat_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/chat_service.dart';
 
@@ -20,6 +21,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   List<types.Message> _messages = [];
   StreamSubscription<QuerySnapshot<Message>>? _stream;
   late types.User _currentUser;
+  final List<User> _dbUsers = [];
   final List<types.User> _users = [];
   bool _isUsersLoading = true;
   bool _isRoomNameLoading = true;
@@ -33,7 +35,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (user.id != currentUserId) {
         roomName += "${user.firstName} ${user.lastName}";
       } else {
-        print("bob");
         setState(
           () => _currentUser = types.User(
             id: user.id,
@@ -85,8 +86,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           () => _users.add(
             types.User(
               id: user.id,
-              firstName: user.firstName,
-              lastName: user.lastName,
+              firstName: user.anonymousUsername.split(" ").elementAt(0),
+              lastName: user.anonymousUsername.split(" ").elementAt(1),
+              imageUrl: user.avatar,
             ),
           ),
         );
@@ -128,6 +130,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     user: _currentUser,
                     showUserNames: true,
                     theme: const chat_ui.DefaultChatTheme(
+                      primaryColor: Color(0xFFC022E5),
                       backgroundColor: Color(0xFF292B2F),
                       secondaryColor: Color(0xFF1F2124),
                       receivedMessageBodyTextStyle: TextStyle(
@@ -143,9 +146,44 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 90,
+                    height: 100,
                     child: AppBar(
-                      title: Text(_roomName),
+                      leading: Padding(
+                        padding: EdgeInsets.only(top: 10),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            IconButton(
+                              onPressed: () {
+                                Navigator.of(context).pop();
+                              },
+                              icon: const Icon(Icons.arrow_back_ios_new),
+                            ),
+                            CircleAvatar(
+                              radius: 30,
+                              child: Image.asset('assets/images/avatars/${_users.first.imageUrl}'),
+                            ),
+                          ],
+                        ),
+                      ),
+                      leadingWidth: 108,
+                      title: Padding(
+                        padding: EdgeInsets.only(top: 20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(_roomName),
+                            Text(
+                              "Anonymous Match",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w300,
+                                color: Color(0xFF9F78F3),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
                       backgroundColor: Color(0xFF292B2F),
                     ),
                   ),

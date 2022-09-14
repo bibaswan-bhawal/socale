@@ -27,55 +27,72 @@ class _MatchPageState extends ConsumerState<MatchPage> {
   @override
   Widget build(BuildContext context) {
     final matchesProvider = ref.watch(matchAsyncController);
-    var size = MediaQuery.of(context).size;
-
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        return Center(
-          child: CarouselSlider(
-            options: CarouselOptions(
-              height: constraints.maxHeight,
-              viewportFraction: 1,
-            ),
-            items: matchesProvider.when(
-              data: (data) {
-                List<Widget> list = [];
-                data.forEach((key, value) {
-                  print(key.id);
-                  list.add(
-                    Container(
-                      padding: EdgeInsets.symmetric(horizontal: 15),
-                      child: MatchCard(
-                        size: Size(constraints.maxWidth * 0.90, constraints.maxHeight * 0.8),
-                        user: key,
-                        match: value,
-                        isFront: true,
-                      ),
-                    ),
-                  );
-                });
-
-                print(list.length);
-                return list;
-              },
-              loading: () {
-                return [
-                  SizedBox(
-                    width: 54,
-                    height: 54,
-                    child: CircularProgressIndicator(),
-                  ),
-                ];
-              },
-              error: (Object error, StackTrace? stackTrace) {
-                return [
-                  Text("error fetching matches"),
-                ];
-              },
+    final mediaQuery = MediaQuery.of(context);
+    return Padding(
+      padding: EdgeInsets.only(top: mediaQuery.padding.top),
+      child: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(top: 5),
+            child: Image.asset(
+              'assets/images/socale_logo_bw.png',
+              height: 50,
+              fit: BoxFit.fitHeight,
             ),
           ),
-        );
-      },
+          Expanded(
+            child: Padding(
+              padding: EdgeInsets.only(top: 20),
+              child: LayoutBuilder(
+                builder: (BuildContext context, BoxConstraints constraints) {
+                  return CarouselSlider(
+                    options: CarouselOptions(
+                      height: constraints.maxHeight,
+                      viewportFraction: 1,
+                      enableInfiniteScroll: false,
+                    ),
+                    items: matchesProvider.when(data: (data) {
+                      List<Widget> matchCards = [];
+
+                      data.forEach((user, matchData) {
+                        matchCards.add(
+                          LayoutBuilder(
+                            builder: (BuildContext context, BoxConstraints constraints) {
+                              return MatchCard(
+                                size: Size(constraints.maxWidth, constraints.maxHeight),
+                                user: user,
+                                match: matchData,
+                              );
+                            },
+                          ),
+                        );
+                      });
+
+                      return matchCards;
+                    }, error: (Object error, StackTrace? stackTrace) {
+                      return [
+                        Center(
+                          child: Text("There was an error getting your matches"),
+                        ),
+                      ];
+                    }, loading: () {
+                      return [
+                        Center(
+                          child: SizedBox(
+                            height: 54,
+                            width: 54,
+                            child: CircularProgressIndicator(),
+                          ),
+                        )
+                      ];
+                    }),
+                  );
+                },
+              ),
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

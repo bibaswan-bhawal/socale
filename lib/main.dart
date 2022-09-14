@@ -6,11 +6,15 @@ import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:animations/animations.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
@@ -20,32 +24,42 @@ import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/get_it_instance.dart';
 import 'package:socale/utils/providers/providers.dart';
-import 'utils/routes.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:socale/utils/routes.dart';
+
+import 'firebase_options.dart';
 import 'amplifyconfiguration.dart';
+import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  await dotenv.load(fileName: "assets/.env");
-  configureDependencies();
-  await Hive.initFlutter();
+
+  await dotenv.load(fileName: "assets/.env"); // load environment variables files
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  // initialize firebase for FCM
+
+  await NotificationService().init();
+
+  await Hive.initFlutter(); // initialize local key storage
+  configureDependencies(); // configure routing dependencies
   runApp(ProviderScope(child: SocaleApp()));
 }
 
 class SocaleApp extends ConsumerStatefulWidget {
   const SocaleApp({Key? key}) : super(key: key);
+
   @override
   SocaleAppState createState() => SocaleAppState();
 }
 
 class SocaleAppState extends ConsumerState<SocaleApp> {
-  List<Widget?> initialPage = [SplashScreen()];
+  List<Widget?> initialPage = [SplashScreen(), MainApp(), OnboardingScreen(), AuthScreen()]; // page router list
+
   bool _isAmplifyConfigured = false;
   bool _isSignedIn = false;
   int _pageIndex = 0;
 
   Future<void> _configureAmplify() async {
-    //AmplifyAnalyticsPinpoint analyticsPlugin = AmplifyAnalyticsPinpoint();
+    //AmplifyAnalyticsPinpoint analyticsPlugin = AmplifyAnalyticsPinpoint(); // library currently broken so can't use
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
     AmplifyAPI apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
     AmplifyStorageS3 storagePlugin = AmplifyStorageS3();
@@ -56,14 +70,14 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       apiPlugin,
       storagePlugin,
       dataStorePlugin,
-      //analyticsPlugin,
+      //analyticsPlugin, // library currently broken so can't use
     ]);
 
     try {
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
-      await _attemptAutoLogin();
-      await getInitialPage();
+      await _attemptAutoLogin(); // attempt auto login
+      await getInitialPage(); // get initial page after splash screen
     } on AmplifyAlreadyConfiguredException {
       throw ("Tried to reconfigure Amplify.");
     }
@@ -72,25 +86,28 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   Future<void> _attemptAutoLogin() async {
     try {
       final session = await Amplify.Auth.fetchAuthSession();
+
       if (session.isSignedIn == true) {
-        authService.startAuthStreamListener();
-        await ref.read(userAttributesAsyncController.notifier).setAttributes();
-        await Amplify.DataStore.start();
+        authService.startAuthStreamListener(); // auth events listener
+
+        await ref.read(userAttributesAsyncController.notifier).setAttributes(); // set user attributes
+        await Amplify.DataStore.start(); // start datastore
       }
+
       setState(() => _isSignedIn = session.isSignedIn);
     } on NotAuthorizedException catch (_) {
-      throw ("error");
+      throw ("Not authorized error when attempting auto login");
     } on UserNotFoundException catch (_) {
       setState(() => _isSignedIn = false);
-    } on AuthException catch (_) {
-      print("Hello");
+    } on AuthException catch (e) {
+      throw ("Auth exception at main: $e");
     }
   }
 
   @override
   void initState() {
     super.initState();
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
     _configureAmplify();
   }
 
@@ -101,13 +118,9 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     ]);
 
     return GestureDetector(
-      onTap: () {
-        FocusManager.instance.primaryFocus?.unfocus();
-      },
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: GetMaterialApp(
-        theme: ThemeData(
-          canvasColor: Colors.transparent,
-        ),
+        theme: ThemeData(canvasColor: Colors.transparent),
         title: 'Socale',
         debugShowCheckedModeBanner: false,
         getPages: Routes.getPages(),
@@ -137,21 +150,17 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     if (_isAmplifyConfigured) {
       if (_isSignedIn) {
         bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
-
         if (isOnBoardingComplete) {
           final user = await Amplify.Auth.getCurrentUser();
-          ref.read(userAsyncController.notifier).setUser(user.userId);
-          ref.read(matchAsyncController.notifier).setMatches(user.userId);
+          await ref.read(userAsyncController.notifier).setUser(user.userId);
+          await ref.read(matchAsyncController.notifier).setMatches(user.userId);
 
-          initialPage.insert(1, MainApp());
           setState(() => _pageIndex = 1);
         } else {
-          initialPage.insert(1, OnboardingScreen());
-          setState(() => _pageIndex = 1);
+          setState(() => _pageIndex = 2);
         }
       } else {
-        setState(() => initialPage.insert(1, AuthScreen()));
-        setState(() => _pageIndex = 1);
+        setState(() => _pageIndex = 3);
       }
     }
   }

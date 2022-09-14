@@ -3,22 +3,23 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:socale/models/ModelProvider.dart';
 
 class FetchService {
-  final _db = Amplify.DataStore;
-
   Future<List<AuthUserAttribute>?> fetchCurrentUserAttributes() async {
     try {
       final result = await Amplify.Auth.fetchUserAttributes();
       return result;
     } on AuthException catch (e) {
-      print(e.message);
-      return null;
+      throw (e.message);
     }
   }
 
   Future<User> fetchUserById(String userId) async {
     final request = ModelQueries.get(User.classType, userId);
     final response = await Amplify.API.query(request: request).response;
-    print(response.errors);
+
+    if (response.errors.isNotEmpty) {
+      throw ("Error fetching user by id at fetch service: ${response.errors}");
+    }
+
     return response.data!;
   }
 
@@ -49,8 +50,6 @@ class FetchService {
         rooms.add(room);
       }
     }
-
-    print(rooms);
 
     return rooms;
   }
