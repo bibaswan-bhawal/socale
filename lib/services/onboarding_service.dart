@@ -6,7 +6,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:socale/models/User.dart';
-import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/options/username_adjectives.dart';
@@ -156,7 +155,7 @@ class OnboardingService {
 
   Future<void> setSchoolEmail(String schoolEmail) async {
     print("Saving school email");
-
+    print(schoolEmail);
     final box = await Hive.openBox(boxName);
     await box.put('schoolEmail', schoolEmail);
   }

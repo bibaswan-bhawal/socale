@@ -25,7 +25,13 @@ class DescribeFriendDataNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void uploadFriendDescription() => onboardingService.setIdealFriendDescription(_description);
+  void uploadData() => onboardingService.setIdealFriendDescription(_description);
+
+  void clearData() {
+    _description = "";
+    _gotData = false;
+    notifyListeners();
+  }
 }
 
 final describeFriendDataProvider = ChangeNotifierProvider((ref) => DescribeFriendDataNotifier());

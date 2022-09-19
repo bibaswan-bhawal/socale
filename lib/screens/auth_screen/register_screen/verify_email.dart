@@ -42,15 +42,15 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         }
       } on NotAuthorizedException catch (_) {
         setState(() => isLoading = false);
-        authService.signOutCurrentUser();
+        authService.signOutCurrentUser(ref);
         authSnackBar.userNotAuthorizedSnackBar(context);
       } on UserNotFoundException catch (_) {
         setState(() => isLoading = false);
-        authService.signOutCurrentUser();
+        authService.signOutCurrentUser(ref);
         authSnackBar.userNotFoundSnackBar(context);
       } on AuthException catch (_) {
         setState(() => isLoading = false);
-        authService.signOutCurrentUser();
+        authService.signOutCurrentUser(ref);
         authSnackBar.defaultErrorMessageSnack(context);
       }
     }

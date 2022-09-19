@@ -6,6 +6,7 @@ import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/onboarding/providers/situational_data_provider.dart';
+import 'package:socale/utils/constraints/constraints.dart';
 import 'package:socale/values/colors.dart';
 
 class QuestionTwoPage extends ConsumerStatefulWidget {
@@ -102,7 +103,10 @@ class _QuestionTwoPageState extends ConsumerState<QuestionTwoPage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
+                    padding: EdgeInsets.only(
+                      left: constraints.onboardingSituational2ImagePadding,
+                      right: constraints.onboardingSituational2ImagePadding,
+                    ),
                     child: Image.asset('assets/images/onboarding_illustration_8.png'),
                   ),
                   Center(

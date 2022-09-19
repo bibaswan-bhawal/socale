@@ -1,10 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/Buttons/primary_button_single_color.dart';
 import 'package:socale/models/User.dart';
-import 'package:socale/utils/options/academic_interests.dart';
-import 'package:socale/utils/options/hobbies.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
@@ -30,6 +29,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
   Widget build(BuildContext context) {
     final userState = ref.watch(userAsyncController);
     final mediaQuery = MediaQuery.of(context);
+    final size = mediaQuery.size;
 
     return Scaffold(
       backgroundColor: Color(0xFF292B2F),
@@ -104,7 +104,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Center(
                 child: Wrap(
                   spacing: 5,
@@ -141,7 +141,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Center(
                 child: Wrap(
                   spacing: 5,
@@ -170,7 +170,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 child: Padding(
                   padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
                   child: Text(
-                    "My ideal friend",
+                    "I would describe myself as...",
                     style: GoogleFonts.poppins(
                       color: Colors.white,
                       fontSize: 14,
@@ -214,7 +214,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Center(
                 child: Wrap(
                   spacing: 5,
@@ -251,7 +251,7 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 5),
+              padding: EdgeInsets.symmetric(horizontal: 10),
               child: Center(
                 child: Wrap(
                   spacing: 5,
@@ -273,6 +273,17 @@ class _SettingsPageState extends ConsumerState<SettingsPage> {
                 ),
               ),
             ),
+            Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20, vertical: 20),
+              child: PrimaryButtonSingleColor(
+                width: size.width,
+                height: 60,
+                text: "Sign out",
+                color: ColorValues.white,
+                onClickEventHandler: () => authService.signOutCurrentUser(ref),
+                textColor: ColorValues.textOnLight,
+              ),
+            )
           ],
         ),
       ),

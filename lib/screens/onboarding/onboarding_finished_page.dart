@@ -1,15 +1,16 @@
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/Buttons/primary_button.dart';
 import 'package:socale/components/Buttons/primary_button_single_color.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/components/snackbar/onboarding_snackbars.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
 class OnboardingFinishedPage extends ConsumerStatefulWidget {
@@ -44,8 +45,12 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
     });
   }
 
-  void _onEventClickHandler() {
+  void _onEventClickHandler() async {
     print("Onboarding complete");
+    final user = await Amplify.Auth.getCurrentUser();
+
+    await ref.read(userAsyncController.notifier).setUser(user.userId);
+    await ref.read(matchAsyncController.notifier).setMatches(user.userId);
     Get.offAllNamed('/main');
   }
 

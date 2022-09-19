@@ -7,6 +7,7 @@ import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/onboarding/providers/situational_data_provider.dart';
 import 'package:socale/services/onboarding_service.dart';
+import 'package:socale/utils/constraints/constraints.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/values/colors.dart';
 
@@ -106,7 +107,10 @@ class _QuestionFivePageState extends ConsumerState<QuestionFivePage> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(left: 40, right: 40),
+                    padding: EdgeInsets.only(
+                      left: constraints.onboardingSituational5ImagePadding,
+                      right: constraints.onboardingSituational5ImagePadding,
+                    ),
                     child: Image.asset('assets/images/onboarding_illustration_11.png'),
                   ),
                   Center(

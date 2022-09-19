@@ -89,6 +89,22 @@ class PersonalityDataNotifier with ChangeNotifier {
   void uploadCareerGoals() => onboardingService.setCareerGoals(_careerGoals);
   void uploadSelfDescription() => onboardingService.setSelfDescription(_selfDescription);
   void uploadHobbies() => onboardingService.setLeisureInterests(_hobbies);
+
+  void clearData() {
+    _skills = [];
+    _academicInterests = [];
+    _careerGoals = [];
+    _selfDescription = [];
+    _hobbies = [];
+
+    _gotSkillData = false;
+    _gotAcademicInterestsData = false;
+    _gotCareerGoalsData = false;
+    _gotSelfDescriptionData = false;
+    _gotHobbies = false;
+
+    notifyListeners();
+  }
 }
 
 final personalityDataProvider = ChangeNotifierProvider((ref) => PersonalityDataNotifier());

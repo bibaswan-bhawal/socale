@@ -49,8 +49,16 @@ class BasicDataController with ChangeNotifier {
     notifyListeners();
   }
 
-  void saveData() {
+  void uploadData() {
     onboardingService.setBio(_firstName.trim(), _lastName.trim(), _birthDate, _gradDate);
+  }
+
+  void clearData() {
+    _firstName = "";
+    _lastName = "";
+    _birthDate = DateTime(2000, 6, 15);
+    _gradDate = DateTime(2025, 6);
+    notifyListeners();
   }
 }
 

@@ -114,7 +114,7 @@ final List<String> usernameAdjectives = [
   "earnest",
   "easy-going",
   "efficient",
-  "egotistical",
+  "egontistical",
   "elfin",
   "emotional",
   "energetic",

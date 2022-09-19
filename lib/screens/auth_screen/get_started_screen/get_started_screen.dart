@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:socale/components/Buttons/outlined_button.dart';
 import 'package:socale/components/Buttons/primary_button.dart';
+import 'package:socale/utils/constraints/constraints.dart';
 import 'package:socale/values/strings.dart';
 import 'package:socale/values/styles.dart';
 
@@ -9,9 +10,7 @@ class GetStartedScreen extends StatelessWidget {
   final Function() goToLogin;
   final Function() goToRegister;
 
-  const GetStartedScreen(
-      {Key? key, required this.goToLogin, required this.goToRegister})
-      : super(key: key);
+  const GetStartedScreen({Key? key, required this.goToLogin, required this.goToRegister}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +19,7 @@ class GetStartedScreen extends StatelessWidget {
     return Stack(
       children: [
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+          padding: EdgeInsets.only(top: constraints.getStartedTopPadding),
           child: Center(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -61,7 +60,7 @@ class GetStartedScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
+                  padding: EdgeInsets.only(top: 20),
                   child: PrimaryButton(
                     width: size.width - 60,
                     height: 60,
@@ -71,7 +70,7 @@ class GetStartedScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.fromLTRB(0, 12, 0, 0),
+                  padding: EdgeInsets.only(top: 12),
                   child: CustomOutlinedButton(
                     width: size.width - 60,
                     height: 60,

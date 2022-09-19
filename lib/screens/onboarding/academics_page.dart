@@ -58,7 +58,7 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
       final isValid = form != null ? form.validate() : false;
 
       if (isValid) {
-        dataNotifier.setData();
+        dataNotifier.uploadData();
         onboardingService.setOnboardingStep(OnboardingStep.skills);
         _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }

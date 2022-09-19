@@ -2,7 +2,6 @@ import 'package:get/get.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
-import 'package:socale/signout.dart';
 import 'package:socale/utils/transitions/fade_through_transition.dart';
 
 class Routes {
@@ -13,12 +12,6 @@ class Routes {
         page: () => OnboardingScreen(),
         customTransition: FadeTransition(),
         transitionDuration: Duration(milliseconds: 600),
-      ),
-      GetPage(
-        name: '/sign_out',
-        page: () => SignOutScreen(),
-        customTransition: FadeTransition(),
-        transitionDuration: Duration(milliseconds: 300),
       ),
       GetPage(
         name: '/auth',

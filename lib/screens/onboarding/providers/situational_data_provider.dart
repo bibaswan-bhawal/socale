@@ -17,6 +17,10 @@ class SituationalDataNotifier with ChangeNotifier {
   }
 
   void uploadQuestions() => onboardingService.setSituationalDecisions(_questions);
+  void clearData() {
+    _questions = [50, 50, 50, 50, 50];
+    notifyListeners();
+  }
 }
 
 final situationalQuestionsProvider = ChangeNotifierProvider((ref) => SituationalDataNotifier());

@@ -14,7 +14,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(0),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFFBC7E)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFF7E7E)),
                 height: 42,
                 width: 42,
               ),
@@ -22,7 +22,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(1),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFF469990)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFFBC7E)),
                 height: 42,
                 width: 42,
               ),
@@ -30,7 +30,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(2),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFF7EB4)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFCFF7E)),
                 height: 42,
                 width: 42,
               ),
@@ -38,7 +38,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(3),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFF7E7E)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFAFFF7E)),
                 height: 42,
                 width: 42,
               ),
@@ -46,7 +46,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(4),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFA9A9A9)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFF7EFFE0)),
                 height: 42,
                 width: 42,
               ),
@@ -54,7 +54,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(5),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFCFF7E)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFF7EE8FF)),
                 height: 42,
                 width: 42,
               ),
@@ -83,7 +83,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(8),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFF7EFFE0)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFFF7EB4)),
                 height: 42,
                 width: 42,
               ),
@@ -91,7 +91,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(9),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFAFFF7E)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFEB9898)),
                 height: 42,
                 width: 42,
               ),
@@ -99,7 +99,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(10),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFF7EFFE0)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFF469990)),
                 height: 42,
                 width: 42,
               ),
@@ -107,7 +107,7 @@ class AvatarSelector extends StatelessWidget {
             GestureDetector(
               onTap: () => onChange(11),
               child: Container(
-                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFEB9898)),
+                decoration: BoxDecoration(borderRadius: BorderRadius.circular(100), color: Color(0xFFA9A9A9)),
                 height: 42,
                 width: 42,
               ),

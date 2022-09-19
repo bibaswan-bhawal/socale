@@ -24,9 +24,11 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-
     final userState = ref.watch(userAsyncController);
-    userState.whenData((user) => _showMatchDialog = !user.introMatchingCompleted);
+    userState.whenData((user) {
+      print(user);
+      _showMatchDialog = !user.introMatchingCompleted;
+    });
   }
 
   _onDismiss() {

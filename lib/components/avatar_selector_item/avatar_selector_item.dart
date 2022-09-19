@@ -10,11 +10,12 @@ class AvatarSelectorItem extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
     return Padding(
       padding: EdgeInsets.only(top: 50),
       child: Column(
         children: [
-          Image.asset(image),
+          Image.asset(image, width: size.width * 0.6),
           Padding(
             padding: EdgeInsets.only(top: 20),
             child: Text(
