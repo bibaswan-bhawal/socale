@@ -75,7 +75,7 @@ class NotificationService {
   Future<void> init() async {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     FirebaseMessaging.instance.requestPermission();
-    await FirebaseMessaging.instance.getToken();
+    print(await FirebaseMessaging.instance.getToken());
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 

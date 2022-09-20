@@ -26,7 +26,6 @@ import 'package:socale/utils/routes.dart';
 
 import 'firebase_options.dart';
 import 'amplifyconfiguration.dart';
-import 'services/notification_service.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -34,8 +33,6 @@ void main() async {
   await dotenv.load(fileName: "assets/.env"); // load environment variables files
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   // initialize firebase for FCM
-
-  await NotificationService().init();
 
   await Hive.initFlutter(); // initialize local key storage
   configureDependencies(); // configure routing dependencies
