@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:socale/firebase_options.dart';
 
 FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
 
@@ -72,6 +73,8 @@ class NotificationService {
   }
 
   Future<void> init() async {
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    FirebaseMessaging.instance.requestPermission();
     await FirebaseMessaging.instance.getToken();
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
