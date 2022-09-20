@@ -27,21 +27,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   late String _roomName;
 
   getRoomName() async {
-    String currentUserId = (await Amplify.Auth.getCurrentUser()).userId;
     String roomName = "";
 
     for (types.User user in _users) {
-      if (user.id != currentUserId) {
-        roomName += "${user.firstName} ${user.lastName}";
-      } else {
-        setState(
-          () => _currentUser = types.User(
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          ),
-        );
-      }
+      roomName += "${user.firstName} ${user.lastName}";
     }
 
     setState(() => _roomName = roomName);
@@ -53,10 +42,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (snapshot.isSynced) {
         List<types.Message> messages = [];
         for (Message message in snapshot.items) {
+          types.User author;
+
+          if (message.author.id == _currentUser.id) {
+            author = _currentUser;
+          } else {
+            author = _users.where((element) => element.id == message.author.id).first;
+          }
+
           messages.add(
             types.TextMessage(
               id: message.id,
-              author: _users.where((element) => element.id == message.author.id).first,
+              author: author,
               roomId: widget.room.id,
               text: message.encryptedText,
               createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
@@ -76,19 +73,29 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   prepareRoom() async {
+    String currentUserId = (await Amplify.Auth.getCurrentUser()).userId;
     List<User> users = await chatService.getUsersByRoom(widget.room);
     if (users.isNotEmpty) {
       for (User user in users) {
-        setState(
-          () => _users.add(
-            types.User(
-              id: user.id,
-              firstName: user.anonymousUsername.split(" ").elementAt(0),
-              lastName: user.anonymousUsername.split(" ").elementAt(1),
-              imageUrl: user.avatar,
+        if (user.id != currentUserId) {
+          setState(
+            () => _users.add(
+              types.User(
+                id: user.id,
+                firstName: user.anonymousUsername.split(" ").elementAt(0),
+                lastName: user.anonymousUsername.split(" ").elementAt(1),
+                imageUrl: user.avatar,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          _currentUser = types.User(
+            id: user.id,
+            firstName: user.anonymousUsername.split(" ").elementAt(0),
+            lastName: user.anonymousUsername.split(" ").elementAt(1),
+            imageUrl: user.avatar,
+          );
+        }
       }
 
       await getRoomName();

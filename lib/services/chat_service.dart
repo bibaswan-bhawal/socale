@@ -148,6 +148,9 @@ class ChatService {
       createdAt: TemporalDateTime.now(),
     );
 
+    Room updatedRoom = currentRoom.copyWith(lastMessage: text);
+
+    await Amplify.DataStore.save(updatedRoom);
     await Amplify.DataStore.save(message);
   }
 

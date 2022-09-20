@@ -69,12 +69,7 @@ const amplifyconfig = ''' {
                         "signupAttributes": [],
                         "passwordProtectionSettings": {
                             "passwordPolicyMinLength": 8,
-                            "passwordPolicyCharacters": [
-                                "REQUIRES_LOWERCASE",
-                                "REQUIRES_NUMBERS",
-                                "REQUIRES_SYMBOLS",
-                                "REQUIRES_UPPERCASE"
-                            ]
+                            "passwordPolicyCharacters": []
                         },
                         "mfaConfiguration": "OFF",
                         "mfaTypes": [

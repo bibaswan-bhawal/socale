@@ -31,17 +31,19 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
 
   getRooms() async {
     final userState = ref.watch(userAsyncController);
+
     userState.whenData((User user) async {
       List<Room> rooms = await fetchService.fetchAllRoomsForUser(user);
       List<User> roomUsers = [];
 
       for (Room room in rooms) {
-        List<User> roomUsers = await chatService.getUsersByRoom(room);
-
-        User toAdd = roomUsers.where((otherUser) => otherUser.id != user.id).first;
+        List<User> allRoomUsers = await chatService.getUsersByRoom(room);
+        User toAdd = allRoomUsers.where((otherUser) => otherUser.id != user.id).first;
         roomUsers.add(toAdd);
       }
 
+      print(roomUsers);
+      print(rooms);
       setState(() => userList = roomUsers);
       setState(() => roomList = rooms);
     });
@@ -90,7 +92,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
             ),
           ),
           subtitle: Text(
-            "Hey we should share our...",
+            roomList[index].lastMessage ?? "Send your first message!",
             style: GoogleFonts.roboto(
               color: Color(0xA8FFFFFF),
               fontWeight: FontWeight.w400,
@@ -129,27 +131,27 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: SizedBox(
-                      width: size.width * 0.9,
-                      height: 40,
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: "Search",
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            borderSide: BorderSide(style: BorderStyle.none, width: 0),
-                          ),
-                          fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding: EdgeInsets.only(top: 10),
-                        ),
-                      ),
-                    ),
-                  ),
+                  // Padding(
+                  //   padding: const EdgeInsets.only(bottom: 10),
+                  //   child: SizedBox(
+                  //     width: size.width * 0.9,
+                  //     height: 40,
+                  //     child: TextFormField(
+                  //       decoration: InputDecoration(
+                  //         prefixIcon: Icon(Icons.search),
+                  //         hintText: "Search",
+                  //         border: OutlineInputBorder(
+                  //           borderRadius: BorderRadius.circular(50),
+                  //           borderSide: BorderSide(style: BorderStyle.none, width: 0),
+                  //         ),
+                  //         fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
+                  //         filled: true,
+                  //         isCollapsed: true,
+                  //         contentPadding: EdgeInsets.only(top: 10),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // ),
                   TabBar(
                     tabs: [
                       Tab(

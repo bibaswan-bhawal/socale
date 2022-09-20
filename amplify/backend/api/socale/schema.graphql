@@ -40,6 +40,7 @@ type UserRoom @model @auth(rules: [{ allow: public }]) {
 
 type Room @model @auth(rules: [{ allow: public }]) {
 	id: ID!
+	lastMessage: String
 	messages: [Message!] @hasMany
 	userRoom: [UserRoom!] @hasMany(indexName: "byRoom", fields: ["id"])
 }
