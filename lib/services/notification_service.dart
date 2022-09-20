@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -46,14 +48,50 @@ class NotificationService {
 
   NotificationService._internal();
 
+  Future<void> requestNotificationPermission() async {
+    if (Platform.isAndroid && flutterLocalNotificationsPlugin != null) {
+      flutterLocalNotificationsPlugin?.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
+    } else if (Platform.isIOS && flutterLocalNotificationsPlugin != null) {
+      await flutterLocalNotificationsPlugin?.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
+            alert: true,
+            badge: true,
+            sound: true,
+          );
+    }
+  }
+
+  void onDidReceiveLocalNotification(int? id, String? title, String? body, String? payload) async {
+    print('old IOS');
+  }
+
+  void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
+    final String? payload = notificationResponse.payload;
+    if (notificationResponse.payload != null) {
+      print('notification payload: $payload');
+    }
+  }
+
   Future<void> init() async {
     await FirebaseMessaging.instance.getToken();
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/launcher_icon');
-    final InitializationSettings initializationSettings = InitializationSettings(android: initializationSettingsAndroid);
-    await flutterLocalNotificationsPlugin!.initialize(initializationSettings, onSelectNotification: selectNotification);
+    final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
+      '@mipmap/launcher_icon',
+    );
+    final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
+      requestSoundPermission: false,
+      requestBadgePermission: false,
+      requestAlertPermission: false,
+      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+    );
+
+    final InitializationSettings initializationSettings = InitializationSettings(
+      android: initializationSettingsAndroid,
+      iOS: initializationSettingsDarwin,
+    );
+
+    await flutterLocalNotificationsPlugin?.initialize(initializationSettings, onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Got a message whilst in the foreground!');
@@ -67,9 +105,5 @@ class NotificationService {
     });
 
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-  }
-
-  Future selectNotification(String? payload) async {
-    //Handle notification tapped logic here
   }
 }
