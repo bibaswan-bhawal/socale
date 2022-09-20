@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/chat_service.dart';
+import 'package:socale/utils/constraints/constraints.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final Room room;
@@ -142,7 +143,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 100,
+                    height: constraints.chatPageAppBarHeight,
                     child: AppBar(
                       leading: Padding(
                         padding: EdgeInsets.only(top: 10),
