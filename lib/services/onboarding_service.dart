@@ -347,7 +347,6 @@ class OnboardingService {
     id = cognitoUser.userId;
 
     final box = await Hive.openBox(boxName);
-    print("school email: ${getSchoolEmail()}");
 
     if (!_checkIfFieldExistsLocally(box, 'academicInterests') ||
         !_checkIfFieldExistsLocally(box, 'avatar') ||
@@ -362,12 +361,16 @@ class OnboardingService {
         !_checkIfFieldExistsLocally(box, 'major') ||
         !_checkIfFieldExistsLocally(box, 'minor') ||
         !_checkIfFieldExistsLocally(box, 'onboardingStep') ||
-        !_checkIfFieldExistsLocally(box, 'schoolEmail') ||
         !_checkIfFieldExistsLocally(box, 'selfDescription') ||
         !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
         !_checkIfFieldExistsLocally(box, 'skills')) {
       print(box.toMap().toString());
       print("something missing");
+      return false;
+    }
+
+    if (box.get('schoolEmail') == null && email == null) {
+      print('school email missing');
       return false;
     }
 
@@ -383,7 +386,7 @@ class OnboardingService {
     final newUser = User(
       id: id,
       email: attributes.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value,
-      schoolEmail: box.get('schoolEmail'),
+      schoolEmail: getSchoolEmail()!,
       firstName: box.get('firstName'),
       lastName: box.get('lastName'),
       dateOfBirth: TemporalDate(box.get('dateOfBirth')),
