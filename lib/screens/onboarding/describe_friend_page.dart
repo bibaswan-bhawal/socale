@@ -55,7 +55,7 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
       return;
     }
 
-    dataNotifier.uploadFriendDescription();
+    dataNotifier.uploadData();
     onboardingService.setOnboardingStep(OnboardingStep.situationalDecisions);
     _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
@@ -100,7 +100,7 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                         text: TextSpan(
                           children: [
                             TextSpan(
-                              text: 'What is your ideal ',
+                              text: 'How would you describe ',
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
                                 fontSize: 32,
@@ -108,7 +108,7 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                               ),
                             ),
                             TextSpan(
-                              text: 'friend?',
+                              text: 'yourself?',
                               style: GoogleFonts.poppins(
                                 fontSize: 32,
                                 fontWeight: FontWeight.bold,
@@ -126,7 +126,7 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                     child: Padding(
                       padding: EdgeInsets.only(left: 30),
                       child: Text(
-                        "In my free time I like to...",
+                        "I would describe myself as...",
                         style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w400,
                           fontSize: 18,

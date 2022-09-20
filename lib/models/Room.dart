@@ -30,6 +30,7 @@ import 'package:flutter/foundation.dart';
 class Room extends Model {
   static const classType = const _RoomModelType();
   final String id;
+  final String? _lastMessage;
   final List<Message>? _messages;
   final List<UserRoom>? _userRoom;
   final TemporalDateTime? _createdAt;
@@ -41,6 +42,10 @@ class Room extends Model {
   @override
   String getId() {
     return id;
+  }
+  
+  String? get lastMessage {
+    return _lastMessage;
   }
   
   List<Message>? get messages {
@@ -59,11 +64,12 @@ class Room extends Model {
     return _updatedAt;
   }
   
-  const Room._internal({required this.id, messages, userRoom, createdAt, updatedAt}): _messages = messages, _userRoom = userRoom, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Room._internal({required this.id, lastMessage, messages, userRoom, createdAt, updatedAt}): _lastMessage = lastMessage, _messages = messages, _userRoom = userRoom, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Room({String? id, List<Message>? messages, List<UserRoom>? userRoom}) {
+  factory Room({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom}) {
     return Room._internal(
       id: id == null ? UUID.getUUID() : id,
+      lastMessage: lastMessage,
       messages: messages != null ? List<Message>.unmodifiable(messages) : messages,
       userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom);
   }
@@ -77,6 +83,7 @@ class Room extends Model {
     if (identical(other, this)) return true;
     return other is Room &&
       id == other.id &&
+      _lastMessage == other._lastMessage &&
       DeepCollectionEquality().equals(_messages, other._messages) &&
       DeepCollectionEquality().equals(_userRoom, other._userRoom);
   }
@@ -90,6 +97,7 @@ class Room extends Model {
     
     buffer.write("Room {");
     buffer.write("id=" + "$id" + ", ");
+    buffer.write("lastMessage=" + "$_lastMessage" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -97,15 +105,17 @@ class Room extends Model {
     return buffer.toString();
   }
   
-  Room copyWith({String? id, List<Message>? messages, List<UserRoom>? userRoom}) {
+  Room copyWith({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom}) {
     return Room._internal(
       id: id ?? this.id,
+      lastMessage: lastMessage ?? this.lastMessage,
       messages: messages ?? this.messages,
       userRoom: userRoom ?? this.userRoom);
   }
   
   Room.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
+      _lastMessage = json['lastMessage'],
       _messages = json['messages'] is List
         ? (json['messages'] as List)
           .where((e) => e?['serializedData'] != null)
@@ -122,10 +132,11 @@ class Room extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'lastMessage': _lastMessage, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
+  static final QueryField LASTMESSAGE = QueryField(fieldName: "lastMessage");
   static final QueryField MESSAGES = QueryField(
     fieldName: "messages",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Message).toString()));
@@ -148,6 +159,12 @@ class Room extends Model {
     ];
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Room.LASTMESSAGE,
+      isRequired: false,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: Room.MESSAGES,

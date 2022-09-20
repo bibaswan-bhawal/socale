@@ -115,7 +115,7 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
 
     if (isValid) {
       final dataNotifier = ref.read(basicDataProvider.notifier);
-      dataNotifier.saveData();
+      dataNotifier.uploadData();
       onboardingService.setOnboardingStep(OnboardingStep.collegeInfo);
       _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     }

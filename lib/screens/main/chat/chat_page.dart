@@ -8,6 +8,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/chat_service.dart';
+import 'package:socale/utils/constraints/constraints.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final Room room;
@@ -21,32 +22,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   List<types.Message> _messages = [];
   StreamSubscription<QuerySnapshot<Message>>? _stream;
   late types.User _currentUser;
-  final List<User> _dbUsers = [];
   final List<types.User> _users = [];
   bool _isUsersLoading = true;
-  bool _isRoomNameLoading = true;
   late String _roomName;
 
   getRoomName() async {
-    String currentUserId = (await Amplify.Auth.getCurrentUser()).userId;
     String roomName = "";
 
     for (types.User user in _users) {
-      if (user.id != currentUserId) {
-        roomName += "${user.firstName} ${user.lastName}";
-      } else {
-        setState(
-          () => _currentUser = types.User(
-            id: user.id,
-            firstName: user.firstName,
-            lastName: user.lastName,
-          ),
-        );
-      }
+      roomName += "${user.firstName} ${user.lastName}";
     }
 
     setState(() => _roomName = roomName);
-    setState(() => _isRoomNameLoading = false);
   }
 
   getMessages() {
@@ -55,11 +42,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (snapshot.isSynced) {
         List<types.Message> messages = [];
         for (Message message in snapshot.items) {
-          print(message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch);
+          types.User author;
+
+          if (message.author.id == _currentUser.id) {
+            author = _currentUser;
+          } else {
+            author = _users.where((element) => element.id == message.author.id).first;
+          }
+
           messages.add(
             types.TextMessage(
               id: message.id,
-              author: _users.where((element) => element.id == message.author.id).first,
+              author: author,
               roomId: widget.room.id,
               text: message.encryptedText,
               createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
@@ -79,19 +73,29 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   prepareRoom() async {
+    String currentUserId = (await Amplify.Auth.getCurrentUser()).userId;
     List<User> users = await chatService.getUsersByRoom(widget.room);
     if (users.isNotEmpty) {
       for (User user in users) {
-        setState(
-          () => _users.add(
-            types.User(
-              id: user.id,
-              firstName: user.anonymousUsername.split(" ").elementAt(0),
-              lastName: user.anonymousUsername.split(" ").elementAt(1),
-              imageUrl: user.avatar,
+        if (user.id != currentUserId) {
+          setState(
+            () => _users.add(
+              types.User(
+                id: user.id,
+                firstName: user.anonymousUsername.split(" ").elementAt(0),
+                lastName: user.anonymousUsername.split(" ").elementAt(1),
+                imageUrl: user.avatar,
+              ),
             ),
-          ),
-        );
+          );
+        } else {
+          _currentUser = types.User(
+            id: user.id,
+            firstName: user.anonymousUsername.split(" ").elementAt(0),
+            lastName: user.anonymousUsername.split(" ").elementAt(1),
+            imageUrl: user.avatar,
+          );
+        }
       }
 
       await getRoomName();
@@ -146,7 +150,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     ),
                   ),
                   SizedBox(
-                    height: 100,
+                    height: constraints.chatPageAppBarHeight,
                     child: AppBar(
                       leading: Padding(
                         padding: EdgeInsets.only(top: 10),

@@ -6,6 +6,7 @@ import 'package:socale/models/User.dart';
 import 'package:socale/screens/main/chat/chat_main_page.dart';
 import 'package:socale/screens/main/matches/matches_page.dart';
 import 'package:socale/screens/main/settings/settings_page.dart';
+import 'package:socale/services/notification_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 
 class MainApp extends ConsumerStatefulWidget {
@@ -23,10 +24,14 @@ class _MainAppState extends ConsumerState<MainApp> {
 
   @override
   void didChangeDependencies() {
-    super.didChangeDependencies();
+    NotificationService().init();
 
+    super.didChangeDependencies();
     final userState = ref.watch(userAsyncController);
-    userState.whenData((user) => _showMatchDialog = !user.introMatchingCompleted);
+    userState.whenData((user) {
+      print(user);
+      _showMatchDialog = !user.introMatchingCompleted;
+    });
   }
 
   _onDismiss() {

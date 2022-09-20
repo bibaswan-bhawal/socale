@@ -6,7 +6,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:socale/models/User.dart';
-import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/options/username_adjectives.dart';
@@ -15,7 +14,7 @@ import 'aws_lambda_service.dart';
 
 @lazySingleton
 class OnboardingService {
-  final String boxName = 'onboardingData';
+  final String boxName = 'user_data';
 
   final _amplifyCognitoUser = Amplify.Auth.getCurrentUser();
   int? otp;
@@ -63,7 +62,9 @@ class OnboardingService {
   String? getSchoolEmail() {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
-      final data = box.get('schoolEmail');
+      var data = box.get('schoolEmail');
+
+      data ??= email;
       return data;
     }
 
@@ -72,71 +73,105 @@ class OnboardingService {
 
   Future<List?> getBio() async {
     List data = [];
-
-    final box = await Hive.openBox(boxName);
-    data.add(await box.get('firstName'));
-    data.add(await box.get('lastName'));
-    data.add(await box.get('dateOfBirth'));
-    data.add(await box.get('graduationMonth'));
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      data.add(box.get('firstName'));
+      data.add(box.get('lastName'));
+      data.add(box.get('dateOfBirth'));
+      data.add(box.get('graduationMonth'));
+      return data;
+    }
+    return null;
   }
 
   Future<List?> getCollegeInfo() async {
     List data = [];
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      data.add(box.get('major'));
+      data.add(box.get('minor'));
+      data.add(box.get('college'));
+      return data;
+    }
 
-    final box = await Hive.openBox(boxName);
-    data.add(await box.get('major'));
-    data.add(await box.get('minor'));
-    data.add(await box.get('college'));
-    return data;
+    return null;
   }
 
   Future<List<String>?> getSkills() async {
-    final box = await Hive.openBox(boxName);
-    final data = await box.get('skills');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('skills');
+      return data;
+    }
+
+    return null;
   }
 
   Future<List<String>?> getAcademicInterests() async {
-    final box = await Hive.openBox(boxName);
-    final data = await box.get('academicInterests');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('academicInterests');
+      return data;
+    }
+
+    return null;
   }
 
   Future<List<String>?> getCareerGoals() async {
-    final box = await Hive.openBox(boxName);
-    final data = await box.get('careerGoals');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('careerGoals');
+      return data;
+    }
+
+    return null;
   }
 
   Future<List<String>?> getSelfDescription() async {
-    final box = await Hive.openBox(boxName);
-    final data = await box.get('selfDescription');
+    if (Hive.isBoxOpen(boxName)) {}
+    final box = Hive.box(boxName);
+    final data = box.get('selfDescription');
     return data;
   }
 
   Future<List<String>?> getHobbies() async {
-    final box = await Hive.openBox(boxName);
-    final data = await box.get('leisureInterests');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('leisureInterests');
+      return data;
+    }
+
+    return null;
   }
 
   Future<String?> getFriendDescription() async {
-    final box = await Hive.openBox(boxName);
-    final data = await box.get('idealFriendDescription');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('idealFriendDescription');
+      return data;
+    }
+
+    return null;
   }
 
   Future<List<int>?> getSituationalDecisions() async {
-    final box = await Hive.openBox(boxName);
-    final data = await box.get('situationalDecisions');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('situationalDecisions');
+      return data;
+    }
+
+    return null;
   }
 
   String? getAvatar() {
-    final box = Hive.box(boxName);
-    final data = box.get('avatar');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('avatar');
+      return data;
+    }
+
+    return null;
   }
 
   Future<OnboardingStep> getOnboardingStep() async {
@@ -155,20 +190,26 @@ class OnboardingService {
   // setters
 
   Future<void> setSchoolEmail(String schoolEmail) async {
-    print("Saving school email");
+    print("Saving school email: $schoolEmail");
 
-    final box = await Hive.openBox(boxName);
-    await box.put('schoolEmail', schoolEmail);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('schoolEmail', schoolEmail);
+      email = schoolEmail;
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
     print("Saving bio");
-
-    final box = await Hive.openBox(boxName);
-    await box.put('firstName', firstName);
-    await box.put('lastName', lastName);
-    await box.put('dateOfBirth', dateOfBirth);
-    await box.put('graduationMonth', graduationMonth);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('firstName', firstName);
+      box.put('lastName', lastName);
+      box.put('dateOfBirth', dateOfBirth);
+      box.put('graduationMonth', graduationMonth);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setCollegeInfo(List<String> major, List<String> minor, String college) async {
@@ -177,11 +218,13 @@ class OnboardingService {
     if (major.length > 2 || major.isEmpty || minor.length > 2 || college.isEmpty) {
       throw ("College info wrong");
     }
-
-    final box = await Hive.openBox(boxName);
-    await box.put('major', major);
-    await box.put('minor', minor);
-    await box.put('college', college);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('major', major);
+      box.put('minor', minor);
+      box.put('college', college);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setSkills(List<String> skills) async {
@@ -190,9 +233,11 @@ class OnboardingService {
     if (skills.length < 3 || skills.length > 5) {
       throw ("skills list wrong length.");
     }
-
-    final box = await Hive.openBox(boxName);
-    await box.put('skills', skills);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('skills', skills);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setAcademicInterests(List<String> academicInterests) async {
@@ -201,9 +246,11 @@ class OnboardingService {
     if (academicInterests.length < 3 || academicInterests.length > 5) {
       throw ("Academic Interests list wrong length.");
     }
-
-    final box = await Hive.openBox(boxName);
-    await box.put('academicInterests', academicInterests);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = await Hive.box(boxName);
+      box.put('academicInterests', academicInterests);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setCareerGoals(List<String> careerGoals) async {
@@ -212,9 +259,11 @@ class OnboardingService {
     if (careerGoals.length < 3 || careerGoals.length > 5) {
       throw ("Career Goals list wrong length.");
     }
-
-    final box = await Hive.openBox(boxName);
-    await box.put('careerGoals', careerGoals);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('careerGoals', careerGoals);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setSelfDescription(List<String> selfDescription) async {
@@ -223,9 +272,11 @@ class OnboardingService {
     if (selfDescription.length < 3 || selfDescription.length > 5) {
       throw ("Self description list wrong length.");
     }
-
-    final box = await Hive.openBox(boxName);
-    await box.put('selfDescription', selfDescription);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('selfDescription', selfDescription);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setLeisureInterests(List<String> leisureInterests) async {
@@ -235,8 +286,11 @@ class OnboardingService {
       throw ("Hobbies list wrong length.");
     }
 
-    final box = await Hive.openBox(boxName);
-    await box.put('leisureInterests', leisureInterests);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('leisureInterests', leisureInterests);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setIdealFriendDescription(String idealFriendDescription) async {
@@ -245,8 +299,12 @@ class OnboardingService {
     if (idealFriendDescription.isEmpty || idealFriendDescription.length > 1000) {
       throw ("description empty or to large");
     }
-    final box = await Hive.openBox(boxName);
-    await box.put('idealFriendDescription', idealFriendDescription);
+
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('idealFriendDescription', idealFriendDescription);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setSituationalDecisions(List<int> situationalDecisions) async {
@@ -255,9 +313,11 @@ class OnboardingService {
     if (situationalDecisions.isEmpty || situationalDecisions.length != 5) {
       throw ("situational questions not correct");
     }
-
-    final box = await Hive.openBox(boxName);
-    await box.put('situationalDecisions', situationalDecisions);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('situationalDecisions', situationalDecisions);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<void> setAvatar(String avatar) async {
@@ -267,13 +327,19 @@ class OnboardingService {
       throw ("avatar url not provided correctly");
     }
 
-    final box = await Hive.openBox(boxName);
-    await box.put('avatar', avatar);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('avatar', avatar);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   void setOnboardingStep(OnboardingStep step) {
-    final box = Hive.box(boxName);
-    box.put('onboardingStep', step.name);
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      box.put('onboardingStep', step.name);
+      print("school email: ${getSchoolEmail()}");
+    }
   }
 
   Future<bool> createOnboardedUser() async {
@@ -295,12 +361,16 @@ class OnboardingService {
         !_checkIfFieldExistsLocally(box, 'major') ||
         !_checkIfFieldExistsLocally(box, 'minor') ||
         !_checkIfFieldExistsLocally(box, 'onboardingStep') ||
-        !_checkIfFieldExistsLocally(box, 'schoolEmail') ||
         !_checkIfFieldExistsLocally(box, 'selfDescription') ||
         !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
         !_checkIfFieldExistsLocally(box, 'skills')) {
       print(box.toMap().toString());
       print("something missing");
+      return false;
+    }
+
+    if (box.get('schoolEmail') == null && email == null) {
+      print('school email missing');
       return false;
     }
 
@@ -316,7 +386,7 @@ class OnboardingService {
     final newUser = User(
       id: id,
       email: attributes.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value,
-      schoolEmail: box.get('schoolEmail'),
+      schoolEmail: getSchoolEmail()!,
       firstName: box.get('firstName'),
       lastName: box.get('lastName'),
       dateOfBirth: TemporalDate(box.get('dateOfBirth')),

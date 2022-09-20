@@ -46,8 +46,16 @@ class AcademicDataNotifier with ChangeNotifier {
     notifyListeners();
   }
 
-  void setData() {
+  void uploadData() {
     onboardingService.setCollegeInfo(_majors, _minors, _college);
+  }
+
+  void clearData() {
+    _currentPage = 0;
+    _majors = [];
+    _minors = [];
+    _college = "";
+    notifyListeners();
   }
 }
 

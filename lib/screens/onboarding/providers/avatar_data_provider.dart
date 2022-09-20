@@ -20,6 +20,11 @@ class AvatarDataNotifier with ChangeNotifier {
   void uploadData() {
     onboardingService.setAvatar(avatars[_currentAvatar]);
   }
+
+  void clearData() {
+    _currentAvatar = 0;
+    notifyListeners();
+  }
 }
 
 final avatarDataProvider = ChangeNotifierProvider((ref) => AvatarDataNotifier());

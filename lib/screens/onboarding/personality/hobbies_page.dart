@@ -81,7 +81,7 @@ class _HobbiesPageState extends ConsumerState<HobbiesPage> {
                           text: TextSpan(
                             children: [
                               TextSpan(
-                                text: 'What are your ',
+                                text: 'Have Any ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
                                   fontSize: 32,

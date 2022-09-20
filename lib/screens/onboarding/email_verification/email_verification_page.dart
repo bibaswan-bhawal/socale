@@ -32,8 +32,8 @@ class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
     onboardingService.generateOTPAndSendEmail(value);
   }
 
-  void _onOtpSaved(value) {
-    onboardingService.setSchoolEmail(_email);
+  void _onOtpSaved(value) async {
+    await onboardingService.setSchoolEmail(_email);
     _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 

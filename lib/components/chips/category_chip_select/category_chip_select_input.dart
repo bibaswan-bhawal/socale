@@ -204,8 +204,6 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
         );
       }
     }
-
-    print(skillsSelected);
   }
 
   @override
