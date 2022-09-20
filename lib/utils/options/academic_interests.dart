@@ -1,213 +1,213 @@
 final Map<String, List<String>> academicInterestsOptionsList = {
-  '🔌 Computer & Electrical Engineering': [
-    'Electronics',
-    'Computer Hardware Systems',
-    'Distributed Computing',
-    'Robotics and Cybernetics',
-    'Embedded Systems',
-    'Computer Graphics',
-    'Signal Processing',
-    'Circuits',
-    'Energy Systems',
-    'Photonics',
-    'Electromagnetics'
+  '🗃 Accounting': [
+    'Actuarial',
+    'Financial Accounting',
+    'Insurance',
+    'Managerial Accounting',
+    'Merchandising'
   ],
-  '🖇 Mechanical & Structural Engineering': [
-    'Mechatronics',
-    'Robotics',
-    'Structural Analysis',
-    'Thermodynamics & Heat Transfer',
-    'Vehicle Engineering',
-    'Aerospace Engineering',
-    'Civil Engineering',
-    'Architecture'
+  '📢 Advertising': [
+    'Customer Strategy',
+    'Market Research',
+    'Marketing',
+    'Sales and Marketing',
+    'Social Media'
+  ],
+  '🖌 Art': [
+    'Acting/Modeling',
+    'Dance',
+    'Drawing',
+    'Fashion',
+    'Film/Video Production',
+    'Interior Design',
+    'Music',
+    'Painting',
+    'Photography',
+    'Sculpting/Ceramics'
   ],
   '🩺 Bio-Engineering': [
-    'Biomedical Engineering',
-    'Biotechnology',
-    'Nanotechnology',
-    'Bioprocessing/Biochemical Engineering',
+    'Biochemistry',
     'Biomechanical Engineering',
-    'Biochemistry'
+    'Biomedical Engineering',
+    'Bioprocessing/Biochemical Engineering',
+    'Biotechnology',
+    'Nanotechnology'
   ],
-  '💸 Finance': [
-    'Stocks',
-    'Investment Banking',
-    'Private Equity',
-    'Venture Capital',
-    'Risk Management',
-    'Entrepreneurship'
+  '🔬 Biology': [
+    'Anatomy',
+    'Biophysics',
+    'Dentistry',
+    'Ecology',
+    'Genetics',
+    'Marine Biology',
+    'Medicine',
+    'Molecular Biology',
+    'Neuroscience',
+    'Zoology'
   ],
-  '🗃 Accounting': [
-    'Managerial Accounting',
-    'Financial Accounting',
-    'Merchandising',
-    'Insurance',
-    'Actuarial'
-  ],
-  '👔 Management Consulting': [
-    'Business Management',
-    'Corporate Strategy',
-    'Product Management',
-    'Product Development'
-  ],
+  '💰 Business': ['Human Resources', 'International Relations', 'Public Relations'],
   '🏦 Business Law and Ethics': [
     'Bankruptcy Law',
     'Government Policy and Regulation',
     'Intellectual Property',
     'Underwriting'
   ],
-  '📢 Advertising': [
-    'Marketing',
-    'Market Research',
-    'Social Media',
-    'Sales and Marketing',
-    'Customer Strategy'
+  '⚗️ Chemistry': [
+    'Analytical Chemistry',
+    'Biochemistry',
+    'Inorganic Chemistry',
+    'Organic Chemistry',
+    'Physical Chemistry'
+  ],
+  '🏛 Civics & Gov': [
+    'Civil Rights & Activism',
+    'Government & Politics',
+    'Non-Profits',
+    'Public Health',
+    'Social Welfare',
+    'Volunteering'
+  ],
+  '🔌 Computer & Electrical Engineering': [
+    'Circuits',
+    'Computer Graphics',
+    'Computer Hardware Systems',
+    'Distributed Computing',
+    'Electromagnetics',
+    'Electronics',
+    'Embedded Systems',
+    'Energy Systems',
+    'Photonics',
+    'Robotics and Cybernetics',
+    'Signal Processing'
+  ],
+  '💻 Computer Science': [
+    'Blockchain Development',
+    'Cyber Security',
+    'HCI',
+    'IoT',
+    'Software Engineering',
+    'Video Game Development'
+  ],
+  '🖼️ Creative Tech': [
+    '3D Asset Design',
+    'Graphic Design',
+    'UI Design',
+    'UX Design',
+    'UX Research'
+  ],
+  '📈 Data Science': [
+    'AI + Machine Learning',
+    'Big Data',
+    'Bioinformatics',
+    'Cloud Computing',
+    'Data Analytics',
+    'Data Architect',
+    'Data Engineering',
+    'Data Mining',
+    'Data Visualization',
+    'Quantitative Finance'
+  ],
+  '🌍 Earth': [
+    'Astronomy',
+    'Atmospheric Science',
+    'Climatology',
+    'Environmental Science',
+    'Geography',
+    'Geology',
+    'Hydrogeology',
+    'Meteorology',
+    'Mineralogy',
+    'Oceanography',
+    'Paleontology',
+    'Seismology',
+    'Toxicology'
+  ],
+  '🌐 English & Foreign Languages:': [
+    'Creative Writing',
+    'Linguistics',
+    'Literature',
+    'Reading & Communication',
+    'Rhetoric'
+  ],
+  '💸 Finance': [
+    'Entrepreneurship',
+    'Investment Banking',
+    'Private Equity',
+    'Risk Management',
+    'Stocks',
+    'Venture Capital'
+  ],
+  '🏺 History': [
+    'American History',
+    'Anthropology',
+    'Archaeology',
+    'Ethnic Studies',
+    'Gender Studies',
+    'Journalist',
+    'Religion',
+    'Sociology',
+    'World History'
   ],
   '⚖️ Law': [
-    'Constitutional Law',
     'Civil Rights Law',
+    'Constitutional Law',
     'Criminal Law',
+    'Employment Law',
     'Entertainment Law',
     'Environmental Law',
     'Family Law',
     'Health Law',
     'Immigration Law',
-    'Employment Law',
     'Real Estate Law',
     'Tax Law'
   ],
-  '🎓 Teaching': ['Teaching'],
-  '🌐 English & Foreign Languages:': [
-    'Linguistics',
-    'Creative Writing',
-    'Reading & Communication',
-    'Literature',
-    'Rhetoric'
-  ],
-  '🖌 Art': [
-    'Music',
-    'Drawing',
-    'Painting',
-    'Sculpting/Ceramics',
-    'Dance',
-    'Film/Video Production',
-    'Fashion',
-    'Photography',
-    'Acting/Modeling',
-    'Interior Design'
-  ],
-  '🏛 Civics & Gov': [
-    'Civil Rights & Activism',
-    'Non-Profits',
-    'Government & Politics',
-    'Volunteering',
-    'Social Welfare',
-    'Public Health'
-  ],
-  '🏺 History': [
-    'World History',
-    'American History',
-    'Journalist',
-    'Religion',
-    'Archaeology',
-    'Anthropology',
-    'Sociology',
-    'Ethnic Studies',
-    'Gender Studies'
-  ],
-  '💡 Philosophy': [
-    'Theoretical Philosophy',
-    'Practical Philosophy',
-    'Philisophical Logic',
-    'History of Philosophy'
-  ],
-  '💰 Business': ['International Relations', 'Human Resources', 'Public Relations'],
-  '🧘 Psychology': [
-    'Clinical Psychology',
-    'Psychiatrist',
-    'Guidance Counseling',
-    'Marriage Counseling',
-    'Caseworker',
-    'Customer Service',
-    'Community Worker'
-  ],
-  '💻 Computer Science': [
-    'Cyber Security',
-    'Video Game Development',
-    'Blockchain Development',
-    'Software Engineering',
-    'IoT',
-    'HCI'
-  ],
-  '‍📈 Data Science': [
-    'Data Analytics',
-    'Data Visualization',
-    'Data Engineering',
-    'Data Architect',
-    'Big Data',
-    'Data Mining',
-    'AI + Machine Learning',
-    'Cloud Computing',
-    'Quantitative Finance',
-    'Bioinformatics'
+  '👔 Management Consulting': [
+    'Business Management',
+    'Corporate Strategy',
+    'Product Development',
+    'Product Management'
   ],
   '📝 Math': [
     'Algebra',
-    'Number Theory',
-    'Geometry',
     'Arithmetic',
-    'Topology',
     'Combinatorics',
+    'Geometry',
+    'Logic',
+    'Number Theory',
     'Statistics',
-    'Logic'
+    'Topology'
   ],
-  '🖼️ Creative Tech': [
-    'UI Design',
-    'UX Research',
-    'Graphic Design',
-    '3D Asset Design',
-    'UX Design'
+  '🖇 Mechanical & Structural Engineering': [
+    'Aerospace Engineering',
+    'Architecture',
+    'Civil Engineering',
+    'Mechatronics',
+    'Robotics',
+    'Structural Analysis',
+    'Thermodynamics & Heat Transfer',
+    'Vehicle Engineering'
   ],
-  '🔬 Biology': [
-    'Molecular Biology',
-    'Anatomy',
-    'Dentistry',
-    'Marine Biology',
-    'Genetics',
-    'Biophysics',
-    'Neuroscience',
-    'Medicine',
-    'Zoology',
-    'Ecology'
-  ],
-  '⚗️ Chemistry': [
-    'Organic Chemistry',
-    'Biochemistry',
-    'Inorganic Chemistry',
-    'Analytical Chemistry',
-    'Physical Chemistry'
+  '💡 Philosophy': [
+    'History of Philosophy',
+    'Philisophical Logic',
+    'Practical Philosophy',
+    'Theoretical Philosophy'
   ],
   '🍎 Physics': [
-    'Quantum Physics',
     'Classical Physics & Mechanics',
     'Optics',
-    'Thermodynamics',
-    'Relativity'
+    'Quantum Physics',
+    'Relativity',
+    'Thermodynamics'
   ],
-  '🌍 Earth': [
-    'Geology',
-    'Seismology',
-    'Astronomy',
-    'Mineralogy',
-    'Hydrogeology',
-    'Paleontology',
-    'Climatology',
-    'Environmental Science',
-    'Toxicology',
-    'Oceanography',
-    'Meteorology',
-    'Atmospheric Science',
-    'Geography'
-  ]
+  '🧘 Psychology': [
+    'Caseworker',
+    'Clinical Psychology',
+    'Community Worker',
+    'Customer Service',
+    'Guidance Counseling',
+    'Marriage Counseling',
+    'Psychiatrist'
+  ],
+  '🎓 Teaching': ['Teaching']
 };
