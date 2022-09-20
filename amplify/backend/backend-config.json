@@ -18,7 +18,7 @@
     }
   },
   "auth": {
-    "socalebc55fdf5": {
+    "socale": {
       "service": "Cognito",
       "providerPlugin": "awscloudformation",
       "dependsOn": [],
@@ -28,12 +28,15 @@
         "usernameAttributes": [
           "EMAIL"
         ],
-        "signupAttributes": [
-          "EMAIL"
-        ],
+        "signupAttributes": [],
         "passwordProtectionSettings": {
           "passwordPolicyMinLength": 8,
-          "passwordPolicyCharacters": []
+          "passwordPolicyCharacters": [
+            "REQUIRES_LOWERCASE",
+            "REQUIRES_NUMBERS",
+            "REQUIRES_SYMBOLS",
+            "REQUIRES_UPPERCASE"
+          ]
         },
         "mfaConfiguration": "OFF",
         "mfaTypes": [
@@ -45,12 +48,7 @@
       }
     }
   },
-  "analytics": {
-    "socalePintpointAnayltics": {
-      "service": "Pinpoint",
-      "providerPlugin": "awscloudformation"
-    }
-  },
+  "analytics": {},
   "function": {
     "S3Trigger3d9ab619": {
       "service": "Lambda",
@@ -59,20 +57,10 @@
     }
   },
   "storage": {
-    "images": {
+    "s3f5814f67": {
       "service": "S3",
       "providerPlugin": "awscloudformation",
-      "dependsOn": [
-        {
-          "category": "function",
-          "resourceName": "S3Trigger3d9ab619",
-          "attributes": [
-            "Name",
-            "Arn",
-            "LambdaExecutionRole"
-          ]
-        }
-      ]
+      "dependsOn": []
     }
   }
 }

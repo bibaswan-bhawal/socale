@@ -13,11 +13,7 @@ import '../screens/onboarding/providers/avatar_data_provider.dart';
 import '../screens/onboarding/providers/describe_friend_data_provider.dart';
 
 class AuthService {
-  void startAuthStreamListener() {
-    Amplify.Hub.listen<dynamic, AuthHubEvent>(HubChannel.Auth, (hubEvent) {
-      print(hubEvent.eventName);
-    });
-  }
+  void startAuthStreamListener() {}
 
   Future<bool> signInWithSocialWebUI(AuthProvider provider) async {
     try {

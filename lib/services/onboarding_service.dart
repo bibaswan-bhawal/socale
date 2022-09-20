@@ -154,10 +154,10 @@ class OnboardingService {
   // setters
 
   Future<void> setSchoolEmail(String schoolEmail) async {
-    print("Saving school email");
-    print(schoolEmail);
+    print("Saving school email: $schoolEmail");
     final box = await Hive.openBox(boxName);
-    await box.put('schoolEmail', schoolEmail);
+    box.put('schoolEmail', schoolEmail);
+    print("school email: ${box.get('schoolEmail')}");
   }
 
   Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
@@ -280,6 +280,7 @@ class OnboardingService {
     id = cognitoUser.userId;
 
     final box = await Hive.openBox(boxName);
+    print("school email: ${box.get('schoolEmail')}");
 
     if (!_checkIfFieldExistsLocally(box, 'academicInterests') ||
         !_checkIfFieldExistsLocally(box, 'avatar') ||

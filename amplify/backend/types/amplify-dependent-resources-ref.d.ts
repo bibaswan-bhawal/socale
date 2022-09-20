@@ -7,23 +7,14 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "auth": {
-        "socalebc55fdf5": {
+        "socale": {
             "IdentityPoolId": "string",
             "IdentityPoolName": "string",
-            "HostedUIDomain": "string",
-            "OAuthMetadata": "string",
             "UserPoolId": "string",
             "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
             "AppClientID": "string"
-        }
-    },
-    "analytics": {
-        "socalePintpointAnayltics": {
-            "Region": "string",
-            "Id": "string",
-            "appName": "string"
         }
     },
     "function": {
@@ -35,7 +26,7 @@ export type AmplifyDependentResourcesAttributes = {
         }
     },
     "storage": {
-        "images": {
+        "s3f5814f67": {
             "BucketName": "string",
             "Region": "string"
         }

@@ -66,18 +66,18 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   checkIfSchoolEmailProvided() {
     final prov = ref.watch(userAttributesAsyncController);
-    prov.whenData((value) {
+    prov.whenData((value) async {
       String? email = value.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value;
       if (email.contains("ucsd.edu")) {
         setState(() => isSchoolEmail = true);
-        onboardingService.setSchoolEmail(email);
+        await onboardingService.setSchoolEmail(email);
+        return;
       }
     });
 
     var email = onboardingService.getSchoolEmail();
     if (email != null) {
       setState(() => isSchoolEmail = true);
-      onboardingService.setSchoolEmail(email);
     }
   }
 

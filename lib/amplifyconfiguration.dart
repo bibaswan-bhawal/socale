@@ -19,10 +19,10 @@ const amplifyconfig = ''' {
             "awsAPIPlugin": {
                 "socale": {
                     "endpointType": "GraphQL",
-                    "endpoint": "https://gat56s2b3nd6xdi5hfvmvxj3cq.appsync-api.us-west-2.amazonaws.com/graphql",
+                    "endpoint": "https://ljccjghtlzdppaystliksm4zz4.appsync-api.us-west-2.amazonaws.com/graphql",
                     "region": "us-west-2",
                     "authorizationType": "API_KEY",
-                    "apiKey": "da2-juupjavcuzgqtb3smjdozbgnxu"
+                    "apiKey": "da2-ytu5dzfgs5gave5q7gkyxux2pi"
                 }
             }
         }
@@ -37,54 +37,44 @@ const amplifyconfig = ''' {
                 },
                 "AppSync": {
                     "Default": {
-                        "ApiUrl": "https://gat56s2b3nd6xdi5hfvmvxj3cq.appsync-api.us-west-2.amazonaws.com/graphql",
+                        "ApiUrl": "https://ljccjghtlzdppaystliksm4zz4.appsync-api.us-west-2.amazonaws.com/graphql",
                         "Region": "us-west-2",
                         "AuthMode": "API_KEY",
-                        "ApiKey": "da2-juupjavcuzgqtb3smjdozbgnxu",
+                        "ApiKey": "da2-ytu5dzfgs5gave5q7gkyxux2pi",
                         "ClientDatabasePrefix": "socale_API_KEY"
                     }
                 },
                 "CredentialsProvider": {
                     "CognitoIdentity": {
                         "Default": {
-                            "PoolId": "us-west-2:bbfb51d7-770f-46b8-8445-2578d2f1a84c",
+                            "PoolId": "us-west-2:968465cf-9299-4bf4-914d-b5c064202504",
                             "Region": "us-west-2"
                         }
                     }
                 },
                 "CognitoUserPool": {
                     "Default": {
-                        "PoolId": "us-west-2_6Era7M8S5",
-                        "AppClientId": "1oegp12a3ukgovv78dg45g9fq1",
+                        "PoolId": "us-west-2_xAbEi0xvk",
+                        "AppClientId": "3qqkgb6suurku6kcap054drggk",
                         "Region": "us-west-2"
                     }
                 },
                 "Auth": {
                     "Default": {
-                        "OAuth": {
-                            "WebDomain": "socalebc55fdf5-bc55fdf5-dev.auth.us-west-2.amazoncognito.com",
-                            "AppClientId": "1oegp12a3ukgovv78dg45g9fq1",
-                            "SignInRedirectURI": "socale://",
-                            "SignOutRedirectURI": "socale://",
-                            "Scopes": [
-                                "phone",
-                                "email",
-                                "openid",
-                                "profile",
-                                "aws.cognito.signin.user.admin"
-                            ]
-                        },
                         "authenticationFlowType": "USER_SRP_AUTH",
                         "socialProviders": [],
                         "usernameAttributes": [
                             "EMAIL"
                         ],
-                        "signupAttributes": [
-                            "EMAIL"
-                        ],
+                        "signupAttributes": [],
                         "passwordProtectionSettings": {
                             "passwordPolicyMinLength": 8,
-                            "passwordPolicyCharacters": []
+                            "passwordPolicyCharacters": [
+                                "REQUIRES_LOWERCASE",
+                                "REQUIRES_NUMBERS",
+                                "REQUIRES_SYMBOLS",
+                                "REQUIRES_UPPERCASE"
+                            ]
                         },
                         "mfaConfiguration": "OFF",
                         "mfaTypes": [
@@ -95,20 +85,9 @@ const amplifyconfig = ''' {
                         ]
                     }
                 },
-                "PinpointAnalytics": {
-                    "Default": {
-                        "AppId": "f04066c90f9441359e4c6fde5406dd72",
-                        "Region": "us-west-2"
-                    }
-                },
-                "PinpointTargeting": {
-                    "Default": {
-                        "Region": "us-west-2"
-                    }
-                },
                 "S3TransferUtility": {
                     "Default": {
-                        "Bucket": "socale178ce0589f2d4ee9ba4f74026e48d99a105154-dev",
+                        "Bucket": "socale73965de19a9e4eb6a550592e80357deb105154-dev",
                         "Region": "us-west-2"
                     }
                 }
@@ -118,7 +97,7 @@ const amplifyconfig = ''' {
     "storage": {
         "plugins": {
             "awsS3StoragePlugin": {
-                "bucket": "socale178ce0589f2d4ee9ba4f74026e48d99a105154-dev",
+                "bucket": "socale73965de19a9e4eb6a550592e80357deb105154-dev",
                 "region": "us-west-2",
                 "defaultAccessLevel": "guest"
             }

@@ -84,6 +84,7 @@ class AWSLambdaService {
     final resp = await signedRequest.send();
     final respBody = await resp.decodeBody();
 
+    print(resp.statusCode);
     print(respBody);
 
     final responseMap = JsonDecoder().convert(respBody);
