@@ -21,10 +21,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   List<types.Message> _messages = [];
   StreamSubscription<QuerySnapshot<Message>>? _stream;
   late types.User _currentUser;
-  final List<User> _dbUsers = [];
   final List<types.User> _users = [];
   bool _isUsersLoading = true;
-  bool _isRoomNameLoading = true;
   late String _roomName;
 
   getRoomName() async {
@@ -46,7 +44,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
 
     setState(() => _roomName = roomName);
-    setState(() => _isRoomNameLoading = false);
   }
 
   getMessages() {
@@ -55,7 +52,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       if (snapshot.isSynced) {
         List<types.Message> messages = [];
         for (Message message in snapshot.items) {
-          print(message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch);
           messages.add(
             types.TextMessage(
               id: message.id,

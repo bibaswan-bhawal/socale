@@ -185,8 +185,6 @@ class _CategoryChipSelectInputListState extends State<CategoryChipSelectInputLis
                                 widget.onChange(skillsSelected);
                               }
                             }
-
-                            print(skillsSelected);
                           },
                         ),
                       ),

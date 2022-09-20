@@ -17,6 +17,7 @@ import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/validators.dart';
 import 'package:socale/utils/providers/providers.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
   final Function() back;
@@ -218,14 +219,56 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: 'By signing up you agree to the Socale Terms of service & Privacy Policy.',
+                                  text: 'By signing up you agree to the Socale ',
                                   style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 12,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: -0.3),
-                                  recognizer: TapGestureRecognizer()..onTap = () => {print('Link clicked')},
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: 'Terms of service',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.3,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(
+                                        Uri.parse('http://socale.co/tos'),
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    },
+                                ),
+                                TextSpan(
+                                  text: ' & ',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.3,
+                                  ),
+                                ),
+                                TextSpan(
+                                  text: 'Privacy Policy',
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    decoration: TextDecoration.underline,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w500,
+                                    letterSpacing: -0.3,
+                                  ),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = () {
+                                      launchUrl(
+                                        Uri.parse('http://socale.co/privacypolicy'),
+                                        mode: LaunchMode.externalApplication,
+                                      );
+                                    },
                                 ),
                               ],
                             ),

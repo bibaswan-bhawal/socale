@@ -73,7 +73,7 @@ class AuthService {
       await Amplify.Auth.signOut(
         options: const SignOutOptions(globalSignOut: true),
       );
-
+      Amplify.DataStore.clear();
       Get.offAllNamed('/auth');
       onboardingService.clearAll();
       ref.read(academicDataProvider.notifier).clearData();

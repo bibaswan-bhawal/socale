@@ -32,18 +32,17 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
   getRooms() async {
     final userState = ref.watch(userAsyncController);
     userState.whenData((User user) async {
-      print("got user rooms");
       List<Room> rooms = await fetchService.fetchAllRoomsForUser(user);
-      List<User> _roomUsers = [];
+      List<User> roomUsers = [];
 
       for (Room room in rooms) {
         List<User> roomUsers = await chatService.getUsersByRoom(room);
 
         User toAdd = roomUsers.where((otherUser) => otherUser.id != user.id).first;
-        _roomUsers.add(toAdd);
+        roomUsers.add(toAdd);
       }
 
-      setState(() => userList = _roomUsers);
+      setState(() => userList = roomUsers);
       setState(() => roomList = rooms);
     });
   }

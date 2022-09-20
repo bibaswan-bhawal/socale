@@ -4,6 +4,7 @@ class AvatarSelector extends StatelessWidget {
   final Function onChange;
   const AvatarSelector({Key? key, required this.onChange}) : super(key: key);
 
+  @override
   Widget build(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,

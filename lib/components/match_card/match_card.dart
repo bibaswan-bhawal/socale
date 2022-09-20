@@ -1,7 +1,5 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/rounded_button.dart';
 import 'package:socale/components/cards/gradient_border_card.dart';
@@ -45,7 +43,6 @@ class _MatchCardState extends State<MatchCard> {
     Room? room = await getRoom(widget.user);
     if (room == null) {
       throw ("Could not fetch rooms");
-      return;
     } else {
       if (mounted) {
         Navigator.of(context).push(

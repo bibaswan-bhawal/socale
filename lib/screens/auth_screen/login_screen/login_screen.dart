@@ -1,10 +1,8 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animations/animations.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/ButtonGroups/SocialSignInButtonGroup.dart';
 import 'package:socale/components/Buttons/primary_loading_button.dart';
 import 'package:socale/components/Dividers/signInDivider.dart';
@@ -195,29 +193,29 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                         ),
-                        Padding(
-                          padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
-                          child: RichText(
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: 'Forgot Password',
-                                  style: GoogleFonts.poppins(
-                                      color: Colors.black,
-                                      decoration: TextDecoration.underline,
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: -0.3),
-                                  recognizer: TapGestureRecognizer()
-                                    ..onTap = () => {
-                                          // implement onClick
-                                        },
-                                ),
-                              ],
-                            ),
-                            textAlign: TextAlign.center,
-                          ),
-                        ),
+                        // Padding(
+                        //   padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
+                        //   child: RichText(
+                        //     text: TextSpan(
+                        //       children: [
+                        //         TextSpan(
+                        //           text: 'Forgot Password',
+                        //           style: GoogleFonts.poppins(
+                        //               color: Colors.black,
+                        //               decoration: TextDecoration.underline,
+                        //               fontSize: 14,
+                        //               fontWeight: FontWeight.w500,
+                        //               letterSpacing: -0.3),
+                        //           recognizer: TapGestureRecognizer()
+                        //             ..onTap = () => {
+                        //                   // implement onClick
+                        //                 },
+                        //         ),
+                        //       ],
+                        //     ),
+                        //     textAlign: TextAlign.center,
+                        //   ),
+                        // ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                           child: PrimaryLoadingButton(

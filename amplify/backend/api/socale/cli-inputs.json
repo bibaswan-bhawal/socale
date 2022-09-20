@@ -9,7 +9,7 @@
     },
     "conflictResolution": {
       "defaultResolutionStrategy": {
-        "type": "OPTIMISTIC_CONCURRENCY"
+        "type": "AUTOMERGE"
       }
     }
   }
