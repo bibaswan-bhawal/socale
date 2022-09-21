@@ -6,22 +6,37 @@ final Map<String, List<String>> careersOptionsList = {
     'Business salesperson or buyer',
     'Hospitality Management'
   ],
+  '🏗️ Civil': [
+    'Clergy (minister, priest)',
+    'Conservationist or forester',
+    'Farmer or rancher',
+    'Homemaker (full-time)',
+    'Laborer (unskilled)',
+    'Semi-skilled worker',
+    'Skilled trades'
+  ],
   '🎨 Creative': [
     'Actor',
+    'Architect',
     'Artist',
     'Chef',
     'Interior design',
-    'Musician',
     'Journalist',
-    'Architect',
+    'Musician',
     'Urban planner'
   ],
   '🏫 Education ': [
     'School administrator',
-    'School teacher',
     'School counselor',
-    'Social, welfare, or recreation worker'
-        'Professorship'
+    'School teacher',
+    'Social, welfare, or recreation workerProfessorship'
+  ],
+  '🗳️ Government': [
+    'Foreign Relations',
+    'Law enforcement officer',
+    'Lawyer or Judge',
+    'Military Service',
+    'Policymaker'
   ],
   '🔬 Science': [
     'Clinical Psychologist',
@@ -36,21 +51,5 @@ final Map<String, List<String>> careersOptionsList = {
     'Therapist',
     'Veterinarian'
   ],
-  '🗳️ Government': [
-    'Foreign Relations',
-    'Law enforcement officer',
-    'Lawyer or Judge',
-    'Military Service',
-    'Policymaker'
-  ],
-  '‍💻 Technology': ['Computer programmer', 'Data analyst', 'Engineer'],
-  '🏗️ Civil': [
-    'Conservationist or forester',
-    'Farmer or rancher',
-    'Laborer (unskilled)',
-    'Semi-skilled worker',
-    'Skilled trades',
-    'Homemaker (full-time)',
-    'Clergy (minister, priest)'
-  ]
+  '💻 Technology': ['Computer programmer', 'Data analyst', 'Engineer']
 };

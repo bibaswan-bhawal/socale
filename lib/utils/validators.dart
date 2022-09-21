@@ -44,7 +44,7 @@ class Validators {
   }
 
   static String? validatePassword(String? password) {
-    if (password != null && password.length > 8) return null;
+    if (password != null && password.length >= 8) return null;
     return "Please enter a password of at least 8 characters.";
   }
 }

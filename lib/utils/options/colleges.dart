@@ -1,10 +1,10 @@
 final List<String> collegesOptionsList = [
-  'Sixth',
-  'Seventh',
-  'Eighth',
-  'Muir',
-  'Marshall',
   'ERC',
-  'Warren',
-  'Revelle'
+  'Eighth',
+  'Marshall',
+  'Muir',
+  'Revelle',
+  'Seventh',
+  'Sixth',
+  'Warren'
 ];
