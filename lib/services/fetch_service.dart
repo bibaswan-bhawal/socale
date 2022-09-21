@@ -51,7 +51,11 @@ class FetchService {
       }
     }
 
-    return rooms;
+    rooms.sort((room1, room2) {
+      return room1.updatedAt!.compareTo(room2.updatedAt!);
+    });
+
+    return rooms.reversed.toList();
   }
 }
 
