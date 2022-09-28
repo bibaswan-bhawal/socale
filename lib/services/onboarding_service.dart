@@ -381,7 +381,7 @@ class OnboardingService {
       return false;
     }
 
-    String anonymousUsername = "${usernameAdjectives[Random().nextInt(394)]} ${usernameNouns[Random().nextInt(224)]}";
+    String anonymousUsername = "${capitalize(usernameAdjectives[Random().nextInt(394)])} ${capitalize(usernameNouns[Random().nextInt(224)])}";
 
     final newUser = User(
       id: id,
@@ -457,6 +457,10 @@ class OnboardingService {
       return false;
     }
     return true;
+  }
+
+  String capitalize(String str) {
+    return str.split(' ').map((word) => word.substring(0, 1).toUpperCase() + word.substring(1)).join(' ');
   }
 }
 

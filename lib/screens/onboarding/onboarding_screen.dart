@@ -24,6 +24,7 @@ import 'package:socale/screens/onboarding/situational/question_three_page.dart';
 import 'package:socale/screens/onboarding/situational/question_two_page.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/providers/providers.dart';
+import 'package:socale/utils/system_ui_setter.dart';
 
 final onboardingPageController = Provider((_) => PageController());
 final bobPageController = Provider((_) => PageController());
@@ -42,20 +43,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   void initState() {
     super.initState();
-    if (Platform.isIOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Colors.transparent,
-        ),
-      );
-    } else if (Platform.isAndroid) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Colors.transparent,
-          systemNavigationBarIconBrightness: Brightness.dark));
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    }
+    setSystemUIDark();
   }
 
   @override
@@ -65,8 +53,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   checkIfSchoolEmailProvided() {
-    final prov = ref.watch(userAttributesAsyncController);
-    prov.whenData((value) async {
+    final userAttributesProvider = ref.watch(userAttributesAsyncController);
+
+    userAttributesProvider.whenData((value) async {
       String? email = value.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value;
       if (email.contains("ucsd.edu")) {
         setState(() => isSchoolEmail = true);
@@ -76,9 +65,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     });
 
     var email = onboardingService.getSchoolEmail();
-    if (email != null) {
-      setState(() => isSchoolEmail = true);
-    }
+    if (email != null) setState(() => isSchoolEmail = true);
   }
 
   onPageChange(page) {
@@ -89,6 +76,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     _pageController = ref.watch(onboardingPageController);
+
     return Stack(
       children: [
         TranslucentBackground(),

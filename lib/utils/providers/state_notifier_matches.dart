@@ -11,9 +11,12 @@ class MatchStateProvider extends StateNotifier<AsyncValue<Map<User, Match>>> {
   Future<void> setMatches(String id) async {
     Map<User, Match> matches = {};
     state = AsyncLoading();
+
     User currentUser = await fetchService.fetchUserById(id);
 
     if (currentUser.matches.isEmpty) {
+      print("No matches found creating matches");
+
       Amplify.DataStore.stop();
       final response = await awsLambdaService.getMatches(id);
       Amplify.DataStore.start();

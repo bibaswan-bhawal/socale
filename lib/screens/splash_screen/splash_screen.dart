@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
+import 'package:socale/utils/system_ui_setter.dart';
 import 'package:socale/values/colors.dart';
 
 class SplashScreen extends StatelessWidget {
@@ -7,12 +7,7 @@ class SplashScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-        statusBarColor: Colors.transparent,
-        statusBarIconBrightness: Brightness.light,
-        systemNavigationBarColor: Colors.transparent,
-        systemNavigationBarIconBrightness: Brightness.light));
-    SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
+    setSystemUILight();
 
     return Scaffold(
       body: Container(

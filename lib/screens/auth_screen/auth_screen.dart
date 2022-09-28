@@ -8,6 +8,8 @@ import 'package:socale/screens/auth_screen/register_screen/register_screen.dart'
 import 'package:socale/utils/enums/auth_pages.dart';
 import 'dart:io';
 
+import 'package:socale/utils/system_ui_setter.dart';
+
 class AuthScreen extends StatefulWidget {
   final AuthPages initialScreen;
   const AuthScreen({Key? key, this.initialScreen = AuthPages.getStarted}) : super(key: key);
@@ -23,22 +25,9 @@ class _AuthScreenState extends State<AuthScreen> {
   @override
   initState() {
     super.initState();
-    _currentScreen = widget.initialScreen;
+    setSystemUIDark();
 
-    if (Platform.isIOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Colors.transparent,
-        ),
-      );
-    } else if (Platform.isAndroid) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Colors.transparent,
-          systemNavigationBarIconBrightness: Brightness.dark));
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    }
+    _currentScreen = widget.initialScreen;
   }
 
   getScreen(value) {
@@ -76,20 +65,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    if (Platform.isIOS) {
-      SystemChrome.setSystemUIOverlayStyle(
-        SystemUiOverlayStyle.dark.copyWith(
-          statusBarColor: Colors.transparent,
-        ),
-      );
-    } else if (Platform.isAndroid) {
-      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-          statusBarColor: Colors.transparent,
-          statusBarIconBrightness: Brightness.dark,
-          systemNavigationBarColor: Colors.transparent,
-          systemNavigationBarIconBrightness: Brightness.dark));
-      SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
-    }
     return Scaffold(
       resizeToAvoidBottomInset: false,
       body: Stack(

@@ -8,6 +8,8 @@ import 'package:socale/screens/main/matches/matches_page.dart';
 import 'package:socale/screens/main/settings/settings_page.dart';
 import 'package:socale/services/notification_service.dart';
 import 'package:socale/utils/providers/providers.dart';
+import 'package:socale/utils/system_ui_setter.dart';
+import 'package:socale/values/colors.dart';
 
 class MainApp extends ConsumerStatefulWidget {
   const MainApp({Key? key}) : super(key: key);
@@ -16,8 +18,12 @@ class MainApp extends ConsumerStatefulWidget {
   ConsumerState<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends ConsumerState<MainApp> {
+class _MainAppState extends ConsumerState<MainApp> with SingleTickerProviderStateMixin {
   final PageController _pageController = PageController(initialPage: 1);
+
+  Animation<double>? containerAnimation;
+  AnimationController? containerAnimationController;
+
   GlobalKey navBarKey = GlobalKey();
 
   bool _showMatchDialog = false;
@@ -26,12 +32,31 @@ class _MainAppState extends ConsumerState<MainApp> {
   void didChangeDependencies() {
     NotificationService().init();
 
-    super.didChangeDependencies();
     final userState = ref.watch(userAsyncController);
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      initialAnimation();
+    });
+
     userState.whenData((user) {
       print(user);
       _showMatchDialog = !user.introMatchingCompleted;
     });
+
+    setSystemUILight();
+    super.didChangeDependencies();
+  }
+
+  void initialAnimation() {
+    final size = MediaQuery.of(context).size;
+
+    containerAnimationController = AnimationController(duration: const Duration(milliseconds: 750), vsync: this);
+    containerAnimation = Tween<double>(begin: size.height, end: 0).animate(containerAnimationController!)
+      ..addListener(() {
+        setState(() {});
+      });
+
+    containerAnimationController?.forward();
   }
 
   _onDismiss() {
@@ -83,6 +108,20 @@ class _MainAppState extends ConsumerState<MainApp> {
             MatchesHelpOverlay(
               onDismiss: _onDismiss,
             ),
+          Align(
+            alignment: Alignment.topCenter,
+            child: Container(
+              width: size.width,
+              height: containerAnimation != null ? containerAnimation?.value : 0,
+              decoration: BoxDecoration(
+                gradient: LinearGradient(
+                  begin: Alignment.topLeft,
+                  end: Alignment.bottomRight,
+                  colors: [ColorValues.socaleOrange, ColorValues.socaleDarkOrange],
+                ),
+              ),
+            ),
+          ),
         ],
       ),
     );

@@ -30,21 +30,9 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
   }
 
   getRooms() async {
-    final userState = ref.watch(userAsyncController);
+    final roomState = ref.watch(roomAsyncController);
 
-    userState.whenData((User user) async {
-      List<Room> rooms = await fetchService.fetchAllRoomsForUser(user);
-      List<User> roomUsers = [];
-
-      for (Room room in rooms) {
-        List<User> allRoomUsers = await chatService.getUsersByRoom(room);
-        User toAdd = allRoomUsers.where((otherUser) => otherUser.id != user.id).first;
-        roomUsers.add(toAdd);
-      }
-
-      print(roomUsers);
-      print(rooms);
-      setState(() => userList = roomUsers);
+    roomState.whenData((rooms) async {
       setState(() => roomList = rooms);
     });
   }
@@ -66,43 +54,51 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
   }
 
   buildListScreen(Size size) {
-    return ListView.separated(
-      itemCount: roomList.length,
-      separatorBuilder: (context, index) {
-        return Padding(
-          padding: EdgeInsets.only(left: 80),
-          child: Divider(
-            color: Color(0x2FFFFFFF),
-          ),
-        );
-      },
-      itemBuilder: (context, index) {
-        return ListTile(
-          tileColor: Color(0xFF292B2F),
-          leading: CircleAvatar(
-            radius: 32,
-            child: Image.asset('assets/images/avatars/${userList[index].avatar}'),
-          ),
-          title: Text(
-            userList[index].anonymousUsername,
-            style: GoogleFonts.poppins(
-              color: Color(0xFFFFFFFF),
-              fontWeight: FontWeight.w500,
-              fontSize: 14,
+    final roomState = ref.watch(roomAsyncController);
+
+    return roomState.when(loading: () {
+      return Container();
+    }, error: (Object error, StackTrace? stackTrace) {
+      return Container();
+    }, data: (List<Room> rooms) {
+      return ListView.separated(
+        itemCount: rooms.length,
+        separatorBuilder: (context, index) {
+          return Padding(
+            padding: EdgeInsets.only(left: 80),
+            child: Divider(
+              color: Color(0x2FFFFFFF),
             ),
-          ),
-          subtitle: Text(
-            roomList[index].lastMessage ?? "Send your first message!",
-            style: GoogleFonts.roboto(
-              color: Color(0xA8FFFFFF),
-              fontWeight: FontWeight.w400,
-              fontSize: 14,
+          );
+        },
+        itemBuilder: (context, index) {
+          return ListTile(
+            tileColor: Color(0xFF292B2F),
+            leading: CircleAvatar(
+              radius: 32,
+              //child: Image.asset('assets/images/avatars/${userList[index].avatar}'),
             ),
-          ),
-          onTap: () => onItemClick(index),
-        );
-      },
-    );
+            title: Text(
+              "Hello", //userList[index].anonymousUsername,
+              style: GoogleFonts.poppins(
+                color: Color(0xFFFFFFFF),
+                fontWeight: FontWeight.w500,
+                fontSize: 14,
+              ),
+            ),
+            subtitle: Text(
+              rooms[index].lastMessage ?? "Send your first message!",
+              style: GoogleFonts.roboto(
+                color: Color(0xA8FFFFFF),
+                fontWeight: FontWeight.w400,
+                fontSize: 14,
+              ),
+            ),
+            onTap: () => onItemClick(index),
+          );
+        },
+      );
+    });
   }
 
   @override

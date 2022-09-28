@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/Buttons/primary_button_single_color.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/components/snackbar/onboarding_snackbars.dart';
@@ -25,8 +24,6 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
   AnimationController? containerAnimationController;
   late PageController _pageController;
 
-  bool _isVisible = false;
-
   @override
   void initState() {
     super.initState();
@@ -34,7 +31,7 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
       if (isSuccess) {
         onboardingService.generateMatches().then((isSuccess) {
           if (isSuccess) {
-            onCallback();
+            _onUserSuccessfullyOnboarded();
           } else {
             onboardingSnackBar.errorCreatingUserSnack(context);
           }
@@ -45,13 +42,15 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
     });
   }
 
-  void _onEventClickHandler() async {
+  void _onUserSuccessfullyOnboarded() async {
     print("Onboarding complete");
+
     final user = await Amplify.Auth.getCurrentUser();
 
     await ref.read(userAsyncController.notifier).setUser(user.userId);
     await ref.read(matchAsyncController.notifier).setMatches(user.userId);
-    Get.offAllNamed('/main');
+
+    startTransition();
   }
 
   Future<bool> _onBackPress() async {
@@ -59,19 +58,20 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
     return false;
   }
 
-  void onCallback() {
+  void startTransition() {
     final size = MediaQuery.of(context).size;
 
-    containerAnimationController = AnimationController(duration: const Duration(milliseconds: 400), vsync: this);
+    containerAnimationController = AnimationController(duration: const Duration(milliseconds: 750), vsync: this);
     containerAnimation = Tween<double>(begin: 0, end: size.height).animate(containerAnimationController!)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          setState(() => _isVisible = true);
+          Get.toNamed('/main');
         }
       })
       ..addListener(() {
         setState(() {});
       });
+
     containerAnimationController?.forward();
   }
 
@@ -182,7 +182,7 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: size.width,
-                height: containerAnimation != null ? containerAnimation!.value : 0,
+                height: containerAnimation != null ? containerAnimation?.value : 0,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
@@ -190,61 +190,6 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
                     colors: [ColorValues.socaleOrange, ColorValues.socaleDarkOrange],
                   ),
                 ),
-              ),
-            ),
-            KeyboardSafeArea(
-              child: Stack(
-                children: [
-                  AnimatedOpacity(
-                    opacity: _isVisible ? 1.0 : 0.0,
-                    duration: Duration(milliseconds: 300),
-                    child: Align(
-                      alignment: Alignment.topCenter,
-                      child: Container(
-                        margin: EdgeInsets.only(top: size.height * 0.1, left: size.width * 0.1, right: size.width * 0.1),
-                        width: size.width,
-                        child: Text(
-                          "Get Ready to Match",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            fontWeight: FontWeight.bold,
-                            fontSize: 48,
-                            color: ColorValues.textOnDark,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.center,
-                    child: AnimatedOpacity(
-                      opacity: _isVisible ? 1.0 : 0.0,
-                      duration: Duration(milliseconds: 300),
-                      child: Image.asset(
-                        'assets/images/onboarding_illustration_12.png',
-                        width: 300,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 30),
-                    child: Align(
-                      alignment: Alignment.bottomCenter,
-                      child: AnimatedOpacity(
-                        opacity: _isVisible ? 1.0 : 0.0,
-                        duration: Duration(milliseconds: 300),
-                        child: PrimaryButtonSingleColor(
-                          text: 'Start Matching',
-                          onClickEventHandler: _onEventClickHandler,
-                          color: ColorValues.white,
-                          width: size.width * 0.9,
-                          textColor: ColorValues.textOnLight,
-                          height: 68,
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ],
