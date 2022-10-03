@@ -22,7 +22,7 @@ const amplifyconfig = ''' {
                     "endpoint": "https://ljccjghtlzdppaystliksm4zz4.appsync-api.us-west-2.amazonaws.com/graphql",
                     "region": "us-west-2",
                     "authorizationType": "API_KEY",
-                    "apiKey": "da2-hezrkqbyxjgztnsivuo6e7glmq"
+                    "apiKey": "da2-ytu5dzfgs5gave5q7gkyxux2pi"
                 }
             }
         }
@@ -40,8 +40,14 @@ const amplifyconfig = ''' {
                         "ApiUrl": "https://ljccjghtlzdppaystliksm4zz4.appsync-api.us-west-2.amazonaws.com/graphql",
                         "Region": "us-west-2",
                         "AuthMode": "API_KEY",
-                        "ApiKey": "da2-hezrkqbyxjgztnsivuo6e7glmq",
+                        "ApiKey": "da2-ytu5dzfgs5gave5q7gkyxux2pi",
                         "ClientDatabasePrefix": "socale_API_KEY"
+                    },
+                    "socale_AWS_IAM": {
+                        "ApiUrl": "https://ljccjghtlzdppaystliksm4zz4.appsync-api.us-west-2.amazonaws.com/graphql",
+                        "Region": "us-west-2",
+                        "AuthMode": "AWS_IAM",
+                        "ClientDatabasePrefix": "socale_AWS_IAM"
                     }
                 },
                 "CredentialsProvider": {

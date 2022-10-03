@@ -18,7 +18,7 @@ class MainApp extends ConsumerStatefulWidget {
   ConsumerState<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends ConsumerState<MainApp> with SingleTickerProviderStateMixin {
+class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin {
   final PageController _pageController = PageController(initialPage: 1);
 
   Animation<double>? containerAnimation;

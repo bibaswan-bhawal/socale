@@ -10,6 +10,11 @@
         android:label="socale"
         android:icon="@mipmap/launcher_icon"
         android:name="androidx.multidex.MultiDexApplication">
+       <activity
+           android:name="com.yalantis.ucrop.UCropActivity"
+           android:screenOrientation="portrait"
+           android:theme="@style/Theme.AppCompat.Light.NoActionBar"/>
+
         <activity
             android:name=".MainActivity"
             android:exported="true"

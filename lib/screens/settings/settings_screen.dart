@@ -1,10 +1,14 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/primary_button_wi_icon_solid.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
+import 'package:socale/screens/settings/account_screen.dart';
+import 'package:socale/screens/settings/notifications_screen.dart';
+import 'package:socale/screens/settings/privacy_screen.dart';
+import 'package:socale/screens/settings/security_screen.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -85,7 +89,7 @@ class SettingsPage extends ConsumerWidget {
                     ListTile(
                       leading: SvgPicture.asset('assets/icons/account_icon.svg'),
                       horizontalTitleGap: 0,
-                      isThreeLine: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Your Account",
@@ -109,11 +113,26 @@ class SettingsPage extends ConsumerWidget {
                         textAlign: TextAlign.start,
                       ),
                       trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => AccountPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return SharedAxisTransition(
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                transitionType: SharedAxisTransitionType.horizontal,
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                     ListTile(
                       leading: SvgPicture.asset('assets/icons/security_icon.svg'),
                       horizontalTitleGap: 0,
-                      isThreeLine: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Security & Password",
@@ -137,11 +156,26 @@ class SettingsPage extends ConsumerWidget {
                         textAlign: TextAlign.start,
                       ),
                       trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => SecurityPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return SharedAxisTransition(
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                transitionType: SharedAxisTransitionType.horizontal,
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                     ListTile(
                       leading: SvgPicture.asset('assets/icons/privacy_icon.svg'),
                       horizontalTitleGap: 0,
-                      isThreeLine: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Your Privacy",
@@ -165,11 +199,26 @@ class SettingsPage extends ConsumerWidget {
                         textAlign: TextAlign.start,
                       ),
                       trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => PrivacyPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return SharedAxisTransition(
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                transitionType: SharedAxisTransitionType.horizontal,
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                     ListTile(
                       leading: SvgPicture.asset('assets/icons/notification_icon.svg'),
                       horizontalTitleGap: 0,
-                      isThreeLine: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Notifications",
@@ -193,11 +242,26 @@ class SettingsPage extends ConsumerWidget {
                         textAlign: TextAlign.start,
                       ),
                       trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      onTap: () {
+                        Navigator.of(context).push(
+                          PageRouteBuilder(
+                            pageBuilder: (context, animation, secondaryAnimation) => NotificationsPage(),
+                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                              return SharedAxisTransition(
+                                animation: animation,
+                                secondaryAnimation: secondaryAnimation,
+                                transitionType: SharedAxisTransitionType.horizontal,
+                                child: child,
+                              );
+                            },
+                          ),
+                        );
+                      },
                     ),
                     ListTile(
                       leading: SvgPicture.asset('assets/icons/support_icon.svg'),
                       horizontalTitleGap: 0,
-                      isThreeLine: true,
+                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Support",
