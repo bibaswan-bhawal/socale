@@ -7,6 +7,7 @@ import 'package:socale/components/Buttons/primary_button_wi_icon_solid.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
@@ -76,6 +77,160 @@ class SettingsPage extends ConsumerWidget {
                   ),
                 ),
               ),
+              Expanded(
+                child: ListView(
+                  physics: NeverScrollableScrollPhysics(),
+                  padding: const EdgeInsets.only(top: 8),
+                  children: [
+                    ListTile(
+                      leading: SvgPicture.asset('assets/icons/account_icon.svg'),
+                      horizontalTitleGap: 0,
+                      isThreeLine: true,
+                      visualDensity: VisualDensity.compact,
+                      title: Text(
+                        "Your Account",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.3,
+                          color: ColorValues.textOnDark,
+                        ),
+                      ),
+                      subtitle: RichText(
+                        text: TextSpan(
+                          text: "View and change information about your account.",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: -0.3,
+                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                          ),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset('assets/icons/security_icon.svg'),
+                      horizontalTitleGap: 0,
+                      isThreeLine: true,
+                      visualDensity: VisualDensity.compact,
+                      title: Text(
+                        "Security & Password",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.3,
+                          color: ColorValues.textOnDark,
+                        ),
+                      ),
+                      subtitle: RichText(
+                        text: TextSpan(
+                          text: "Change your password and adjust your security settings.",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: -0.3,
+                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                          ),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset('assets/icons/privacy_icon.svg'),
+                      horizontalTitleGap: 0,
+                      isThreeLine: true,
+                      visualDensity: VisualDensity.compact,
+                      title: Text(
+                        "Your Privacy",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.3,
+                          color: ColorValues.textOnDark,
+                        ),
+                      ),
+                      subtitle: RichText(
+                        text: TextSpan(
+                          text: "Adjust what information others can see.",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: -0.3,
+                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                          ),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset('assets/icons/notification_icon.svg'),
+                      horizontalTitleGap: 0,
+                      isThreeLine: true,
+                      visualDensity: VisualDensity.compact,
+                      title: Text(
+                        "Notifications",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.3,
+                          color: ColorValues.textOnDark,
+                        ),
+                      ),
+                      subtitle: RichText(
+                        text: TextSpan(
+                          text: "Select what notifications you receive.",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: -0.3,
+                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                          ),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset('assets/icons/support_icon.svg'),
+                      horizontalTitleGap: 0,
+                      isThreeLine: true,
+                      visualDensity: VisualDensity.compact,
+                      title: Text(
+                        "Support",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.3,
+                          color: ColorValues.textOnDark,
+                        ),
+                      ),
+                      subtitle: RichText(
+                        text: TextSpan(
+                          text: "Reach out to us if you have questions or concerns.",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: -0.3,
+                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                          ),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      onTap: () {
+                        launchUrl(
+                          Uri.parse('https://docs.google.com/forms/d/e/1FAIpQLScUhReI0LUNVtOf0oRvuTN-wB-ZFmf7OTFpJUcrXGGa181-RA/viewform'),
+                          mode: LaunchMode.externalApplication,
+                        );
+                      },
+                    ),
+                  ],
+                ),
+              )
             ],
           ),
           Positioned(

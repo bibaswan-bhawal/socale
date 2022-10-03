@@ -20,4 +20,8 @@ class ColorValues {
   static final Shader socaleOrangeGradient = LinearGradient(
     colors: <Color>[Color(0xFFFD6C00), Color(0xFFFFA133)],
   ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
+
+  static final Shader socaleLightPurpleGradient = LinearGradient(
+    colors: <Color>[Color(0xFFF151DD), Color(0xFFDD9CFC)],
+  ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0));
 }
