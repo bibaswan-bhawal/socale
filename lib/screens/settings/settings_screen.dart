@@ -35,7 +35,7 @@ class SettingsPage extends ConsumerWidget {
                   child: Stack(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 15, top: 20),
+                        padding: EdgeInsets.only(left: 15, top: 5),
                         child: IconButton(
                           onPressed: () => onBack(context),
                           icon: const Icon(
@@ -45,7 +45,7 @@ class SettingsPage extends ConsumerWidget {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 20),
+                        padding: EdgeInsets.only(top: 5),
                         child: Center(
                           child: Column(
                             children: [
