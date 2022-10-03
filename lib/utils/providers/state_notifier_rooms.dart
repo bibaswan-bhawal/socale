@@ -34,6 +34,8 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
           newRooms.sort((room1, room2) {
             return room1.updatedAt!.compareTo(room2.updatedAt!);
           });
+          
+          state = AsyncData(newRooms);
         }
       },
     );
