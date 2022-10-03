@@ -5,7 +5,7 @@ import 'package:socale/components/help_overplays/matches_help_overlay.dart';
 import 'package:socale/models/User.dart';
 import 'package:socale/screens/main/chat/chat_main_page.dart';
 import 'package:socale/screens/main/matches/matches_page.dart';
-import 'package:socale/screens/main/settings/settings_page.dart';
+import 'package:socale/screens/main/profile/profile_page.dart';
 import 'package:socale/services/notification_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/system_ui_setter.dart';
@@ -93,7 +93,7 @@ class _MainAppState extends ConsumerState<MainApp> with SingleTickerProviderStat
                   children: [
                     ChatListPage(),
                     MatchPage(),
-                    SettingsPage(),
+                    ProfilePage(),
                   ],
                 ),
               ),

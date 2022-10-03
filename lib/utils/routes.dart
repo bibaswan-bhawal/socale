@@ -1,7 +1,9 @@
+import 'package:animations/animations.dart';
 import 'package:get/get.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
+import 'package:socale/screens/settings/settings_screen.dart';
 import 'package:socale/utils/transitions/fade_through_transition.dart';
 
 class Routes {
@@ -23,6 +25,12 @@ class Routes {
         name: '/main',
         page: () => MainApp(),
         customTransition: FadeTransition(),
+        transitionDuration: Duration(milliseconds: 300),
+      ),
+      GetPage(
+        name: '/settings',
+        page: () => SettingsPage(),
+        transition: Transition.leftToRight,
         transitionDuration: Duration(milliseconds: 300),
       )
     ];
