@@ -81,10 +81,9 @@ class AWSLambdaService {
       request,
       credentialScope: scope,
     );
+
     final resp = await signedRequest.send();
     final respBody = await resp.decodeBody();
-
-    print(respBody);
 
     final responseMap = JsonDecoder().convert(respBody);
     if (responseMap.containsKey('success') && responseMap["success"]) {

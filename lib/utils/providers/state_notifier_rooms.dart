@@ -11,6 +11,7 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
   StreamSubscription<QuerySnapshot<UserRoom>>? _stream;
 
   RoomsProvider() : super(AsyncLoading()) {
+    print("search rooms");
     requestRooms();
   }
 
