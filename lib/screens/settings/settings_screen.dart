@@ -35,40 +35,41 @@ class SettingsPage extends ConsumerWidget {
                   child: Stack(
                     children: [
                       Padding(
-                        padding: EdgeInsets.only(left: 15, top: 5),
-                        child: IconButton(
-                          onPressed: () => onBack(context),
-                          icon: const Icon(
-                            Icons.arrow_back_ios,
-                            color: ColorValues.textOnDark,
+                        padding: EdgeInsets.only(left: 20),
+                        child: Align(
+                          alignment: Alignment.centerLeft,
+                          child: IconButton(
+                            onPressed: () => onBack(context),
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: ColorValues.textOnDark,
+                            ),
                           ),
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.only(top: 5),
-                        child: Center(
-                          child: Column(
-                            children: [
-                              Text(
-                                "Settings",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                  letterSpacing: -0.3,
-                                  color: ColorValues.textOnDark,
-                                ),
+                      Center(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "Settings",
+                              style: GoogleFonts.poppins(
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                                letterSpacing: -0.3,
+                                color: ColorValues.textOnDark,
                               ),
-                              Text(
-                                "${userState.value!.firstName} ${userState.value!.lastName}",
-                                style: GoogleFonts.poppins(
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w400,
-                                  letterSpacing: -0.3,
-                                  color: ColorValues.textOnDark,
-                                ),
+                            ),
+                            Text(
+                              "${userState.value!.firstName} ${userState.value!.lastName}",
+                              style: GoogleFonts.poppins(
+                                fontSize: 12,
+                                fontWeight: FontWeight.w400,
+                                letterSpacing: -0.3,
+                                color: ColorValues.textOnDark,
                               ),
-                            ],
-                          ),
+                            ),
+                          ],
                         ),
                       )
                     ],
