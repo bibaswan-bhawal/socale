@@ -8,6 +8,7 @@ class ConstraintsAndroid {
   final double getStartedTopPadding = 40;
 
   final double chatPageAppBarHeight = 100;
+  final double settingsPageAppBarHeight = 100;
 }
 
 final constraintsAndroid = ConstraintsAndroid();

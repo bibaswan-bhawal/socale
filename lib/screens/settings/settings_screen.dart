@@ -5,11 +5,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/primary_button_wi_icon_solid.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
+import 'package:socale/components/translucent_background/bottom_translucent_card.dart';
 import 'package:socale/screens/settings/account_screen.dart';
 import 'package:socale/screens/settings/notifications_screen.dart';
 import 'package:socale/screens/settings/privacy_screen.dart';
 import 'package:socale/screens/settings/security_screen.dart';
 import 'package:socale/services/auth_service.dart';
+import 'package:socale/utils/constraints/constraints.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -20,6 +22,7 @@ class SettingsPage extends ConsumerWidget {
   void onClickEventHandler(WidgetRef ref) {
     authService.signOutCurrentUser(ref);
   }
+
   void onBack(BuildContext context) {
     Navigator.of(context).pop();
   }
@@ -34,10 +37,11 @@ class SettingsPage extends ConsumerWidget {
       backgroundColor: Color(0xFF2D2D2D),
       body: Stack(
         children: [
+          BottomTranslucentCard(),
           Column(
             children: [
               Container(
-                height: 120,
+                height: constraints.settingsPageAppBarHeight,
                 color: Color(0xFF363636),
                 child: KeyboardSafeArea(
                   child: Stack(

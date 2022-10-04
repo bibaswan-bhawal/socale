@@ -8,6 +8,7 @@ class ConstraintsIOS {
   final double getStartedTopPadding = 30;
 
   final double chatPageAppBarHeight = 115;
+  final double settingsPageAppBarHeight = 120;
 }
 
 final constraintsIOS = ConstraintsIOS();

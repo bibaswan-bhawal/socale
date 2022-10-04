@@ -13,6 +13,7 @@ class AppConstraint {
   late double getStartedTopPadding;
 
   late double chatPageAppBarHeight;
+  late double settingsPageAppBarHeight;
 
   AppConstraint() {
     if (Platform.isAndroid) {
@@ -25,6 +26,7 @@ class AppConstraint {
       getStartedTopPadding = constraintsAndroid.getStartedTopPadding;
 
       chatPageAppBarHeight = constraintsAndroid.chatPageAppBarHeight;
+      settingsPageAppBarHeight = constraintsAndroid.settingsPageAppBarHeight;
     } else if (Platform.isIOS) {
       onboardingSituational1ImagePadding = constraintsIOS.onboardingSituational1ImagePadding;
       onboardingSituational2ImagePadding = constraintsIOS.onboardingSituational2ImagePadding;
@@ -35,6 +37,7 @@ class AppConstraint {
       getStartedTopPadding = constraintsIOS.getStartedTopPadding;
 
       chatPageAppBarHeight = constraintsIOS.chatPageAppBarHeight;
+      settingsPageAppBarHeight = constraintsIOS.settingsPageAppBarHeight;
     }
   }
 }
