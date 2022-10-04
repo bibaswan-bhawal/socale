@@ -57,9 +57,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
             ),
           );
-
-          setState(() => _messages = newMessages);
         }
+
+        setState(() => _messages = newMessages);
       }
     });
   }
