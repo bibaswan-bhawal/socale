@@ -46,7 +46,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         List<types.Message> newMessages = [];
 
         for (Message message in snapshot.items) {
-          print(message.encryptedText);
+          print("${widget.room.getChatUIUsers} said ${message.encryptedText}");
 
           newMessages.add(
             types.TextMessage(
@@ -57,6 +57,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
             ),
           );
+
+          print(newMessages);
         }
 
         setState(() => _messages = newMessages);

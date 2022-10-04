@@ -28,7 +28,7 @@ class RoomListItem implements Comparable<RoomListItem> {
         lastName: user.lastName,
       );
 
-      _chatUIUsers.addIf(_chatUIUsers.contains(userToAdd), userToAdd);
+      _chatUIUsers.addIf(!_chatUIUsers.contains(userToAdd), userToAdd);
     }
   }
 
