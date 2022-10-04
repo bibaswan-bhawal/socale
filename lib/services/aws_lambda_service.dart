@@ -39,8 +39,9 @@ class AWSLambdaService {
       request,
       credentialScope: scope,
     );
-    final resp = await signedRequest.send();
-    final respBody = await resp.decodeBody();
+
+    AWSBaseHttpResponse resp = await signedRequest.send().response;
+    String respBody = await resp.decodeBody();
 
     final responseMap = JsonDecoder().convert(respBody);
     if (responseMap.containsKey('success') && responseMap["success"]) {
@@ -82,8 +83,8 @@ class AWSLambdaService {
       credentialScope: scope,
     );
 
-    final resp = await signedRequest.send();
-    final respBody = await resp.decodeBody();
+    AWSBaseHttpResponse resp = await signedRequest.send().response;
+    String respBody = await resp.decodeBody();
 
     final responseMap = JsonDecoder().convert(respBody);
     if (responseMap.containsKey('success') && responseMap["success"]) {

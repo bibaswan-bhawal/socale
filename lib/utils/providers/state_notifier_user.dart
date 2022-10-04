@@ -14,9 +14,9 @@ class UserStateNotifier extends StateNotifier<AsyncValue<User>> {
       User user = await fetchService.fetchUserById(id);
       state = AsyncData(user);
       return true;
-    } catch (e) {
+    } catch (e, stackTrace) {
       print(e);
-      state = AsyncError(e);
+      state = AsyncError(e, stackTrace);
       return false;
     }
   }

@@ -16,13 +16,16 @@ class MatchStateProvider extends StateNotifier<AsyncValue<Map<User, Match>>> {
 
     if (currentUser.matches.isEmpty) {
       print("No matches found creating matches");
+      try {
+        Amplify.DataStore.stop();
+        final response = await awsLambdaService.getMatches(id);
+        Amplify.DataStore.start();
 
-      Amplify.DataStore.stop();
-      final response = await awsLambdaService.getMatches(id);
-      Amplify.DataStore.start();
-
-      if (response == false) {
-        state = AsyncError("Could not fetch matches");
+        if (response == false) {
+          throw ("");
+        }
+      } catch (e, stackTrace) {
+        state = AsyncError(e, stackTrace);
         return;
       }
 
@@ -36,8 +39,12 @@ class MatchStateProvider extends StateNotifier<AsyncValue<Map<User, Match>>> {
       matches.addEntries([MapEntry(user, match)]);
     }
 
-    if (matches.isEmpty) {
-      state = AsyncError("Could not fetch matches");
+    try {
+      if (matches.isEmpty) {
+        throw ("");
+      }
+    } catch (e, stackTrace) {
+      state = AsyncError(e, stackTrace);
       return;
     }
 
