@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:ui' as ui;
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
@@ -46,8 +47,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         List<types.Message> newMessages = [];
 
         for (Message message in snapshot.items) {
-          print("${widget.room.getChatUIUsers} said ${message.encryptedText}");
-
           newMessages.add(
             types.TextMessage(
               id: message.id,
@@ -57,8 +56,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
             ),
           );
-
-          print(newMessages);
         }
 
         setState(() => _messages = newMessages);
@@ -79,41 +76,69 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   Widget appBarBuilder() {
+    final size = MediaQuery.of(context).size;
+
     return SizedBox(
-      height: constraints.chatPageAppBarHeight,
-      child: AppBar(
-        leading: Padding(
-          padding: EdgeInsets.only(top: 15),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              IconButton(
-                onPressed: () => Navigator.of(context).pop(),
-                icon: const Icon(Icons.arrow_back_ios_new),
-              ),
-              widget.room.getRoomPic,
-            ],
-          ),
-        ),
-        leadingWidth: 112,
-        title: Padding(
-          padding: EdgeInsets.only(top: 20),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(widget.room.getRoomName),
-              Text(
-                "Anonymous Match",
-                style: GoogleFonts.poppins(
-                  fontSize: 12,
-                  fontWeight: FontWeight.w300,
-                  color: Color(0xFF9F78F3),
+      height: constraints.chatPageAppBarHeight + 4,
+      child: Column(
+        children: [
+          SizedBox(
+            height: constraints.chatPageAppBarHeight,
+            child: AppBar(
+              leading: Padding(
+                padding: EdgeInsets.only(top: 15),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    IconButton(
+                      onPressed: () => Navigator.of(context).pop(),
+                      icon: const Icon(Icons.arrow_back_ios_new),
+                    ),
+                    widget.room.getRoomPic,
+                  ],
                 ),
               ),
-            ],
+              leadingWidth: 112,
+              title: Padding(
+                padding: EdgeInsets.only(top: 20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(widget.room.getRoomName),
+                    Text(
+                      "Anonymous Match",
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
+                        fontWeight: FontWeight.w300,
+                        color: Color(0xFF9F78F3),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              backgroundColor: Color(0xFF292B2F),
+            ),
           ),
-        ),
-        backgroundColor: Color(0xFF292B2F),
+          Align(
+            alignment: Alignment.centerLeft,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xFF1A2A6C),
+                    Color(0xFFFF0080),
+                    Color(0xFFFDBB2D),
+                  ],
+                ),
+              ),
+              height: 4,
+              width: size.width * (_messages.length / 120),
+            ),
+          ),
+        ],
       ),
     );
   }
