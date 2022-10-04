@@ -22,7 +22,7 @@ class LoginHeader extends StatelessWidget {
           ),
         ),
         Padding(
-          padding: EdgeInsets.fromLTRB(0, 24, 0, 0),
+          padding: EdgeInsets.fromLTRB(0, 20, 0, 0),
           child: Text(
             StringValues.loginHeading,
             style: GoogleFonts.poppins(

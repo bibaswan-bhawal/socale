@@ -17,6 +17,7 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
 
   Future<void> requestRooms() async {
     print("Searching for rooms.");
+
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
 
     _stream = Amplify.DataStore.observeQuery(
@@ -26,7 +27,7 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
       (QuerySnapshot<UserRoom> snapshot) {
         if (snapshot.isSynced) {
           List<Room> newRooms = [];
-          print("rooms");
+
           for (UserRoom userRoom in snapshot.items) {
             newRooms.addIf(userRoom.room != null, userRoom.room!);
           }

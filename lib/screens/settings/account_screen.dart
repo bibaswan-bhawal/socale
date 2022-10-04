@@ -43,8 +43,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState(){
+    super.initState();
 
     final userState = ref.watch(userAsyncController);
 
@@ -60,8 +60,14 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     emailController.text = email;
 
     if (userState.value!.profilePicture != null && userState.value!.profilePicture!.isNotEmpty) {
+      print(userState.value!.profilePicture!);
       getProfilePicture(userState.value!.profilePicture!);
     }
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
   }
 
   void _onBirthDateClickEventHandler() async {
@@ -134,15 +140,22 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     }
   }
 
-  Future<void> uploadProfilePic(String key) async {
+  Future<void> uploadProfilePic(String? currentKey, String newKey) async {
     final file = profilePicture;
+
+    if(currentKey != null && currentKey.isNotEmpty){
+      try {
+        final result = await Amplify.Storage.remove(key: currentKey);
+        print('Deleted file: ${result.key}');
+      } on StorageException catch (e) {
+        print('Error deleting file: $e');
+      }
+    }
+
     try {
       final UploadFileResult result = await Amplify.Storage.uploadFile(
         local: file,
-        key: key,
-        onProgress: (progress) {
-          print('Fraction completed: ${progress.getFractionCompleted()}');
-        },
+        key: newKey,
       );
       print('Successfully uploaded image: ${result.key}');
       return;
@@ -153,18 +166,16 @@ class _AccountPageState extends ConsumerState<AccountPage> {
 
   Future<void> getProfilePicture(String key) async {
     final documentsDir = await getApplicationDocumentsDirectory();
-    final filepath = '${documentsDir.path}/$key.png';
+    final filepath = '${documentsDir.path}/$key.jpg';
     final file = File(filepath);
 
     try {
-      await Amplify.Storage.downloadFile(
+      final result = await Amplify.Storage.downloadFile(
         key: key,
         local: file,
-        onProgress: (progress) {
-          print('Fraction completed: ${progress.getFractionCompleted()}');
-        },
       );
 
+      print('downloaded file: $key');
       setState(() => profilePicture = file);
     } on StorageException catch (e) {
       print('Error downloading file: $e');
@@ -172,16 +183,20 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   }
 
   void saveData() async {
+    print("Saving Data");
     final userState = ref.watch(userAsyncController);
     final userStateNotifier = ref.read(userAsyncController.notifier);
 
+    final newProfileKey = "${userState.value!.id}-${DateTime.now()}";
+
+    print("Profile picture changed: ${profilePicture != null}");
     if (profilePicture != null) {
-      await uploadProfilePic(userState.value!.id);
+      await uploadProfilePic(userState.value!.profilePicture, newProfileKey);
+      userStateNotifier.changeUserValue(userState.value!.copyWith(profilePicture: newProfileKey,),);
     }
 
     userStateNotifier.changeUserValue(
       userState.value!.copyWith(
-        profilePicture: userState.value!.id,
         avatar: avatar,
         firstName: firstName,
         lastName: lastName,
@@ -203,7 +218,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
         child: Column(
           children: [
             Container(
-              height: 100,
+              height: 120,
               color: Color(0xFF363636),
               child: KeyboardSafeArea(
                 child: Stack(
@@ -334,6 +349,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
                     if (image != null) {
+                      print("edit image: ${image.path}");
+
                       CroppedFile? croppedFile = await ImageCropper().cropImage(
                         cropStyle: CropStyle.circle,
                         compressQuality: 50,
@@ -425,12 +442,11 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         child: TextField(
                           controller: firstNameController,
                           textAlign: TextAlign.end,
+                          onChanged: (value) {setState(() => firstName = value);},
                           style: GoogleFonts.roboto(color: Color(0xFF479CFF)),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             border: InputBorder.none,
-                            hintText: userState.value!.firstName,
-                            hintStyle: GoogleFonts.roboto(color: Color(0xFF479CFF)),
                           ),
                         ),
                       ),
@@ -462,12 +478,11 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         child: TextField(
                           controller: lastNameController,
                           textAlign: TextAlign.end,
+                          onChanged: (value) {setState(() => lastName = value);},
                           style: GoogleFonts.roboto(color: Color(0xFF479CFF)),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             border: InputBorder.none,
-                            hintText: userState.value!.firstName,
-                            hintStyle: GoogleFonts.roboto(color: Color(0xFF479CFF)),
                           ),
                         ),
                       ),
@@ -499,16 +514,13 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         child: TextField(
                           controller: emailController,
                           textAlign: TextAlign.end,
+                          onChanged: (value) {setState(() => email = value);},
                           style: GoogleFonts.roboto(
                             color: Color(0xFF479CFF),
                           ),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
                             border: InputBorder.none,
-                            hintText: userState.value!.firstName,
-                            hintStyle: GoogleFonts.roboto(
-                              color: Color(0xFF479CFF),
-                            ),
                           ),
                         ),
                       ),

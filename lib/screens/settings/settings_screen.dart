@@ -9,6 +9,7 @@ import 'package:socale/screens/settings/account_screen.dart';
 import 'package:socale/screens/settings/notifications_screen.dart';
 import 'package:socale/screens/settings/privacy_screen.dart';
 import 'package:socale/screens/settings/security_screen.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -16,7 +17,9 @@ import 'package:url_launcher/url_launcher.dart';
 class SettingsPage extends ConsumerWidget {
   const SettingsPage({Key? key}) : super(key: key);
 
-  void onClickEventHandler() {}
+  void onClickEventHandler(WidgetRef ref) {
+    authService.signOutCurrentUser(ref);
+  }
   void onBack(BuildContext context) {
     Navigator.of(context).pop();
   }
@@ -34,7 +37,7 @@ class SettingsPage extends ConsumerWidget {
           Column(
             children: [
               Container(
-                height: 100,
+                height: 120,
                 color: Color(0xFF363636),
                 child: KeyboardSafeArea(
                   child: Stack(
@@ -310,12 +313,9 @@ class SettingsPage extends ConsumerWidget {
                     height: 54,
                     text: "Sign Out",
                     color: ColorValues.white,
-                    onClickEventHandler: onClickEventHandler,
+                    onClickEventHandler: () => onClickEventHandler(ref),
                     textColor: ColorValues.textOnLight,
-                    icon: SvgPicture.asset(
-                      'assets/icons/log_out_icon.svg',
-                      color: ColorValues.textOnLight,
-                    ),
+                    icon: SvgPicture.asset('assets/icons/log_out_icon.svg', color: ColorValues.textOnLight),
                   ),
                 ),
                 Padding(

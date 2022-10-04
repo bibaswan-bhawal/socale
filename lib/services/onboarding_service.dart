@@ -405,6 +405,7 @@ class OnboardingService {
       introMatchingCompleted: false,
       matches: [],
       anonymousUsername: anonymousUsername,
+      profilePicture: "",
     );
 
     print(newUser);

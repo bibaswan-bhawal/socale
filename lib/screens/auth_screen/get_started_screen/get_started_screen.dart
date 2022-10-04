@@ -38,7 +38,7 @@ class GetStartedScreen extends StatelessWidget {
                   padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
                   child: Image.asset(
                     'assets/images/onboarding_illustration_1.png',
-                    height: size.height / 2.2,
+                    height: size.height / 2.4,
                   ),
                 ),
                 Padding(

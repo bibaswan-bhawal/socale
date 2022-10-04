@@ -152,7 +152,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ),
           ),
           Padding(
-            padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+            padding: EdgeInsets.only(top: 20),
             child: Center(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
