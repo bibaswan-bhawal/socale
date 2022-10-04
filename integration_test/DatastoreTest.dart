@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
@@ -86,7 +88,12 @@ main() {
         avatar: 'Artist Raccoon.png',
       );
 
-      final room1 = Room();
+      var isHiddenJsonObject = {
+        user1!.id: true,
+        user2!.id: true,
+      };
+
+      final room1 = Room(isHidden: jsonEncode(isHiddenJsonObject));
 
       final userRoom1 = UserRoom(
         user: user1,

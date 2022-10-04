@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart' as chat_ui;
@@ -13,6 +15,10 @@ class RoomListItem implements Comparable<RoomListItem> {
   late List<types.User> _chatUIUsers;
 
   RoomListItem(this._room, this._users, this._currentUser) {
+    var isHiddenData = jsonDecode(_room.isHidden);
+
+    print(isHiddenData);
+
     _currentChatUIUser = types.User(
       id: _currentUser.id,
       firstName: _currentUser.firstName,
@@ -22,11 +28,21 @@ class RoomListItem implements Comparable<RoomListItem> {
     _chatUIUsers = [];
 
     for (User user in _users) {
-      types.User userToAdd = types.User(
-        id: user.id,
-        firstName: user.firstName,
-        lastName: user.lastName,
-      );
+      types.User userToAdd;
+
+      if (isHiddenData[user.id]) {
+        userToAdd = types.User(
+          id: user.id,
+          firstName: user.anonymousUsername.split(' ')[0],
+          lastName: user.anonymousUsername.split(' ')[1],
+        );
+      } else {
+        userToAdd = types.User(
+          id: user.id,
+          firstName: user.firstName,
+          lastName: user.lastName,
+        );
+      }
 
       _chatUIUsers.addIf(!_chatUIUsers.contains(userToAdd), userToAdd);
     }

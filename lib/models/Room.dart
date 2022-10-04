@@ -33,6 +33,7 @@ class Room extends Model {
   final String? _lastMessage;
   final List<Message>? _messages;
   final List<UserRoom>? _userRoom;
+  final String? _isHidden;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
 
@@ -56,6 +57,19 @@ class Room extends Model {
     return _userRoom;
   }
   
+  String get isHidden {
+    try {
+      return _isHidden!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
   TemporalDateTime? get createdAt {
     return _createdAt;
   }
@@ -64,14 +78,15 @@ class Room extends Model {
     return _updatedAt;
   }
   
-  const Room._internal({required this.id, lastMessage, messages, userRoom, createdAt, updatedAt}): _lastMessage = lastMessage, _messages = messages, _userRoom = userRoom, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Room._internal({required this.id, lastMessage, messages, userRoom, required isHidden, createdAt, updatedAt}): _lastMessage = lastMessage, _messages = messages, _userRoom = userRoom, _isHidden = isHidden, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Room({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom}) {
+  factory Room({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom, required String isHidden}) {
     return Room._internal(
       id: id == null ? UUID.getUUID() : id,
       lastMessage: lastMessage,
       messages: messages != null ? List<Message>.unmodifiable(messages) : messages,
-      userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom);
+      userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom,
+      isHidden: isHidden);
   }
   
   bool equals(Object other) {
@@ -85,7 +100,8 @@ class Room extends Model {
       id == other.id &&
       _lastMessage == other._lastMessage &&
       DeepCollectionEquality().equals(_messages, other._messages) &&
-      DeepCollectionEquality().equals(_userRoom, other._userRoom);
+      DeepCollectionEquality().equals(_userRoom, other._userRoom) &&
+      _isHidden == other._isHidden;
   }
   
   @override
@@ -98,6 +114,7 @@ class Room extends Model {
     buffer.write("Room {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("lastMessage=" + "$_lastMessage" + ", ");
+    buffer.write("isHidden=" + "$_isHidden" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
@@ -105,12 +122,13 @@ class Room extends Model {
     return buffer.toString();
   }
   
-  Room copyWith({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom}) {
+  Room copyWith({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom, String? isHidden}) {
     return Room._internal(
       id: id ?? this.id,
       lastMessage: lastMessage ?? this.lastMessage,
       messages: messages ?? this.messages,
-      userRoom: userRoom ?? this.userRoom);
+      userRoom: userRoom ?? this.userRoom,
+      isHidden: isHidden ?? this.isHidden);
   }
   
   Room.fromJson(Map<String, dynamic> json)  
@@ -128,11 +146,12 @@ class Room extends Model {
           .map((e) => UserRoom.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
+      _isHidden = json['isHidden'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'lastMessage': _lastMessage, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'lastMessage': _lastMessage, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'isHidden': _isHidden, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
@@ -143,6 +162,7 @@ class Room extends Model {
   static final QueryField USERROOM = QueryField(
     fieldName: "userRoom",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (UserRoom).toString()));
+  static final QueryField ISHIDDEN = QueryField(fieldName: "isHidden");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Room";
     modelSchemaDefinition.pluralName = "Rooms";
@@ -178,6 +198,12 @@ class Room extends Model {
       isRequired: true,
       ofModelName: (UserRoom).toString(),
       associatedKey: UserRoom.ROOM
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Room.ISHIDDEN,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

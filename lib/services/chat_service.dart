@@ -86,13 +86,17 @@ class ChatService {
     final currentUser = await _getUserById(userId);
     final otherUser = await _getUserById(otherUserId);
 
-    Room room = Room();
+    var isHiddenJsonObject = {
+      currentUser!.id: true,
+      otherUser!.id: true,
+    };
 
+    Room room = Room(isHidden: jsonEncode(isHiddenJsonObject));
     await Amplify.DataStore.save(room);
+
     await Amplify.DataStore.save(UserRoom(user: currentUser, room: room));
     await Amplify.DataStore.save(UserRoom(user: otherUser, room: room));
 
-    RoomListItem(room, [currentUser!, otherUser!], currentUser);
     return RoomListItem(room, [currentUser, otherUser], currentUser);
   }
 
