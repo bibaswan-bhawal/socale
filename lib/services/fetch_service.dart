@@ -57,6 +57,20 @@ class FetchService {
 
     return rooms.reversed.toList();
   }
+
+  Future<List<User>> fetchAllUsersForRoom(Room room) async {
+    List<User> users = [];
+
+    final userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.ROOM.eq(room.id));
+
+    for (UserRoom userRoom in userRooms) {
+      if (userRoom.user != null) {
+        users.add(userRoom.user!);
+      }
+    }
+
+    return users;
+  }
 }
 
 final fetchService = FetchService();

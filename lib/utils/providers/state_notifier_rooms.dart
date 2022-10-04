@@ -3,32 +3,33 @@ import 'dart:async';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
-import 'package:socale/models/Room.dart';
-import 'package:socale/models/UserRoom.dart';
+import 'package:socale/models/RoomListItem.dart';
+import 'package:socale/services/fetch_service.dart';
 
-class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
-  final List<Room> rooms = [];
+import '../../models/ModelProvider.dart';
+
+class RoomsProvider extends StateNotifier<AsyncValue<List<RoomListItem>>> {
   StreamSubscription<QuerySnapshot<UserRoom>>? _streamUserRooms;
   StreamSubscription<QuerySnapshot<Room>>? _streamRooms;
 
   RoomsProvider() : super(AsyncLoading()) {
-    print("search rooms");
     requestRooms();
   }
 
   Future<void> requestRooms() async {
+    print("getting rooms");
+
     if (_streamUserRooms != null) {
       _streamUserRooms!.cancel();
     }
 
-    print("Searching for rooms.");
-    final userId = (await Amplify.Auth.getCurrentUser()).userId;
+    final currentUserId = (await Amplify.Auth.getCurrentUser()).userId;
 
     _streamUserRooms = Amplify.DataStore.observeQuery(
       UserRoom.classType,
-      where: UserRoom.USER.eq(userId),
+      where: UserRoom.USER.eq(currentUserId),
     ).listen(
-      (QuerySnapshot<UserRoom> snapshot) {
+      (QuerySnapshot<UserRoom> snapshot) async {
         if (snapshot.isSynced) {
           List<String> newRoomId = [];
 
@@ -40,24 +41,39 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
             _streamRooms!.cancel();
           }
 
-          print("updated user rooms: $newRoomId");
-          QueryPredicate bob = Room.ID.eq(newRoomId[0]).or(Room.ID.eq(newRoomId[1]));
+          if (newRoomId.isNotEmpty) {
+            QueryPredicate roomPredicate = Room.ID.eq(newRoomId[0]);
+            QueryPredicateGroup? multiRoomPredicate;
 
-          _streamRooms = Amplify.DataStore.observeQuery(
-            Room.classType,
-          ).listen((QuerySnapshot<Room> snapshot) {
-            if (snapshot.isSynced) {
-              List<Room> newRooms = [];
+            if (newRoomId.length > 1) {
+              multiRoomPredicate = Room.ID.eq(newRoomId[0]).or(Room.ID.eq(newRoomId[1]));
 
-              for (Room room in snapshot.items) {
-                newRooms.addIf(!rooms.contains(room), room);
+              for (int i = 2; i < newRoomId.length; i++) {
+                multiRoomPredicate = multiRoomPredicate!.or(Room.ID.eq(newRoomId[i]));
               }
-
-              List<String> id = newRooms.map((e) => e.id).toList();
-
-              print("Updated rooms: $id");
             }
-          });
+
+            var queryPredicate = multiRoomPredicate ?? roomPredicate;
+
+            _streamRooms = Amplify.DataStore.observeQuery(
+              Room.classType,
+              where: queryPredicate,
+            ).listen((QuerySnapshot<Room> snapshot) async {
+              if (snapshot.isSynced) {
+                List<RoomListItem> roomsListItems = [];
+
+                for (Room room in snapshot.items) {
+                  List<User> usersForRoom = await fetchService.fetchAllUsersForRoom(room);
+                  User currentUser = await fetchService.fetchUserById(currentUserId);
+                  RoomListItem itemToAdd = RoomListItem(room, usersForRoom, currentUser);
+                  roomsListItems.addIf(!roomsListItems.contains(itemToAdd), itemToAdd);
+                }
+
+                roomsListItems.sort((room1, room2) => room1.compareTo(room2));
+                if (mounted) state = AsyncData(roomsListItems.reversed.toList());
+              }
+            });
+          }
         }
       },
     );

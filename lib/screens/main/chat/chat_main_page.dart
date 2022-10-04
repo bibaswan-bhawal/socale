@@ -5,10 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
-import 'package:socale/models/ModelProvider.dart';
+import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
-import 'package:socale/services/chat_service.dart';
-import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
@@ -21,9 +19,6 @@ class ChatListPage extends ConsumerStatefulWidget {
 
 class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProviderStateMixin {
   late TabController _tabController;
-  List<User> userList = [];
-  List<Room> roomList = [];
-
   int _selectedIndex = 0;
 
   @override
@@ -38,86 +33,65 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
     });
   }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getRooms();
-  }
-
-  getRooms() async {
-    final roomState = ref.watch(roomAsyncController);
-
-    roomState.whenData((rooms) async {
-      setState(() => roomList = rooms);
-    });
-  }
-
   onItemClick(int index) {
-    // Room room = roomList[index];
-    //
-    // Navigator.of(context).push(
-    //   PageRouteBuilder(
-    //     pageBuilder: (context, animation, secondaryAnimation) => ChatPage(
-    //       room: room,
-    //     ),
-    //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
-    //       return SharedAxisTransition(
-    //           animation: animation, secondaryAnimation: secondaryAnimation, transitionType: SharedAxisTransitionType.horizontal, child: child);
-    //     },
-    //   ),
-    // );
-  }
-
-  buildListScreen(Size size) {
     final roomState = ref.watch(roomAsyncController);
 
-    return roomState.when(loading: () {
-      return Container();
-    }, error: (Object error, StackTrace? stackTrace) {
-      return Container();
-    }, data: (List<Room> rooms) {
-      return ListView.separated(
-        itemCount: rooms.length,
-        separatorBuilder: (context, index) {
-          return Padding(
-            padding: EdgeInsets.only(left: 80),
-            child: Divider(
-              color: Color(0x2FFFFFFF),
-            ),
+    Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: roomState.value![index]),
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return SharedAxisTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            transitionType: SharedAxisTransitionType.horizontal,
+            child: child,
           );
         },
-        itemBuilder: (context, index) {
-          return ListTile(
-            tileColor: Color(0xFF292B2F),
-            leading: CircleAvatar(
-              radius: 32,
-              //child: Image.asset('assets/images/avatars/${userList[index].avatar}'),
-            ),
-            title: Text(
-              "Hello", //userList[index].anonymousUsername,
-              style: GoogleFonts.poppins(
-                color: Color(0xFFFFFFFF),
-                fontWeight: FontWeight.w500,
-                fontSize: 14,
-              ),
-            ),
-            subtitle: Text(
-              rooms[index].lastMessage ?? "Send your first message!",
-              style: GoogleFonts.roboto(
-                color: Color(0xA8FFFFFF),
-                fontWeight: FontWeight.w400,
-                fontSize: 14,
-              ),
-            ),
-            onTap: () => onItemClick(index),
-          );
-        },
-      );
-    });
+      ),
+    );
+  }
+
+  Widget separatorBuilder(context, index) {
+    return Padding(
+      padding: EdgeInsets.only(left: 80),
+      child: Divider(
+        color: Color(0x2FFFFFFF),
+      ),
+    );
+  }
+
+  Widget listItem(RoomListItem roomListItem, int index) {
+    return ListTile(
+      tileColor: Color(0xFF292B2F),
+      leading: roomListItem.getRoomPic,
+      title: Text(
+        roomListItem.getRoomName,
+        style: GoogleFonts.poppins(
+          color: Color(0xFFFFFFFF),
+          fontWeight: FontWeight.w500,
+          fontSize: 14,
+        ),
+      ),
+      subtitle: Text(
+        roomListItem.getLastMessage,
+        style: GoogleFonts.roboto(
+          color: Color(0xA8FFFFFF),
+          fontWeight: FontWeight.w400,
+          fontSize: 14,
+        ),
+      ),
+      onTap: () => onItemClick(index),
+    );
+  }
+
+  Widget listItemBuilder(context, index) {
+    final roomState = ref.watch(roomAsyncController);
+    return listItem(roomState.value![index], index);
   }
 
   @override
   Widget build(BuildContext context) {
+    final roomState = ref.watch(roomAsyncController);
     var size = MediaQuery.of(context).size;
 
     return DefaultTabController(
@@ -164,6 +138,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                     ),
                   ),
                   TabBar(
+                    splashFactory: NoSplash.splashFactory,
                     controller: _tabController,
                     indicatorWeight: 3,
                     indicatorColor: _selectedIndex == 0 ? ColorValues.socaleOrange : Color(0xFFF151DD),
@@ -173,14 +148,9 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                           "Your Network",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
+                            color: _selectedIndex == 0 ? ColorValues.socaleOrange : Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
-                            foreground: Paint()
-                              ..shader = LinearGradient(
-                                colors: _selectedIndex == 0 ? [ColorValues.socaleOrange, ColorValues.socaleDarkOrange] : [Colors.white, Colors.white],
-                              ).createShader(
-                                Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
-                              ),
                           ),
                         ),
                       ),
@@ -191,14 +161,9 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                               TextSpan(
                                 text: 'New Matches',
                                 style: GoogleFonts.poppins(
+                                  color: _selectedIndex == 0 ? Colors.white : Color(0xFFF151DD),
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
-                                  foreground: Paint()
-                                    ..shader = LinearGradient(
-                                      colors: _selectedIndex == 1 ? [Color(0xFFF151DD), Color(0xFF7E3ECF)] : [Colors.white, Colors.white],
-                                    ).createShader(
-                                      Rect.fromLTWH(0.0, 0.0, 10.0, 20.0),
-                                    ),
                                 ),
                               ),
                             ],
@@ -212,6 +177,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                     width: constraints.maxWidth,
                     height: constraints.maxHeight - 199,
                     child: TabBarView(
+                      controller: _tabController,
                       children: [
                         Center(
                           child: SizedBox(
@@ -227,7 +193,20 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                             ),
                           ),
                         ),
-                        buildListScreen(size),
+                        // Anonymous Matches
+                        roomState.when(error: (Object error, StackTrace? stackTrace) {
+                          throw (stackTrace.toString());
+                        }, loading: () {
+                          return Container();
+                        }, data: (List<RoomListItem> data) {
+                          print("Got Data");
+                          return ListView.separated(
+                            physics: BouncingScrollPhysics(),
+                            itemCount: roomState.value!.length,
+                            separatorBuilder: separatorBuilder,
+                            itemBuilder: listItemBuilder,
+                          );
+                        }),
                       ],
                     ),
                   ),

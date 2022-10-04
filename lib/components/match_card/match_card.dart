@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/rounded_button.dart';
 import 'package:socale/components/cards/gradient_border_card.dart';
-import 'package:socale/models/Room.dart';
+import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
 import 'package:socale/models/User.dart';
 import 'package:socale/models/Match.dart';
@@ -29,21 +29,19 @@ class MatchCard extends StatefulWidget {
 }
 
 class _MatchCardState extends State<MatchCard> {
+  bool isLoading = false;
+
   @override
   void initState() {
     super.initState();
   }
 
-  getRoom(User user) async {
-    Room? room = await chatService.getRoom(user.id);
-    return room;
-  }
-
   onItemClick() async {
-    Room? room = await getRoom(widget.user);
-    if (room == null) {
-      throw ("Could not fetch rooms");
-    } else {
+    if (!isLoading) {
+      setState(() => isLoading = true);
+      RoomListItem room = await chatService.getRoom(widget.user.id);
+      setState(() => isLoading = false);
+
       if (mounted) {
         Navigator.of(context).push(
           PageRouteBuilder(

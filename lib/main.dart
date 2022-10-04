@@ -91,11 +91,11 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
 
       setState(() => _isSignedIn = session.isSignedIn);
     } on NotAuthorizedException catch (_) {
-      throw ("Not authorized error when attempting auto login");
+      setState(() => _isSignedIn = false);
     } on UserNotFoundException catch (_) {
       setState(() => _isSignedIn = false);
     } on AuthException catch (e) {
-      throw ("Auth exception at main: $e");
+      setState(() => _isSignedIn = false);
     }
   }
 

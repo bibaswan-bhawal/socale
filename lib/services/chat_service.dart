@@ -3,10 +3,12 @@ import 'dart:convert';
 
 import 'package:amplify_api/model_queries.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/models/UserRoom.dart';
 import 'package:socale/models/Message.dart';
 import 'package:socale/models/Room.dart';
 import 'package:socale/models/User.dart';
+import 'package:socale/services/fetch_service.dart';
 
 class ChatService {
   Future<List<User>> getUsersByRoom(Room room) async {
@@ -78,22 +80,28 @@ class ChatService {
     return response.data;
   }
 
-  Future<Room> _createRoom(String otherUserId) async {
+  Future<RoomListItem> _createRoom(String otherUserId) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
+
+    final currentUser = await _getUserById(userId);
+    final otherUser = await _getUserById(otherUserId);
 
     Room room = Room();
 
     await Amplify.DataStore.save(room);
+    await Amplify.DataStore.save(UserRoom(user: currentUser, room: room));
+    await Amplify.DataStore.save(UserRoom(user: otherUser, room: room));
 
-    await Amplify.DataStore.save(UserRoom(user: await _getUserById(userId), room: room));
-
-    await Amplify.DataStore.save(UserRoom(user: await _getUserById(otherUserId), room: room));
-
-    return room;
+    RoomListItem(room, [currentUser!, otherUser!], currentUser);
+    return RoomListItem(room, [currentUser, otherUser], currentUser);
   }
 
-  Future<Room?> getRoom(String otherUserId) async {
+  Future<RoomListItem> getRoom(String otherUserId) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
+
+    User currentUser = await fetchService.fetchUserById(userId);
+    User otherUser = await fetchService.fetchUserById(otherUserId);
+
     List<String> userRooms = await getRoomIdsByUser(userId);
     List<String> otherUserRooms = await getRoomIdsByUser(otherUserId);
 
@@ -116,12 +124,13 @@ class ChatService {
 
     for (String roomId in commonRooms) {
       List<String> users = await getUserIdsByRoom(roomId);
+
       if (users.length == 2) {
-        final request = ModelQueries.get(Room.classType, roomId);
-        final response = await Amplify.API.query(request: request).response;
-        return response.data;
+        Room room = (await Amplify.DataStore.query(Room.classType, where: Room.ID.eq(roomId))).first;
+        return RoomListItem(room, [currentUser, otherUser], currentUser);
       }
     }
+
     return await _createRoom(otherUserId);
   }
 
