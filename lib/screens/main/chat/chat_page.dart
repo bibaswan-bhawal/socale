@@ -24,6 +24,18 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   List<types.Message> _messages = [];
   StreamSubscription<QuerySnapshot<Message>>? _stream;
 
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    getMessages();
+  }
+
+  @override
+  dispose() {
+    super.dispose();
+    _stream?.cancel();
+  }
+
   void getMessages() {
     _stream = Amplify.DataStore.observeQuery(
       Message.classType,
@@ -34,7 +46,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
         List<types.Message> newMessages = [];
 
         for (Message message in snapshot.items) {
-          _messages.add(
+          print(message.encryptedText);
+
+          newMessages.add(
             types.TextMessage(
               id: message.id,
               author: widget.room.getChatUIUsers.where((user) => user.id == message.author.id).first,
@@ -43,6 +57,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
             ),
           );
+
+          setState(() => _messages = newMessages);
         }
       }
     });
