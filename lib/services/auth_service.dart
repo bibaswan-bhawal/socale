@@ -25,6 +25,22 @@ class AuthService {
     }
   }
 
+  Future<bool> updatePassword(String currentPassword, String newPassword) async {
+    try {
+      await Amplify.Auth.updatePassword(
+        newPassword: newPassword,
+        oldPassword: currentPassword,
+      );
+    } on NotAuthorizedException catch (e) {
+      return false;
+    } on AmplifyException catch (e) {
+      print(e);
+      return false;
+    }
+
+    return false;
+  }
+
   Future<bool> signUpWithSocialWebUI(AuthProvider provider) async {
     try {
       final result = await Amplify.Auth.signInWithWebUI(provider: provider);

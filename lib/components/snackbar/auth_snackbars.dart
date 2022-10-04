@@ -27,6 +27,32 @@ class AuthSnackBar {
     ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
   }
 
+  void passwordChangeSuccessfulSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    final errorSnackBar = SnackBar(
+      content: Text(
+        "Your password was changed successfully",
+        textAlign: TextAlign.center,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+  }
+
+  void passwordIncorrectSnackBar(BuildContext context) {
+    ScaffoldMessenger.of(context).hideCurrentSnackBar();
+
+    final errorSnackBar = SnackBar(
+      content: Text(
+        "The password you entered is incorrect",
+        textAlign: TextAlign.center,
+      ),
+    );
+
+    ScaffoldMessenger.of(context).showSnackBar(errorSnackBar);
+  }
+
   void userNotAuthorizedSnackBar(BuildContext context) {
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 

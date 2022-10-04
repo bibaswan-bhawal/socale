@@ -5,7 +5,9 @@ import 'package:socale/components/Buttons/primary_loading_button.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field_solid.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
+import 'package:socale/components/snackbar/auth_snackbars.dart';
 import 'package:socale/components/translucent_background/bottom_translucent_card.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/constraints/constraints.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/validators.dart';
@@ -33,14 +35,23 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (!isLoading) {
+      setState(() => isLoading = true);
       // Validate input data and try signing in
       final form = _formKey.currentState;
       final isValid = form != null ? form.validate() : false;
 
       if (isValid) {
         form.save();
-
-        setState(() => isLoading = true);
+        final result = await authService.updatePassword(currentPassword, newPassword);
+        if (!result) {
+          if (mounted) authSnackBar.passwordIncorrectSnackBar(context);
+        } else {
+          if (mounted) {
+            authSnackBar.passwordChangeSuccessfulSnackBar(context);
+            Navigator.of(context).pop();
+          }
+        }
+        setState(() => isLoading = false);
       } else {
         setState(() => isLoading = false);
       }
@@ -121,7 +132,11 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
                           icon: 'assets/icons/lock_icons.svg',
                           obscureText: true,
                           validator: Validators.validatePassword,
-                          onSave: (value) {},
+                          onSave: (value) {
+                            if (value != null) {
+                              setState(() => currentPassword = value);
+                            }
+                          },
                           autoFillHints: [""],
                           textInputAction: TextInputAction.next,
                         ),
@@ -133,7 +148,11 @@ class _ChangePasswordPageState extends ConsumerState<ChangePasswordPage> {
                           icon: 'assets/icons/lock_icons.svg',
                           obscureText: true,
                           validator: Validators.validatePassword,
-                          onSave: (value) {},
+                          onSave: (value) {
+                            if (value != null) {
+                              setState(() => newPassword = value);
+                            }
+                          },
                           autoFillHints: [""],
                           textInputAction: TextInputAction.done,
                         ),

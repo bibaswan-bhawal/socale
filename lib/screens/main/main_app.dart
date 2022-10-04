@@ -47,6 +47,12 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
     super.didChangeDependencies();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    containerAnimationController?.dispose();
+  }
+
   void initialAnimation() {
     final size = MediaQuery.of(context).size;
 
