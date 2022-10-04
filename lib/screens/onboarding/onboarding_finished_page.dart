@@ -67,7 +67,7 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           Navigator.of(context)
-              .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainApp(transitionAnimation: true)), (Route route) => false);
+              .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainApp(transitionAnimation: true)), (Route route) => false);
         }
       })
       ..addListener(() {

@@ -47,7 +47,7 @@ class SocaleApp extends ConsumerStatefulWidget {
 }
 
 class SocaleAppState extends ConsumerState<SocaleApp> {
-  List<Widget?> initialPage = [SplashScreen(), MainApp(transitionAnimation: true), OnboardingScreen(), AuthScreen()]; // page router list
+  List<Widget?> initialPage = [SplashScreen(), MainApp(transitionAnimation: false), OnboardingScreen(), AuthScreen()]; // page router list
 
   bool _isAmplifyConfigured = false;
   bool _isSignedIn = false;

@@ -19,9 +19,24 @@ class ChatListPage extends ConsumerStatefulWidget {
   ConsumerState<ChatListPage> createState() => _ChatListPageState();
 }
 
-class _ChatListPageState extends ConsumerState<ChatListPage> {
+class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProviderStateMixin {
+  late TabController _tabController;
   List<User> userList = [];
   List<Room> roomList = [];
+
+  int _selectedIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 2, vsync: this);
+
+    _tabController.addListener(() {
+      setState(() {
+        _selectedIndex = _tabController.index;
+      });
+    });
+  }
 
   @override
   void didChangeDependencies() {
@@ -38,19 +53,19 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
   }
 
   onItemClick(int index) {
-    Room room = roomList[index];
-
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => ChatPage(
-          room: room,
-        ),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SharedAxisTransition(
-              animation: animation, secondaryAnimation: secondaryAnimation, transitionType: SharedAxisTransitionType.horizontal, child: child);
-        },
-      ),
-    );
+    // Room room = roomList[index];
+    //
+    // Navigator.of(context).push(
+    //   PageRouteBuilder(
+    //     pageBuilder: (context, animation, secondaryAnimation) => ChatPage(
+    //       room: room,
+    //     ),
+    //     transitionsBuilder: (context, animation, secondaryAnimation, child) {
+    //       return SharedAxisTransition(
+    //           animation: animation, secondaryAnimation: secondaryAnimation, transitionType: SharedAxisTransitionType.horizontal, child: child);
+    //     },
+    //   ),
+    // );
   }
 
   buildListScreen(Size size) {
@@ -127,37 +142,45 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                       ),
                     ),
                   ),
-                  // Padding(
-                  //   padding: const EdgeInsets.only(bottom: 10),
-                  //   child: SizedBox(
-                  //     width: size.width * 0.9,
-                  //     height: 40,
-                  //     child: TextFormField(
-                  //       decoration: InputDecoration(
-                  //         prefixIcon: Icon(Icons.search),
-                  //         hintText: "Search",
-                  //         border: OutlineInputBorder(
-                  //           borderRadius: BorderRadius.circular(50),
-                  //           borderSide: BorderSide(style: BorderStyle.none, width: 0),
-                  //         ),
-                  //         fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
-                  //         filled: true,
-                  //         isCollapsed: true,
-                  //         contentPadding: EdgeInsets.only(top: 10),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 10),
+                    child: SizedBox(
+                      width: size.width * 0.9,
+                      height: 40,
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          prefixIcon: Icon(Icons.search),
+                          hintText: "Search",
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(50),
+                            borderSide: BorderSide(style: BorderStyle.none, width: 0),
+                          ),
+                          fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
+                          filled: true,
+                          isCollapsed: true,
+                          contentPadding: EdgeInsets.only(top: 10),
+                        ),
+                      ),
+                    ),
+                  ),
                   TabBar(
+                    controller: _tabController,
+                    indicatorWeight: 3,
+                    indicatorColor: _selectedIndex == 0 ? ColorValues.socaleOrange : Color(0xFFF151DD),
                     tabs: [
                       Tab(
                         child: Text(
                           "Your Network",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
-                            color: ColorValues.textOnDark,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
+                            foreground: Paint()
+                              ..shader = LinearGradient(
+                                colors: _selectedIndex == 0 ? [ColorValues.socaleOrange, ColorValues.socaleDarkOrange] : [Colors.white, Colors.white],
+                              ).createShader(
+                                Rect.fromLTWH(0.0, 0.0, 200.0, 70.0),
+                              ),
                           ),
                         ),
                       ),
@@ -172,8 +195,10 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                                   fontWeight: FontWeight.bold,
                                   foreground: Paint()
                                     ..shader = LinearGradient(
-                                      colors: <Color>[Color(0xFFE0BEF0), Color(0xFFE0BEF0)],
-                                    ).createShader(Rect.fromLTWH(0.0, 0.0, 200.0, 70.0)),
+                                      colors: _selectedIndex == 1 ? [Color(0xFFF151DD), Color(0xFF7E3ECF)] : [Colors.white, Colors.white],
+                                    ).createShader(
+                                      Rect.fromLTWH(0.0, 0.0, 10.0, 20.0),
+                                    ),
                                 ),
                               ),
                             ],
@@ -185,7 +210,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> {
                   ),
                   SizedBox(
                     width: constraints.maxWidth,
-                    height: constraints.maxHeight - 198,
+                    height: constraints.maxHeight - 199,
                     child: TabBarView(
                       children: [
                         Center(

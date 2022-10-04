@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io' show Platform;
 
+import 'package:socale/values/colors.dart';
+
 class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onNavBarClicked;
   final Size size;
@@ -53,14 +55,14 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   onPressed: () {
                     onNavBarClicked(0);
                   },
-                  icon: SvgPicture.asset("assets/icons/chat_icon.svg"),
+                  icon: SvgPicture.asset("assets/icons/chat_icon.svg", color: ColorValues.white.withOpacity(0.69)),
                 ),
                 Container(width: size.width * 0.20),
                 IconButton(
                   onPressed: () {
                     onNavBarClicked(2);
                   },
-                  icon: SvgPicture.asset("assets/icons/user_icon.svg"),
+                  icon: SvgPicture.asset("assets/icons/user_icon.svg", color: ColorValues.white.withOpacity(0.69)),
                 )
               ],
             ),

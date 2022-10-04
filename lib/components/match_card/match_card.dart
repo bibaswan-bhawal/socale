@@ -144,7 +144,7 @@ class _MatchCardState extends State<MatchCard> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(left: 40, top: 20, bottom: 10),
+                      padding: EdgeInsets.only(left: 40, top: 20, bottom: 10, right: 40),
                       child: Text(
                         "Academic Interests",
                         style: GoogleFonts.poppins(
@@ -156,7 +156,7 @@ class _MatchCardState extends State<MatchCard> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 20),
                     child: Center(
                       child: Wrap(
                         spacing: 5,
@@ -193,7 +193,7 @@ class _MatchCardState extends State<MatchCard> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 5),
+                    padding: EdgeInsets.symmetric(horizontal: 15),
                     child: Center(
                       child: Wrap(
                         spacing: 5,

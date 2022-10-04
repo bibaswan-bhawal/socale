@@ -8,7 +8,8 @@ import 'package:socale/models/UserRoom.dart';
 
 class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
   final List<Room> rooms = [];
-  StreamSubscription<QuerySnapshot<UserRoom>>? _stream;
+  StreamSubscription<QuerySnapshot<UserRoom>>? _streamUserRooms;
+  StreamSubscription<QuerySnapshot<Room>>? _streamRooms;
 
   RoomsProvider() : super(AsyncLoading()) {
     print("search rooms");
@@ -16,27 +17,47 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<Room>>> {
   }
 
   Future<void> requestRooms() async {
-    print("Searching for rooms.");
+    if (_streamUserRooms != null) {
+      _streamUserRooms!.cancel();
+    }
 
+    print("Searching for rooms.");
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
 
-    _stream = Amplify.DataStore.observeQuery(
+    _streamUserRooms = Amplify.DataStore.observeQuery(
       UserRoom.classType,
       where: UserRoom.USER.eq(userId),
     ).listen(
       (QuerySnapshot<UserRoom> snapshot) {
         if (snapshot.isSynced) {
-          List<Room> newRooms = [];
+          List<String> newRoomId = [];
 
           for (UserRoom userRoom in snapshot.items) {
-            newRooms.addIf(userRoom.room != null, userRoom.room!);
+            newRoomId.addIf(userRoom.room != null && !newRoomId.contains(userRoom.room!.id), userRoom.room!.id);
           }
 
-          newRooms.sort((room1, room2) {
-            return room1.updatedAt!.compareTo(room2.updatedAt!);
+          if (_streamRooms != null) {
+            _streamRooms!.cancel();
+          }
+
+          print("updated user rooms: $newRoomId");
+          QueryPredicate bob = Room.ID.eq(newRoomId[0]).or(Room.ID.eq(newRoomId[1]));
+
+          _streamRooms = Amplify.DataStore.observeQuery(
+            Room.classType,
+          ).listen((QuerySnapshot<Room> snapshot) {
+            if (snapshot.isSynced) {
+              List<Room> newRooms = [];
+
+              for (Room room in snapshot.items) {
+                newRooms.addIf(!rooms.contains(room), room);
+              }
+
+              List<String> id = newRooms.map((e) => e.id).toList();
+
+              print("Updated rooms: $id");
+            }
           });
-          
-          state = AsyncData(newRooms);
         }
       },
     );

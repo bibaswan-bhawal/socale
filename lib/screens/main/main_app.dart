@@ -12,8 +12,9 @@ import 'package:socale/utils/system_ui_setter.dart';
 import 'package:socale/values/colors.dart';
 
 class MainApp extends ConsumerStatefulWidget {
-  final bool? transitionAnimation;
-  const MainApp({Key? key, this.transitionAnimation}) : super(key: key);
+  bool? transitionAnimation;
+
+  MainApp({Key? key, this.transitionAnimation}) : super(key: key);
 
   @override
   ConsumerState<MainApp> createState() => _MainAppState();
@@ -30,11 +31,12 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
   @override
   void didChangeDependencies() {
     NotificationService().init();
-
+    final roomState = ref.watch(roomAsyncController);
     final userState = ref.watch(userAsyncController);
 
     if (widget.transitionAnimation != null && widget.transitionAnimation!) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        widget.transitionAnimation = false;
         initialAnimation();
       });
     }
