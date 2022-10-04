@@ -12,6 +12,7 @@ import 'package:image_cropper/image_cropper.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/translucent_background/bottom_translucent_card.dart';
 import 'package:socale/screens/settings/avatar_picker.dart';
@@ -30,6 +31,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
   TextEditingController emailController = TextEditingController();
+
+  int pageIndex = 0;
 
   String firstName = "";
   String lastName = "";
@@ -299,11 +302,12 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                 ),
                 CarouselSlider(
                   options: CarouselOptions(
-                    height: 250.0,
+                    height: 220.0,
                     viewportFraction: 0.4,
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     autoPlay: false,
+                    onPageChanged: (index, _) => setState(() => pageIndex = index),
                   ),
                   items: [
                     Stack(
@@ -441,6 +445,15 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                       ),
                     ),
                   ],
+                ),
+                AnimatedSmoothIndicator(
+                  activeIndex: pageIndex,
+                  count: 2,
+                  effect: ExpandingDotsEffect(
+                    dotHeight: 10,
+                    dotWidth: 10,
+                    activeDotColor: ColorValues.socaleDarkOrange,
+                  ),
                 ),
                 Container(
                   width: size.width,
