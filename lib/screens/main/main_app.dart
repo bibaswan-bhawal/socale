@@ -12,7 +12,8 @@ import 'package:socale/utils/system_ui_setter.dart';
 import 'package:socale/values/colors.dart';
 
 class MainApp extends ConsumerStatefulWidget {
-  const MainApp({Key? key}) : super(key: key);
+  final bool? transitionAnimation;
+  const MainApp({Key? key, this.transitionAnimation}) : super(key: key);
 
   @override
   ConsumerState<MainApp> createState() => _MainAppState();
@@ -23,9 +24,7 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
 
   Animation<double>? containerAnimation;
   AnimationController? containerAnimationController;
-
   GlobalKey navBarKey = GlobalKey();
-
   bool _showMatchDialog = false;
 
   @override
@@ -34,12 +33,13 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
 
     final userState = ref.watch(userAsyncController);
 
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      initialAnimation();
-    });
+    if (widget.transitionAnimation != null && widget.transitionAnimation!) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        initialAnimation();
+      });
+    }
 
     userState.whenData((user) {
-      print(user);
       _showMatchDialog = !user.introMatchingCompleted;
     });
 

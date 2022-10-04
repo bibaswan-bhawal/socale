@@ -5,7 +5,7 @@ import 'package:socale/models/User.dart';
 class UpdateService {
   Future<bool> updateUser(User newUser) async {
     try {
-      await Amplify.DataStore.save(newUser).whenComplete(() => print("data uploaded"));
+      await Amplify.DataStore.save(newUser);
       return true;
     } catch (e) {
       rethrow;

@@ -36,6 +36,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   DateTime dob = DateTime(1900, 1);
   DateTime grad = DateTime(1900, 1);
 
+  bool firstTime = true;
+
   String avatar = "";
 
   void onBack(BuildContext context) {
@@ -43,31 +45,33 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   }
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
-
-    final userState = ref.watch(userAsyncController);
-
-    firstName = userState.value!.firstName;
-    lastName = userState.value!.lastName;
-    email = userState.value!.email;
-    dob = userState.value!.dateOfBirth.getDateTime();
-    grad = userState.value!.graduationMonth.getDateTime();
-    avatar = userState.value!.avatar;
-
-    firstNameController.text = firstName;
-    lastNameController.text = lastName;
-    emailController.text = email;
-
-    if (userState.value!.profilePicture != null && userState.value!.profilePicture!.isNotEmpty) {
-      print(userState.value!.profilePicture!);
-      getProfilePicture(userState.value!.profilePicture!);
-    }
   }
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+    final userState = ref.watch(userAsyncController);
+
+    if (firstTime) {
+      firstTime = false;
+
+      firstName = userState.value!.firstName;
+      lastName = userState.value!.lastName;
+      email = userState.value!.email;
+      dob = userState.value!.dateOfBirth.getDateTime();
+      grad = userState.value!.graduationMonth.getDateTime();
+      avatar = userState.value!.avatar;
+
+      firstNameController.text = firstName;
+      lastNameController.text = lastName;
+      emailController.text = email;
+
+      if (userState.value!.profilePicture != null && userState.value!.profilePicture!.isNotEmpty) {
+        getProfilePicture(userState.value!.profilePicture!);
+      }
+    }
   }
 
   void _onBirthDateClickEventHandler() async {
@@ -143,7 +147,7 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   Future<void> uploadProfilePic(String? currentKey, String newKey) async {
     final file = profilePicture;
 
-    if(currentKey != null && currentKey.isNotEmpty){
+    if (currentKey != null && currentKey.isNotEmpty) {
       try {
         final result = await Amplify.Storage.remove(key: currentKey);
         print('Deleted file: ${result.key}');
@@ -165,12 +169,13 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   }
 
   Future<void> getProfilePicture(String key) async {
+    print("getting profile picture");
     final documentsDir = await getApplicationDocumentsDirectory();
     final filepath = '${documentsDir.path}/$key.jpg';
     final file = File(filepath);
 
     try {
-      final result = await Amplify.Storage.downloadFile(
+      await Amplify.Storage.downloadFile(
         key: key,
         local: file,
       );
@@ -186,24 +191,34 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     print("Saving Data");
     final userState = ref.watch(userAsyncController);
     final userStateNotifier = ref.read(userAsyncController.notifier);
-
     final newProfileKey = "${userState.value!.id}-${DateTime.now()}";
-
     print("Profile picture changed: ${profilePicture != null}");
+
     if (profilePicture != null) {
       await uploadProfilePic(userState.value!.profilePicture, newProfileKey);
-      userStateNotifier.changeUserValue(userState.value!.copyWith(profilePicture: newProfileKey,),);
+      userStateNotifier.changeUserValue(
+        userState.value!.copyWith(
+          profilePicture: newProfileKey,
+          avatar: avatar,
+          firstName: firstName,
+          lastName: lastName,
+          dateOfBirth: TemporalDate(dob),
+          graduationMonth: TemporalDate(grad),
+        ),
+      );
+    } else {
+      userStateNotifier.changeUserValue(
+        userState.value!.copyWith(
+          avatar: avatar,
+          firstName: firstName,
+          lastName: lastName,
+          dateOfBirth: TemporalDate(dob),
+          graduationMonth: TemporalDate(grad),
+        ),
+      );
     }
 
-    userStateNotifier.changeUserValue(
-      userState.value!.copyWith(
-        avatar: avatar,
-        firstName: firstName,
-        lastName: lastName,
-        dateOfBirth: TemporalDate(dob),
-        graduationMonth: TemporalDate(grad),
-      ),
-    );
+    if (mounted) Navigator.of(context).pop();
   }
 
   @override
@@ -442,7 +457,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         child: TextField(
                           controller: firstNameController,
                           textAlign: TextAlign.end,
-                          onChanged: (value) {setState(() => firstName = value);},
+                          onChanged: (value) {
+                            setState(() => firstName = value);
+                          },
                           style: GoogleFonts.roboto(color: Color(0xFF479CFF)),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
@@ -478,7 +495,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         child: TextField(
                           controller: lastNameController,
                           textAlign: TextAlign.end,
-                          onChanged: (value) {setState(() => lastName = value);},
+                          onChanged: (value) {
+                            setState(() => lastName = value);
+                          },
                           style: GoogleFonts.roboto(color: Color(0xFF479CFF)),
                           decoration: InputDecoration(
                             contentPadding: EdgeInsets.zero,
@@ -514,7 +533,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         child: TextField(
                           controller: emailController,
                           textAlign: TextAlign.end,
-                          onChanged: (value) {setState(() => email = value);},
+                          onChanged: (value) {
+                            setState(() => email = value);
+                          },
                           style: GoogleFonts.roboto(
                             color: Color(0xFF479CFF),
                           ),

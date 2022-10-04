@@ -7,6 +7,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/components/snackbar/onboarding_snackbars.dart';
+import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/providers/providers.dart';
@@ -65,7 +66,8 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
     containerAnimation = Tween<double>(begin: 0, end: size.height).animate(containerAnimationController!)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          Get.toNamed('/main');
+          Navigator.of(context)
+              .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const MainApp(transitionAnimation: true)), (Route route) => false);
         }
       })
       ..addListener(() {
