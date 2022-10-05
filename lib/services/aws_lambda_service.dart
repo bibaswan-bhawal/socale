@@ -1,8 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:aws_common/aws_common.dart';
-import 'package:aws_signature_v4/aws_signature_v4.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AWSLambdaService {
   Future<bool> sendOTPVerificationEmail(String email, int otp) async {
