@@ -86,17 +86,17 @@ class AuthService {
 
   Future<void> signOutCurrentUser(WidgetRef ref) async {
     try {
-      // await Amplify.Auth.signOut(
-      //   options: const SignOutOptions(globalSignOut: true),
-      // );
+      await Amplify.Auth.signOut(
+        options: const SignOutOptions(globalSignOut: true),
+      );
       Amplify.DataStore.clear();
-      // Get.offAllNamed('/auth');
-      // onboardingService.clearAll();
-      // ref.read(academicDataProvider.notifier).clearData();
-      // ref.read(avatarDataProvider.notifier).clearData();
-      // ref.read(basicDataProvider.notifier).clearData();
-      // ref.read(describeFriendDataProvider.notifier).clearData();
-      // ref.read(personalityDataProvider.notifier).clearData();
+      Get.offAllNamed('/auth');
+      onboardingService.clearAll();
+      ref.read(academicDataProvider.notifier).clearData();
+      ref.read(avatarDataProvider.notifier).clearData();
+      ref.read(basicDataProvider.notifier).clearData();
+      ref.read(describeFriendDataProvider.notifier).clearData();
+      ref.read(personalityDataProvider.notifier).clearData();
     } on SignedOutException catch (_) {
       throw ("Error could not sign out");
     } on AuthException catch (_) {

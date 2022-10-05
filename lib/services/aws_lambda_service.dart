@@ -28,7 +28,7 @@ class AWSLambdaService {
         'otp': otp.toString(),
       }),
       headers: const {
-        AWSHeaders.contentType: 'application/x-amz-json-1.1',
+        'content-type': 'application/x-amz-json-1.1',
       },
       body: json.encode({
         'email': email,
@@ -73,7 +73,7 @@ class AWSLambdaService {
         'userId': id,
       }),
       headers: const {
-        AWSHeaders.contentType: 'application/x-amz-json-1.1',
+        'content-type': 'application/x-amz-json-1.1',
       },
       body: json.encode({'userId': id}).codeUnits,
     );
@@ -82,13 +82,17 @@ class AWSLambdaService {
       request,
       credentialScope: scope,
     );
-
-    AWSBaseHttpResponse resp = await signedRequest.send().response;
-    String respBody = await resp.decodeBody();
-
-    final responseMap = JsonDecoder().convert(respBody);
-    if (responseMap.containsKey('success') && responseMap["success"]) {
-      return true;
+    try {
+      final resp = signedRequest.send();
+      // String respBody = await resp.decodeBody();
+      //
+      // final responseMap = jsonDecode(respBody);
+      // if (responseMap.containsKey('success') && responseMap["success"]) {
+      //   print("GOT MATCHES");
+      //   return false;
+      // }
+    } catch (e) {
+      print("Something went wrong: $e");
     }
 
     return false;

@@ -406,6 +406,8 @@ class OnboardingService {
       matches: [],
       anonymousUsername: anonymousUsername,
       profilePicture: "",
+      createdAt: TemporalDateTime.now(),
+      updateAt: TemporalDateTime.now(),
     );
 
     print(newUser);

@@ -29,8 +29,6 @@ main() {
   testWidgets(
     'should emit events with nested data',
     (WidgetTester tester) async {
-      List<String> result = [];
-
       // Nested data (message.author.firstName)
       Amplify.DataStore.observeQuery(Message.classType).listen((QuerySnapshot<Message> snapshot) {
         if (snapshot.items.isEmpty) {
@@ -63,6 +61,8 @@ main() {
         anonymousUsername: 'bob',
         introMatchingCompleted: false,
         avatar: 'Artist Raccoon.png',
+        createdAt: TemporalDateTime.now(),
+        updateAt: TemporalDateTime.now(),
       );
 
       final user2 = User(
@@ -86,29 +86,41 @@ main() {
         anonymousUsername: 'bib',
         introMatchingCompleted: false,
         avatar: 'Artist Raccoon.png',
+        createdAt: TemporalDateTime.now(),
+        updateAt: TemporalDateTime.now(),
       );
 
       var isHiddenJsonObject = {
-        user1!.id: true,
-        user2!.id: true,
+        user1.id: true,
+        user2.id: true,
       };
 
-      final room1 = Room(isHidden: jsonEncode(isHiddenJsonObject));
+      final room1 = Room(
+        isHidden: jsonEncode(isHiddenJsonObject),
+        createdAt: TemporalDateTime.now(),
+        updateAt: TemporalDateTime.now(),
+      );
 
       final userRoom1 = UserRoom(
         user: user1,
         room: room1,
+        createdAt: TemporalDateTime.now(),
+        updateAt: TemporalDateTime.now(),
       );
+
       final userRoom2 = UserRoom(
         user: user2,
         room: room1,
+        createdAt: TemporalDateTime.now(),
+        updateAt: TemporalDateTime.now(),
       );
 
       final message1 = Message(
         author: user1,
         room: room1,
-        createdAt: TemporalDateTime.now(),
         encryptedText: 'text 1',
+        createdAt: TemporalDateTime.now(),
+        updateAt: TemporalDateTime.now(),
       );
 
       // create users

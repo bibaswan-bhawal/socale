@@ -19,6 +19,7 @@ import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/splash_screen/splash_screen.dart';
 import 'package:socale/services/auth_service.dart';
+import 'package:socale/services/aws_lambda_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/get_it_instance.dart';
 import 'package:socale/utils/providers/providers.dart';

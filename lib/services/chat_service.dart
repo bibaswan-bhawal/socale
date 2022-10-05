@@ -91,11 +91,30 @@ class ChatService {
       otherUser!.id: true,
     };
 
-    Room room = Room(isHidden: jsonEncode(isHiddenJsonObject));
+    Room room = Room(
+      isHidden: jsonEncode(isHiddenJsonObject),
+      createdAt: TemporalDateTime.now(),
+      updateAt: TemporalDateTime.now(),
+    );
+
+    UserRoom userRoom1 = UserRoom(
+      user: currentUser,
+      room: room,
+      createdAt: TemporalDateTime.now(),
+      updateAt: TemporalDateTime.now(),
+    );
+
+    UserRoom userRoom2 = UserRoom(
+      user: otherUser,
+      room: room,
+      createdAt: TemporalDateTime.now(),
+      updateAt: TemporalDateTime.now(),
+    );
+
     await Amplify.DataStore.save(room);
 
-    await Amplify.DataStore.save(UserRoom(user: currentUser, room: room));
-    await Amplify.DataStore.save(UserRoom(user: otherUser, room: room));
+    await Amplify.DataStore.save(userRoom1);
+    await Amplify.DataStore.save(userRoom2);
 
     return RoomListItem(room, [currentUser, otherUser], currentUser);
   }
@@ -148,6 +167,7 @@ class ChatService {
 
   Future<void> sendMessage(String text, Room currentRoom) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
+
     User user = (await Amplify.DataStore.query(
       User.classType,
       where: User.ID.eq(userId),
@@ -159,22 +179,14 @@ class ChatService {
       author: user,
       room: currentRoom,
       createdAt: TemporalDateTime.now(),
+      updateAt: TemporalDateTime.now(),
     );
 
     Room updatedRoom = currentRoom.copyWith(lastMessage: text);
+    print("Chat: Saving updated Room as: $updatedRoom");
 
     await Amplify.DataStore.save(updatedRoom);
     await Amplify.DataStore.save(message);
-  }
-
-  Stream<List<Message>> listenToNewMessages(Room room, DateTime chatStartTime) {
-    final messages = Amplify.DataStore.observeQuery(
-      Message.classType,
-      where: Message.ROOM.eq(room.id).and(Message.CREATEDAT.gt(chatStartTime)),
-      sortBy: [Message.CREATEDAT.descending()],
-    );
-
-    return messages.map((message) => message.items);
   }
 
   Future<List<Message>> queryMessages(Room room, int page) async {

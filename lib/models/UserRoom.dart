@@ -23,6 +23,7 @@ import 'ModelProvider.dart';
 import 'package:amplify_core/amplify_core.dart';
 import 'package:flutter/foundation.dart';
 
+
 /** This is an auto generated class representing the UserRoom type in your schema. */
 @immutable
 class UserRoom extends Model {
@@ -31,115 +32,194 @@ class UserRoom extends Model {
   final User? _user;
   final Room? _room;
   final TemporalDateTime? _createdAt;
+  final TemporalDateTime? _updateAt;
   final TemporalDateTime? _updatedAt;
 
   @override
   getInstanceType() => classType;
-
+  
   @override
   String getId() {
     return id;
   }
-
+  
   User? get user {
     return _user;
   }
-
+  
   Room? get room {
     return _room;
   }
-
-  TemporalDateTime? get createdAt {
-    return _createdAt;
+  
+  TemporalDateTime get createdAt {
+    try {
+      return _createdAt!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
-
+  
+  TemporalDateTime get updateAt {
+    try {
+      return _updateAt!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
-
-  const UserRoom._internal({required this.id, user, room, createdAt, updatedAt})
-      : _user = user,
-        _room = room,
-        _createdAt = createdAt,
-        _updatedAt = updatedAt;
-
-  factory UserRoom({String? id, User? user, Room? room}) {
-    return UserRoom._internal(id: id == null ? UUID.getUUID() : id, user: user, room: room);
+  
+  const UserRoom._internal({required this.id, user, room, required createdAt, required updateAt, updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updateAt = updateAt, _updatedAt = updatedAt;
+  
+  factory UserRoom({String? id, User? user, Room? room, required TemporalDateTime createdAt, required TemporalDateTime updateAt}) {
+    return UserRoom._internal(
+      id: id == null ? UUID.getUUID() : id,
+      user: user,
+      room: room,
+      createdAt: createdAt,
+      updateAt: updateAt);
   }
-
+  
   bool equals(Object other) {
     return this == other;
   }
-
+  
   @override
   bool operator ==(Object other) {
     if (identical(other, this)) return true;
-    return other is UserRoom && id == other.id && _user == other._user && _room == other._room;
+    return other is UserRoom &&
+      id == other.id &&
+      _user == other._user &&
+      _room == other._room &&
+      _createdAt == other._createdAt &&
+      _updateAt == other._updateAt;
   }
-
+  
   @override
   int get hashCode => toString().hashCode;
-
+  
   @override
   String toString() {
     var buffer = new StringBuffer();
-
+    
     buffer.write("UserRoom {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
     buffer.write("room=" + (_room != null ? _room!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
+    buffer.write("updateAt=" + (_updateAt != null ? _updateAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
-
+    
     return buffer.toString();
   }
-
-  UserRoom copyWith({String? id, User? user, Room? room}) {
-    return UserRoom._internal(id: id ?? this.id, user: user ?? this.user, room: room ?? this.room);
+  
+  UserRoom copyWith({String? id, User? user, Room? room, TemporalDateTime? createdAt, TemporalDateTime? updateAt}) {
+    return UserRoom._internal(
+      id: id ?? this.id,
+      user: user ?? this.user,
+      room: room ?? this.room,
+      createdAt: createdAt ?? this.createdAt,
+      updateAt: updateAt ?? this.updateAt);
   }
-
-  UserRoom.fromJson(Map<String, dynamic> json)
-      : id = json['id'],
-        _user = json['user']?['serializedData'] != null ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData'])) : null,
-        _room = json['room']?['serializedData'] != null ? Room.fromJson(new Map<String, dynamic>.from(json['room']['serializedData'])) : null,
-        _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-        _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
-
-  Map<String, dynamic> toJson() =>
-      {'id': id, 'user': _user?.toJson(), 'room': _room?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()};
+  
+  UserRoom.fromJson(Map<String, dynamic> json)  
+    : id = json['id'],
+      _user = json['user']?['serializedData'] != null
+        ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
+        : null,
+      _room = json['room']?['serializedData'] != null
+        ? Room.fromJson(new Map<String, dynamic>.from(json['room']['serializedData']))
+        : null,
+      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
+      _updateAt = json['updateAt'] != null ? TemporalDateTime.fromString(json['updateAt']) : null,
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
+  
+  Map<String, dynamic> toJson() => {
+    'id': id, 'user': _user?.toJson(), 'room': _room?.toJson(), 'createdAt': _createdAt?.format(), 'updateAt': _updateAt?.format(), 'updatedAt': _updatedAt?.format()
+  };
 
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField USER = QueryField(fieldName: "user", fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
-  static final QueryField ROOM = QueryField(fieldName: "room", fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));
+  static final QueryField USER = QueryField(
+    fieldName: "user",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
+  static final QueryField ROOM = QueryField(
+    fieldName: "room",
+    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));
+  static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
+  static final QueryField UPDATEAT = QueryField(fieldName: "updateAt");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "UserRoom";
     modelSchemaDefinition.pluralName = "UserRooms";
-
+    
     modelSchemaDefinition.authRules = [
       AuthRule(
-          authStrategy: AuthStrategy.PUBLIC, operations: [ModelOperation.CREATE, ModelOperation.UPDATE, ModelOperation.DELETE, ModelOperation.READ])
+        authStrategy: AuthStrategy.PUBLIC,
+        operations: [
+          ModelOperation.CREATE,
+          ModelOperation.UPDATE,
+          ModelOperation.DELETE,
+          ModelOperation.READ
+        ])
     ];
-
+    
+    modelSchemaDefinition.indexes = [
+      ModelIndex(fields: const ["userID", "roomID"], name: "byUser"),
+      ModelIndex(fields: const ["roomID", "userID"], name: "byRoom")
+    ];
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
-
-    modelSchemaDefinition
-        .addField(ModelFieldDefinition.belongsTo(key: UserRoom.USER, isRequired: false, targetName: "userID", ofModelName: (User).toString()));
-
-    modelSchemaDefinition
-        .addField(ModelFieldDefinition.belongsTo(key: UserRoom.ROOM, isRequired: false, targetName: "roomID", ofModelName: (Room).toString()));
-
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: UserRoom.USER,
+      isRequired: false,
+      targetName: "userID",
+      ofModelName: (User).toString()
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: UserRoom.ROOM,
+      isRequired: false,
+      targetName: "roomID",
+      ofModelName: (Room).toString()
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: UserRoom.CREATEDAT,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: UserRoom.UPDATEAT,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-        fieldName: 'createdAt', isRequired: false, isReadOnly: true, ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
-
-    modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-        fieldName: 'updatedAt', isRequired: false, isReadOnly: true, ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)));
+      fieldName: 'updatedAt',
+      isRequired: false,
+      isReadOnly: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
   });
 }
 
 class _UserRoomModelType extends ModelType<UserRoom> {
   const _UserRoomModelType();
-
+  
   @override
   UserRoom fromJson(Map<String, dynamic> jsonData) {
     return UserRoom.fromJson(jsonData);

@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:flutter_chat_ui/flutter_chat_ui.dart' as chat_ui;
 import 'package:get/get.dart';
 
 import 'ModelProvider.dart';
@@ -15,6 +14,8 @@ class RoomListItem implements Comparable<RoomListItem> {
   late List<types.User> _chatUIUsers;
 
   RoomListItem(this._room, this._users, this._currentUser) {
+    print("Chat: creating RoomListItem with room $_room");
+
     var isHiddenData = jsonDecode(_room.isHidden);
 
     print(isHiddenData);
@@ -110,6 +111,7 @@ class RoomListItem implements Comparable<RoomListItem> {
 
   @override
   int compareTo(RoomListItem other) {
+    print("sorting: $_room and ${other.getRoom}");
     return _room.updatedAt!.compareTo(other._room.updatedAt!);
   }
 }

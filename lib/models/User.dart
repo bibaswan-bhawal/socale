@@ -49,11 +49,13 @@ class User extends Model {
   final String? _avatar;
   final String? _anonymousUsername;
   final bool? _introMatchingCompleted;
-  final List<Message>? _messages;
-  final List<UserRoom>? _userRoom;
   final List<String>? _matches;
   final String? _profilePicture;
+  final String? _notificationToken;
   final TemporalDateTime? _createdAt;
+  final TemporalDateTime? _updateAt;
+  final List<Message>? _messages;
+  final List<UserRoom>? _userRoom;
   final TemporalDateTime? _updatedAt;
 
   @override
@@ -311,14 +313,6 @@ class User extends Model {
     }
   }
   
-  List<Message>? get messages {
-    return _messages;
-  }
-  
-  List<UserRoom>? get userRoom {
-    return _userRoom;
-  }
-  
   List<String> get matches {
     try {
       return _matches!;
@@ -336,17 +330,51 @@ class User extends Model {
     return _profilePicture;
   }
   
-  TemporalDateTime? get createdAt {
-    return _createdAt;
+  String? get notificationToken {
+    return _notificationToken;
+  }
+  
+  TemporalDateTime get createdAt {
+    try {
+      return _createdAt!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  TemporalDateTime get updateAt {
+    try {
+      return _updateAt!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  List<Message>? get messages {
+    return _messages;
+  }
+  
+  List<UserRoom>? get userRoom {
+    return _userRoom;
   }
   
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
   
-  const User._internal({required this.id, required email, required schoolEmail, required firstName, required lastName, required dateOfBirth, required graduationMonth, required major, required minor, required college, required skills, required careerGoals, required selfDescription, required leisureInterests, required idealFriendDescription, required situationalDecisions, required academicInterests, required avatar, required anonymousUsername, required introMatchingCompleted, messages, userRoom, required matches, profilePicture, createdAt, updatedAt}): _email = email, _schoolEmail = schoolEmail, _firstName = firstName, _lastName = lastName, _dateOfBirth = dateOfBirth, _graduationMonth = graduationMonth, _major = major, _minor = minor, _college = college, _skills = skills, _careerGoals = careerGoals, _selfDescription = selfDescription, _leisureInterests = leisureInterests, _idealFriendDescription = idealFriendDescription, _situationalDecisions = situationalDecisions, _academicInterests = academicInterests, _avatar = avatar, _anonymousUsername = anonymousUsername, _introMatchingCompleted = introMatchingCompleted, _messages = messages, _userRoom = userRoom, _matches = matches, _profilePicture = profilePicture, _createdAt = createdAt, _updatedAt = updatedAt;
+  const User._internal({required this.id, required email, required schoolEmail, required firstName, required lastName, required dateOfBirth, required graduationMonth, required major, required minor, required college, required skills, required careerGoals, required selfDescription, required leisureInterests, required idealFriendDescription, required situationalDecisions, required academicInterests, required avatar, required anonymousUsername, required introMatchingCompleted, required matches, profilePicture, notificationToken, required createdAt, required updateAt, messages, userRoom, updatedAt}): _email = email, _schoolEmail = schoolEmail, _firstName = firstName, _lastName = lastName, _dateOfBirth = dateOfBirth, _graduationMonth = graduationMonth, _major = major, _minor = minor, _college = college, _skills = skills, _careerGoals = careerGoals, _selfDescription = selfDescription, _leisureInterests = leisureInterests, _idealFriendDescription = idealFriendDescription, _situationalDecisions = situationalDecisions, _academicInterests = academicInterests, _avatar = avatar, _anonymousUsername = anonymousUsername, _introMatchingCompleted = introMatchingCompleted, _matches = matches, _profilePicture = profilePicture, _notificationToken = notificationToken, _createdAt = createdAt, _updateAt = updateAt, _messages = messages, _userRoom = userRoom, _updatedAt = updatedAt;
   
-  factory User({String? id, required String email, required String schoolEmail, required String firstName, required String lastName, required TemporalDate dateOfBirth, required TemporalDate graduationMonth, required List<String> major, required List<String> minor, required String college, required List<String> skills, required List<String> careerGoals, required List<String> selfDescription, required List<String> leisureInterests, required String idealFriendDescription, required List<int> situationalDecisions, required List<String> academicInterests, required String avatar, required String anonymousUsername, required bool introMatchingCompleted, List<Message>? messages, List<UserRoom>? userRoom, required List<String> matches, String? profilePicture}) {
+  factory User({String? id, required String email, required String schoolEmail, required String firstName, required String lastName, required TemporalDate dateOfBirth, required TemporalDate graduationMonth, required List<String> major, required List<String> minor, required String college, required List<String> skills, required List<String> careerGoals, required List<String> selfDescription, required List<String> leisureInterests, required String idealFriendDescription, required List<int> situationalDecisions, required List<String> academicInterests, required String avatar, required String anonymousUsername, required bool introMatchingCompleted, required List<String> matches, String? profilePicture, String? notificationToken, required TemporalDateTime createdAt, required TemporalDateTime updateAt, List<Message>? messages, List<UserRoom>? userRoom}) {
     return User._internal(
       id: id == null ? UUID.getUUID() : id,
       email: email,
@@ -368,10 +396,13 @@ class User extends Model {
       avatar: avatar,
       anonymousUsername: anonymousUsername,
       introMatchingCompleted: introMatchingCompleted,
-      messages: messages != null ? List<Message>.unmodifiable(messages) : messages,
-      userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom,
       matches: matches != null ? List<String>.unmodifiable(matches) : matches,
-      profilePicture: profilePicture);
+      profilePicture: profilePicture,
+      notificationToken: notificationToken,
+      createdAt: createdAt,
+      updateAt: updateAt,
+      messages: messages != null ? List<Message>.unmodifiable(messages) : messages,
+      userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom);
   }
   
   bool equals(Object other) {
@@ -402,10 +433,13 @@ class User extends Model {
       _avatar == other._avatar &&
       _anonymousUsername == other._anonymousUsername &&
       _introMatchingCompleted == other._introMatchingCompleted &&
-      DeepCollectionEquality().equals(_messages, other._messages) &&
-      DeepCollectionEquality().equals(_userRoom, other._userRoom) &&
       DeepCollectionEquality().equals(_matches, other._matches) &&
-      _profilePicture == other._profilePicture;
+      _profilePicture == other._profilePicture &&
+      _notificationToken == other._notificationToken &&
+      _createdAt == other._createdAt &&
+      _updateAt == other._updateAt &&
+      DeepCollectionEquality().equals(_messages, other._messages) &&
+      DeepCollectionEquality().equals(_userRoom, other._userRoom);
   }
   
   @override
@@ -438,14 +472,16 @@ class User extends Model {
     buffer.write("introMatchingCompleted=" + (_introMatchingCompleted != null ? _introMatchingCompleted!.toString() : "null") + ", ");
     buffer.write("matches=" + (_matches != null ? _matches!.toString() : "null") + ", ");
     buffer.write("profilePicture=" + "$_profilePicture" + ", ");
+    buffer.write("notificationToken=" + "$_notificationToken" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
+    buffer.write("updateAt=" + (_updateAt != null ? _updateAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  User copyWith({String? id, String? email, String? schoolEmail, String? firstName, String? lastName, TemporalDate? dateOfBirth, TemporalDate? graduationMonth, List<String>? major, List<String>? minor, String? college, List<String>? skills, List<String>? careerGoals, List<String>? selfDescription, List<String>? leisureInterests, String? idealFriendDescription, List<int>? situationalDecisions, List<String>? academicInterests, String? avatar, String? anonymousUsername, bool? introMatchingCompleted, List<Message>? messages, List<UserRoom>? userRoom, List<String>? matches, String? profilePicture}) {
+  User copyWith({String? id, String? email, String? schoolEmail, String? firstName, String? lastName, TemporalDate? dateOfBirth, TemporalDate? graduationMonth, List<String>? major, List<String>? minor, String? college, List<String>? skills, List<String>? careerGoals, List<String>? selfDescription, List<String>? leisureInterests, String? idealFriendDescription, List<int>? situationalDecisions, List<String>? academicInterests, String? avatar, String? anonymousUsername, bool? introMatchingCompleted, List<String>? matches, String? profilePicture, String? notificationToken, TemporalDateTime? createdAt, TemporalDateTime? updateAt, List<Message>? messages, List<UserRoom>? userRoom}) {
     return User._internal(
       id: id ?? this.id,
       email: email ?? this.email,
@@ -467,10 +503,13 @@ class User extends Model {
       avatar: avatar ?? this.avatar,
       anonymousUsername: anonymousUsername ?? this.anonymousUsername,
       introMatchingCompleted: introMatchingCompleted ?? this.introMatchingCompleted,
-      messages: messages ?? this.messages,
-      userRoom: userRoom ?? this.userRoom,
       matches: matches ?? this.matches,
-      profilePicture: profilePicture ?? this.profilePicture);
+      profilePicture: profilePicture ?? this.profilePicture,
+      notificationToken: notificationToken ?? this.notificationToken,
+      createdAt: createdAt ?? this.createdAt,
+      updateAt: updateAt ?? this.updateAt,
+      messages: messages ?? this.messages,
+      userRoom: userRoom ?? this.userRoom);
   }
   
   User.fromJson(Map<String, dynamic> json)  
@@ -494,6 +533,11 @@ class User extends Model {
       _avatar = json['avatar'],
       _anonymousUsername = json['anonymousUsername'],
       _introMatchingCompleted = json['introMatchingCompleted'],
+      _matches = json['matches']?.cast<String>(),
+      _profilePicture = json['profilePicture'],
+      _notificationToken = json['notificationToken'],
+      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
+      _updateAt = json['updateAt'] != null ? TemporalDateTime.fromString(json['updateAt']) : null,
       _messages = json['messages'] is List
         ? (json['messages'] as List)
           .where((e) => e?['serializedData'] != null)
@@ -506,13 +550,10 @@ class User extends Model {
           .map((e) => UserRoom.fromJson(new Map<String, dynamic>.from(e['serializedData'])))
           .toList()
         : null,
-      _matches = json['matches']?.cast<String>(),
-      _profilePicture = json['profilePicture'],
-      _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'email': _email, 'schoolEmail': _schoolEmail, 'firstName': _firstName, 'lastName': _lastName, 'dateOfBirth': _dateOfBirth?.format(), 'graduationMonth': _graduationMonth?.format(), 'major': _major, 'minor': _minor, 'college': _college, 'skills': _skills, 'careerGoals': _careerGoals, 'selfDescription': _selfDescription, 'leisureInterests': _leisureInterests, 'idealFriendDescription': _idealFriendDescription, 'situationalDecisions': _situationalDecisions, 'academicInterests': _academicInterests, 'avatar': _avatar, 'anonymousUsername': _anonymousUsername, 'introMatchingCompleted': _introMatchingCompleted, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'matches': _matches, 'profilePicture': _profilePicture, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'email': _email, 'schoolEmail': _schoolEmail, 'firstName': _firstName, 'lastName': _lastName, 'dateOfBirth': _dateOfBirth?.format(), 'graduationMonth': _graduationMonth?.format(), 'major': _major, 'minor': _minor, 'college': _college, 'skills': _skills, 'careerGoals': _careerGoals, 'selfDescription': _selfDescription, 'leisureInterests': _leisureInterests, 'idealFriendDescription': _idealFriendDescription, 'situationalDecisions': _situationalDecisions, 'academicInterests': _academicInterests, 'avatar': _avatar, 'anonymousUsername': _anonymousUsername, 'introMatchingCompleted': _introMatchingCompleted, 'matches': _matches, 'profilePicture': _profilePicture, 'notificationToken': _notificationToken, 'createdAt': _createdAt?.format(), 'updateAt': _updateAt?.format(), 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
@@ -535,14 +576,17 @@ class User extends Model {
   static final QueryField AVATAR = QueryField(fieldName: "avatar");
   static final QueryField ANONYMOUSUSERNAME = QueryField(fieldName: "anonymousUsername");
   static final QueryField INTROMATCHINGCOMPLETED = QueryField(fieldName: "introMatchingCompleted");
+  static final QueryField MATCHES = QueryField(fieldName: "matches");
+  static final QueryField PROFILEPICTURE = QueryField(fieldName: "profilePicture");
+  static final QueryField NOTIFICATIONTOKEN = QueryField(fieldName: "notificationToken");
+  static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
+  static final QueryField UPDATEAT = QueryField(fieldName: "updateAt");
   static final QueryField MESSAGES = QueryField(
     fieldName: "messages",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Message).toString()));
   static final QueryField USERROOM = QueryField(
     fieldName: "userRoom",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (UserRoom).toString()));
-  static final QueryField MATCHES = QueryField(fieldName: "matches");
-  static final QueryField PROFILEPICTURE = QueryField(fieldName: "profilePicture");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "User";
     modelSchemaDefinition.pluralName = "Users";
@@ -682,20 +726,6 @@ class User extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.bool)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: User.MESSAGES,
-      isRequired: true,
-      ofModelName: (Message).toString(),
-      associatedKey: Message.AUTHOR
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
-      key: User.USERROOM,
-      isRequired: false,
-      ofModelName: (UserRoom).toString(),
-      associatedKey: UserRoom.USER
-    ));
-    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: User.MATCHES,
       isRequired: true,
@@ -709,11 +739,36 @@ class User extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: User.NOTIFICATIONTOKEN,
       isRequired: false,
-      isReadOnly: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: User.CREATEDAT,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: User.UPDATEAT,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: User.MESSAGES,
+      isRequired: true,
+      ofModelName: (Message).toString(),
+      associatedKey: Message.AUTHOR
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
+      key: User.USERROOM,
+      isRequired: false,
+      ofModelName: (UserRoom).toString(),
+      associatedKey: UserRoom.USER
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(

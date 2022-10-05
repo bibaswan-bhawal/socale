@@ -194,19 +194,22 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                           ),
                         ),
                         // Anonymous Matches
-                        roomState.when(error: (Object error, StackTrace? stackTrace) {
-                          throw (stackTrace.toString());
-                        }, loading: () {
-                          return Container();
-                        }, data: (List<RoomListItem> data) {
-                          print("Got Data");
-                          return ListView.separated(
-                            physics: BouncingScrollPhysics(),
-                            itemCount: roomState.value!.length,
-                            separatorBuilder: separatorBuilder,
-                            itemBuilder: listItemBuilder,
-                          );
-                        }),
+                        roomState.when(
+                          error: (Object error, StackTrace? stackTrace) {
+                            throw (stackTrace.toString());
+                          },
+                          loading: () {
+                            return Container();
+                          },
+                          data: (List<RoomListItem> data) {
+                            return ListView.separated(
+                              physics: BouncingScrollPhysics(),
+                              itemCount: roomState.value!.length,
+                              separatorBuilder: separatorBuilder,
+                              itemBuilder: listItemBuilder,
+                            );
+                          },
+                        ),
                       ],
                     ),
                   ),

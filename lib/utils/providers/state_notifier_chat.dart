@@ -10,7 +10,6 @@ class ChatMessagesProvider extends StateNotifier<List<Message>> {
 
   ChatMessagesProvider(this.room) : super([]) {
     requestMessages();
-    chatService.listenToNewMessages(room, DateTime.now());
   }
 
   Future<bool> requestMessages() async {

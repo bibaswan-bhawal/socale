@@ -168,6 +168,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   }
 
   void _handleSendPressed(types.PartialText message) {
+    print("Chat: Sending message in room: ${widget.room.getRoom}");
     chatService.sendMessage(message.text, widget.room.getRoom);
   }
 }

@@ -35,6 +35,7 @@ class Room extends Model {
   final List<UserRoom>? _userRoom;
   final String? _isHidden;
   final TemporalDateTime? _createdAt;
+  final TemporalDateTime? _updateAt;
   final TemporalDateTime? _updatedAt;
 
   @override
@@ -70,23 +71,47 @@ class Room extends Model {
     }
   }
   
-  TemporalDateTime? get createdAt {
-    return _createdAt;
+  TemporalDateTime get createdAt {
+    try {
+      return _createdAt!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
+  }
+  
+  TemporalDateTime get updateAt {
+    try {
+      return _updateAt!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime? get updatedAt {
     return _updatedAt;
   }
   
-  const Room._internal({required this.id, lastMessage, messages, userRoom, required isHidden, createdAt, updatedAt}): _lastMessage = lastMessage, _messages = messages, _userRoom = userRoom, _isHidden = isHidden, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Room._internal({required this.id, lastMessage, messages, userRoom, required isHidden, required createdAt, required updateAt, updatedAt}): _lastMessage = lastMessage, _messages = messages, _userRoom = userRoom, _isHidden = isHidden, _createdAt = createdAt, _updateAt = updateAt, _updatedAt = updatedAt;
   
-  factory Room({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom, required String isHidden}) {
+  factory Room({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom, required String isHidden, required TemporalDateTime createdAt, required TemporalDateTime updateAt}) {
     return Room._internal(
       id: id == null ? UUID.getUUID() : id,
       lastMessage: lastMessage,
       messages: messages != null ? List<Message>.unmodifiable(messages) : messages,
       userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom,
-      isHidden: isHidden);
+      isHidden: isHidden,
+      createdAt: createdAt,
+      updateAt: updateAt);
   }
   
   bool equals(Object other) {
@@ -101,7 +126,9 @@ class Room extends Model {
       _lastMessage == other._lastMessage &&
       DeepCollectionEquality().equals(_messages, other._messages) &&
       DeepCollectionEquality().equals(_userRoom, other._userRoom) &&
-      _isHidden == other._isHidden;
+      _isHidden == other._isHidden &&
+      _createdAt == other._createdAt &&
+      _updateAt == other._updateAt;
   }
   
   @override
@@ -116,19 +143,22 @@ class Room extends Model {
     buffer.write("lastMessage=" + "$_lastMessage" + ", ");
     buffer.write("isHidden=" + "$_isHidden" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
+    buffer.write("updateAt=" + (_updateAt != null ? _updateAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Room copyWith({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom, String? isHidden}) {
+  Room copyWith({String? id, String? lastMessage, List<Message>? messages, List<UserRoom>? userRoom, String? isHidden, TemporalDateTime? createdAt, TemporalDateTime? updateAt}) {
     return Room._internal(
       id: id ?? this.id,
       lastMessage: lastMessage ?? this.lastMessage,
       messages: messages ?? this.messages,
       userRoom: userRoom ?? this.userRoom,
-      isHidden: isHidden ?? this.isHidden);
+      isHidden: isHidden ?? this.isHidden,
+      createdAt: createdAt ?? this.createdAt,
+      updateAt: updateAt ?? this.updateAt);
   }
   
   Room.fromJson(Map<String, dynamic> json)  
@@ -148,10 +178,11 @@ class Room extends Model {
         : null,
       _isHidden = json['isHidden'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
+      _updateAt = json['updateAt'] != null ? TemporalDateTime.fromString(json['updateAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'lastMessage': _lastMessage, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'isHidden': _isHidden, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'lastMessage': _lastMessage, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'isHidden': _isHidden, 'createdAt': _createdAt?.format(), 'updateAt': _updateAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
@@ -163,6 +194,8 @@ class Room extends Model {
     fieldName: "userRoom",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (UserRoom).toString()));
   static final QueryField ISHIDDEN = QueryField(fieldName: "isHidden");
+  static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
+  static final QueryField UPDATEAT = QueryField(fieldName: "updateAt");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Room";
     modelSchemaDefinition.pluralName = "Rooms";
@@ -206,10 +239,15 @@ class Room extends Model {
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'createdAt',
-      isRequired: false,
-      isReadOnly: true,
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Room.CREATEDAT,
+      isRequired: true,
+      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
+      key: Room.UPDATEAT,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
     
