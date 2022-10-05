@@ -89,14 +89,15 @@ class AuthService {
       await Amplify.Auth.signOut(
         options: const SignOutOptions(globalSignOut: true),
       );
-      Amplify.DataStore.clear();
-      Get.offAllNamed('/auth');
-      onboardingService.clearAll();
       ref.read(academicDataProvider.notifier).clearData();
       ref.read(avatarDataProvider.notifier).clearData();
       ref.read(basicDataProvider.notifier).clearData();
       ref.read(describeFriendDataProvider.notifier).clearData();
       ref.read(personalityDataProvider.notifier).clearData();
+      Amplify.DataStore.clear();
+      onboardingService.clearAll();
+
+      Get.offAllNamed('/auth');
     } on SignedOutException catch (_) {
       throw ("Error could not sign out");
     } on AuthException catch (_) {

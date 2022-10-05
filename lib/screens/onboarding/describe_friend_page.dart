@@ -203,7 +203,6 @@ class EditTextArea extends ConsumerStatefulWidget {
 
 class _EditTextAreaState extends ConsumerState<EditTextArea> {
   final TextEditingController _controller = TextEditingController();
-
   bool gotData = false;
 
   @override

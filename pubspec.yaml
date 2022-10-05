@@ -49,6 +49,7 @@ dependencies:
   amplify_secure_storage: ^0.1.0
   aws_signature_v4: ^0.2.2
   aws_request: ^0.4.0+1
+  remove_emoji: ^0.0.7
 
 dev_dependencies:
   flutter_lints: ^2.0.1
