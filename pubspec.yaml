@@ -48,6 +48,7 @@ dependencies:
   amplify_storage_s3: ^1.0.0-next.0+2
   amplify_secure_storage: ^0.1.0
   aws_signature_v4: ^0.2.2
+  aws_request: ^0.4.0+1
 
 dev_dependencies:
   flutter_lints: ^2.0.1

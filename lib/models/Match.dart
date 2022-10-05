@@ -32,7 +32,6 @@ class Match extends Model {
   final String? _matchingPercentage;
   final User? _user;
   final TemporalDateTime? _createdAt;
-  final TemporalDateTime? _updateAt;
   final TemporalDateTime? _updatedAt;
   final String? _matchUserId;
 
@@ -65,9 +64,9 @@ class Match extends Model {
     }
   }
   
-  TemporalDateTime get updateAt {
+  TemporalDateTime get updatedAt {
     try {
-      return _updateAt!;
+      return _updatedAt!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -78,23 +77,19 @@ class Match extends Model {
     }
   }
   
-  TemporalDateTime? get updatedAt {
-    return _updatedAt;
-  }
-  
   String? get matchUserId {
     return _matchUserId;
   }
   
-  const Match._internal({required this.id, matchingPercentage, user, required createdAt, required updateAt, updatedAt, matchUserId}): _matchingPercentage = matchingPercentage, _user = user, _createdAt = createdAt, _updateAt = updateAt, _updatedAt = updatedAt, _matchUserId = matchUserId;
+  const Match._internal({required this.id, matchingPercentage, user, required createdAt, required updatedAt, matchUserId}): _matchingPercentage = matchingPercentage, _user = user, _createdAt = createdAt, _updatedAt = updatedAt, _matchUserId = matchUserId;
   
-  factory Match({String? id, String? matchingPercentage, User? user, required TemporalDateTime createdAt, required TemporalDateTime updateAt, String? matchUserId}) {
+  factory Match({String? id, String? matchingPercentage, User? user, required TemporalDateTime createdAt, required TemporalDateTime updatedAt, String? matchUserId}) {
     return Match._internal(
       id: id == null ? UUID.getUUID() : id,
       matchingPercentage: matchingPercentage,
       user: user,
       createdAt: createdAt,
-      updateAt: updateAt,
+      updatedAt: updatedAt,
       matchUserId: matchUserId);
   }
   
@@ -110,7 +105,7 @@ class Match extends Model {
       _matchingPercentage == other._matchingPercentage &&
       _user == other._user &&
       _createdAt == other._createdAt &&
-      _updateAt == other._updateAt &&
+      _updatedAt == other._updatedAt &&
       _matchUserId == other._matchUserId;
   }
   
@@ -125,7 +120,6 @@ class Match extends Model {
     buffer.write("id=" + "$id" + ", ");
     buffer.write("matchingPercentage=" + "$_matchingPercentage" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updateAt=" + (_updateAt != null ? _updateAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
     buffer.write("matchUserId=" + "$_matchUserId");
     buffer.write("}");
@@ -133,13 +127,13 @@ class Match extends Model {
     return buffer.toString();
   }
   
-  Match copyWith({String? id, String? matchingPercentage, User? user, TemporalDateTime? createdAt, TemporalDateTime? updateAt, String? matchUserId}) {
+  Match copyWith({String? id, String? matchingPercentage, User? user, TemporalDateTime? createdAt, TemporalDateTime? updatedAt, String? matchUserId}) {
     return Match._internal(
       id: id ?? this.id,
       matchingPercentage: matchingPercentage ?? this.matchingPercentage,
       user: user ?? this.user,
       createdAt: createdAt ?? this.createdAt,
-      updateAt: updateAt ?? this.updateAt,
+      updatedAt: updatedAt ?? this.updatedAt,
       matchUserId: matchUserId ?? this.matchUserId);
   }
   
@@ -150,12 +144,11 @@ class Match extends Model {
         ? User.fromJson(new Map<String, dynamic>.from(json['user']['serializedData']))
         : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updateAt = json['updateAt'] != null ? TemporalDateTime.fromString(json['updateAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
       _matchUserId = json['matchUserId'];
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'matchingPercentage': _matchingPercentage, 'user': _user?.toJson(), 'createdAt': _createdAt?.format(), 'updateAt': _updateAt?.format(), 'updatedAt': _updatedAt?.format(), 'matchUserId': _matchUserId
+    'id': id, 'matchingPercentage': _matchingPercentage, 'user': _user?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'matchUserId': _matchUserId
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
@@ -164,7 +157,7 @@ class Match extends Model {
     fieldName: "user",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
   static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
-  static final QueryField UPDATEAT = QueryField(fieldName: "updateAt");
+  static final QueryField UPDATEDAT = QueryField(fieldName: "updatedAt");
   static final QueryField MATCHUSERID = QueryField(fieldName: "matchUserId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Match";
@@ -203,15 +196,8 @@ class Match extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Match.UPDATEAT,
+      key: Match.UPDATEDAT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
     

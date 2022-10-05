@@ -94,21 +94,21 @@ class ChatService {
     Room room = Room(
       isHidden: jsonEncode(isHiddenJsonObject),
       createdAt: TemporalDateTime.now(),
-      updateAt: TemporalDateTime.now(),
+      updatedAt: TemporalDateTime.now(),
     );
 
     UserRoom userRoom1 = UserRoom(
       user: currentUser,
       room: room,
       createdAt: TemporalDateTime.now(),
-      updateAt: TemporalDateTime.now(),
+      updatedAt: TemporalDateTime.now(),
     );
 
     UserRoom userRoom2 = UserRoom(
       user: otherUser,
       room: room,
       createdAt: TemporalDateTime.now(),
-      updateAt: TemporalDateTime.now(),
+      updatedAt: TemporalDateTime.now(),
     );
 
     await Amplify.DataStore.save(room);
@@ -179,7 +179,7 @@ class ChatService {
       author: user,
       room: currentRoom,
       createdAt: TemporalDateTime.now(),
-      updateAt: TemporalDateTime.now(),
+      updatedAt: TemporalDateTime.now(),
     );
 
     Room updatedRoom = currentRoom.copyWith(lastMessage: text);

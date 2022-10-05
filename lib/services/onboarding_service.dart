@@ -407,7 +407,7 @@ class OnboardingService {
       anonymousUsername: anonymousUsername,
       profilePicture: "",
       createdAt: TemporalDateTime.now(),
-      updateAt: TemporalDateTime.now(),
+      updatedAt: TemporalDateTime.now(),
     );
 
     print(newUser);

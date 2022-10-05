@@ -62,7 +62,7 @@ main() {
         introMatchingCompleted: false,
         avatar: 'Artist Raccoon.png',
         createdAt: TemporalDateTime.now(),
-        updateAt: TemporalDateTime.now(),
+        updatedAt: TemporalDateTime.now(),
       );
 
       final user2 = User(
@@ -87,7 +87,7 @@ main() {
         introMatchingCompleted: false,
         avatar: 'Artist Raccoon.png',
         createdAt: TemporalDateTime.now(),
-        updateAt: TemporalDateTime.now(),
+        updatedAt: TemporalDateTime.now(),
       );
 
       var isHiddenJsonObject = {
@@ -98,21 +98,21 @@ main() {
       final room1 = Room(
         isHidden: jsonEncode(isHiddenJsonObject),
         createdAt: TemporalDateTime.now(),
-        updateAt: TemporalDateTime.now(),
+        updatedAt: TemporalDateTime.now(),
       );
 
       final userRoom1 = UserRoom(
         user: user1,
         room: room1,
         createdAt: TemporalDateTime.now(),
-        updateAt: TemporalDateTime.now(),
+        updatedAt: TemporalDateTime.now(),
       );
 
       final userRoom2 = UserRoom(
         user: user2,
         room: room1,
         createdAt: TemporalDateTime.now(),
-        updateAt: TemporalDateTime.now(),
+        updatedAt: TemporalDateTime.now(),
       );
 
       final message1 = Message(
@@ -120,7 +120,7 @@ main() {
         room: room1,
         encryptedText: 'text 1',
         createdAt: TemporalDateTime.now(),
-        updateAt: TemporalDateTime.now(),
+        updatedAt: TemporalDateTime.now(),
       );
 
       // create users

@@ -112,6 +112,6 @@ class RoomListItem implements Comparable<RoomListItem> {
   @override
   int compareTo(RoomListItem other) {
     print("sorting: $_room and ${other.getRoom}");
-    return _room.updatedAt!.compareTo(other._room.updatedAt!);
+    return _room.updatedAt.compareTo(other._room.updatedAt);
   }
 }

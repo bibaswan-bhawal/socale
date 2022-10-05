@@ -32,7 +32,6 @@ class UserRoom extends Model {
   final User? _user;
   final Room? _room;
   final TemporalDateTime? _createdAt;
-  final TemporalDateTime? _updateAt;
   final TemporalDateTime? _updatedAt;
 
   @override
@@ -64,9 +63,9 @@ class UserRoom extends Model {
     }
   }
   
-  TemporalDateTime get updateAt {
+  TemporalDateTime get updatedAt {
     try {
-      return _updateAt!;
+      return _updatedAt!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -77,19 +76,15 @@ class UserRoom extends Model {
     }
   }
   
-  TemporalDateTime? get updatedAt {
-    return _updatedAt;
-  }
+  const UserRoom._internal({required this.id, user, room, required createdAt, required updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  const UserRoom._internal({required this.id, user, room, required createdAt, required updateAt, updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updateAt = updateAt, _updatedAt = updatedAt;
-  
-  factory UserRoom({String? id, User? user, Room? room, required TemporalDateTime createdAt, required TemporalDateTime updateAt}) {
+  factory UserRoom({String? id, User? user, Room? room, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
     return UserRoom._internal(
       id: id == null ? UUID.getUUID() : id,
       user: user,
       room: room,
       createdAt: createdAt,
-      updateAt: updateAt);
+      updatedAt: updatedAt);
   }
   
   bool equals(Object other) {
@@ -104,7 +99,7 @@ class UserRoom extends Model {
       _user == other._user &&
       _room == other._room &&
       _createdAt == other._createdAt &&
-      _updateAt == other._updateAt;
+      _updatedAt == other._updatedAt;
   }
   
   @override
@@ -119,20 +114,19 @@ class UserRoom extends Model {
     buffer.write("user=" + (_user != null ? _user!.toString() : "null") + ", ");
     buffer.write("room=" + (_room != null ? _room!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updateAt=" + (_updateAt != null ? _updateAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  UserRoom copyWith({String? id, User? user, Room? room, TemporalDateTime? createdAt, TemporalDateTime? updateAt}) {
+  UserRoom copyWith({String? id, User? user, Room? room, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
     return UserRoom._internal(
       id: id ?? this.id,
       user: user ?? this.user,
       room: room ?? this.room,
       createdAt: createdAt ?? this.createdAt,
-      updateAt: updateAt ?? this.updateAt);
+      updatedAt: updatedAt ?? this.updatedAt);
   }
   
   UserRoom.fromJson(Map<String, dynamic> json)  
@@ -144,11 +138,10 @@ class UserRoom extends Model {
         ? Room.fromJson(new Map<String, dynamic>.from(json['room']['serializedData']))
         : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updateAt = json['updateAt'] != null ? TemporalDateTime.fromString(json['updateAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'user': _user?.toJson(), 'room': _room?.toJson(), 'createdAt': _createdAt?.format(), 'updateAt': _updateAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'user': _user?.toJson(), 'room': _room?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
@@ -159,7 +152,7 @@ class UserRoom extends Model {
     fieldName: "room",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));
   static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
-  static final QueryField UPDATEAT = QueryField(fieldName: "updateAt");
+  static final QueryField UPDATEDAT = QueryField(fieldName: "updatedAt");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "UserRoom";
     modelSchemaDefinition.pluralName = "UserRooms";
@@ -203,15 +196,8 @@ class UserRoom extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: UserRoom.UPDATEAT,
+      key: UserRoom.UPDATEDAT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
   });

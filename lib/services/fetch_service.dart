@@ -26,6 +26,11 @@ class FetchService {
   Future<Match> fetchMatch(String matchId) async {
     final request = ModelQueries.get(Match.classType, matchId);
     final response = await Amplify.API.query(request: request).response;
+
+    if (response.errors.isNotEmpty) {
+      throw ("Error fetching match by id at fetch service: ${response.errors}");
+    }
+
     return response.data!;
   }
 
@@ -52,7 +57,7 @@ class FetchService {
     }
 
     rooms.sort((room1, room2) {
-      return room1.updatedAt!.compareTo(room2.updatedAt!);
+      return room1.updatedAt.compareTo(room2.updatedAt);
     });
 
     return rooms.reversed.toList();

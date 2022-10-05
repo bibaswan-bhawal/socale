@@ -3,7 +3,7 @@ type Match @model @auth(rules: [{allow: public}]) {
   matchingPercentage: String
   user: User @hasOne
   createdAt: AWSDateTime!
-  updateAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
 
 type User @model @auth(rules: [{allow: public}]) {
@@ -31,7 +31,7 @@ type User @model @auth(rules: [{allow: public}]) {
   profilePicture: String
   notificationToken: String
   createdAt: AWSDateTime!
-  updateAt: AWSDateTime!
+  updatedAt: AWSDateTime!
   messages: [Message!] @hasMany
   userRoom: [UserRoom] @hasMany(indexName: "byUser", fields: ["id"])
 }
@@ -43,7 +43,7 @@ type UserRoom @model @auth(rules: [{allow: public}]) {
   user: User @belongsTo(fields: ["userID"])
   room: Room @belongsTo(fields: ["roomID"])
   createdAt: AWSDateTime!
-  updateAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
 
 type Room @model @auth(rules: [{allow: public}]) {
@@ -53,7 +53,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   userRoom: [UserRoom!] @hasMany(indexName: "byRoom", fields: ["id"])
   isHidden: AWSJSON!
   createdAt: AWSDateTime!
-  updateAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
 
 type Message @model @auth(rules: [{allow: public}]) {
@@ -62,6 +62,6 @@ type Message @model @auth(rules: [{allow: public}]) {
   encryptedText: String!
   author: User! @belongsTo
   createdAt: AWSDateTime!
-  updateAt: AWSDateTime!
+  updatedAt: AWSDateTime!
 }
  

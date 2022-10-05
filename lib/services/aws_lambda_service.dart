@@ -1,11 +1,11 @@
 import 'dart:convert';
-
+import 'package:http/http.dart' as http;
 import 'package:aws_common/aws_common.dart';
 import 'package:aws_signature_v4/aws_signature_v4.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
 class AWSLambdaService {
-  Future<bool> sendOTPVerificationEmail(String email, int otp) async {
+  Future<bool> sendOTPVerificationEmailOld(String email, int otp) async {
     AWSSigV4Signer signer = AWSSigV4Signer(
       credentialsProvider: AWSCredentialsProvider(
         AWSCredentials(
@@ -51,53 +51,38 @@ class AWSLambdaService {
     return false;
   }
 
+  Future<bool> sendOTPVerificationEmail(String email, int otp) async {
+    final response = await http.post(
+      Uri.https('77fbkbndbv3ftq3lj57bfjmfx40ndxrj.lambda-url.us-west-2.on.aws', '/', {
+        'email': email,
+        'otp': otp.toString(),
+      }),
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: json.encode({
+        'email': email,
+        'otp': otp,
+      }).codeUnits,
+    );
+
+    return true;
+  }
+
   Future<bool> getMatches(String id) async {
-    AWSSigV4Signer signer = AWSSigV4Signer(
-      credentialsProvider: AWSCredentialsProvider(
-        AWSCredentials(
-          dotenv.get('AWS_ACCESS_KEY_ID'),
-          dotenv.get('AWS_SECRET_ACCESS_KEY'),
-        ),
-      ),
-    );
-
-    final scope = AWSCredentialScope(
-      region: 'us-west-2',
-      service: AWSService.lambda,
-    );
-
-    final createRequest = AWSHttpRequest.post(
+    final response = await http.post(
       Uri.https('7uetyhcxradhyc3zz6um6foj440lcbdy.lambda-url.us-west-2.on.aws', '/', {
         'userId': id,
       }),
-      body: json.encode({'userId': id}).codeUnits,
-      headers: {
-        AWSHeaders.host: '7uetyhcxradhyc3zz6um6foj440lcbdy.lambda-url.us-west-2.on.aws',
-        AWSHeaders.contentLength: json.encode({'userId': id}).codeUnits.length.toString(),
-        AWSHeaders.contentType: 'application/x-amz-json-1.1',
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
       },
+      body: jsonEncode(<String, String>{
+        'userId': id,
+      }).codeUnits,
     );
 
-    final signedCreateRequest = await signer.sign(
-      createRequest,
-      credentialScope: scope,
-    );
-
-    try {
-      final createResponse = await signedCreateRequest.send().response;
-      String body = await createResponse.decodeBody();
-
-      final responseMap = jsonDecode(body);
-      if (responseMap.containsKey('success') && responseMap["success"]) {
-        print("GOT MATCHES with status code: ${responseMap['statusCode']} and data: ${responseMap['matchedIds']}");
-        return false;
-      }
-    } catch (e) {
-      print("Something went wrong: $e");
-    }
-
-    return false;
-    return false;
+    return true;
   }
 
   Future<bool> getMatchesOld(String id) async {

@@ -33,7 +33,6 @@ class Message extends Model {
   final String? _encryptedText;
   final User? _author;
   final TemporalDateTime? _createdAt;
-  final TemporalDateTime? _updateAt;
   final TemporalDateTime? _updatedAt;
 
   @override
@@ -87,9 +86,9 @@ class Message extends Model {
     }
   }
   
-  TemporalDateTime get updateAt {
+  TemporalDateTime get updatedAt {
     try {
-      return _updateAt!;
+      return _updatedAt!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -100,20 +99,16 @@ class Message extends Model {
     }
   }
   
-  TemporalDateTime? get updatedAt {
-    return _updatedAt;
-  }
+  const Message._internal({required this.id, room, required encryptedText, required author, required createdAt, required updatedAt}): _room = room, _encryptedText = encryptedText, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  const Message._internal({required this.id, room, required encryptedText, required author, required createdAt, required updateAt, updatedAt}): _room = room, _encryptedText = encryptedText, _author = author, _createdAt = createdAt, _updateAt = updateAt, _updatedAt = updatedAt;
-  
-  factory Message({String? id, Room? room, required String encryptedText, required User author, required TemporalDateTime createdAt, required TemporalDateTime updateAt}) {
+  factory Message({String? id, Room? room, required String encryptedText, required User author, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
     return Message._internal(
       id: id == null ? UUID.getUUID() : id,
       room: room,
       encryptedText: encryptedText,
       author: author,
       createdAt: createdAt,
-      updateAt: updateAt);
+      updatedAt: updatedAt);
   }
   
   bool equals(Object other) {
@@ -129,7 +124,7 @@ class Message extends Model {
       _encryptedText == other._encryptedText &&
       _author == other._author &&
       _createdAt == other._createdAt &&
-      _updateAt == other._updateAt;
+      _updatedAt == other._updatedAt;
   }
   
   @override
@@ -145,21 +140,20 @@ class Message extends Model {
     buffer.write("encryptedText=" + "$_encryptedText" + ", ");
     buffer.write("author=" + (_author != null ? _author!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updateAt=" + (_updateAt != null ? _updateAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Message copyWith({String? id, Room? room, String? encryptedText, User? author, TemporalDateTime? createdAt, TemporalDateTime? updateAt}) {
+  Message copyWith({String? id, Room? room, String? encryptedText, User? author, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
     return Message._internal(
       id: id ?? this.id,
       room: room ?? this.room,
       encryptedText: encryptedText ?? this.encryptedText,
       author: author ?? this.author,
       createdAt: createdAt ?? this.createdAt,
-      updateAt: updateAt ?? this.updateAt);
+      updatedAt: updatedAt ?? this.updatedAt);
   }
   
   Message.fromJson(Map<String, dynamic> json)  
@@ -172,11 +166,10 @@ class Message extends Model {
         ? User.fromJson(new Map<String, dynamic>.from(json['author']['serializedData']))
         : null,
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updateAt = json['updateAt'] != null ? TemporalDateTime.fromString(json['updateAt']) : null,
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'room': _room?.toJson(), 'encryptedText': _encryptedText, 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updateAt': _updateAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'room': _room?.toJson(), 'encryptedText': _encryptedText, 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
@@ -188,7 +181,7 @@ class Message extends Model {
     fieldName: "author",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
   static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
-  static final QueryField UPDATEAT = QueryField(fieldName: "updateAt");
+  static final QueryField UPDATEDAT = QueryField(fieldName: "updatedAt");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Message";
     modelSchemaDefinition.pluralName = "Messages";
@@ -233,15 +226,8 @@ class Message extends Model {
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Message.UPDATEAT,
+      key: Message.UPDATEDAT,
       isRequired: true,
-      ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.nonQueryField(
-      fieldName: 'updatedAt',
-      isRequired: false,
-      isReadOnly: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
   });
