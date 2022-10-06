@@ -406,6 +406,7 @@ class OnboardingService {
       matches: [],
       anonymousUsername: anonymousUsername,
       profilePicture: "",
+      notificationToken: "",
       createdAt: TemporalDateTime.now(),
       updatedAt: TemporalDateTime.now(),
     );

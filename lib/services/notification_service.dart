@@ -1,9 +1,14 @@
 import 'dart:io';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socale/firebase_options.dart';
+import 'package:socale/services/fetch_service.dart';
+import 'package:socale/services/update_service.dart';
+
+import '../models/ModelProvider.dart';
 
 FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
 
@@ -72,16 +77,29 @@ class NotificationService {
     }
   }
 
+  updateDeviceToken() async {
+    print(await FirebaseMessaging.instance.getToken());
+
+    try {
+      final userId = (await Amplify.Auth.getCurrentUser()).userId;
+      final user = await fetchService.fetchUserById(userId);
+
+      User updatedUser = user.copyWith(notificationToken: await FirebaseMessaging.instance.getToken());
+      await updateService.updateUser(updatedUser);
+    } catch (e) {
+      print("could not get current user");
+    }
+  }
+
   Future<void> init() async {
     await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     FirebaseMessaging.instance.requestPermission();
-    print(await FirebaseMessaging.instance.getToken());
+
+    await updateDeviceToken();
 
     flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
 
-    final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings(
-      '@mipmap/launcher_icon',
-    );
+    final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/launcher_icon');
     final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
