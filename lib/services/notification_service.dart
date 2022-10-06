@@ -17,7 +17,7 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await NotificationService().init();
   receivedChatMessage(message);
 
-  print("Handling a background message: ${message.messageId}");
+  print("Notifications: Handling a background message: ${message.messageId}");
 }
 
 void receivedChatMessage(RemoteMessage message) async {
@@ -39,7 +39,7 @@ void receivedChatMessage(RemoteMessage message) async {
 
   await flutterLocalNotificationsPlugin!.show(
     (DateTime.now().microsecondsSinceEpoch / DateTime.now().millisecondsSinceEpoch).truncate(),
-    "New Messages",
+    message.data['message'],
     message.data['message'],
     platformChannelSpecifics,
   );
@@ -81,6 +81,7 @@ class NotificationService {
     print(await FirebaseMessaging.instance.getToken());
 
     try {
+      print("uploading token");
       final userId = (await Amplify.Auth.getCurrentUser()).userId;
       final user = await fetchService.fetchUserById(userId);
 
@@ -115,7 +116,7 @@ class NotificationService {
     await flutterLocalNotificationsPlugin?.initialize(initializationSettings, onDidReceiveNotificationResponse: onDidReceiveNotificationResponse);
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
+      print('Notifications: Got a message whilst in the foreground!');
       print('Message data: ${message.data}');
 
       receivedChatMessage(message);
