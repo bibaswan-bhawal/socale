@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:socale/firebase_options.dart';
 import 'package:socale/services/fetch_service.dart';
@@ -10,7 +12,26 @@ import 'package:socale/services/update_service.dart';
 
 import '../models/ModelProvider.dart';
 
-FlutterLocalNotificationsPlugin? flutterLocalNotificationsPlugin;
+final FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
+final StreamController<ReceivedNotification> didReceiveLocalNotificationStream = StreamController<ReceivedNotification>.broadcast();
+final StreamController<String?> selectNotificationStream = StreamController<String?>.broadcast();
+const MethodChannel platform = MethodChannel('dexterx.dev/flutter_local_notifications_example');
+const String portName = 'notification_send_port';
+String? selectedNotificationPayload;
+
+class ReceivedNotification {
+  ReceivedNotification({
+    required this.id,
+    required this.title,
+    required this.body,
+    required this.payload,
+  });
+
+  final int id;
+  final String? title;
+  final String? body;
+  final String? payload;
+}
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   await Firebase.initializeApp();
@@ -22,10 +43,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 
 void receivedChatMessage(RemoteMessage message) async {
   print("Notifications: Message UI Handler: ${message.messageId}");
-
-  if (flutterLocalNotificationsPlugin == null) {
-    throw ("notification plugin has not been initialized yet");
-  }
 
   const AndroidNotificationDetails androidPlatformChannelSpecifics = AndroidNotificationDetails(
     "CHAT",
@@ -57,13 +74,14 @@ class NotificationService {
   NotificationService._internal();
 
   Future<void> requestNotificationPermission() async {
-    if (Platform.isAndroid && flutterLocalNotificationsPlugin != null) {
+    if (Platform.isAndroid) {
       flutterLocalNotificationsPlugin?.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()?.requestPermission();
-    } else if (Platform.isIOS && flutterLocalNotificationsPlugin != null) {
+    } else if (Platform.isIOS) {
       await flutterLocalNotificationsPlugin?.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>()?.requestPermissions(
             alert: true,
             badge: true,
             sound: true,
+            critical: true,
           );
     }
   }
@@ -73,10 +91,7 @@ class NotificationService {
   }
 
   void onDidReceiveNotificationResponse(NotificationResponse notificationResponse) async {
-    final String? payload = notificationResponse.payload;
-    if (notificationResponse.payload != null) {
-      print('notification payload: $payload');
-    }
+    selectNotificationStream.add(notificationResponse.payload);
   }
 
   updateDeviceToken() async {
@@ -100,14 +115,21 @@ class NotificationService {
 
     await updateDeviceToken();
 
-    flutterLocalNotificationsPlugin = FlutterLocalNotificationsPlugin();
-
     final AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/launcher_icon');
     final DarwinInitializationSettings initializationSettingsDarwin = DarwinInitializationSettings(
       requestSoundPermission: false,
       requestBadgePermission: false,
       requestAlertPermission: false,
-      onDidReceiveLocalNotification: onDidReceiveLocalNotification,
+      onDidReceiveLocalNotification: (int id, String? title, String? body, String? payload) async {
+        didReceiveLocalNotificationStream.add(
+          ReceivedNotification(
+            id: id,
+            title: title,
+            body: body,
+            payload: payload,
+          ),
+        );
+      },
     );
 
     final InitializationSettings initializationSettings = InitializationSettings(
