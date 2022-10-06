@@ -1,5 +1,7 @@
 // ignore_for_file: use_build_context_synchronously
 
+import 'package:animated_list_plus/animated_list_plus.dart';
+import 'package:animated_list_plus/transitions.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -84,9 +86,14 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
     );
   }
 
-  Widget listItemBuilder(context, index) {
+  Widget listItemBuilder(context, animation, item, index) {
     final roomState = ref.watch(roomAsyncController);
-    return listItem(roomState.value![index], index);
+    return SizeFadeTransition(
+      sizeFraction: 0.7,
+      curve: Curves.easeInOut,
+      animation: animation,
+      child: listItem(roomState.value![index], index),
+    );
   }
 
   @override
@@ -202,11 +209,11 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                             return Container();
                           },
                           data: (List<RoomListItem> data) {
-                            return ListView.separated(
-                              physics: BouncingScrollPhysics(),
-                              itemCount: roomState.value!.length,
-                              separatorBuilder: separatorBuilder,
-                              itemBuilder: listItemBuilder,
+
+                            return ImplicitlyAnimatedList(
+                              items: data,
+                              areItemsTheSame: (RoomListItem room1, RoomListItem room2) => room1.getRoom.id == room2.getRoom.id,
+                                itemBuilder: listItemBuilder,
                             );
                           },
                         ),

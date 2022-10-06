@@ -4,24 +4,25 @@ import 'package:socale/services/onboarding_service.dart';
 
 class DescribeFriendDataNotifier with ChangeNotifier {
   String _description = "";
-
   bool _gotData = false;
 
   DescribeFriendDataNotifier() {
+    print("Hello");
     onboardingService.getFriendDescription().then((value) {
+      print("bye");
       _description = value ?? "";
       _gotData = true;
-      print(_gotData);
       notifyListeners();
     });
   }
 
   bool get getGotData => _gotData;
-
   String get getDescription => _description;
+
 
   void setDescription(String value) {
     _description = value;
+    _gotData = true;
     notifyListeners();
   }
 

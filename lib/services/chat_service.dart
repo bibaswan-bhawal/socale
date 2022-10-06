@@ -182,7 +182,7 @@ class ChatService {
       updatedAt: TemporalDateTime.now(),
     );
 
-    Room updatedRoom = currentRoom.copyWith(lastMessage: text);
+    Room updatedRoom = currentRoom.copyWith(lastMessage: text, updatedAt: TemporalDateTime.now());
     print("Chat: Saving updated Room as: $updatedRoom");
 
     await Amplify.DataStore.save(updatedRoom);

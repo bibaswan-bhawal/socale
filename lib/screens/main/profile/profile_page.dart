@@ -9,6 +9,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:remove_emoji/remove_emoji.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:socale/components/Buttons/primary_button_wi_icon_solid.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
@@ -316,7 +317,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                     Padding(
                                       padding: EdgeInsets.only(top: 10),
                                       child: Text(
-                                        goal,
+                                        goal.removemoji,
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.poppins(
                                           fontSize: 14,
@@ -362,7 +363,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       .substring(0, 2),
                                 ),
                                 label: Text(
-                                  interests,
+                                  interests.removemoji,
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.w400,
                                     color: ColorValues.textOnDark.withOpacity(0.8),
@@ -405,7 +406,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       .substring(0, 2),
                                 ),
                                 label: Text(
-                                  interests,
+                                  interests.removemoji,
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.w400,
                                     color: ColorValues.textOnDark.withOpacity(0.8),
@@ -470,7 +471,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           Align(
                                             alignment: Alignment.bottomCenter,
                                             child: Text(
-                                              interests,
+                                              interests.removemoji,
                                               style: GoogleFonts.poppins(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 14,
@@ -519,7 +520,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       .substring(0, 2),
                                 ),
                                 label: Text(
-                                  interests,
+                                  interests.removemoji,
                                   style: GoogleFonts.roboto(
                                     fontWeight: FontWeight.w400,
                                     color: ColorValues.textOnDark.withOpacity(0.8),
