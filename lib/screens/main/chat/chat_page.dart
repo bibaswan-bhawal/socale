@@ -45,6 +45,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     ).listen((QuerySnapshot<Message> snapshot) {
       if (snapshot.isSynced) {
         List<types.Message> newMessages = [];
+        print("Chat Messages: got new messages. ${snapshot.items.length}");
 
         for (Message message in snapshot.items) {
           newMessages.add(
@@ -58,7 +59,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           );
         }
 
-        setState(() => _messages = newMessages);
+        if (mounted) setState(() => _messages = newMessages);
       }
     });
   }

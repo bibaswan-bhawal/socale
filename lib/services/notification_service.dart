@@ -21,6 +21,8 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 }
 
 void receivedChatMessage(RemoteMessage message) async {
+  print("Notifications: Message UI Handler: ${message.messageId}");
+
   if (flutterLocalNotificationsPlugin == null) {
     throw ("notification plugin has not been initialized yet");
   }
@@ -117,10 +119,7 @@ class NotificationService {
 
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       print('Notifications: Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
-
       receivedChatMessage(message);
-
       if (message.notification != null) {
         print('Message also contained a notification: ${message.notification}');
       }
