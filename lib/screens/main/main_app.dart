@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/bottom_navigation_bar/bottom_navigation_bar.dart';
 import 'package:socale/components/help_overplays/matches_help_overlay.dart';
@@ -22,15 +23,22 @@ class MainApp extends ConsumerStatefulWidget {
 
 class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin {
   final PageController _pageController = PageController(initialPage: 1);
-
+  final NotificationService notificationService = NotificationService();
   Animation<double>? containerAnimation;
   AnimationController? containerAnimationController;
   GlobalKey navBarKey = GlobalKey();
   bool _showMatchDialog = false;
 
   @override
+  void dispose() {
+    notificationService.dispose();
+    containerAnimationController?.dispose();
+    super.dispose();
+  }
+
+  @override
   void didChangeDependencies() {
-    NotificationService().init();
+    notificationService.init();
     final roomState = ref.watch(roomAsyncController);
     final userState = ref.watch(userAsyncController);
 
@@ -47,12 +55,6 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
 
     setSystemUILight();
     super.didChangeDependencies();
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    containerAnimationController?.dispose();
   }
 
   void initialAnimation() {
