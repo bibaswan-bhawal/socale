@@ -74,12 +74,32 @@ Future<void> _showNotification(RemoteMessage message) async {
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  _showNotification(message);
+  await Firebase.initializeApp();
   print("Notifications: Handling a background message: ${message.messageId}");
+  _showNotification(message);
 }
 
 class NotificationService {
+  Future<void> initFirebaseMessaging() async{
+
+    print("Notification: Initializing Firebase Messaging.");
+
+    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await FirebaseMessaging.instance.requestPermission();
+    await uploadDeviceToken();
+
+
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      print('Notifications: Got a message whilst in the foreground!');
+      _showNotification(message);
+      if (message.notification != null) {
+        print('Message also contained a notification: ${message.notification}');
+      }
+    });
+
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
   static final NotificationService _notificationService = NotificationService._internal();
 
   factory NotificationService() {
@@ -132,11 +152,21 @@ class NotificationService {
     didReceiveLocalNotificationStream.stream.listen((ReceivedNotification receivedNotification) async {});
   }
 
-  void init() async {
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    FirebaseMessaging.instance.requestPermission();
+  Future<void> uploadDeviceToken() async {
+    final deviceToken = await FirebaseMessaging.instance.getToken();
 
-    print(await FirebaseMessaging.instance.getToken());
+    try {
+      String? userId = (await Amplify.Auth.getCurrentUser()).userId;
+      User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId))).first;
+
+      await Amplify.DataStore.save(user.copyWith(notificationToken: deviceToken));
+    } catch(e) {
+      print("Device token could not be uploaded.");
+    }
+  }
+
+  void init() async {
+  await initFirebaseMessaging();
 
     const AndroidInitializationSettings initializationSettingsAndroid = AndroidInitializationSettings('@mipmap/launcher_icon');
 
@@ -167,16 +197,6 @@ class NotificationService {
         selectNotificationStream.add(notificationResponse.payload);
       },
     );
-
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Notifications: Got a message whilst in the foreground!');
-      _showNotification(message);
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
-      }
-    });
-
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
     _requestPermissions();
     _configureDidReceiveLocalNotificationSubject();

@@ -18,20 +18,10 @@ class _MatchPageState extends ConsumerState<MatchPage> {
   CarouselController carouselController = CarouselController();
   int pageIndex = 0;
 
-  getMatches() async {
-    final user = await Amplify.Auth.getCurrentUser();
-    ref.read(matchAsyncController.notifier).setMatches(user.userId);
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getMatches();
-  }
-
   @override
   Widget build(BuildContext context) {
     final matchesProvider = ref.watch(matchAsyncController);
+
     final mediaQuery = MediaQuery.of(context);
     return Padding(
       padding: EdgeInsets.only(top: mediaQuery.padding.top),

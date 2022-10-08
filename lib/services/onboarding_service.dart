@@ -414,24 +414,21 @@ class OnboardingService {
     print(newUser);
 
     try {
-      var request = ModelMutations.update(newUser);
-      var response = await Amplify.API.mutate(request: request).response;
+      List<User> userList = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
 
-      if (response.errors.isNotEmpty && response.errors.first.message.contains("No existing item found in the data source")) {
-        request = ModelMutations.create(newUser);
-        response = await Amplify.API.mutate(request: request).response;
-      }
-
-      if (response.data != null) {
-        print("user added");
-        return true;
+      if(userList.isEmpty){
+        await Amplify.DataStore.save(newUser);
       } else {
-        print(response.errors);
-        print("user failed");
-        return false;
+        for (User oldUser in userList){
+          await Amplify.DataStore.delete(oldUser);
+        }
+        await Amplify.DataStore.save(newUser);
       }
-    } on Exception catch (error) {
-      print('Error saving user: $error');
+
+      print("user added");
+      return true;
+    } catch (e) {
+      print("Creating user failed: $e");
       return false;
     }
   }

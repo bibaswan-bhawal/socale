@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/bottom_navigation_bar/bottom_navigation_bar.dart';
 import 'package:socale/components/help_overplays/matches_help_overlay.dart';
@@ -13,7 +12,7 @@ import 'package:socale/utils/system_ui_setter.dart';
 import 'package:socale/values/colors.dart';
 
 class MainApp extends ConsumerStatefulWidget {
-  bool? transitionAnimation;
+  final bool? transitionAnimation;
 
   MainApp({Key? key, this.transitionAnimation}) : super(key: key);
 
@@ -22,12 +21,21 @@ class MainApp extends ConsumerStatefulWidget {
 }
 
 class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin {
+  bool? transitionAnimation;
   final PageController _pageController = PageController(initialPage: 1);
   final NotificationService notificationService = NotificationService();
   Animation<double>? containerAnimation;
   AnimationController? containerAnimationController;
   GlobalKey navBarKey = GlobalKey();
   bool _showMatchDialog = false;
+
+  @override
+  void initState() {
+    super.initState();
+    transitionAnimation = widget.transitionAnimation;
+
+    setSystemUILight();
+  }
 
   @override
   void dispose() {
@@ -39,12 +47,14 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
   @override
   void didChangeDependencies() {
     notificationService.init();
-    final roomState = ref.watch(roomAsyncController);
+    ref.watch(roomAsyncController);
     final userState = ref.watch(userAsyncController);
+    ref.watch(matchAsyncController);
 
-    if (widget.transitionAnimation != null && widget.transitionAnimation!) {
+    if (transitionAnimation != null && transitionAnimation!) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        widget.transitionAnimation = false;
+        transitionAnimation = false;
+        ref.read(matchAsyncController.notifier).setMatches(userState.value!.id);
         initialAnimation();
       });
     }
@@ -53,7 +63,6 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
       _showMatchDialog = !user.introMatchingCompleted;
     });
 
-    setSystemUILight();
     super.didChangeDependencies();
   }
 
@@ -79,7 +88,6 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
   }
 
   handleBottomNavigationClick(value) {
-    if (value == 1) ref.read(matchAsyncController.notifier).setLoading();
     _pageController.animateToPage(value, duration: Duration(milliseconds: 300), curve: Curves.easeInOutCubicEmphasized);
   }
 

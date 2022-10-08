@@ -33,9 +33,9 @@ class FormTextField extends StatelessWidget {
       onSaved: onSave,
       validator: validator,
       style: StyleValues.textFieldContentStyle,
-      cursorHeight: 21,
+      cursorHeight: 16,
       cursorColor: ColorValues.elementColor,
-      cursorRadius: Radius.circular(5),
+      cursorRadius: Radius.circular(1),
       decoration: InputDecoration(
         contentPadding: EdgeInsets.fromLTRB(0, 16, 0, 16),
         hintStyle: StyleValues.textFieldHintStyle,

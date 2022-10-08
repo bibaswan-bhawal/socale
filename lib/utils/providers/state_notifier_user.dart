@@ -1,4 +1,3 @@
-import 'package:aws_common/aws_common.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/User.dart';
 import 'package:socale/services/fetch_service.dart';
@@ -27,7 +26,7 @@ class UserStateNotifier extends StateNotifier<AsyncValue<User>> {
   }
 
   void clearUser() {
-    safePrint("Clearing UserStateNotifier");
+    print("Clearing UserStateNotifier");
     state = AsyncLoading();
   }
 }

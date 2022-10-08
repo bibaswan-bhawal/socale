@@ -5,11 +5,7 @@ import 'package:flutter/services.dart';
 
 void setSystemUILight() {
   if (Platform.isIOS) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.light.copyWith(
-        statusBarColor: Colors.transparent,
-      ),
-    );
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.light);
   } else if (Platform.isAndroid) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,
@@ -18,22 +14,11 @@ void setSystemUILight() {
         systemNavigationBarIconBrightness: Brightness.light));
     SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
   }
-
-  SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent,
-      statusBarIconBrightness: Brightness.light,
-      systemNavigationBarColor: Colors.transparent,
-      systemNavigationBarIconBrightness: Brightness.light));
-  SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
 }
 
 void setSystemUIDark() {
   if (Platform.isIOS) {
-    SystemChrome.setSystemUIOverlayStyle(
-      SystemUiOverlayStyle.dark.copyWith(
-        statusBarColor: Colors.transparent,
-      ),
-    );
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle.dark);
   } else if (Platform.isAndroid) {
     SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
         statusBarColor: Colors.transparent,

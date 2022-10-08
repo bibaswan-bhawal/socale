@@ -125,8 +125,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   ),
                 ),
               ),
-              Container(
-                padding: EdgeInsets.symmetric(horizontal: 10),
+              SizedBox(
                 width: size.width,
                 child: Column(
                   children: [
@@ -182,383 +181,390 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10),
-                      child: Text(
-                        "${userState.value!.firstName} ${userState.value!.lastName}",
-                        style: GoogleFonts.poppins(
-                          fontSize: 28,
-                          fontWeight: FontWeight.bold,
-                          color: ColorValues.textOnDark,
-                        ),
-                      ),
-                    ),
-                    Text(
-                      "${userState.value!.major.toString().replaceAll('[', '').replaceAll(']', '')} | @${userState.value!.college}",
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w400,
-                        color: ColorValues.textOnDark,
-                      ),
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                      padding: EdgeInsets.symmetric(horizontal: 10),
+                      child: Column(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(top: 10),
                             child: Text(
-                              "A little about me",
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: ColorValues.textOnDark.withOpacity(0.8),
+                              "${userState.value!.firstName} ${userState.value!.lastName}",
+                              style: GoogleFonts.poppins(
+                                fontSize: 28,
+                                fontWeight: FontWeight.bold,
+                                color: ColorValues.textOnDark,
                               ),
                             ),
                           ),
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 5,
-                          children: [
-                            Chip(
-                              label: Text(
-                                userState.value!.major.toString().replaceAll('[', '').replaceAll(']', ''),
-                                style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.w400,
-                                  color: ColorValues.textOnDark.withOpacity(0.8),
-                                ),
-                              ),
-                              backgroundColor: Color(0xFF3F3E3E),
-                              shape: StadiumBorder(
-                                side: BorderSide(color: ColorValues.socaleOrange),
-                              ),
-                            ),
-                            Chip(
-                              label: Text(
-                                calculateAge(userState.value!.dateOfBirth.getDateTime()).toString(),
-                                style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.w400,
-                                  color: ColorValues.textOnDark.withOpacity(0.8),
-                                ),
-                              ),
-                              backgroundColor: Color(0xFF3F3E3E),
-                              shape: StadiumBorder(
-                                side: BorderSide(color: ColorValues.socaleOrange),
-                              ),
-                            ),
-                            Chip(
-                              label: Text(
-                                userState.value!.college,
-                                style: GoogleFonts.roboto(
-                                  fontWeight: FontWeight.w400,
-                                  color: ColorValues.textOnDark.withOpacity(0.8),
-                                ),
-                              ),
-                              backgroundColor: Color(0xFF3F3E3E),
-                              shape: StadiumBorder(
-                                side: BorderSide(color: ColorValues.socaleOrange),
-                              ),
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-                            child: Text(
-                              "My career goals are",
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: ColorValues.textOnDark.withOpacity(0.8),
-                              ),
+                          Text(
+                            "${userState.value!.major.toString().replaceAll('[', '').replaceAll(']', '')} | @${userState.value!.college}",
+                            style: GoogleFonts.roboto(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                              color: ColorValues.textOnDark,
                             ),
                           ),
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 20,
-                          runSpacing: 20,
-                          children: [
-                            for (String goal in userState.value!.careerGoals)
-                              SizedBox(
-                                width: 80,
-                                child: Column(
-                                  children: [
-                                    Container(
+                          Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  child: Text(
+                                    "A little about me",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 5,
+                                children: [
+                                  Chip(
+                                    label: Text(
+                                      userState.value!.major.toString().replaceAll('[', '').replaceAll(']', ''),
+                                      style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorValues.textOnDark.withOpacity(0.8),
+                                      ),
+                                    ),
+                                    backgroundColor: Color(0xFF3F3E3E),
+                                    shape: StadiumBorder(
+                                      side: BorderSide(color: ColorValues.socaleOrange),
+                                    ),
+                                  ),
+                                  Chip(
+                                    label: Text(
+                                      calculateAge(userState.value!.dateOfBirth.getDateTime()).toString(),
+                                      style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorValues.textOnDark.withOpacity(0.8),
+                                      ),
+                                    ),
+                                    backgroundColor: Color(0xFF3F3E3E),
+                                    shape: StadiumBorder(
+                                      side: BorderSide(color: ColorValues.socaleOrange),
+                                    ),
+                                  ),
+                                  Chip(
+                                    label: Text(
+                                      userState.value!.college,
+                                      style: GoogleFonts.roboto(
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorValues.textOnDark.withOpacity(0.8),
+                                      ),
+                                    ),
+                                    backgroundColor: Color(0xFF3F3E3E),
+                                    shape: StadiumBorder(
+                                      side: BorderSide(color: ColorValues.socaleOrange),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  child: Text(
+                                    "My career goals are",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 20,
+                                runSpacing: 20,
+                                children: [
+                                  for (String goal in userState.value!.careerGoals)
+                                    SizedBox(
                                       width: 80,
-                                      height: 80,
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(10),
-                                        border: Border.all(
-                                          color: ColorValues.socaleOrange,
-                                        ),
-                                      ),
-                                      child: Align(
-                                        alignment: Alignment.bottomCenter,
-                                        child: Text(
-                                          careersOptionsList.keys
-                                              .firstWhere(
-                                                (element) => element == goal || careersOptionsList[element]!.contains(goal),
-                                              )
-                                              .substring(0, 2),
-                                          style: TextStyle(
-                                            fontSize: 54,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Padding(
-                                      padding: EdgeInsets.only(top: 10),
-                                      child: Text(
-                                        goal.removemoji,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.poppins(
-                                          fontSize: 14,
-                                          color: ColorValues.textOnDark,
-                                        ),
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              )
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-                            child: Text(
-                              "My academic interests are",
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: ColorValues.textOnDark.withOpacity(0.8),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 5,
-                          children: [
-                            for (String interests in userState.value!.academicInterests)
-                              Chip(
-                                avatar: Text(
-                                  academicInterestsOptionsList.keys
-                                      .firstWhere(
-                                        (element) => element == interests || academicInterestsOptionsList[element]!.contains(interests),
-                                      )
-                                      .substring(0, 2),
-                                ),
-                                label: Text(
-                                  interests.removemoji,
-                                  style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.w400,
-                                    color: ColorValues.textOnDark.withOpacity(0.8),
-                                  ),
-                                ),
-                                backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-                            child: Text(
-                              "My Non-Academic Interests are",
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: ColorValues.textOnDark.withOpacity(0.8),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 5,
-                          children: [
-                            for (String interests in userState.value!.leisureInterests)
-                              Chip(
-                                avatar: Text(
-                                  hobbiesOptionsList.keys
-                                      .firstWhere(
-                                        (element) => element == interests || hobbiesOptionsList[element]!.contains(interests),
-                                      )
-                                      .substring(0, 2),
-                                ),
-                                label: Text(
-                                  interests.removemoji,
-                                  style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.w400,
-                                    color: ColorValues.textOnDark.withOpacity(0.8),
-                                  ),
-                                ),
-                                backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-                            child: Text(
-                              "I am",
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: ColorValues.textOnDark.withOpacity(0.8),
-                              ),
-                            ),
-                          ),
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 20,
-                          runSpacing: 20,
-                          children: [
-                            for (String interests in userState.value!.selfDescription)
-                              SizedBox(
-                                width: 150,
-                                height: 135,
-                                child: Stack(
-                                  children: [
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
-                                      child: Container(
-                                        width: 150,
-                                        height: 100,
-                                        decoration: BoxDecoration(
-                                          borderRadius: BorderRadius.circular(10),
-                                          border: Border.all(
-                                            width: 4,
-                                            color: Colors.primaries[Random().nextInt(Colors.accents.length)],
-                                          ),
-                                        ),
-                                      ),
-                                    ),
-                                    Align(
-                                      alignment: Alignment.bottomCenter,
                                       child: Column(
                                         children: [
-                                          Image.asset(
-                                            "assets/images/${descriptionIconOptions[userState.value!.selfDescription.indexOf(interests) % 3]}",
-                                            height: 110,
+                                          Container(
+                                            width: 80,
+                                            height: 80,
+                                            decoration: BoxDecoration(
+                                              borderRadius: BorderRadius.circular(10),
+                                              border: Border.all(
+                                                color: ColorValues.socaleOrange,
+                                              ),
+                                            ),
+                                            child: Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Text(
+                                                careersOptionsList.keys
+                                                    .firstWhere(
+                                                      (element) => element == goal || careersOptionsList[element]!.contains(goal),
+                                                )
+                                                    .substring(0, 2),
+                                                style: TextStyle(
+                                                  fontSize: 54,
+                                                ),
+                                              ),
+                                            ),
                                           ),
-                                          Align(
-                                            alignment: Alignment.bottomCenter,
+                                          Padding(
+                                            padding: EdgeInsets.only(top: 10),
                                             child: Text(
-                                              interests.removemoji,
+                                              goal.removemoji,
+                                              textAlign: TextAlign.center,
                                               style: GoogleFonts.poppins(
-                                                fontWeight: FontWeight.bold,
                                                 fontSize: 14,
                                                 color: ColorValues.textOnDark,
                                               ),
                                             ),
-                                          )
+                                          ),
                                         ],
                                       ),
+                                    )
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  child: Text(
+                                    "My academic interests are",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorValues.textOnDark.withOpacity(0.8),
                                     ),
-                                  ],
+                                  ),
                                 ),
-                              )
-                          ],
-                        ),
-                      ],
-                    ),
-                    Column(
-                      children: [
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          child: Padding(
-                            padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-                            child: Text(
-                              "I am also skillful at ...",
-                              textAlign: TextAlign.start,
-                              style: GoogleFonts.roboto(
-                                fontSize: 18,
-                                fontWeight: FontWeight.w400,
-                                color: ColorValues.textOnDark.withOpacity(0.8),
+                              ),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 5,
+                                children: [
+                                  for (String interests in userState.value!.academicInterests)
+                                    Chip(
+                                      avatar: Text(
+                                        academicInterestsOptionsList.keys
+                                            .firstWhere(
+                                              (element) => element == interests || academicInterestsOptionsList[element]!.contains(interests),
+                                        )
+                                            .substring(0, 2),
+                                      ),
+                                      label: Text(
+                                        interests.removemoji,
+                                        style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w400,
+                                          color: ColorValues.textOnDark.withOpacity(0.8),
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  child: Text(
+                                    "My Non-Academic Interests are",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 5,
+                                children: [
+                                  for (String interests in userState.value!.leisureInterests)
+                                    Chip(
+                                      avatar: Text(
+                                        hobbiesOptionsList.keys
+                                            .firstWhere(
+                                              (element) => element == interests || hobbiesOptionsList[element]!.contains(interests),
+                                        )
+                                            .substring(0, 2),
+                                      ),
+                                      label: Text(
+                                        interests.removemoji,
+                                        style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w400,
+                                          color: ColorValues.textOnDark.withOpacity(0.8),
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  child: Text(
+                                    "I am",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 20,
+                                runSpacing: 20,
+                                children: [
+                                  for (String interests in userState.value!.selfDescription)
+                                    SizedBox(
+                                      width: 150,
+                                      height: 135,
+                                      child: Stack(
+                                        children: [
+                                          Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Container(
+                                              width: 150,
+                                              height: 100,
+                                              decoration: BoxDecoration(
+                                                borderRadius: BorderRadius.circular(10),
+                                                border: Border.all(
+                                                  width: 4,
+                                                  color: Colors.primaries[Random().nextInt(Colors.accents.length)],
+                                                ),
+                                              ),
+                                            ),
+                                          ),
+                                          Align(
+                                            alignment: Alignment.bottomCenter,
+                                            child: Column(
+                                              children: [
+                                                Image.asset(
+                                                  "assets/images/${descriptionIconOptions[userState.value!.selfDescription.indexOf(interests) % 3]}",
+                                                  height: 110,
+                                                ),
+                                                Align(
+                                                  alignment: Alignment.bottomCenter,
+                                                  child: Text(
+                                                    interests.removemoji,
+                                                    style: GoogleFonts.poppins(
+                                                      fontWeight: FontWeight.bold,
+                                                      fontSize: 14,
+                                                      color: ColorValues.textOnDark,
+                                                    ),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    )
+                                ],
+                              ),
+                            ],
+                          ),
+                          Column(
+                            children: [
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Padding(
+                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  child: Text(
+                                    "I am also skillful at ...",
+                                    textAlign: TextAlign.start,
+                                    style: GoogleFonts.roboto(
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.w400,
+                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Wrap(
+                                alignment: WrapAlignment.center,
+                                spacing: 5,
+                                children: [
+                                  for (String interests in userState.value!.skills)
+                                    Chip(
+                                      avatar: Text(
+                                        skillsOptionsList.keys
+                                            .firstWhere(
+                                              (element) => element == interests || skillsOptionsList[element]!.contains(interests),
+                                        )
+                                            .substring(0, 2),
+                                      ),
+                                      label: Text(
+                                        interests.removemoji,
+                                        style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w400,
+                                          color: ColorValues.textOnDark.withOpacity(0.8),
+                                        ),
+                                      ),
+                                      backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
+                                    ),
+                                ],
+                              ),
+                            ],
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(vertical: 20),
+                            child: PrimarySolidIconButton(
+                              width: size.width - 30,
+                              height: 58,
+                              text: "Situational Questions",
+                              color: Colors.black,
+                              onClickEventHandler: () {
+                                Navigator.of(context).push(
+                                  PageRouteBuilder(
+                                    pageBuilder: (context, animation, secondaryAnimation) => SituationalQuestionsPage(),
+                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      return SharedAxisTransition(
+                                        animation: animation,
+                                        secondaryAnimation: secondaryAnimation,
+                                        transitionType: SharedAxisTransitionType.horizontal,
+                                        child: child,
+                                      );
+                                    },
+                                  ),
+                                );
+                              },
+                              textColor: ColorValues.socaleDarkOrange,
+                              icon: SvgPicture.asset(
+                                "assets/icons/arrow_right.svg",
+                                color: ColorValues.socaleDarkOrange,
                               ),
                             ),
                           ),
-                        ),
-                        Wrap(
-                          alignment: WrapAlignment.center,
-                          spacing: 5,
-                          children: [
-                            for (String interests in userState.value!.skills)
-                              Chip(
-                                avatar: Text(
-                                  skillsOptionsList.keys
-                                      .firstWhere(
-                                        (element) => element == interests || skillsOptionsList[element]!.contains(interests),
-                                      )
-                                      .substring(0, 2),
-                                ),
-                                label: Text(
-                                  interests.removemoji,
-                                  style: GoogleFonts.roboto(
-                                    fontWeight: FontWeight.w400,
-                                    color: ColorValues.textOnDark.withOpacity(0.8),
-                                  ),
-                                ),
-                                backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
-                              ),
-                          ],
-                        ),
-                      ],
-                    ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(vertical: 20),
-                      child: PrimarySolidIconButton(
-                        width: size.width - 30,
-                        height: 58,
-                        text: "Situational Questions",
-                        color: Colors.black,
-                        onClickEventHandler: () {
-                          Navigator.of(context).push(
-                            PageRouteBuilder(
-                              pageBuilder: (context, animation, secondaryAnimation) => SituationalQuestionsPage(),
-                              transitionsBuilder: (context, animation, secondaryAnimation, child) {
-                                return SharedAxisTransition(
-                                  animation: animation,
-                                  secondaryAnimation: secondaryAnimation,
-                                  transitionType: SharedAxisTransitionType.horizontal,
-                                  child: child,
-                                );
-                              },
-                            ),
-                          );
-                        },
-                        textColor: ColorValues.socaleDarkOrange,
-                        icon: SvgPicture.asset(
-                          "assets/icons/arrow_right.svg",
-                          color: ColorValues.socaleDarkOrange,
-                        ),
+                        ],
                       ),
                     ),
                   ],
