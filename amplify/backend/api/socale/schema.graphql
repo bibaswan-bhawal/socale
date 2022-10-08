@@ -54,6 +54,7 @@ type Room @model @auth(rules: [{allow: public}]) {
   isHidden: AWSJSON!
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
+  lastUser: String
 }
 
 type Message @model @auth(rules: [{allow: public}]) {
