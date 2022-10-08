@@ -30,7 +30,7 @@ class Message extends Model {
   static const classType = const _MessageModelType();
   final String id;
   final Room? _room;
-  final String? _encryptedText;
+  final String? _text;
   final User? _author;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
@@ -43,13 +43,22 @@ class Message extends Model {
     return id;
   }
   
-  Room? get room {
-    return _room;
+  Room get room {
+    try {
+      return _room!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  String get encryptedText {
+  String get text {
     try {
-      return _encryptedText!;
+      return _text!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -99,13 +108,13 @@ class Message extends Model {
     }
   }
   
-  const Message._internal({required this.id, room, required encryptedText, required author, required createdAt, required updatedAt}): _room = room, _encryptedText = encryptedText, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Message._internal({required this.id, required room, required text, required author, required createdAt, required updatedAt}): _room = room, _text = text, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Message({String? id, Room? room, required String encryptedText, required User author, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
+  factory Message({String? id, required Room room, required String text, required User author, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
     return Message._internal(
       id: id == null ? UUID.getUUID() : id,
       room: room,
-      encryptedText: encryptedText,
+      text: text,
       author: author,
       createdAt: createdAt,
       updatedAt: updatedAt);
@@ -121,7 +130,7 @@ class Message extends Model {
     return other is Message &&
       id == other.id &&
       _room == other._room &&
-      _encryptedText == other._encryptedText &&
+      _text == other._text &&
       _author == other._author &&
       _createdAt == other._createdAt &&
       _updatedAt == other._updatedAt;
@@ -137,7 +146,7 @@ class Message extends Model {
     buffer.write("Message {");
     buffer.write("id=" + "$id" + ", ");
     buffer.write("room=" + (_room != null ? _room!.toString() : "null") + ", ");
-    buffer.write("encryptedText=" + "$_encryptedText" + ", ");
+    buffer.write("text=" + "$_text" + ", ");
     buffer.write("author=" + (_author != null ? _author!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
@@ -146,11 +155,11 @@ class Message extends Model {
     return buffer.toString();
   }
   
-  Message copyWith({String? id, Room? room, String? encryptedText, User? author, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
+  Message copyWith({String? id, Room? room, String? text, User? author, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
     return Message._internal(
       id: id ?? this.id,
       room: room ?? this.room,
-      encryptedText: encryptedText ?? this.encryptedText,
+      text: text ?? this.text,
       author: author ?? this.author,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt);
@@ -161,7 +170,7 @@ class Message extends Model {
       _room = json['room']?['serializedData'] != null
         ? Room.fromJson(new Map<String, dynamic>.from(json['room']['serializedData']))
         : null,
-      _encryptedText = json['encryptedText'],
+      _text = json['text'],
       _author = json['author']?['serializedData'] != null
         ? User.fromJson(new Map<String, dynamic>.from(json['author']['serializedData']))
         : null,
@@ -169,14 +178,14 @@ class Message extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'room': _room?.toJson(), 'encryptedText': _encryptedText, 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'room': _room?.toJson(), 'text': _text, 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField ROOM = QueryField(
     fieldName: "room",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));
-  static final QueryField ENCRYPTEDTEXT = QueryField(fieldName: "encryptedText");
+  static final QueryField TEXT = QueryField(fieldName: "text");
   static final QueryField AUTHOR = QueryField(
     fieldName: "author",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
@@ -201,13 +210,13 @@ class Message extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: Message.ROOM,
-      isRequired: false,
-      targetName: "roomMessagesId",
+      isRequired: true,
+      targetName: "messageRoomId",
       ofModelName: (Room).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Message.ENCRYPTEDTEXT,
+      key: Message.TEXT,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));

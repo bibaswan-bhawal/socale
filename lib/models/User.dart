@@ -759,7 +759,7 @@ class User extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasMany(
       key: User.USERROOM,
-      isRequired: false,
+      isRequired: true,
       ofModelName: (UserRoom).toString(),
       associatedKey: UserRoom.USER
     ));

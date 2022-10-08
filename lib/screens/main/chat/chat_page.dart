@@ -53,7 +53,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               id: message.id,
               author: widget.room.getChatUIUsers.where((user) => user.id == message.author.id).first,
               roomId: widget.room.getRoom.id,
-              text: message.encryptedText,
+              text: message.text,
               createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
             ),
           );

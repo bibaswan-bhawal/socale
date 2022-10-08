@@ -32,7 +32,7 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<RoomListItem>>> {
           List<String> newRoomId = [];
 
           for (UserRoom userRoom in snapshot.items) {
-            newRoomId.addIf(userRoom.room != null && !newRoomId.contains(userRoom.room!.id), userRoom.room!.id);
+            newRoomId.addIf(!newRoomId.contains(userRoom.room.id), userRoom.room.id);
           }
 
           if (_streamRooms != null) {

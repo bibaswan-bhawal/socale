@@ -43,12 +43,30 @@ class Match extends Model {
     return id;
   }
   
-  String? get matchingPercentage {
-    return _matchingPercentage;
+  String get matchingPercentage {
+    try {
+      return _matchingPercentage!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  User? get user {
-    return _user;
+  User get user {
+    try {
+      return _user!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime get createdAt {
@@ -77,13 +95,22 @@ class Match extends Model {
     }
   }
   
-  String? get matchUserId {
-    return _matchUserId;
+  String get matchUserId {
+    try {
+      return _matchUserId!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  const Match._internal({required this.id, matchingPercentage, user, required createdAt, required updatedAt, matchUserId}): _matchingPercentage = matchingPercentage, _user = user, _createdAt = createdAt, _updatedAt = updatedAt, _matchUserId = matchUserId;
+  const Match._internal({required this.id, required matchingPercentage, required user, required createdAt, required updatedAt, required matchUserId}): _matchingPercentage = matchingPercentage, _user = user, _createdAt = createdAt, _updatedAt = updatedAt, _matchUserId = matchUserId;
   
-  factory Match({String? id, String? matchingPercentage, User? user, required TemporalDateTime createdAt, required TemporalDateTime updatedAt, String? matchUserId}) {
+  factory Match({String? id, required String matchingPercentage, required User user, required TemporalDateTime createdAt, required TemporalDateTime updatedAt, required String matchUserId}) {
     return Match._internal(
       id: id == null ? UUID.getUUID() : id,
       matchingPercentage: matchingPercentage,
@@ -178,13 +205,13 @@ class Match extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Match.MATCHINGPERCENTAGE,
-      isRequired: false,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
       key: Match.USER,
-      isRequired: false,
+      isRequired: true,
       ofModelName: (User).toString(),
       associatedKey: User.ID
     ));
@@ -203,7 +230,7 @@ class Match extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Match.MATCHUSERID,
-      isRequired: false,
+      isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });

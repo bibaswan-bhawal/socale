@@ -56,7 +56,7 @@ class RoomListItem implements Comparable<RoomListItem> {
   List<types.User> get getChatUIUsers => _chatUIUsers;
 
   String get getLastMessage {
-    return _room.lastMessage ?? "Send your first message!";
+    return _room.lastMessageSent != null ? _room.lastMessageSent!.text : "Send your first message!";
   }
 
   String get getRoomName {

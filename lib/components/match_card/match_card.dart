@@ -39,10 +39,10 @@ class _MatchCardState extends State<MatchCard> {
   onItemClick() async {
     if (!isLoading) {
       setState(() => isLoading = true);
-      RoomListItem room = await chatService.getRoom(widget.user.id);
+      RoomListItem? room = await chatService.getRoom(widget.user.id);
       setState(() => isLoading = false);
 
-      if (mounted) {
+      if (mounted && room != null) {
         Navigator.of(context).push(
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: room),
@@ -102,7 +102,7 @@ class _MatchCardState extends State<MatchCard> {
             size: Size(widget.size.width, widget.size.height - 50),
             baseColor: Color(0xFF232323),
             gradientColor: matchPercentageConverter.convertPercentageToColorList(
-              int.parse(widget.match.matchingPercentage!),
+              int.parse(widget.match.matchingPercentage),
             ),
           ),
           Align(
@@ -127,14 +127,14 @@ class _MatchCardState extends State<MatchCard> {
                   Padding(
                     padding: const EdgeInsets.only(top: 8.0),
                     child: Text(
-                      matchPercentageConverter.convertPercentageToString(int.parse(widget.match.matchingPercentage!)),
+                      matchPercentageConverter.convertPercentageToString(int.parse(widget.match.matchingPercentage)),
                       style: GoogleFonts.roboto(
                         fontSize: 18,
                         fontWeight: FontWeight.w500,
                         letterSpacing: -0.3,
                         foreground: Paint()
                           ..shader = matchPercentageConverter.convertPercentageToGradient(
-                            int.parse(widget.match.matchingPercentage!),
+                            int.parse(widget.match.matchingPercentage),
                           ),
                       ),
                     ),

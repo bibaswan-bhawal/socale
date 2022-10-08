@@ -42,12 +42,30 @@ class UserRoom extends Model {
     return id;
   }
   
-  User? get user {
-    return _user;
+  User get user {
+    try {
+      return _user!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
-  Room? get room {
-    return _room;
+  Room get room {
+    try {
+      return _room!;
+    } catch(e) {
+      throw new AmplifyCodeGenModelException(
+          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
+          recoverySuggestion:
+            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
+          underlyingException: e.toString()
+          );
+    }
   }
   
   TemporalDateTime get createdAt {
@@ -76,9 +94,9 @@ class UserRoom extends Model {
     }
   }
   
-  const UserRoom._internal({required this.id, user, room, required createdAt, required updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
+  const UserRoom._internal({required this.id, required user, required room, required createdAt, required updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory UserRoom({String? id, User? user, Room? room, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
+  factory UserRoom({String? id, required User user, required Room room, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
     return UserRoom._internal(
       id: id == null ? UUID.getUUID() : id,
       user: user,
@@ -177,14 +195,14 @@ class UserRoom extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: UserRoom.USER,
-      isRequired: false,
+      isRequired: true,
       targetName: "userID",
       ofModelName: (User).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: UserRoom.ROOM,
-      isRequired: false,
+      isRequired: true,
       targetName: "roomID",
       ofModelName: (Room).toString()
     ));

@@ -1,98 +1,22 @@
 import 'dart:collection';
 import 'dart:convert';
 
-import 'package:amplify_api/model_queries.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
+import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/models/RoomListItem.dart';
-import 'package:socale/models/UserRoom.dart';
-import 'package:socale/models/Message.dart';
-import 'package:socale/models/Room.dart';
-import 'package:socale/models/User.dart';
 import 'package:socale/services/fetch_service.dart';
 
 class ChatService {
-  Future<List<User>> getUsersByRoom(Room room) async {
-    List<User> users = [];
-
-    List<UserRoom> userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.ROOM.eq(room.id));
-
-    for (UserRoom userRoom in userRooms) {
-      users.add(userRoom.user!);
-    }
-
-    return users;
-  }
-
-  Future<List<String>> getUserIdsByRoom(String roomId) async {
-    String graphQLDocument = '''
-    query getUsersForRoom(\$id: ID!) {
-      listUserRooms(filter: {roomID: {eq: \$id}}) {
-        items {
-          user{
-            id
-          }
-        }
-      }
-    } 
-''';
-
-    final request = GraphQLRequest(
-      document: graphQLDocument,
-      variables: <String, String>{'id': roomId},
-    );
-
-    final response = await Amplify.API.query(request: request).response;
-    Map<String, dynamic> data = jsonDecode(response.data);
-    List<dynamic> users = data['listUserRooms']['items'].map((room) => room['user']['id'].toString()).toList();
-
-    return users.map((e) => e.toString()).toList();
-  }
-
-  Future<List<String>> getRoomIdsByUser(String userId) async {
-    String graphQLDocument = '''
-    query getRoomsForUser(\$id: ID!) {
-      listUserRooms(filter: {userID: {eq: \$id}}) {
-        items {
-          room{
-            id
-          }
-        }
-      }
-    } 
-''';
-
-    final request = GraphQLRequest(
-      document: graphQLDocument,
-      variables: <String, String>{'id': userId},
-    );
-
-    final response = await Amplify.API.query(request: request).response;
-    Map<String, dynamic> data = jsonDecode(response.data);
-    List<dynamic> rooms = data['listUserRooms']['items'].map((room) => room['room']['id'].toString()).toList();
-
-    return rooms.map((e) => e.toString()).toList();
-  }
-
-  Future<User?> _getUserById(String id) async {
-    final request = ModelQueries.get(User.classType, id);
-    final response = await Amplify.API.query(request: request).response;
-
-    return response.data;
-  }
-
-  Future<RoomListItem> _createRoom(String otherUserId) async {
-    final userId = (await Amplify.Auth.getCurrentUser()).userId;
-
-    final currentUser = await _getUserById(userId);
-    final otherUser = await _getUserById(otherUserId);
-
+  Future<RoomListItem> _createRoom(User currentUser, User otherUser) async {
     var isHiddenJsonObject = {
-      currentUser!.id: true,
-      otherUser!.id: true,
+      currentUser.id: true,
+      otherUser.id: true,
     };
 
     Room room = Room(
       isHidden: jsonEncode(isHiddenJsonObject),
+      roomType: types.RoomType.direct.toString(),
       createdAt: TemporalDateTime.now(),
       updatedAt: TemporalDateTime.now(),
     );
@@ -119,71 +43,58 @@ class ChatService {
     return RoomListItem(room, [currentUser, otherUser], currentUser);
   }
 
-  Future<RoomListItem> getRoom(String otherUserId) async {
+  Future<RoomListItem?> getRoom(String otherUserId) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
 
     User currentUser = await fetchService.fetchUserById(userId);
     User otherUser = await fetchService.fetchUserById(otherUserId);
 
-    List<String> userRooms = await getRoomIdsByUser(userId);
-    List<String> otherUserRooms = await getRoomIdsByUser(otherUserId);
+    List<UserRoom> userRooms = await fetchService.fetchAllUserRoomsForUser(currentUser);
+    List<UserRoom> otherUserRooms = await fetchService.fetchAllUserRoomsForUser(otherUser);
 
-    HashMap<String, bool> allRooms = HashMap<String, bool>();
-    List<String> commonRooms = [];
+    HashMap<Room, bool> allRooms = HashMap<Room, bool>();
+    List<Room> commonRooms = [];
 
-    for (String room in userRooms) {
-      allRooms.putIfAbsent(room, () => true);
+    for (UserRoom userRoom in userRooms) {
+      allRooms.putIfAbsent(userRoom.room, () => true);
     }
 
-    for (String room in otherUserRooms) {
-      if (allRooms.putIfAbsent(room, () => false)) {
-        commonRooms.add(room);
+    for (UserRoom userRoom in otherUserRooms) {
+      if (allRooms.putIfAbsent(userRoom.room, () => false)) {
+        commonRooms.add(userRoom.room);
       }
     }
 
     if (commonRooms.isEmpty) {
-      return await _createRoom(otherUserId);
+      return _createRoom(currentUser, otherUser);
     }
 
-    for (String roomId in commonRooms) {
-      List<String> users = await getUserIdsByRoom(roomId);
+    RoomListItem roomListItem = RoomListItem(
+      commonRooms.where((room) => room.roomType == types.RoomType.direct.toString()).first,
+      [currentUser, otherUser],
+      currentUser,
+    );
 
-      if (users.length == 2) {
-        Room room = (await Amplify.DataStore.query(Room.classType, where: Room.ID.eq(roomId))).first;
-        return RoomListItem(room, [currentUser, otherUser], currentUser);
-      }
-    }
-
-    return await _createRoom(otherUserId);
-  }
-
-  Future<User> getUser(String userId) async {
-    return (await Amplify.DataStore.query(
-      User.classType,
-      where: User.ID.eq(userId),
-    ))
-        .first;
+    return roomListItem;
   }
 
   Future<void> sendMessage(String text, Room currentRoom) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
 
-    User user = (await Amplify.DataStore.query(
-      User.classType,
-      where: User.ID.eq(userId),
-    ))
-        .first;
+    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId))).first;
 
     final message = Message(
-      encryptedText: text,
+      text: text,
       author: user,
       room: currentRoom,
       createdAt: TemporalDateTime.now(),
       updatedAt: TemporalDateTime.now(),
     );
 
-    Room updatedRoom = currentRoom.copyWith(lastMessage: text, updatedAt: TemporalDateTime.now());
-    print("Chat: Saving updated Room as: $updatedRoom");
+    Room updatedRoom = currentRoom.copyWith(
+      lastMessageSent: message,
+      updatedAt: TemporalDateTime.now(),
+    );
 
     await Amplify.DataStore.save(updatedRoom);
     await Amplify.DataStore.save(message);

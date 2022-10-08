@@ -3,6 +3,7 @@ import 'dart:convert';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -96,6 +97,7 @@ main() {
       };
 
       final room1 = Room(
+        roomType: types.RoomType.direct.toString(),
         isHidden: jsonEncode(isHiddenJsonObject),
         createdAt: TemporalDateTime.now(),
         updatedAt: TemporalDateTime.now(),
@@ -118,7 +120,7 @@ main() {
       final message1 = Message(
         author: user1,
         room: room1,
-        encryptedText: 'text 1',
+        text: 'text 1',
         createdAt: TemporalDateTime.now(),
         updatedAt: TemporalDateTime.now(),
       );
