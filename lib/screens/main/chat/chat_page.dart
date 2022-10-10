@@ -28,6 +28,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   @override
   Widget build(BuildContext context) {
     var chatState = ref.watch(chatAsyncController(widget.room));
+    final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
@@ -40,6 +41,41 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           }, loading: () {
             return Container();
           }),
+          Positioned(
+            top: constraints.chatPageAppBarHeight,
+            child: AnimatedContainer(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(2),
+                gradient: LinearGradient(
+                  begin: Alignment.centerLeft,
+                  end: Alignment.centerRight,
+                  colors: [
+                    Color(0xFF1A2A6C),
+                    Color(0xFFFF0080),
+                    Color(0xFFFDBB2D),
+                  ],
+                ),
+              ),
+              height: 4,
+              width: size.width * (numMessages) / 50,
+              duration: Duration(milliseconds: 100),
+              curve: Curves.easeInOut,
+            ),
+          ),
+          AnimatedPositioned(
+            top: numMessages != 50 ? 0 : constraints.chatPageAppBarHeight,
+            duration: Duration(milliseconds: 100),
+            curve: Curves.easeInOut,
+            child: Material(
+              elevation: 2,
+              child: Container(
+                color: Color(0xFF3E3E3E),
+                width: size.width,
+                height: 82,
+                child: Text("bob"),
+              ),
+            ),
+          ),
           appBarBuilder(),
         ],
       ),
@@ -50,7 +86,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     final size = MediaQuery.of(context).size;
 
     return SizedBox(
-      height: constraints.chatPageAppBarHeight + 4,
+      height: constraints.chatPageAppBarHeight,
       child: Column(
         children: [
           SizedBox(
@@ -62,6 +98,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
                     IconButton(
+                      splashColor: Colors.transparent,
                       onPressed: () => Navigator.of(context).pop(),
                       icon: const Icon(Icons.arrow_back_ios_new),
                     ),
@@ -88,27 +125,6 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ),
               ),
               backgroundColor: Color(0xFF292B2F),
-            ),
-          ),
-          Align(
-            alignment: Alignment.centerLeft,
-            child: AnimatedContainer(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    Color(0xFF1A2A6C),
-                    Color(0xFFFF0080),
-                    Color(0xFFFDBB2D),
-                  ],
-                ),
-              ),
-              height: 4,
-              width: size.width * (numMessages) / 50,
-              duration: Duration(milliseconds: 100),
-              curve: Curves.easeInOut,
             ),
           ),
         ],

@@ -35,6 +35,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               maxHeight: 400,
               child: IconButton(
                 iconSize: 64,
+                splashRadius: 1,
                 onPressed: () {
                   onNavBarClicked(1);
                 },
@@ -52,6 +53,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
                 IconButton(
+                  splashRadius: 1,
                   onPressed: () {
                     onNavBarClicked(0);
                   },
@@ -59,6 +61,7 @@ class CustomBottomNavigationBar extends StatelessWidget {
                 ),
                 Container(width: size.width * 0.20),
                 IconButton(
+                  splashRadius: 1,
                   onPressed: () {
                     onNavBarClicked(2);
                   },

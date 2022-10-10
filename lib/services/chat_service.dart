@@ -66,6 +66,8 @@ class ChatService {
     }
 
     if (commonRooms.isEmpty) {
+      print(userRooms);
+      print(otherUserRooms);
       return _createRoom(currentUser, otherUser);
     }
 
@@ -96,8 +98,8 @@ class ChatService {
       updatedAt: TemporalDateTime.now(),
     );
 
-    await Amplify.DataStore.save(message);
     await Amplify.DataStore.save(updatedRoom);
+    await Amplify.DataStore.save(message);
   }
 }
 
