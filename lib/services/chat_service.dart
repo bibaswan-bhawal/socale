@@ -80,8 +80,8 @@ class ChatService {
 
   Future<void> sendMessage(String text, Room currentRoom) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
-
     User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId))).first;
+    Room room = (await Amplify.DataStore.query(Room.classType, where: Room.ID.eq(currentRoom.id))).first;
 
     final message = Message(
       text: text,
@@ -91,23 +91,13 @@ class ChatService {
       updatedAt: TemporalDateTime.now(),
     );
 
-    Room updatedRoom = currentRoom.copyWith(
+    Room updatedRoom = room.copyWith(
       lastMessageSent: message,
       updatedAt: TemporalDateTime.now(),
     );
 
     await Amplify.DataStore.save(updatedRoom);
     await Amplify.DataStore.save(message);
-  }
-
-  Future<List<Message>> queryMessages(Room room, int page) async {
-    final messages = await Amplify.DataStore.query(
-      Message.classType,
-      where: Message.ROOM.eq(room.id),
-      sortBy: [Message.CREATEDAT.descending()],
-    );
-
-    return messages;
   }
 }
 

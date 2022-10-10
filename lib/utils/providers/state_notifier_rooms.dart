@@ -61,11 +61,8 @@ class RoomsProvider extends StateNotifier<AsyncValue<List<RoomListItem>>> {
                 List<RoomListItem> roomsListItems = [];
 
                 for (Room room in snapshot.items) {
-                  print("Chat: Got Room: $room");
-
                   List<User> usersForRoom = await fetchService.fetchAllUsersForRoom(room);
                   User currentUser = await fetchService.fetchUserById(currentUserId);
-                  print("Chat: adding room: $room");
                   RoomListItem itemToAdd = RoomListItem(room, usersForRoom, currentUser);
                   roomsListItems.addIf(!roomsListItems.contains(itemToAdd), itemToAdd);
                 }

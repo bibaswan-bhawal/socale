@@ -41,7 +41,6 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
 
   @override
   void dispose() {
-    notificationService.dispose();
     containerAnimationController?.dispose();
     super.dispose();
   }
