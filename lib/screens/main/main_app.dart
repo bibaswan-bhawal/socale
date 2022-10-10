@@ -48,7 +48,7 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
   @override
   void didChangeDependencies() {
     notificationService.init();
-    ref.watch(roomAsyncController);
+    ref.watch(roomsAsyncController);
     final userState = ref.watch(userAsyncController);
     ref.watch(matchAsyncController);
 

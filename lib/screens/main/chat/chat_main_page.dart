@@ -36,7 +36,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
   }
 
   onItemClick(int index) {
-    final roomState = ref.watch(roomAsyncController);
+    final roomState = ref.watch(roomsAsyncController);
 
     Navigator.of(context).push(
       PageRouteBuilder(
@@ -87,7 +87,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
   }
 
   Widget listItemBuilder(context, animation, item, index) {
-    final roomState = ref.watch(roomAsyncController);
+    final roomState = ref.watch(roomsAsyncController);
     return SizeFadeTransition(
       sizeFraction: 0.7,
       curve: Curves.easeInOut,
@@ -98,7 +98,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
 
   @override
   Widget build(BuildContext context) {
-    final roomState = ref.watch(roomAsyncController);
+    final roomState = ref.watch(roomsAsyncController);
     var size = MediaQuery.of(context).size;
 
     return DefaultTabController(
@@ -209,11 +209,10 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
                             return Container();
                           },
                           data: (List<RoomListItem> data) {
-
                             return ImplicitlyAnimatedList(
                               items: data,
                               areItemsTheSame: (RoomListItem room1, RoomListItem room2) => room1.getRoom.id == room2.getRoom.id,
-                                itemBuilder: listItemBuilder,
+                              itemBuilder: listItemBuilder,
                             );
                           },
                         ),
