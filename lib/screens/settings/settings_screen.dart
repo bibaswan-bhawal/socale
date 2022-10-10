@@ -268,7 +268,7 @@ class SettingsPage extends ConsumerWidget {
                     ListTile(
                       leading: SvgPicture.asset('assets/icons/support_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      contentPadding: EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 20),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Support",
@@ -291,7 +291,7 @@ class SettingsPage extends ConsumerWidget {
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      trailing: SvgPicture.asset('assets/icons/external_icon.svg'),
                       onTap: () {
                         launchUrl(
                           Uri.parse('https://docs.google.com/forms/d/e/1FAIpQLScUhReI0LUNVtOf0oRvuTN-wB-ZFmf7OTFpJUcrXGGa181-RA/viewform'),

@@ -1,6 +1,4 @@
 import 'dart:async';
-import 'dart:ui' as ui;
-
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
@@ -10,8 +8,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/services/chat_service.dart';
 import 'package:socale/utils/constraints/constraints.dart';
-
-import '../../../models/ModelProvider.dart';
+import 'package:socale/models/ModelProvider.dart';
+import 'package:socale/utils/providers/providers.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
   final RoomListItem room;
@@ -22,55 +20,20 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
-  List<types.Message> _messages = [];
-  StreamSubscription<QuerySnapshot<Message>>? _stream;
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-    getMessages();
-  }
-
-  @override
-  dispose() {
-    super.dispose();
-    _stream?.cancel();
-  }
-
-  void getMessages() {
-    _stream = Amplify.DataStore.observeQuery(
-      Message.classType,
-      where: Message.ROOM.eq(widget.room.getRoom.id),
-      sortBy: [Message.CREATEDAT.descending()],
-    ).listen((QuerySnapshot<Message> snapshot) {
-      if (snapshot.isSynced) {
-        List<types.Message> newMessages = [];
-
-        for (Message message in snapshot.items) {
-          print(message.author);
-
-          newMessages.add(
-            types.TextMessage(
-              id: message.id,
-              author: widget.room.getChatUIUsers.where((user) => user.id == message.author.id).first,
-              roomId: widget.room.getRoom.id,
-              text: message.text,
-              createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
-            ),
-          );
-        }
-
-        if (mounted) setState(() => _messages = newMessages);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    var chatState = ref.watch(chatAsyncController(widget.room));
+
     return Scaffold(
       body: Stack(
         children: [
-          chatRoomBuilder(),
+          chatState.when(data: (messages) {
+            return chatRoomBuilder(messages);
+          }, error: (error, stackTrace) {
+            return Container();
+          }, loading: () {
+            return Container();
+          }),
           appBarBuilder(),
         ],
       ),
@@ -137,7 +100,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ),
               ),
               height: 4,
-              width: size.width * (_messages.length / 120),
+              width: size.width,
             ),
           ),
         ],
@@ -145,9 +108,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-  Widget chatRoomBuilder() {
+  Widget chatRoomBuilder(List<types.Message> messages) {
     return chat_ui.Chat(
-      messages: _messages,
+      messages: messages,
       onSendPressed: _handleSendPressed,
       user: widget.room.getCurrentChatUIUser,
       showUserNames: true,

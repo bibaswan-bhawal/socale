@@ -9,6 +9,7 @@ import 'package:socale/components/translucent_background/bottom_translucent_card
 import 'package:socale/utils/constraints/constraints.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class PrivacyPage extends ConsumerStatefulWidget {
   const PrivacyPage({Key? key}) : super(key: key);
@@ -123,6 +124,40 @@ class _PrivacyPageState extends ConsumerState<PrivacyPage> {
                         onChanged: (bool? value) => setState(() => shareProfile = value ?? true),
                         value: shareProfile,
                       ),
+                    ),
+                    ListTile(
+                      leading: SvgPicture.asset('assets/icons/support_icon.svg'),
+                      horizontalTitleGap: 0,
+                      contentPadding: EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 20),
+                      visualDensity: VisualDensity.compact,
+                      title: Text(
+                        "Privacy Policy",
+                        style: GoogleFonts.poppins(
+                          fontSize: 14,
+                          fontWeight: FontWeight.w500,
+                          letterSpacing: -0.3,
+                          color: ColorValues.textOnDark,
+                        ),
+                      ),
+                      subtitle: RichText(
+                        text: TextSpan(
+                          text: "Read our privacy policy to learn more.",
+                          style: GoogleFonts.roboto(
+                            fontSize: 12,
+                            fontWeight: FontWeight.w400,
+                            letterSpacing: -0.3,
+                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                          ),
+                        ),
+                        textAlign: TextAlign.start,
+                      ),
+                      trailing: SvgPicture.asset('assets/icons/external_icon.svg'),
+                      onTap: () {
+                        launchUrl(
+                          Uri.parse('http://socale.co/support'),
+                          mode: LaunchMode.externalApplication,
+                        );
+                      },
                     ),
                   ],
                 ),

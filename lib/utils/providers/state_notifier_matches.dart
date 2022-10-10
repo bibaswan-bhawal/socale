@@ -4,8 +4,8 @@ import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/aws_lambda_service.dart';
 import 'package:socale/services/fetch_service.dart';
 
-class MatchStateProvider extends StateNotifier<AsyncValue<Map<User, Match>>> {
-  MatchStateProvider() : super(AsyncLoading());
+class MatchStateNotifier extends StateNotifier<AsyncValue<Map<User, Match>>> {
+  MatchStateNotifier() : super(AsyncLoading());
 
   Future<void> setMatches(String id) async {
     print("MessageProvider: message provider getting matches.");

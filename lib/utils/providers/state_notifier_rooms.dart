@@ -8,11 +8,11 @@ import 'package:socale/services/fetch_service.dart';
 
 import '../../models/ModelProvider.dart';
 
-class RoomsProvider extends StateNotifier<AsyncValue<List<RoomListItem>>> {
+class RoomsStateNotifier extends StateNotifier<AsyncValue<List<RoomListItem>>> {
   StreamSubscription<QuerySnapshot<UserRoom>>? _streamUserRooms;
   StreamSubscription<QuerySnapshot<Room>>? _streamRooms;
 
-  RoomsProvider() : super(AsyncLoading()) {
+  RoomsStateNotifier() : super(AsyncLoading()) {
     requestRooms();
   }
 
