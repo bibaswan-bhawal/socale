@@ -16,9 +16,7 @@ class RoomListItem implements Comparable<RoomListItem> {
   RoomListItem(this._room, this._users, this._currentUser) {
     print("Chat: creating RoomListItem with room $_room");
 
-    var isHiddenData = jsonDecode(_room.isHidden);
-
-    print(isHiddenData);
+    Map<String, dynamic> isHiddenData = jsonDecode(_room.isHidden);
 
     _currentChatUIUser = types.User(
       id: _currentUser.id,
@@ -61,13 +59,24 @@ class RoomListItem implements Comparable<RoomListItem> {
 
   String get getRoomName {
     String roomName = "";
-
+    Map<String, dynamic> map = jsonDecode(_room.isHidden);
+    print(map);
     for (User user in _users) {
       if (user.id != _currentUser.id) {
         if (roomName.isEmpty) {
-          roomName = user.anonymousUsername;
+          if(map[user.id] == true){
+            roomName = user.anonymousUsername;
+            continue;
+          }
+
+          roomName = "${user.firstName} ${user.lastName}";
         } else {
-          roomName += ", ${user.anonymousUsername}";
+          if(map[user.id]){
+            roomName += "${user.firstName} ${user.lastName}";
+            continue;
+          }
+
+          roomName = ", ${user.firstName} ${user.lastName}";
         }
       }
     }

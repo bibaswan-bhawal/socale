@@ -69,7 +69,6 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   }
 
   onPageChange(page) {
-    onboardingService.getOnboardingStep().then((value) => print(value.toString()));
     FocusManager.instance.primaryFocus?.unfocus();
   }
 

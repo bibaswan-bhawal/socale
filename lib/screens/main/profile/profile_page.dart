@@ -196,7 +196,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                             ),
                           ),
                           Text(
-                            "${userState.value!.major.toString().replaceAll('[', '').replaceAll(']', '')} | @${userState.value!.college}",
+                            "${userState.value!.major.toString().replaceAll('[', '').replaceAll(']', '')} | ${userState.value!.college}",
                             style: GoogleFonts.roboto(
                               fontSize: 14,
                               fontWeight: FontWeight.w400,
@@ -295,7 +295,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       child: Column(
                                         children: [
                                           Container(
-                                            width: 80,
+                                            width: 100,
                                             height: 80,
                                             decoration: BoxDecoration(
                                               borderRadius: BorderRadius.circular(10),
@@ -323,7 +323,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               goal.removemoji,
                                               textAlign: TextAlign.center,
                                               style: GoogleFonts.poppins(
-                                                fontSize: 14,
+                                                fontSize: 12,
                                                 color: ColorValues.textOnDark,
                                               ),
                                             ),

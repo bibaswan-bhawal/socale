@@ -80,6 +80,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
       final user = await Amplify.Auth.getCurrentUser();
       await ref.read(userAsyncController.notifier).setUser(user.userId);
+      await ref.read(matchAsyncController.notifier).setMatches(user.userId);
       Get.offAllNamed('/main');
       return;
     } else {

@@ -16,12 +16,12 @@ import 'aws_lambda_service.dart';
 class OnboardingService {
   final String boxName = 'user_data';
 
-  final _amplifyCognitoUser = Amplify.Auth.getCurrentUser();
   int? otp;
   String? email;
   String? id;
 
   OnboardingService() {
+    Amplify.DataStore.clear();
     Hive.openBox(boxName);
   }
 
@@ -190,31 +190,25 @@ class OnboardingService {
   // setters
 
   Future<void> setSchoolEmail(String schoolEmail) async {
-    print("Saving school email: $schoolEmail");
 
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('schoolEmail', schoolEmail);
       email = schoolEmail;
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
-    print("Saving bio");
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('firstName', firstName);
       box.put('lastName', lastName);
       box.put('dateOfBirth', dateOfBirth);
       box.put('graduationMonth', graduationMonth);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setCollegeInfo(List<String> major, List<String> minor, String college) async {
-    print("Saving College info");
-
     if (major.length > 2 || major.isEmpty || minor.length > 2 || college.isEmpty) {
       throw ("College info wrong");
     }
@@ -223,12 +217,10 @@ class OnboardingService {
       box.put('major', major);
       box.put('minor', minor);
       box.put('college', college);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setSkills(List<String> skills) async {
-    print("Saving skills");
 
     if (skills.length < 3 || skills.length > 5) {
       throw ("skills list wrong length.");
@@ -236,25 +228,21 @@ class OnboardingService {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('skills', skills);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setAcademicInterests(List<String> academicInterests) async {
-    print("Saving Academic Interests");
 
     if (academicInterests.length < 3 || academicInterests.length > 5) {
       throw ("Academic Interests list wrong length.");
     }
     if (Hive.isBoxOpen(boxName)) {
-      final box = await Hive.box(boxName);
+      final box = Hive.box(boxName);
       box.put('academicInterests', academicInterests);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setCareerGoals(List<String> careerGoals) async {
-    print("Saving Career Goals");
 
     if (careerGoals.length < 3 || careerGoals.length > 5) {
       throw ("Career Goals list wrong length.");
@@ -262,12 +250,10 @@ class OnboardingService {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('careerGoals', careerGoals);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setSelfDescription(List<String> selfDescription) async {
-    print("Saving Self Description");
 
     if (selfDescription.length < 3 || selfDescription.length > 5) {
       throw ("Self description list wrong length.");
@@ -275,12 +261,10 @@ class OnboardingService {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('selfDescription', selfDescription);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setLeisureInterests(List<String> leisureInterests) async {
-    print("saved hobbies");
 
     if (leisureInterests.length < 3 || leisureInterests.length > 5) {
       throw ("Hobbies list wrong length.");
@@ -289,13 +273,10 @@ class OnboardingService {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('leisureInterests', leisureInterests);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setIdealFriendDescription(String idealFriendDescription) async {
-    print("saved friend description");
-
     if (idealFriendDescription.isEmpty || idealFriendDescription.length > 1000) {
       throw ("description empty or to large");
     }
@@ -303,26 +284,20 @@ class OnboardingService {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('idealFriendDescription', idealFriendDescription);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setSituationalDecisions(List<int> situationalDecisions) async {
-    print("saving situational questions");
-
     if (situationalDecisions.isEmpty || situationalDecisions.length != 5) {
       throw ("situational questions not correct");
     }
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('situationalDecisions', situationalDecisions);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<void> setAvatar(String avatar) async {
-    print("saving avatar");
-
     if (avatar.isEmpty) {
       throw ("avatar url not provided correctly");
     }
@@ -330,7 +305,6 @@ class OnboardingService {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('avatar', avatar);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
@@ -338,14 +312,12 @@ class OnboardingService {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('onboardingStep', step.name);
-      print("school email: ${getSchoolEmail()}");
     }
   }
 
   Future<bool> createOnboardedUser() async {
-    final cognitoUser = await _amplifyCognitoUser;
+    final cognitoUser = await Amplify.Auth.getCurrentUser();
     id = cognitoUser.userId;
-
     final box = await Hive.openBox(boxName);
 
     if (!_checkIfFieldExistsLocally(box, 'academicInterests') ||
@@ -364,22 +336,14 @@ class OnboardingService {
         !_checkIfFieldExistsLocally(box, 'selfDescription') ||
         !_checkIfFieldExistsLocally(box, 'situationalDecisions') ||
         !_checkIfFieldExistsLocally(box, 'skills')) {
-      print(box.toMap().toString());
-      print("something missing");
       return false;
     }
 
-    if (box.get('schoolEmail') == null && email == null) {
-      print('school email missing');
-      return false;
-    }
+    if (box.get('schoolEmail') == null && email == null) return false;
 
     List<AuthUserAttribute>? attributes = await fetchService.fetchCurrentUserAttributes();
 
-    if (attributes == null) {
-      print("failed to get attributes");
-      return false;
-    }
+    if (attributes == null) return false;
 
     String anonymousUsername = "${capitalize(usernameAdjectives[Random().nextInt(394)])} ${capitalize(usernameNouns[Random().nextInt(224)])}";
 
@@ -411,24 +375,29 @@ class OnboardingService {
       updatedAt: TemporalDateTime.now(),
     );
 
-    print(newUser);
 
     try {
-      List<User> userList = await Amplify.DataStore.query(User.classType, where: User.ID.eq(id));
+      final queryUserRequest = ModelQueries.get(User.classType, newUser.id);
+      final queryUserResponse = await Amplify.API.query(request: queryUserRequest).response;
 
-      if(userList.isEmpty){
-        await Amplify.DataStore.save(newUser);
-      } else {
-        for (User oldUser in userList){
-          await Amplify.DataStore.delete(oldUser);
-        }
-        await Amplify.DataStore.save(newUser);
+      if(queryUserResponse.errors.isNotEmpty) throw Exception("Query Response Error");
+
+      User? queryData = queryUserResponse.data;
+
+      if(queryData != null){
+        final deleteUserRequest = ModelMutations.deleteById(User.classType, newUser.id);
+        final deleteUserResponse = await Amplify.API.mutate(request: deleteUserRequest).response;
+
+        if(deleteUserResponse.errors.isNotEmpty) throw Exception("Error deleting existing user.");
       }
 
-      print("user added");
+      final createUserRequest = ModelMutations.create(newUser);
+      final createUserResponse = await Amplify.API.mutate(request: createUserRequest).response;
+
+      if(createUserResponse.errors.isNotEmpty) throw Exception("Error creating new user.");
+
       return true;
-    } catch (e) {
-      print("Creating user failed: $e");
+    } on Exception catch (_) {
       return false;
     }
   }
@@ -442,10 +411,7 @@ class OnboardingService {
     final response = await awsLambdaService.getMatches(id!);
     await Amplify.DataStore.start();
 
-    if (response == false) {
-      print("Couldn't create matches");
-      return false;
-    }
+    if (response == false) return false;
 
     return true;
   }
