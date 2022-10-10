@@ -62,7 +62,7 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
   void startTransition() {
     final size = MediaQuery.of(context).size;
 
-    containerAnimationController = AnimationController(duration: const Duration(milliseconds: 750), vsync: this);
+    containerAnimationController = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
     containerAnimation = Tween<double>(begin: 0, end: size.height).animate(containerAnimationController!)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {

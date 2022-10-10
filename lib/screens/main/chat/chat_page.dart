@@ -16,12 +16,36 @@ class ChatPage extends ConsumerStatefulWidget {
   ConsumerState<ChatPage> createState() => _ChatPageState();
 }
 
-class _ChatPageState extends ConsumerState<ChatPage> {
+class _ChatPageState extends ConsumerState<ChatPage> with SingleTickerProviderStateMixin {
   int numMessages = 0;
+  int maxMessage = 0;
+  Animation<double>? animation;
+  AnimationController? animationController;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
+  }
+
+  onMessagesChange(int newLength) {
+    final size = MediaQuery.of(context).size;
+
+    if (animationController != null) {
+      animationController?.stop(canceled: true);
+    }
+
+    animationController = AnimationController(duration: Duration(milliseconds: 100), vsync: this);
+    animation = Tween<double>(begin: size.width * (numMessages / 50), end: size.width * (newLength / 50)).animate(animationController!)
+      ..addStatusListener((status) {
+        if (status == AnimationStatus.completed) {
+          setState(() => numMessages = newLength);
+        }
+      })
+      ..addListener(() {
+        setState(() {});
+      });
+
+    animationController?.forward();
   }
 
   @override
@@ -32,7 +56,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       body: Stack(
         children: [
           chatState.when(data: (messages) {
-            setState(() => numMessages = messages.length);
+            onMessagesChange(messages.length);
             return chatRoomBuilder(messages);
           }, error: (error, stackTrace) {
             return Container();
