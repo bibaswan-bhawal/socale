@@ -92,7 +92,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           ),
           Align(
             alignment: Alignment.centerLeft,
-            child: Container(
+            child: AnimatedContainer(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(2),
                 gradient: LinearGradient(
@@ -106,7 +106,9 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ),
               ),
               height: 4,
-              width: size.width * numMessages / 50,
+              width: size.width * (numMessages) / 50,
+              duration: Duration(milliseconds: 100),
+              curve: Curves.easeInOut,
             ),
           ),
         ],

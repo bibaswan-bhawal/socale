@@ -79,6 +79,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   }
 
   Future<void> _attemptAutoLogin() async {
+
     try {
       final session = await Amplify.Auth.fetchAuthSession();
 
@@ -87,6 +88,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
 
         await ref.read(userAttributesAsyncController.notifier).setAttributes(); // set user attributes
         await Amplify.DataStore.start(); // start datastore
+        await Amplify.DataStore.clear();
       }
 
       setState(() => _isSignedIn = session.isSignedIn);
