@@ -30,14 +30,13 @@ import 'package:flutter/foundation.dart';
 class Room extends Model {
   static const classType = const _RoomModelType();
   final String id;
-  final Message? _lastMessageSent;
+  final String? _lastMessageSent;
   final String? _roomType;
   final List<Message>? _messages;
   final List<UserRoom>? _userRoom;
   final String? _isHidden;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
-  final String? _roomLastMessageSentId;
 
   @override
   getInstanceType() => classType;
@@ -47,7 +46,7 @@ class Room extends Model {
     return id;
   }
   
-  Message? get lastMessageSent {
+  String? get lastMessageSent {
     return _lastMessageSent;
   }
   
@@ -111,13 +110,9 @@ class Room extends Model {
     }
   }
   
-  String? get roomLastMessageSentId {
-    return _roomLastMessageSentId;
-  }
+  const Room._internal({required this.id, lastMessageSent, required roomType, messages, userRoom, required isHidden, required createdAt, required updatedAt}): _lastMessageSent = lastMessageSent, _roomType = roomType, _messages = messages, _userRoom = userRoom, _isHidden = isHidden, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  const Room._internal({required this.id, lastMessageSent, required roomType, messages, userRoom, required isHidden, required createdAt, required updatedAt, roomLastMessageSentId}): _lastMessageSent = lastMessageSent, _roomType = roomType, _messages = messages, _userRoom = userRoom, _isHidden = isHidden, _createdAt = createdAt, _updatedAt = updatedAt, _roomLastMessageSentId = roomLastMessageSentId;
-  
-  factory Room({String? id, Message? lastMessageSent, required String roomType, List<Message>? messages, List<UserRoom>? userRoom, required String isHidden, required TemporalDateTime createdAt, required TemporalDateTime updatedAt, String? roomLastMessageSentId}) {
+  factory Room({String? id, String? lastMessageSent, required String roomType, List<Message>? messages, List<UserRoom>? userRoom, required String isHidden, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
     return Room._internal(
       id: id == null ? UUID.getUUID() : id,
       lastMessageSent: lastMessageSent,
@@ -126,8 +121,7 @@ class Room extends Model {
       userRoom: userRoom != null ? List<UserRoom>.unmodifiable(userRoom) : userRoom,
       isHidden: isHidden,
       createdAt: createdAt,
-      updatedAt: updatedAt,
-      roomLastMessageSentId: roomLastMessageSentId);
+      updatedAt: updatedAt);
   }
   
   bool equals(Object other) {
@@ -145,8 +139,7 @@ class Room extends Model {
       DeepCollectionEquality().equals(_userRoom, other._userRoom) &&
       _isHidden == other._isHidden &&
       _createdAt == other._createdAt &&
-      _updatedAt == other._updatedAt &&
-      _roomLastMessageSentId == other._roomLastMessageSentId;
+      _updatedAt == other._updatedAt;
   }
   
   @override
@@ -158,17 +151,17 @@ class Room extends Model {
     
     buffer.write("Room {");
     buffer.write("id=" + "$id" + ", ");
+    buffer.write("lastMessageSent=" + "$_lastMessageSent" + ", ");
     buffer.write("roomType=" + "$_roomType" + ", ");
     buffer.write("isHidden=" + "$_isHidden" + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
-    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null") + ", ");
-    buffer.write("roomLastMessageSentId=" + "$_roomLastMessageSentId");
+    buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
     buffer.write("}");
     
     return buffer.toString();
   }
   
-  Room copyWith({String? id, Message? lastMessageSent, String? roomType, List<Message>? messages, List<UserRoom>? userRoom, String? isHidden, TemporalDateTime? createdAt, TemporalDateTime? updatedAt, String? roomLastMessageSentId}) {
+  Room copyWith({String? id, String? lastMessageSent, String? roomType, List<Message>? messages, List<UserRoom>? userRoom, String? isHidden, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
     return Room._internal(
       id: id ?? this.id,
       lastMessageSent: lastMessageSent ?? this.lastMessageSent,
@@ -177,15 +170,12 @@ class Room extends Model {
       userRoom: userRoom ?? this.userRoom,
       isHidden: isHidden ?? this.isHidden,
       createdAt: createdAt ?? this.createdAt,
-      updatedAt: updatedAt ?? this.updatedAt,
-      roomLastMessageSentId: roomLastMessageSentId ?? this.roomLastMessageSentId);
+      updatedAt: updatedAt ?? this.updatedAt);
   }
   
   Room.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
-      _lastMessageSent = json['lastMessageSent']?['serializedData'] != null
-        ? Message.fromJson(new Map<String, dynamic>.from(json['lastMessageSent']['serializedData']))
-        : null,
+      _lastMessageSent = json['lastMessageSent'],
       _roomType = json['roomType'],
       _messages = json['messages'] is List
         ? (json['messages'] as List)
@@ -201,17 +191,14 @@ class Room extends Model {
         : null,
       _isHidden = json['isHidden'],
       _createdAt = json['createdAt'] != null ? TemporalDateTime.fromString(json['createdAt']) : null,
-      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null,
-      _roomLastMessageSentId = json['roomLastMessageSentId'];
+      _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'lastMessageSent': _lastMessageSent?.toJson(), 'roomType': _roomType, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'isHidden': _isHidden, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'roomLastMessageSentId': _roomLastMessageSentId
+    'id': id, 'lastMessageSent': _lastMessageSent, 'roomType': _roomType, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'isHidden': _isHidden, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
-  static final QueryField LASTMESSAGESENT = QueryField(
-    fieldName: "lastMessageSent",
-    fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Message).toString()));
+  static final QueryField LASTMESSAGESENT = QueryField(fieldName: "lastMessageSent");
   static final QueryField ROOMTYPE = QueryField(fieldName: "roomType");
   static final QueryField MESSAGES = QueryField(
     fieldName: "messages",
@@ -222,7 +209,6 @@ class Room extends Model {
   static final QueryField ISHIDDEN = QueryField(fieldName: "isHidden");
   static final QueryField CREATEDAT = QueryField(fieldName: "createdAt");
   static final QueryField UPDATEDAT = QueryField(fieldName: "updatedAt");
-  static final QueryField ROOMLASTMESSAGESENTID = QueryField(fieldName: "roomLastMessageSentId");
   static var schema = Model.defineSchema(define: (ModelSchemaDefinition modelSchemaDefinition) {
     modelSchemaDefinition.name = "Room";
     modelSchemaDefinition.pluralName = "Rooms";
@@ -240,11 +226,10 @@ class Room extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.hasOne(
+    modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Room.LASTMESSAGESENT,
       isRequired: false,
-      ofModelName: (Message).toString(),
-      associatedKey: Message.ROOM
+      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
@@ -283,12 +268,6 @@ class Room extends Model {
       key: Room.UPDATEDAT,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
-    ));
-    
-    modelSchemaDefinition.addField(ModelFieldDefinition.field(
-      key: Room.ROOMLASTMESSAGESENTID,
-      isRequired: false,
-      ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
   });
 }

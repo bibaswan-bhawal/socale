@@ -56,7 +56,7 @@ class RoomListItem implements Comparable<RoomListItem> {
     print("Current Room Messages: ${_room.messages}");
     print("Current Room Messages last: ${_room.lastMessageSent}");
 
-    return _room.lastMessageSent != null ? _room.lastMessageSent!.text : "Send your first message!";
+    return _room.lastMessageSent ?? "Send your first message!";
   }
 
   String get getRoomName {

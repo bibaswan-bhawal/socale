@@ -29,8 +29,8 @@ import 'package:flutter/foundation.dart';
 class Message extends Model {
   static const classType = const _MessageModelType();
   final String id;
-  final Room? _room;
   final String? _text;
+  final Room? _room;
   final User? _author;
   final TemporalDateTime? _createdAt;
   final TemporalDateTime? _updatedAt;
@@ -43,9 +43,9 @@ class Message extends Model {
     return id;
   }
   
-  Room get room {
+  String get text {
     try {
-      return _room!;
+      return _text!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -56,9 +56,9 @@ class Message extends Model {
     }
   }
   
-  String get text {
+  Room get room {
     try {
-      return _text!;
+      return _room!;
     } catch(e) {
       throw new AmplifyCodeGenModelException(
           AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
@@ -108,13 +108,13 @@ class Message extends Model {
     }
   }
   
-  const Message._internal({required this.id, required room, required text, required author, required createdAt, required updatedAt}): _room = room, _text = text, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Message._internal({required this.id, required text, required room, required author, required createdAt, required updatedAt}): _text = text, _room = room, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Message({String? id, required Room room, required String text, required User author, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
+  factory Message({String? id, required String text, required Room room, required User author, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
     return Message._internal(
       id: id == null ? UUID.getUUID() : id,
-      room: room,
       text: text,
+      room: room,
       author: author,
       createdAt: createdAt,
       updatedAt: updatedAt);
@@ -129,8 +129,8 @@ class Message extends Model {
     if (identical(other, this)) return true;
     return other is Message &&
       id == other.id &&
-      _room == other._room &&
       _text == other._text &&
+      _room == other._room &&
       _author == other._author &&
       _createdAt == other._createdAt &&
       _updatedAt == other._updatedAt;
@@ -145,8 +145,8 @@ class Message extends Model {
     
     buffer.write("Message {");
     buffer.write("id=" + "$id" + ", ");
-    buffer.write("room=" + (_room != null ? _room!.toString() : "null") + ", ");
     buffer.write("text=" + "$_text" + ", ");
+    buffer.write("room=" + (_room != null ? _room!.toString() : "null") + ", ");
     buffer.write("author=" + (_author != null ? _author!.toString() : "null") + ", ");
     buffer.write("createdAt=" + (_createdAt != null ? _createdAt!.format() : "null") + ", ");
     buffer.write("updatedAt=" + (_updatedAt != null ? _updatedAt!.format() : "null"));
@@ -155,11 +155,11 @@ class Message extends Model {
     return buffer.toString();
   }
   
-  Message copyWith({String? id, Room? room, String? text, User? author, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
+  Message copyWith({String? id, String? text, Room? room, User? author, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
     return Message._internal(
       id: id ?? this.id,
-      room: room ?? this.room,
       text: text ?? this.text,
+      room: room ?? this.room,
       author: author ?? this.author,
       createdAt: createdAt ?? this.createdAt,
       updatedAt: updatedAt ?? this.updatedAt);
@@ -167,10 +167,10 @@ class Message extends Model {
   
   Message.fromJson(Map<String, dynamic> json)  
     : id = json['id'],
+      _text = json['text'],
       _room = json['room']?['serializedData'] != null
         ? Room.fromJson(new Map<String, dynamic>.from(json['room']['serializedData']))
         : null,
-      _text = json['text'],
       _author = json['author']?['serializedData'] != null
         ? User.fromJson(new Map<String, dynamic>.from(json['author']['serializedData']))
         : null,
@@ -178,14 +178,14 @@ class Message extends Model {
       _updatedAt = json['updatedAt'] != null ? TemporalDateTime.fromString(json['updatedAt']) : null;
   
   Map<String, dynamic> toJson() => {
-    'id': id, 'room': _room?.toJson(), 'text': _text, 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
+    'id': id, 'text': _text, 'room': _room?.toJson(), 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
 
   static final QueryField ID = QueryField(fieldName: "id");
+  static final QueryField TEXT = QueryField(fieldName: "text");
   static final QueryField ROOM = QueryField(
     fieldName: "room",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (Room).toString()));
-  static final QueryField TEXT = QueryField(fieldName: "text");
   static final QueryField AUTHOR = QueryField(
     fieldName: "author",
     fieldType: ModelFieldType(ModelFieldTypeEnum.model, ofModelName: (User).toString()));
@@ -208,17 +208,17 @@ class Message extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.id());
     
-    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
-      key: Message.ROOM,
-      isRequired: true,
-      targetName: "messageRoomId",
-      ofModelName: (Room).toString()
-    ));
-    
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Message.TEXT,
       isRequired: true,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
+    ));
+    
+    modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
+      key: Message.ROOM,
+      isRequired: true,
+      targetName: "roomMessagesId",
+      ofModelName: (Room).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(

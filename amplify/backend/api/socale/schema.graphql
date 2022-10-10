@@ -48,7 +48,7 @@ type UserRoom @model @auth(rules: [{allow: public}]) {
 
 type Room @model @auth(rules: [{allow: public}]) {
   id: ID!
-  lastMessageSent: Message @hasOne
+  lastMessageSent: String
   roomType: String!
   messages: [Message!] @hasMany
   userRoom: [UserRoom!] @hasMany(indexName: "byRoom", fields: ["id"])
@@ -59,8 +59,8 @@ type Room @model @auth(rules: [{allow: public}]) {
 
 type Message @model @auth(rules: [{allow: public}]) {
   id: ID!
-  room: Room! @belongsTo
   text: String!
+  room: Room! @belongsTo
   author: User! @belongsTo
   createdAt: AWSDateTime!
   updatedAt: AWSDateTime!
