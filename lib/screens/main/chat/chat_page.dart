@@ -8,7 +8,6 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/services/chat_service.dart';
 import 'package:socale/utils/constraints/constraints.dart';
-import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/utils/providers/providers.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
@@ -20,6 +19,13 @@ class ChatPage extends ConsumerStatefulWidget {
 }
 
 class _ChatPageState extends ConsumerState<ChatPage> {
+  int numMessages = 0;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+  }
+
   @override
   Widget build(BuildContext context) {
     var chatState = ref.watch(chatAsyncController(widget.room));
@@ -28,6 +34,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
       body: Stack(
         children: [
           chatState.when(data: (messages) {
+            setState(() => numMessages = messages.length);
             return chatRoomBuilder(messages);
           }, error: (error, stackTrace) {
             return Container();
@@ -100,7 +107,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 ),
               ),
               height: 4,
-              width: size.width,
+              width: size.width * numMessages / 50,
             ),
           ),
         ],
