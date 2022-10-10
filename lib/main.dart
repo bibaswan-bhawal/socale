@@ -79,7 +79,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   }
 
   Future<void> _attemptAutoLogin() async {
-
     try {
       final session = await Amplify.Auth.fetchAuthSession();
 
@@ -88,15 +87,17 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
 
         await ref.read(userAttributesAsyncController.notifier).setAttributes(); // set user attributes
         await Amplify.DataStore.start(); // start datastore
-        await Amplify.DataStore.clear();
       }
 
       setState(() => _isSignedIn = session.isSignedIn);
     } on NotAuthorizedException catch (_) {
+      await Amplify.DataStore.clear();
       setState(() => _isSignedIn = false);
     } on UserNotFoundException catch (_) {
+      await Amplify.DataStore.clear();
       setState(() => _isSignedIn = false);
     } on AuthException catch (e) {
+      await Amplify.DataStore.clear();
       setState(() => _isSignedIn = false);
     }
   }

@@ -63,7 +63,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
             ),
           ),
           AnimatedPositioned(
-            top: numMessages != 50 ? 0 : constraints.chatPageAppBarHeight,
+            top: numMessages == 50 ? 0 : constraints.chatPageAppBarHeight,
             duration: Duration(milliseconds: 100),
             curve: Curves.easeInOut,
             child: Material(
