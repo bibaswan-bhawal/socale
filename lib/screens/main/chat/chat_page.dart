@@ -45,9 +45,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     ).listen((QuerySnapshot<Message> snapshot) {
       if (snapshot.isSynced) {
         List<types.Message> newMessages = [];
-        print("Chat Messages: got new messages. ${snapshot.items.length}");
 
         for (Message message in snapshot.items) {
+          print(message.author);
+
           newMessages.add(
             types.TextMessage(
               id: message.id,
