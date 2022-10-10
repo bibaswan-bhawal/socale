@@ -52,6 +52,7 @@ class RoomListItem implements Comparable<RoomListItem> {
   List<types.User> get getChatUIUsers => _chatUIUsers;
 
   String get getLastMessage {
+    print("Current Room userRooms: ${_room.userRoom}");
     print("Current Room Messages: ${_room.messages}");
     print("Current Room Messages last: ${_room.lastMessageSent}");
 
