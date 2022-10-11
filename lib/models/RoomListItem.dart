@@ -52,17 +52,24 @@ class RoomListItem implements Comparable<RoomListItem> {
   List<types.User> get getChatUIUsers => _chatUIUsers;
 
   String get getLastMessage {
-    print("Current Room userRooms: ${_room.userRoom}");
-    print("Current Room Messages: ${_room.messages}");
-    print("Current Room Messages last: ${_room.lastMessageSent}");
-
     return _room.lastMessageSent ?? "Send your first message!";
+  }
+
+  bool showHidden () {
+    Map<String, dynamic> map = jsonDecode(_room.isHidden);
+
+    for (User user in _users) {
+      if (user.id == _currentUser.id) {
+        return (map[user.id]);
+      }
+    }
+
+    return false;
   }
 
   String get getRoomName {
     String roomName = "";
     Map<String, dynamic> map = jsonDecode(_room.isHidden);
-    print(map);
     for (User user in _users) {
       if (user.id != _currentUser.id) {
         if (roomName.isEmpty) {
@@ -122,7 +129,6 @@ class RoomListItem implements Comparable<RoomListItem> {
 
   @override
   int compareTo(RoomListItem other) {
-    print("sorting: $_room and ${other.getRoom}");
     return _room.updatedAt.compareTo(other._room.updatedAt);
   }
 }

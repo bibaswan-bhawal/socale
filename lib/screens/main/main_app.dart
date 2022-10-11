@@ -33,10 +33,11 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
   @override
   void initState() {
     super.initState();
-    transitionAnimation = widget.transitionAnimation;
-    Amplify.DataStore.clear();
-
     setSystemUILight();
+
+    transitionAnimation = widget.transitionAnimation;
+    notificationService.init();
+
   }
 
   @override
@@ -47,10 +48,9 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
 
   @override
   void didChangeDependencies() {
-    notificationService.init();
-    ref.watch(roomsAsyncController);
+    final roomState = ref.watch(roomsAsyncController);
     final userState = ref.watch(userAsyncController);
-    ref.watch(matchAsyncController);
+    final matchState = ref.watch(matchAsyncController);
 
     if (transitionAnimation != null && transitionAnimation!) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -64,13 +64,7 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
       _showMatchDialog = !user.introMatchingCompleted;
     });
 
-    bob();
-
     super.didChangeDependencies();
-  }
-
-  Future<void> bob() async {
-    print("PRINT USER: ${await Amplify.DataStore.query(User.classType)}");
   }
 
   void initialAnimation() {

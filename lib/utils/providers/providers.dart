@@ -17,6 +17,6 @@ final userAttributesAsyncController =
 final chatAsyncController = StateNotifierProvider.autoDispose
     .family<ChatStateNotifier, AsyncValue<List<types.Message>>, RoomListItem>((ref, room) => ChatStateNotifier(room));
 final roomAsyncController =
-    StateNotifierProvider.family<RoomStateNotifier, AsyncValue<RoomListItem>, MatchRoom>((ref, matchRoom) => RoomStateNotifier(matchRoom));
+    StateNotifierProvider.autoDispose.family<RoomStateNotifier, AsyncValue<RoomListItem>, MatchRoom>((ref, matchRoom) => RoomStateNotifier(matchRoom));
 final matchAsyncController = StateNotifierProvider<MatchStateNotifier, AsyncValue<Map<User, Match>>>((ref) => MatchStateNotifier());
 final roomsAsyncController = StateNotifierProvider<RoomsStateNotifier, AsyncValue<List<RoomListItem>>>((ref) => RoomsStateNotifier());

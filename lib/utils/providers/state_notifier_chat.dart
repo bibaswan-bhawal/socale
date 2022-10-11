@@ -3,10 +3,8 @@ import 'dart:async';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
-import 'package:socale/models/MatchRoom.dart';
 import 'package:socale/models/Message.dart';
 import 'package:socale/models/RoomListItem.dart';
-import 'package:socale/services/chat_service.dart';
 
 class ChatStateNotifier extends StateNotifier<AsyncValue<List<types.Message>>> {
   final RoomListItem room;

@@ -8,7 +8,7 @@ import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/services/fetch_service.dart';
 
 class ChatService {
-  Future<RoomListItem> _createRoom(User currentUser, User otherUser) async {
+  Future<RoomListItem?> _createRoom(User currentUser, User otherUser) async {
     var isHiddenJsonObject = {
       currentUser.id: true,
       otherUser.id: true,
@@ -17,6 +17,7 @@ class ChatService {
     Room room = Room(
       isHidden: jsonEncode(isHiddenJsonObject),
       roomType: types.RoomType.direct.toString(),
+      lastMessageSent: null,
       createdAt: TemporalDateTime.now(),
       updatedAt: TemporalDateTime.now(),
     );
@@ -35,49 +36,76 @@ class ChatService {
       updatedAt: TemporalDateTime.now(),
     );
 
-    await Amplify.DataStore.save(room);
+    try {
+      await Amplify.DataStore.save(room);
 
-    await Amplify.DataStore.save(userRoom1);
-    await Amplify.DataStore.save(userRoom2);
+      await Amplify.DataStore.save(userRoom1);
+      await Amplify.DataStore.save(userRoom2);
 
-    return RoomListItem(room, [currentUser, otherUser], currentUser);
+      return RoomListItem(room, [currentUser, otherUser], currentUser);
+    } catch (e){
+      return null;
+    }
   }
 
   Future<RoomListItem?> getRoom(String otherUserId) async {
+
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
 
     User currentUser = await fetchService.fetchUserById(userId);
     User otherUser = await fetchService.fetchUserById(otherUserId);
 
-    List<UserRoom> userRooms = await fetchService.fetchAllUserRoomsForUser(currentUser);
-    List<UserRoom> otherUserRooms = await fetchService.fetchAllUserRoomsForUser(otherUser);
+    try {
+      List<UserRoom?>? userRooms = await fetchService.fetchAllUserRoomsForUser(currentUser);
+      List<UserRoom?>? otherUserRooms = await fetchService.fetchAllUserRoomsForUser(otherUser);
 
-    HashMap<Room, bool> allRooms = HashMap<Room, bool>();
-    List<Room> commonRooms = [];
-
-    for (UserRoom userRoom in userRooms) {
-      allRooms.putIfAbsent(userRoom.room, () => true);
-    }
-
-    for (UserRoom userRoom in otherUserRooms) {
-      if (allRooms.putIfAbsent(userRoom.room, () => false)) {
-        commonRooms.add(userRoom.room);
+      for(UserRoom? f in userRooms!){
+        print(f!.id);
       }
+      if(userRooms == null || otherUserRooms == null){
+        print("could not get UserRooms");
+        throw(Exception("Could not get UserRooms"));
+      }
+
+      HashMap<Room, bool> allRooms = HashMap<Room, bool>();
+      List<Room> commonRooms = [];
+
+      for (UserRoom? userRoom in userRooms) {
+        if(userRoom == null) {
+          print("user room somehow null for $userId");
+          return null;
+        }
+
+        print("UserRoom: ${userRoom.room.id}");
+
+        allRooms.putIfAbsent(userRoom.room, () => true);
+      }
+
+      for (UserRoom? userRoom in otherUserRooms) {
+        if(userRoom == null) {
+          print("user room somehow null for user $otherUserId");
+          return null;
+        }
+
+        if (allRooms.putIfAbsent(userRoom.room, () => false)) {
+          commonRooms.add(userRoom.room);
+        }
+      }
+
+      if (commonRooms.isEmpty) {
+        return _createRoom(currentUser, otherUser);
+      }
+
+      RoomListItem roomListItem = RoomListItem(
+        commonRooms.where((room) => room.roomType == types.RoomType.direct.toString()).first,
+        [currentUser, otherUser],
+        currentUser,
+      );
+
+      return roomListItem;
+    } catch (_) {
+      rethrow;
     }
-
-    if (commonRooms.isEmpty) {
-      print(userRooms);
-      print(otherUserRooms);
-      return _createRoom(currentUser, otherUser);
-    }
-
-    RoomListItem roomListItem = RoomListItem(
-      commonRooms.where((room) => room.roomType == types.RoomType.direct.toString()).first,
-      [currentUser, otherUser],
-      currentUser,
-    );
-
-    return roomListItem;
   }
 
   Future<void> sendMessage(String text, Room currentRoom) async {

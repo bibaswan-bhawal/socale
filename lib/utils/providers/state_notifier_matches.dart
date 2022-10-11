@@ -1,4 +1,5 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'dart:async';
+
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/services/aws_lambda_service.dart';
@@ -8,7 +9,6 @@ class MatchStateNotifier extends StateNotifier<AsyncValue<Map<User, Match>>> {
   MatchStateNotifier() : super(AsyncLoading());
 
   Future<void> setMatches(String id) async {
-    print("MessageProvider: message provider getting matches.");
     Map<User, Match> matches = {};
     state = AsyncLoading();
 
@@ -16,12 +16,9 @@ class MatchStateNotifier extends StateNotifier<AsyncValue<Map<User, Match>>> {
 
     if (currentUser.matches.isEmpty) {
       try {
-        Amplify.DataStore.stop();
         final response = await awsLambdaService.getMatches(id);
-        Amplify.DataStore.start();
-
         if (response == false) {
-          throw ("");
+          throw (Exception("Failed to generate matches"));
         }
       } catch (e, stackTrace) {
         state = AsyncError(e, stackTrace);
@@ -32,7 +29,6 @@ class MatchStateNotifier extends StateNotifier<AsyncValue<Map<User, Match>>> {
     }
 
     for (String matchId in currentUser.matches) {
-      print(matchId);
       User user = await fetchService.fetchUserById(matchId.split('_')[1]);
       Match match = await fetchService.fetchMatch(matchId);
 

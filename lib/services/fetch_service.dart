@@ -34,48 +34,16 @@ class FetchService {
     return response.data!;
   }
 
-  Future<List<User>?> fetchAllUsers() async {
-    final userId = (await Amplify.Auth.getCurrentUser()).userId;
-    final users = await Amplify.DataStore.query(
-      User.classType,
-      where: User.ID.ne(userId),
-    );
+  Future<List<UserRoom?>?> fetchAllUserRoomsForUser(User user) async {
+    final request = ModelQueries.list(UserRoom.classType, where: UserRoom.USER.eq(user.id));
+    final response = await Amplify.API.query(request: request).response;
 
-    return users;
-  }
-
-  Future<List<UserRoom>> fetchAllUserRoomsForUser(User user) async {
-    List<UserRoom> userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.USER.eq(user.id));
-    return userRooms;
-  }
-
-  Future<List<Room>> fetchAllRoomsForUser(User user) async {
-    List<Room> rooms = [];
-
-    final userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.USER.eq(user.id));
-
-    for (UserRoom userRoom in userRooms) {
-      Room room = userRoom.room;
-      rooms.add(room);
+    if (response.errors.isNotEmpty || response.data == null) {
+      print("error getting user room for ${user.id}");
+      return null;
     }
 
-    rooms.sort((room1, room2) {
-      return room1.updatedAt.compareTo(room2.updatedAt);
-    });
-
-    return rooms.reversed.toList();
-  }
-
-  Future<List<User>> fetchAllUsersByRoom(Room room) async {
-    List<User> users = [];
-
-    List<UserRoom> userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.ROOM.eq(room.id));
-
-    for (UserRoom userRoom in userRooms) {
-      users.add(userRoom.user);
-    }
-
-    return users;
+    return response.data!.items;
   }
 
   Future<List<User>> fetchAllUsersForRoom(Room room) async {

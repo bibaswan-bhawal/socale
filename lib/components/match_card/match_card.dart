@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/rounded_button.dart';
 import 'package:socale/components/cards/gradient_border_card.dart';
+import 'package:socale/models/MatchRoom.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
 import 'package:socale/models/User.dart';
@@ -37,15 +38,10 @@ class _MatchCardState extends State<MatchCard> {
   }
 
   onItemClick() async {
-    if (!isLoading) {
-      setState(() => isLoading = true);
-      RoomListItem? room = await chatService.getRoom(widget.user.id);
-      setState(() => isLoading = false);
-
-      if (mounted && room != null) {
+      if (mounted) {
         Navigator.of(context).push(
           PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: room),
+            pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: MatchRoom(user: widget.user)),
             transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return SharedAxisTransition(
                 animation: animation,
@@ -57,7 +53,6 @@ class _MatchCardState extends State<MatchCard> {
           ),
         );
       }
-    }
   }
 
   @override

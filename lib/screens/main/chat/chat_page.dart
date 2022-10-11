@@ -6,6 +6,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:flutter_chat_ui/flutter_chat_ui.dart' as chat_ui;
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/models/MatchRoom.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/services/chat_service.dart';
@@ -14,7 +15,7 @@ import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
 class ChatPage extends ConsumerStatefulWidget {
-  final RoomListItem room;
+  final MatchRoom room;
   const ChatPage({Key? key, required this.room}) : super(key: key);
 
   @override
@@ -24,149 +25,164 @@ class ChatPage extends ConsumerStatefulWidget {
 class _ChatPageState extends ConsumerState<ChatPage> {
   int numMessages = 0;
   int maxMessage = 0;
-
+  bool showHiddenMessage = false;
   bool isLoading = false;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    var chatState = ref.watch(chatAsyncController(widget.room));
+    var roomState = ref.watch(roomAsyncController(widget.room));
+
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
       body: Stack(
         children: [
-          chatState.when(data: (messages) {
-            setState(() => numMessages = messages.length);
-            return chatRoomBuilder(messages);
-          }, error: (error, stackTrace) {
-            return Container();
-          }, loading: () {
-            return Container();
-          }),
-          Positioned(
-            top: constraints.chatPageAppBarHeight,
-            child: AnimatedContainer(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(2),
-                gradient: LinearGradient(
-                  begin: Alignment.centerLeft,
-                  end: Alignment.centerRight,
-                  colors: [
-                    Color(0xFF1A2A6C),
-                    Color(0xFFFF0080),
-                    Color(0xFFFDBB2D),
-                  ],
-                ),
-              ),
-              height: 4,
-              width: size.width * (numMessages) / 50,
-              duration: Duration(milliseconds: 100),
-              curve: Curves.easeInOut,
-            ),
-          ),
-          AnimatedPositioned(
-            top: numMessages == 50 ? 0 : constraints.chatPageAppBarHeight,
-            duration: Duration(milliseconds: 100),
-            curve: Curves.easeInOut,
-            child: Material(
-              elevation: 2,
-              child: Container(
-                color: Color(0xFF3E3E3E),
-                width: size.width,
-                height: 82,
-                child: Row(
+          roomState.when(
+              data: (room) {
+                showHiddenMessage  = numMessages == 50 && room.showHidden();
+
+                var chatState = ref.watch(chatAsyncController(room));
+                return Stack(
                   children: [
-                    Container(
-                      padding: EdgeInsets.only(left: 10),
-                      width: 54,
-                      child: widget.room.getRoomPic,
-                    ),
-                    Expanded(
-                      child: Padding(
-                        padding: EdgeInsets.only(top: 12, left: 10),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Looks like you are getting along!",
-                              style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.w500,
-                                color: Colors.white,
-                                fontSize: 14,
-                                letterSpacing: -0.3,
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
-                            Text(
-                              "You have been talking with a crass Salmon for a while now would you like to share your profile?",
-                              style: GoogleFonts.roboto(
-                                fontWeight: FontWeight.w400,
-                                color: Colors.white.withOpacity(0.5),
-                                fontSize: 12,
-                                letterSpacing: -0.3,
-                              ),
-                              textAlign: TextAlign.start,
-                            )
-                          ],
+                    chatState.when(data: (messages) {
+                      setState(() => numMessages = messages.length);
+                      return chatRoomBuilder(messages, room);
+                    }, error: (error, stackTrace) {
+                      return Container();
+                    }, loading: () {
+                      return Container();
+                    }),
+                    Positioned(
+                      top: constraints.chatPageAppBarHeight,
+                      child: AnimatedContainer(
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(2),
+                          gradient: LinearGradient(
+                            begin: Alignment.centerLeft,
+                            end: Alignment.centerRight,
+                            colors: [
+                              Color(0xFF1A2A6C),
+                              Color(0xFFFF0080),
+                              Color(0xFFFDBB2D),
+                            ],
+                          ),
                         ),
+                        height: 4,
+                        width: size.width * (numMessages) / 50,
+                        duration: Duration(milliseconds: 100),
+                        curve: Curves.easeInOut,
                       ),
                     ),
-                    Padding(
-                      padding: EdgeInsets.only(right: 20, left: 20),
-                      child: GestureDetector(
-                        onTap: setIsHidden,
+                    AnimatedPositioned(
+                      top: showHiddenMessage ? constraints.chatPageAppBarHeight : 0,
+                      duration: Duration(milliseconds: 300),
+                      curve: Curves.easeInOut,
+                      child: Material(
+                        elevation: 2,
                         child: Container(
-                          decoration: BoxDecoration(
-                            color: Color(0xFF686868),
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          height: 32,
-                          width: 74,
-                          child: Center(
-                            child: RichText(
-                              text: TextSpan(
-                                children: [
-                                  TextSpan(
-                                    text: 'Share',
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 14,
-                                      fontWeight: FontWeight.w500,
-                                      letterSpacing: -0.3,
-                                      foreground: Paint()..shader = ColorValues.socaleTextGradient,
+                          color: Color(0xFF3E3E3E),
+                          width: size.width,
+                          height: 82,
+                          child: Row(
+                            children: [
+                              Container(
+                                padding: EdgeInsets.only(left: 10),
+                                width: 54,
+                                child: room.getRoomPic,
+                              ),
+                              Expanded(
+                                child: Padding(
+                                  padding: EdgeInsets.only(top: 12, left: 10),
+                                  child: Column(
+                                    mainAxisAlignment: MainAxisAlignment.start,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Looks like you are getting along!",
+                                        style: GoogleFonts.roboto(
+                                          fontWeight: FontWeight.w500,
+                                          color: Colors.white,
+                                          fontSize: 14,
+                                          letterSpacing: -0.3,
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
+                                      Padding(
+                                        padding: EdgeInsets.only(top: 2),
+                                        child: Text(
+                                          "You have been talking with a crass Salmon for a while now would you like to share your profile?",
+                                          style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w400,
+                                            color: Colors.white.withOpacity(0.5),
+                                            fontSize: 12,
+                                            letterSpacing: -0.3,
+                                          ),
+                                          textAlign: TextAlign.start,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: EdgeInsets.only(right: 20, left: 20),
+                                child: GestureDetector(
+                                  onTap: () => setIsHidden(room),
+                                  child: Container(
+                                    decoration: BoxDecoration(
+                                      color: Color(0xFF686868),
+                                      borderRadius: BorderRadius.circular(18),
+                                    ),
+                                    height: 32,
+                                    width: 74,
+                                    child: Center(
+                                      child: RichText(
+                                        text: TextSpan(
+                                          children: [
+                                            TextSpan(
+                                              text: 'Share',
+                                              style: GoogleFonts.roboto(
+                                                fontSize: 14,
+                                                fontWeight: FontWeight.w500,
+                                                letterSpacing: -0.3,
+                                                foreground: Paint()..shader = ColorValues.socaleTextGradient,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.start,
+                                      ),
                                     ),
                                   ),
-                                ],
-                              ),
-                              textAlign: TextAlign.start,
-                            ),
+                                ),
+                              )
+                            ],
                           ),
                         ),
                       ),
-                    )
+                    ),
+                    appBarBuilder(room),
                   ],
-                ),
-              ),
-            ),
-          ),
-          appBarBuilder(),
+                );
+              },
+              error: (error, stackTrace) {
+                return Container();
+              },
+              loading: () {
+                return Container();
+              }),
         ],
       ),
     );
   }
 
-  void setIsHidden() async {
+  void setIsHidden(RoomListItem roomListItem) async {
     if (!isLoading) {
       setState(() => isLoading = true);
-      Room room = (await Amplify.DataStore.query(Room.classType, where: Room.ID.eq(widget.room.getRoom.id))).first;
+      Room room = (await Amplify.DataStore.query(Room.classType, where: Room.ID.eq(roomListItem.getRoom.id))).first;
       Map<String, dynamic> isHidden = jsonDecode(room.isHidden);
 
-      isHidden[widget.room.getCurrentUser.id] = false;
+      isHidden[roomListItem.getCurrentUser.id] = false;
 
       Room updatedRoom = room.copyWith(
         isHidden: jsonEncode(isHidden),
@@ -179,7 +195,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     }
   }
 
-  Widget appBarBuilder() {
+  Widget appBarBuilder(RoomListItem roomListItem) {
     return SizedBox(
       height: constraints.chatPageAppBarHeight,
       child: Column(
@@ -197,7 +213,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                       onPressed: () => Navigator.of(context).pop(),
                       icon: const Icon(Icons.arrow_back_ios_new),
                     ),
-                    widget.room.getRoomPic,
+                    roomListItem.getRoomPic,
                   ],
                 ),
               ),
@@ -207,7 +223,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(widget.room.getRoomName),
+                    Text(roomListItem.getRoomName),
                     Text(
                       "Anonymous Match",
                       style: GoogleFonts.poppins(
@@ -227,11 +243,11 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-  Widget chatRoomBuilder(List<types.Message> messages) {
+  Widget chatRoomBuilder(List<types.Message> messages, RoomListItem roomListItem) {
     return chat_ui.Chat(
       messages: messages,
-      onSendPressed: _handleSendPressed,
-      user: widget.room.getCurrentChatUIUser,
+      onSendPressed: (types.PartialText message) => _handleSendPressed(message, roomListItem),
+      user: roomListItem.getCurrentChatUIUser,
       showUserNames: true,
       theme: const chat_ui.DefaultChatTheme(
         primaryColor: Color(0xFFC022E5),
@@ -251,8 +267,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-  void _handleSendPressed(types.PartialText message) {
-    print("Chat: Sending message in room: ${widget.room.getRoom}");
-    chatService.sendMessage(message.text, widget.room.getRoom);
+  void _handleSendPressed(types.PartialText message, RoomListItem roomListItem) {
+    print("Chat: Sending message in room: ${roomListItem.getRoom}");
+    chatService.sendMessage(message.text, roomListItem.getRoom);
   }
 }

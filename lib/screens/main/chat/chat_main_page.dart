@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
+import 'package:socale/models/MatchRoom.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
 import 'package:socale/utils/providers/providers.dart';
@@ -40,7 +41,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProvider
 
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: roomState.value![index]),
+        pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: MatchRoom(room: roomState.value![index])),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SharedAxisTransition(
             animation: animation,

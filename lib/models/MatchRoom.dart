@@ -5,5 +5,5 @@ class MatchRoom {
   final RoomListItem? room;
   final User? user;
 
-  MatchRoom(this.room, this.user);
+  MatchRoom({this.room, this.user});
 }

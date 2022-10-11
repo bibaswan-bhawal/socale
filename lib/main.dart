@@ -32,8 +32,6 @@ void main() async {
 
   await dotenv.load(fileName: "assets/.env"); // load environment variables files
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // initialize firebase for FCM
-
   await Hive.initFlutter(); // initialize local key storage
   configureDependencies(); // configure routing dependencies
   runApp(ProviderScope(child: SocaleApp()));
@@ -48,13 +46,41 @@ class SocaleApp extends ConsumerStatefulWidget {
 
 class SocaleAppState extends ConsumerState<SocaleApp> {
   List<Widget?> initialPage = [SplashScreen(), MainApp(transitionAnimation: false), OnboardingScreen(), AuthScreen()]; // page router list
+  StreamSubscription<DataStoreHubEvent>? stream;
 
   bool _isAmplifyConfigured = false;
+  bool _isDataStoreReady = true;
   bool _isSignedIn = false;
   int _pageIndex = 0;
 
+  void observeEvents() {
+    print("started listen");
+    stream = Amplify.Hub.listen(HubChannel.DataStore, (event) {
+      if (event.eventName == 'networkStatus') {
+        setState(() {
+          final status = event.payload as NetworkStatusEvent?;
+          if(status != null) {
+            _pageIndex = status.active ? _pageIndex : 0;
+          }
+        });
+
+        return;
+      }
+
+      if(event.eventName == 'ready'){
+        setState(() => _isDataStoreReady = true);
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    stream?.cancel();
+    super.dispose();
+  }
+
   Future<void> _configureAmplify() async {
-    //AmplifyAnalyticsPinpoint analyticsPlugin = AmplifyAnalyticsPinpoint(); // library currently broken so can't use
+    // PinpointAnalytics analyticsPlugin = PinpointAnalytics(appId: appId, region: 'us-west-2');
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
     AmplifyAPI apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
     AmplifyStorageS3 storagePlugin = AmplifyStorageS3();
@@ -71,6 +97,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     try {
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
+      Amplify.DataStore.start();
       await _attemptAutoLogin(); // attempt auto login
       await getInitialPage(); // get initial page after splash screen
     } on AmplifyAlreadyConfiguredException {
@@ -84,7 +111,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
 
       if (session.isSignedIn == true) {
         authService.startAuthStreamListener(); // auth events listener
-
         await ref.read(userAttributesAsyncController.notifier).setAttributes(); // set user attributes
         await Amplify.DataStore.start(); // start datastore
       }
@@ -96,7 +122,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     } on UserNotFoundException catch (_) {
       await Amplify.DataStore.clear();
       setState(() => _isSignedIn = false);
-    } on AuthException catch (e) {
+    } on AuthException catch (_) {
       await Amplify.DataStore.clear();
       setState(() => _isSignedIn = false);
     }
@@ -145,7 +171,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   }
 
   getInitialPage() async {
-    if (_isAmplifyConfigured) {
+    if (_isAmplifyConfigured && _isDataStoreReady) {
       if (_isSignedIn) {
         bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
         if (isOnBoardingComplete) {
