@@ -1,4 +1,3 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/bottom_navigation_bar/bottom_navigation_bar.dart';
@@ -36,7 +35,7 @@ class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin
     setSystemUILight();
 
     transitionAnimation = widget.transitionAnimation;
-    notificationService.init();
+    notificationService.setWidgetRef(ref).init();
 
   }
 

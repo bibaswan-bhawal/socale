@@ -32,7 +32,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       setState(() => isLoading = true);
 
       try {
-        final result = await authService.signIn(widget.email, widget.password); // try signing in user.
+        final result = await authService.signIn(
+            widget.email, widget.password); // try signing in user.
 
         if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
           setState(() => isLoading = false);
@@ -125,7 +126,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                              foreground: Paint()
+                                ..shader = ColorValues.socaleOrangeGradient,
                             ),
                           ),
                         ],
@@ -170,8 +172,29 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
               ),
             ),
           ),
+          Positioned(
+            right: 30,
+            top: 60,
+            child: GestureDetector(
+              behavior: HitTestBehavior.translucent,
+              onTap: () {
+                authService.signOutCurrentUser(ref);
+              },
+              child: Container(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  "Log Out",
+                  style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: ColorValues.socaleOrange),
+                ),
+              ),
+            ),
+          ),
           Padding(
-            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom),
           ),
         ],
       ),

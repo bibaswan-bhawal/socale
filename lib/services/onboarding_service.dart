@@ -5,11 +5,13 @@ import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socale/models/User.dart';
 import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/options/username_adjectives.dart';
 import 'package:socale/utils/options/username_nouns.dart';
+
 import 'aws_lambda_service.dart';
 
 @lazySingleton
@@ -21,7 +23,6 @@ class OnboardingService {
   String? id;
 
   OnboardingService() {
-    Amplify.DataStore.clear();
     Hive.openBox(boxName);
   }
 
@@ -128,10 +129,13 @@ class OnboardingService {
   }
 
   Future<List<String>?> getSelfDescription() async {
-    if (Hive.isBoxOpen(boxName)) {}
-    final box = Hive.box(boxName);
-    final data = box.get('selfDescription');
-    return data;
+    if (Hive.isBoxOpen(boxName)) {
+      final box = Hive.box(boxName);
+      final data = box.get('selfDescription');
+      return data;
+    }
+
+    return null;
   }
 
   Future<List<String>?> getHobbies() async {
@@ -190,7 +194,6 @@ class OnboardingService {
   // setters
 
   Future<void> setSchoolEmail(String schoolEmail) async {
-
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('schoolEmail', schoolEmail);
@@ -198,7 +201,8 @@ class OnboardingService {
     }
   }
 
-  Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
+  Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth,
+      DateTime graduationMonth) async {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('firstName', firstName);
@@ -208,8 +212,12 @@ class OnboardingService {
     }
   }
 
-  Future<void> setCollegeInfo(List<String> major, List<String> minor, String college) async {
-    if (major.length > 2 || major.isEmpty || minor.length > 2 || college.isEmpty) {
+  Future<void> setCollegeInfo(
+      List<String> major, List<String> minor, String college) async {
+    if (major.length > 2 ||
+        major.isEmpty ||
+        minor.length > 2 ||
+        college.isEmpty) {
       throw ("College info wrong");
     }
     if (Hive.isBoxOpen(boxName)) {
@@ -221,7 +229,6 @@ class OnboardingService {
   }
 
   Future<void> setSkills(List<String> skills) async {
-
     if (skills.length < 3 || skills.length > 5) {
       throw ("skills list wrong length.");
     }
@@ -232,7 +239,6 @@ class OnboardingService {
   }
 
   Future<void> setAcademicInterests(List<String> academicInterests) async {
-
     if (academicInterests.length < 3 || academicInterests.length > 5) {
       throw ("Academic Interests list wrong length.");
     }
@@ -243,7 +249,6 @@ class OnboardingService {
   }
 
   Future<void> setCareerGoals(List<String> careerGoals) async {
-
     if (careerGoals.length < 3 || careerGoals.length > 5) {
       throw ("Career Goals list wrong length.");
     }
@@ -254,7 +259,6 @@ class OnboardingService {
   }
 
   Future<void> setSelfDescription(List<String> selfDescription) async {
-
     if (selfDescription.length < 3 || selfDescription.length > 5) {
       throw ("Self description list wrong length.");
     }
@@ -265,7 +269,6 @@ class OnboardingService {
   }
 
   Future<void> setLeisureInterests(List<String> leisureInterests) async {
-
     if (leisureInterests.length < 3 || leisureInterests.length > 5) {
       throw ("Hobbies list wrong length.");
     }
@@ -277,7 +280,8 @@ class OnboardingService {
   }
 
   Future<void> setIdealFriendDescription(String idealFriendDescription) async {
-    if (idealFriendDescription.isEmpty || idealFriendDescription.length > 1000) {
+    if (idealFriendDescription.isEmpty ||
+        idealFriendDescription.length > 1000) {
       throw ("description empty or to large");
     }
 
@@ -341,15 +345,21 @@ class OnboardingService {
 
     if (box.get('schoolEmail') == null && email == null) return false;
 
-    List<AuthUserAttribute>? attributes = await fetchService.fetchCurrentUserAttributes();
+    List<AuthUserAttribute>? attributes =
+        await fetchService.fetchCurrentUserAttributes();
 
     if (attributes == null) return false;
 
-    String anonymousUsername = "${capitalize(usernameAdjectives[Random().nextInt(394)])} ${capitalize(usernameNouns[Random().nextInt(224)])}";
+    String anonymousUsername =
+        "${capitalize(usernameAdjectives[Random().nextInt(394)])} ${capitalize(usernameNouns[Random().nextInt(224)])}";
 
     final newUser = User(
       id: id,
-      email: attributes.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value,
+      email: attributes
+          .where((element) =>
+              element.userAttributeKey == CognitoUserAttributeKey.email)
+          .first
+          .value,
       schoolEmail: getSchoolEmail()!,
       firstName: box.get('firstName'),
       lastName: box.get('lastName'),
@@ -375,26 +385,32 @@ class OnboardingService {
       updatedAt: TemporalDateTime.now(),
     );
 
-
     try {
       final queryUserRequest = ModelQueries.get(User.classType, newUser.id);
-      final queryUserResponse = await Amplify.API.query(request: queryUserRequest).response;
+      final queryUserResponse =
+          await Amplify.API.query(request: queryUserRequest).response;
 
-      if(queryUserResponse.errors.isNotEmpty) throw Exception("Query Response Error");
+      if (queryUserResponse.errors.isNotEmpty)
+        throw Exception("Query Response Error");
 
       User? queryData = queryUserResponse.data;
 
-      if(queryData != null){
-        final deleteUserRequest = ModelMutations.deleteById(User.classType, newUser.id);
-        final deleteUserResponse = await Amplify.API.mutate(request: deleteUserRequest).response;
+      if (queryData != null) {
+        final deleteUserRequest =
+            ModelMutations.deleteById(User.classType, newUser.id);
+        final deleteUserResponse =
+            await Amplify.API.mutate(request: deleteUserRequest).response;
 
-        if(deleteUserResponse.errors.isNotEmpty) throw Exception("Error deleting existing user.");
+        if (deleteUserResponse.errors.isNotEmpty)
+          throw Exception("Error deleting existing user.");
       }
 
       final createUserRequest = ModelMutations.create(newUser);
-      final createUserResponse = await Amplify.API.mutate(request: createUserRequest).response;
+      final createUserResponse =
+          await Amplify.API.mutate(request: createUserRequest).response;
 
-      if(createUserResponse.errors.isNotEmpty) throw Exception("Error creating new user.");
+      if (createUserResponse.errors.isNotEmpty)
+        throw Exception("Error creating new user.");
 
       return true;
     } on Exception catch (_) {
@@ -403,12 +419,17 @@ class OnboardingService {
   }
 
   Future<bool> generateMatches() async {
+    final prefs = await SharedPreferences.getInstance();
+
     if (id == null) {
       return false;
     }
 
     await Amplify.DataStore.stop();
     final response = await awsLambdaService.getMatches(id!);
+
+    await prefs.setString('lastUpdated', DateTime.now().toString());
+
     await Amplify.DataStore.start();
 
     if (response == false) return false;
@@ -427,7 +448,10 @@ class OnboardingService {
   }
 
   String capitalize(String str) {
-    return str.split(' ').map((word) => word.substring(0, 1).toUpperCase() + word.substring(1)).join(' ');
+    return str
+        .split(' ')
+        .map((word) => word.substring(0, 1).toUpperCase() + word.substring(1))
+        .join(' ');
   }
 }
 

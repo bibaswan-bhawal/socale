@@ -34,24 +34,23 @@ class ProfilePage extends ConsumerStatefulWidget {
 class _ProfilePageState extends ConsumerState<ProfilePage> {
   late User currentUser;
   File? profilePicture;
-
   int pageIndex = 0;
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState(){
+    super.initState();
 
-    final userState = ref.watch(userAsyncController);
-    userState.whenData((value) {
-      setState(() => currentUser = value);
-      if (userState.value!.profilePicture != null && userState.value!.profilePicture!.isNotEmpty) {
-        getProfilePicture(userState.value!.profilePicture!);
+    ref.read(userAsyncController).whenData((value) {
+      String? newProfilePic = value.profilePicture;
+
+      if(newProfilePic!.isNotEmpty){
+        getProfilePicture(newProfilePic);
       }
     });
+
   }
 
   Future<void> getProfilePicture(String key) async {
-    print("getting profile picture: $key");
     final documentsDir = await getApplicationDocumentsDirectory();
     final filepath = '${documentsDir.path}/$key.jpg';
     final file = File(filepath);
@@ -62,7 +61,6 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
         local: file,
       );
 
-      print('downloaded file: $key');
       setState(() => profilePicture = file);
     } on StorageException catch (e) {
       print('Error downloading file: $e');
@@ -104,7 +102,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    final userState = ref.watch(userAsyncController);
+    ref.listen<AsyncValue<User>>(userAsyncController, (AsyncValue? previousState, AsyncValue newState) {
+      String? newProfilePic = newState.value!.profilePicture;
+      String? oldProfilePic = previousState?.value.profilePicture;
+
+      if(previousState == null){
+        if (newProfilePic!.isNotEmpty) {
+          getProfilePicture(newProfilePic);
+        }
+      } else {
+        if(oldProfilePic != newProfilePic && newProfilePic!.isNotEmpty){
+          getProfilePicture(newProfilePic);
+        }
+      }
+    });
+
+    var userState = ref.watch(userAsyncController);
+
     final mediaQuery = MediaQuery.of(context);
     final size = mediaQuery.size;
 
@@ -372,7 +386,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           color: ColorValues.textOnDark.withOpacity(0.8),
                                         ),
                                       ),
-                                      backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
+                                      backgroundColor: Color(0xFF3E4042),
                                     ),
                                 ],
                               ),
@@ -415,7 +429,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           color: ColorValues.textOnDark.withOpacity(0.8),
                                         ),
                                       ),
-                                      backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
+                                      backgroundColor: Color(0xFF3E4042),
                                     ),
                                 ],
                               ),
@@ -529,7 +543,7 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                           color: ColorValues.textOnDark.withOpacity(0.8),
                                         ),
                                       ),
-                                      backgroundColor: Colors.primaries[Random().nextInt(Colors.accents.length)].withOpacity(0.4),
+                                      backgroundColor: Color(0xFF3E4042),
                                     ),
                                 ],
                               ),

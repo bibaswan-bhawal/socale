@@ -10,8 +10,6 @@ class AcademicDataNotifier with ChangeNotifier {
 
   AcademicDataNotifier() {
     onboardingService.getCollegeInfo().then((value) {
-      print("Getting College info");
-
       if (value == null) return;
 
       _majors = value[0] ?? [];

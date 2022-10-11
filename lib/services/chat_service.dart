@@ -6,6 +6,7 @@ import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/services/fetch_service.dart';
+import 'package:socale/services/mutate_service.dart';
 
 class ChatService {
   Future<RoomListItem?> _createRoom(User currentUser, User otherUser) async {
@@ -17,7 +18,6 @@ class ChatService {
     Room room = Room(
       isHidden: jsonEncode(isHiddenJsonObject),
       roomType: types.RoomType.direct.toString(),
-      lastMessageSent: null,
       createdAt: TemporalDateTime.now(),
       updatedAt: TemporalDateTime.now(),
     );
@@ -37,57 +37,54 @@ class ChatService {
     );
 
     try {
-      await Amplify.DataStore.save(room);
+      Room? createdRoom = (await mutateService.createModel(room)) as Room?;
+      if (createdRoom == null) return null;
+      UserRoom? createdUserRoom1 =
+          (await mutateService.createModel(userRoom1)) as UserRoom?;
+      if (createdUserRoom1 == null) return null;
+      UserRoom? createdUserRoom2 =
+          (await mutateService.createModel(userRoom2)) as UserRoom?;
+      if (createdUserRoom2 == null) return null;
 
-      await Amplify.DataStore.save(userRoom1);
-      await Amplify.DataStore.save(userRoom2);
-
-      return RoomListItem(room, [currentUser, otherUser], currentUser);
-    } catch (e){
+      return RoomListItem(createdRoom, [currentUser, otherUser], currentUser);
+    } catch (e) {
       return null;
     }
   }
 
   Future<RoomListItem?> getRoom(String otherUserId) async {
-
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
 
-    User currentUser = await fetchService.fetchUserById(userId);
-    User otherUser = await fetchService.fetchUserById(otherUserId);
+    User? currentUser = await fetchService.fetchUserById(userId);
+    User? otherUser = await fetchService.fetchUserById(otherUserId);
+
+    if (currentUser == null || otherUser == null) return null;
 
     try {
-      List<UserRoom?>? userRooms = await fetchService.fetchAllUserRoomsForUser(currentUser);
-      List<UserRoom?>? otherUserRooms = await fetchService.fetchAllUserRoomsForUser(otherUser);
+      List<UserRoom?> userRooms =
+          await fetchService.fetchAllUserRoomsForUser(currentUser);
+      List<UserRoom?> otherUserRooms =
+          await fetchService.fetchAllUserRoomsForUser(otherUser);
 
-      for(UserRoom? f in userRooms!){
-        print(f!.id);
-      }
-      if(userRooms == null || otherUserRooms == null){
-        print("could not get UserRooms");
-        throw(Exception("Could not get UserRooms"));
-      }
-
-      HashMap<Room, bool> allRooms = HashMap<Room, bool>();
+      HashMap<String, bool> allRooms = HashMap<String, bool>();
       List<Room> commonRooms = [];
 
       for (UserRoom? userRoom in userRooms) {
-        if(userRoom == null) {
+        if (userRoom == null) {
           print("user room somehow null for $userId");
           return null;
         }
 
-        print("UserRoom: ${userRoom.room.id}");
-
-        allRooms.putIfAbsent(userRoom.room, () => true);
+        allRooms.putIfAbsent(userRoom.room.id, () => true);
       }
 
       for (UserRoom? userRoom in otherUserRooms) {
-        if(userRoom == null) {
+        if (userRoom == null) {
           print("user room somehow null for user $otherUserId");
           return null;
         }
 
-        if (allRooms.putIfAbsent(userRoom.room, () => false)) {
+        if (allRooms.putIfAbsent(userRoom.room.id, () => false)) {
           commonRooms.add(userRoom.room);
         }
       }
@@ -97,7 +94,9 @@ class ChatService {
       }
 
       RoomListItem roomListItem = RoomListItem(
-        commonRooms.where((room) => room.roomType == types.RoomType.direct.toString()).first,
+        commonRooms
+            .where((room) => room.roomType == types.RoomType.direct.toString())
+            .first,
         [currentUser, otherUser],
         currentUser,
       );
@@ -110,8 +109,12 @@ class ChatService {
 
   Future<void> sendMessage(String text, Room currentRoom) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
-    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId))).first;
-    Room room = (await Amplify.DataStore.query(Room.classType, where: Room.ID.eq(currentRoom.id))).first;
+    User user = (await Amplify.DataStore.query(User.classType,
+            where: User.ID.eq(userId)))
+        .first;
+    Room room = (await Amplify.DataStore.query(Room.classType,
+            where: Room.ID.eq(currentRoom.id)))
+        .first;
 
     final message = Message(
       text: text,

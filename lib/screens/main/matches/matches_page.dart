@@ -99,7 +99,6 @@ class _MatchPageState extends ConsumerState<MatchPage> {
                           activeIndex: pageIndex,
                           count: 5,
                           onDotClicked: (index) {
-                            print(index);
                             carouselController.animateToPage(index);
                           },
                           effect: ExpandingDotsEffect(

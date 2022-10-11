@@ -53,6 +53,8 @@ dependencies:
   animated_list_plus: ^0.4.4
   flutter_native_timezone:
   device_info_plus:
+  connectivity_plus: ^2.3.9
+  shared_preferences: ^2.0.15
 
 dev_dependencies:
   flutter_lints: ^2.0.1
@@ -80,3 +82,4 @@ flutter:
     - assets/icons/
     - assets/images/
     - assets/images/avatars/
+    - google_fonts/

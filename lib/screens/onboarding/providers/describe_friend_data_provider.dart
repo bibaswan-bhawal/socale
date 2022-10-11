@@ -7,9 +7,7 @@ class DescribeFriendDataNotifier with ChangeNotifier {
   bool _gotData = false;
 
   DescribeFriendDataNotifier() {
-    print("Hello");
     onboardingService.getFriendDescription().then((value) {
-      print("bye");
       _description = value ?? "";
       _gotData = true;
       notifyListeners();

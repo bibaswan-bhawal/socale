@@ -16,15 +16,17 @@ class RoomStateNotifier extends StateNotifier<AsyncValue<RoomListItem>> {
   }
 
   void getRoom() async {
-
     if (matchRoom.room != null) {
       state = AsyncData(matchRoom.room!);
     }
 
     if (matchRoom.user != null) {
       try {
-        RoomListItem? roomListItem = await chatService.getRoom(matchRoom.user!.id);
-        state = AsyncData(roomListItem!);
+        RoomListItem? roomListItem =
+            await chatService.getRoom(matchRoom.user!.id);
+        if (roomListItem == null) throw (Exception("couldn't get room"));
+
+        state = AsyncData(roomListItem);
       } catch (error, stackTrace) {
         print(error);
         state = AsyncError(error, stackTrace);
@@ -34,10 +36,14 @@ class RoomStateNotifier extends StateNotifier<AsyncValue<RoomListItem>> {
       return;
     }
 
-    _stream = Amplify.DataStore.observeQuery(Room.classType, where: Room.ID.eq(state.value!.getRoom.id),).listen((QuerySnapshot snapshot) {
-      if(snapshot.isSynced) {
+    _stream = Amplify.DataStore.observeQuery(
+      Room.classType,
+      where: Room.ID.eq(state.value!.getRoom.id),
+    ).listen((QuerySnapshot snapshot) {
+      if (snapshot.isSynced) {
         Room room = snapshot.items.first as Room;
-        RoomListItem newRoomListItem = RoomListItem(room, state.value!.getUserList, state.value!.getCurrentUser);
+        RoomListItem newRoomListItem = RoomListItem(
+            room, state.value!.getUserList, state.value!.getCurrentUser);
         state = AsyncData(newRoomListItem);
       }
     });

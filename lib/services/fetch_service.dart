@@ -12,15 +12,22 @@ class FetchService {
     }
   }
 
-  Future<User> fetchUserById(String userId) async {
+  Future<User?> fetchUserById(String userId) async {
     final request = ModelQueries.get(User.classType, userId);
     final response = await Amplify.API.query(request: request).response;
 
     if (response.errors.isNotEmpty) {
-      throw ("Error fetching user by id at fetch service: ${response.errors}");
+      print ("Error fetching user by id at fetch service: ${response.errors}");
+      return null;
     }
 
     return response.data!;
+  }
+
+  Future<User> fetchUserByIdDataStore(String userId) async {
+    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId))).first;
+
+    return user;
   }
 
   Future<Match> fetchMatch(String matchId) async {
@@ -34,16 +41,9 @@ class FetchService {
     return response.data!;
   }
 
-  Future<List<UserRoom?>?> fetchAllUserRoomsForUser(User user) async {
-    final request = ModelQueries.list(UserRoom.classType, where: UserRoom.USER.eq(user.id));
-    final response = await Amplify.API.query(request: request).response;
-
-    if (response.errors.isNotEmpty || response.data == null) {
-      print("error getting user room for ${user.id}");
-      return null;
-    }
-
-    return response.data!.items;
+  Future<List<UserRoom?>> fetchAllUserRoomsForUser(User user) async {
+    List<UserRoom> userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.USER.eq(user.id));
+    return userRooms;
   }
 
   Future<List<User>> fetchAllUsersForRoom(Room room) async {

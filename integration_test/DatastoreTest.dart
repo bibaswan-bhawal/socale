@@ -24,7 +24,6 @@ main() {
 
   setUp(() async {
     await configureDataStore();
-    await Amplify.DataStore.clear();
   });
 
   testWidgets(

@@ -24,8 +24,6 @@ class ChatStateNotifier extends StateNotifier<AsyncValue<List<types.Message>>> {
         List<types.Message> newMessages = [];
 
         for (Message message in snapshot.items) {
-          print(message.author);
-
           newMessages.add(
             types.TextMessage(
               id: message.id,

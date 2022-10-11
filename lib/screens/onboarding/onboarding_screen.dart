@@ -1,9 +1,8 @@
-import 'dart:io';
-
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:socale/screens/onboarding/academics_page.dart';
 import 'package:socale/screens/onboarding/avatar_selection_page.dart';
@@ -22,9 +21,11 @@ import 'package:socale/screens/onboarding/situational/question_four_page.dart';
 import 'package:socale/screens/onboarding/situational/question_one_page.dart';
 import 'package:socale/screens/onboarding/situational/question_three_page.dart';
 import 'package:socale/screens/onboarding/situational/question_two_page.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/system_ui_setter.dart';
+import 'package:socale/values/colors.dart';
 
 final onboardingPageController = Provider((_) => PageController());
 final bobPageController = Provider((_) => PageController());
@@ -56,7 +57,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     final userAttributesProvider = ref.watch(userAttributesAsyncController);
 
     userAttributesProvider.whenData((value) async {
-      String? email = value.where((element) => element.userAttributeKey == CognitoUserAttributeKey.email).first.value;
+      String? email = value
+          .where((element) =>
+              element.userAttributeKey == CognitoUserAttributeKey.email)
+          .first
+          .value;
       if (email.contains("ucsd.edu")) {
         setState(() => isSchoolEmail = true);
         await onboardingService.setSchoolEmail(email);
@@ -102,6 +107,27 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             AvatarSelectionPage(),
             OnboardingFinishedPage(),
           ],
+        ),
+        Positioned(
+          right: 30,
+          top: 60,
+          child: GestureDetector(
+            behavior: HitTestBehavior.translucent,
+            onTap: () {
+              authService.signOutCurrentUser(ref);
+            },
+            child: Container(
+              padding: EdgeInsets.all(5),
+              child: Text(
+                "Log Out",
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  color: ColorValues.socaleOrange,
+                ),
+              ),
+            ),
+          ),
         ),
       ],
     );

@@ -27,6 +27,12 @@
           "deploymentBucketName": "amplify-socale-dev-105154-deployment",
           "s3Key": "amplify-builds/S3Trigger3d9ab619-7a627679485a6b4d3656-build.zip"
         }
+      },
+      "storage": {
+        "s3f5814f67": {}
+      },
+      "api": {
+        "socale": {}
       }
     }
   }

@@ -1,5 +1,4 @@
 import 'dart:async';
-
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -17,12 +16,18 @@ import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
+import 'package:socale/screens/onboarding/providers/academic_data_provider.dart';
+import 'package:socale/screens/onboarding/providers/avatar_data_provider.dart';
+import 'package:socale/screens/onboarding/providers/basic_data_provider.dart';
+import 'package:socale/screens/onboarding/providers/describe_friend_data_provider.dart';
+import 'package:socale/screens/onboarding/providers/personality_data_provider.dart';
 import 'package:socale/screens/splash_screen/splash_screen.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/get_it_instance.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/routes.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
 
 import 'firebase_options.dart';
 import 'amplifyconfiguration.dart';
@@ -47,27 +52,16 @@ class SocaleApp extends ConsumerStatefulWidget {
 class SocaleAppState extends ConsumerState<SocaleApp> {
   List<Widget?> initialPage = [SplashScreen(), MainApp(transitionAnimation: false), OnboardingScreen(), AuthScreen()]; // page router list
   StreamSubscription<DataStoreHubEvent>? stream;
+  StreamSubscription<ConnectivityResult>? subscription;
 
   bool _isAmplifyConfigured = false;
-  bool _isDataStoreReady = true;
+  bool _isDataStoreReady = false;
   bool _isSignedIn = false;
   int _pageIndex = 0;
 
   void observeEvents() {
-    print("started listen");
     stream = Amplify.Hub.listen(HubChannel.DataStore, (event) {
-      if (event.eventName == 'networkStatus') {
-        setState(() {
-          final status = event.payload as NetworkStatusEvent?;
-          if(status != null) {
-            _pageIndex = status.active ? _pageIndex : 0;
-          }
-        });
-
-        return;
-      }
-
-      if(event.eventName == 'ready'){
+      if(event.eventName == 'syncQueriesReady'){
         setState(() => _isDataStoreReady = true);
       }
     });
@@ -76,6 +70,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   @override
   void dispose() {
     stream?.cancel();
+    subscription?.cancel();
     super.dispose();
   }
 
@@ -84,7 +79,13 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
     AmplifyAPI apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
     AmplifyStorageS3 storagePlugin = AmplifyStorageS3();
-    AmplifyDataStore dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance);
+    AmplifyDataStore dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance,
+      conflictHandler: (ConflictData data) {
+        final localData = data.local;
+        final remoteData = data.remote;
+
+        return ConflictResolutionDecision.retry(localData);
+    });
 
     await Amplify.addPlugins([
       authPlugin,
@@ -112,7 +113,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       if (session.isSignedIn == true) {
         authService.startAuthStreamListener(); // auth events listener
         await ref.read(userAttributesAsyncController.notifier).setAttributes(); // set user attributes
-        await Amplify.DataStore.start(); // start datastore
       }
 
       setState(() => _isSignedIn = session.isSignedIn);
@@ -132,6 +132,13 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
+      if(result == ConnectivityResult.none){
+        setState(() {
+          _pageIndex = 0;
+        });
+      }
+    });
     _configureAmplify();
   }
 
@@ -171,19 +178,26 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   }
 
   getInitialPage() async {
-    if (_isAmplifyConfigured && _isDataStoreReady) {
+    if (_isAmplifyConfigured) {
       if (_isSignedIn) {
         bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
         if (isOnBoardingComplete) {
+          observeEvents();
           final user = await Amplify.Auth.getCurrentUser();
           await ref.read(userAsyncController.notifier).setUser(user.userId);
           await ref.read(matchAsyncController.notifier).setMatches(user.userId);
-
           setState(() => _pageIndex = 1);
         } else {
           setState(() => _pageIndex = 2);
         }
       } else {
+        ref.read(academicDataProvider.notifier).clearData();
+        ref.read(avatarDataProvider.notifier).clearData();
+        ref.read(basicDataProvider.notifier).clearData();
+        ref.read(describeFriendDataProvider.notifier).clearData();
+        ref.read(personalityDataProvider.notifier).clearData();
+        Amplify.DataStore.clear();
+        onboardingService.clearAll();
         setState(() => _pageIndex = 3);
       }
     }

@@ -1,7 +1,7 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/User.dart';
 import 'package:socale/services/fetch_service.dart';
-import 'package:socale/services/update_service.dart';
+import 'package:socale/services/mutate_service.dart';
 
 class UserStateNotifier extends StateNotifier<AsyncValue<User>> {
   UserStateNotifier() : super(AsyncLoading());
@@ -10,7 +10,8 @@ class UserStateNotifier extends StateNotifier<AsyncValue<User>> {
     state = AsyncLoading();
 
     try {
-      User user = await fetchService.fetchUserById(id);
+      User? user = await fetchService.fetchUserById(id);
+      if (user == null) throw Exception("could not get user");
       state = AsyncData(user);
       return true;
     } catch (e, stackTrace) {
@@ -21,12 +22,19 @@ class UserStateNotifier extends StateNotifier<AsyncValue<User>> {
   }
 
   Future<bool> changeUserValue(User user) async {
+    print(state);
+    print(user);
     state = AsyncData(user);
-    return await updateService.updateUser(user);
+    User? updatedUser = await mutateService.updateModel(user) as User?;
+
+    if (updatedUser == null) {
+      return false;
+    }
+
+    return true;
   }
 
   void clearUser() {
-    print("Clearing UserStateNotifier");
     state = AsyncLoading();
   }
 }

@@ -1,8 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
 
+import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_chat_types/flutter_chat_types.dart' as types;
 import 'package:get/get.dart';
+import 'package:path_provider/path_provider.dart';
 
 import 'ModelProvider.dart';
 
@@ -12,9 +15,22 @@ class RoomListItem implements Comparable<RoomListItem> {
   final User _currentUser;
   late types.User _currentChatUIUser;
   late List<types.User> _chatUIUsers;
+  File? roomPic;
 
   RoomListItem(this._room, this._users, this._currentUser) {
     Map<String, dynamic> isHiddenData = jsonDecode(_room.isHidden);
+
+    if (_users.length == 2) {
+      bool isHidden = _users[0].id == _currentUser.id
+          ? isProfileHidden(_users[1])
+          : isProfileHidden(_users[0]);
+      User userToGet = _users[0].id == _currentUser.id ? _users[1] : _users[0];
+      if (!isHidden) {
+        if (userToGet.profilePicture!.isNotEmpty) {
+          fetchRoomPic(userToGet.profilePicture!);
+        }
+      }
+    }
 
     _currentChatUIUser = types.User(
       id: _currentUser.id,
@@ -45,6 +61,23 @@ class RoomListItem implements Comparable<RoomListItem> {
     }
   }
 
+  Future<void> fetchRoomPic(String key) async {
+    final documentsDir = await getApplicationDocumentsDirectory();
+    final filepath = '${documentsDir.path}/$key.jpg';
+    final file = File(filepath);
+
+    try {
+      await Amplify.Storage.downloadFile(
+        key: key,
+        local: file,
+      );
+
+      roomPic = file;
+    } on StorageException catch (e) {
+      print('Error downloading file: $e');
+    }
+  }
+
   Room get getRoom => _room;
   List<User> get getUserList => _users;
   User get getCurrentUser => _currentUser;
@@ -55,7 +88,7 @@ class RoomListItem implements Comparable<RoomListItem> {
     return _room.lastMessageSent ?? "Send your first message!";
   }
 
-  bool showHidden () {
+  bool showHidden() {
     Map<String, dynamic> map = jsonDecode(_room.isHidden);
 
     for (User user in _users) {
@@ -65,6 +98,11 @@ class RoomListItem implements Comparable<RoomListItem> {
     }
 
     return false;
+  }
+
+  bool isProfileHidden(User otherUser) {
+    Map<String, dynamic> map = jsonDecode(_room.isHidden);
+    return (map[otherUser.id]);
   }
 
   String get getRoomName {
@@ -95,12 +133,21 @@ class RoomListItem implements Comparable<RoomListItem> {
 
   Widget get getRoomPic {
     if (_users.length == 2) {
-      String profilePic = _users[0].id == _currentUser.id ? _users[1].avatar : _users[0].avatar;
+      String avatarPic =
+          _users[0].id == _currentUser.id ? _users[1].avatar : _users[0].avatar;
+      bool isHidden = _users[0].id == _currentUser.id
+          ? isProfileHidden(_users[1])
+          : isProfileHidden(_users[0]);
 
-      return CircleAvatar(
-        radius: 32,
-        child: Image.asset('assets/images/avatars/$profilePic'),
-      );
+      if (isHidden) {
+        return Image.asset('assets/images/avatars/$avatarPic');
+      } else {
+        if (roomPic != null) {
+          return Image.file(roomPic!);
+        } else {
+          return Image.asset('assets/images/avatars/$avatarPic');
+        }
+      }
     }
 
     String shortName = getRoomName;
@@ -116,8 +163,20 @@ class RoomListItem implements Comparable<RoomListItem> {
     );
   }
 
+  RoomListItem copyWith({Room? room, List<User>? users, User? currentUser}) {
+    return RoomListItem(
+      room ?? _room,
+      users ?? _users,
+      currentUser ?? _currentUser,
+    );
+  }
+
   @override
-  bool operator ==(Object other) => identical(this, other) || other is RoomListItem && runtimeType == other.runtimeType && _room.id == other._room.id;
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is RoomListItem &&
+          runtimeType == other.runtimeType &&
+          _room.id == other._room.id;
 
   @override
   String toString() {

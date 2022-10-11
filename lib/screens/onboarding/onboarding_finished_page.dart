@@ -44,8 +44,6 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
   }
 
   void _onUserSuccessfullyOnboarded() async {
-    print("Onboarding complete");
-
     final user = await Amplify.Auth.getCurrentUser();
 
     await ref.read(userAsyncController.notifier).setUser(user.userId);

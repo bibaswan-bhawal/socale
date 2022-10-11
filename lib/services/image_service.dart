@@ -17,12 +17,8 @@ class ImageService {
     try {
       final UploadFileResult result = await Amplify.Storage.uploadFile(
           local: compressedFile ?? profilePictureFile,
-          key:
-              "${(await Amplify.Auth.getCurrentUser()).userId}_profile_picture",
-          onProgress: (progress) {
-            print('Fraction completed: ${progress.getFractionCompleted()}');
-          });
-      print('Successfully uploaded file: ${result.key}');
+          key:"${(await Amplify.Auth.getCurrentUser()).userId}_profile_picture",
+      );
     } on StorageException catch (e) {
       print('Error uploading file: $e');
       return false;

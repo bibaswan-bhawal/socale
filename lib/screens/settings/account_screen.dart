@@ -154,7 +154,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
     if (currentKey != null && currentKey.isNotEmpty) {
       try {
         final result = await Amplify.Storage.remove(key: currentKey);
-        print('Deleted file: ${result.key}');
       } on StorageException catch (e) {
         print('Error deleting file: $e');
       }
@@ -165,7 +164,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
         local: file,
         key: newKey,
       );
-      print('Successfully uploaded image: ${result.key}');
       return;
     } on StorageException catch (e) {
       print('Error uploading image: $e');
@@ -173,7 +171,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   }
 
   Future<void> getProfilePicture(String key) async {
-    print("getting profile picture: $key");
     final documentsDir = await getApplicationDocumentsDirectory();
     final filepath = '${documentsDir.path}/$key.jpg';
     final file = File(filepath);
@@ -184,7 +181,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
         local: file,
       );
 
-      print('downloaded file: $key');
       setState(() => profilePicture = file);
     } on StorageException catch (e) {
       print('Error downloading file: $e');
@@ -192,11 +188,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   }
 
   void saveData() async {
-    print("Saving Data");
     final userState = ref.watch(userAsyncController);
     final userStateNotifier = ref.read(userAsyncController.notifier);
     final newProfileKey = "${userState.value!.id}-${DateTime.now()}";
-    print("Profile picture changed: ${profilePicture != null}");
 
     if (profilePicture != null) {
       await uploadProfilePic(userState.value!.profilePicture, newProfileKey);
@@ -372,7 +366,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
                         if (image != null) {
-                          print("edit image: ${image.path}");
 
                           CroppedFile? croppedFile = await ImageCropper().cropImage(
                             cropStyle: CropStyle.circle,
