@@ -1,17 +1,19 @@
 import 'dart:async';
+
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:amplify_storage_s3/amplify_storage_s3.dart';
 import 'package:animations/animations.dart';
+import 'package:connectivity_plus/connectivity_plus.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
@@ -27,15 +29,15 @@ import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/get_it_instance.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/routes.dart';
-import 'package:connectivity_plus/connectivity_plus.dart';
 
-import 'firebase_options.dart';
 import 'amplifyconfiguration.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(fileName: "assets/.env"); // load environment variables files
+  await dotenv.load(
+      fileName: "assets/.env"); // load environment variables files
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter(); // initialize local key storage
   configureDependencies(); // configure routing dependencies
@@ -50,7 +52,12 @@ class SocaleApp extends ConsumerStatefulWidget {
 }
 
 class SocaleAppState extends ConsumerState<SocaleApp> {
-  List<Widget?> initialPage = [SplashScreen(), MainApp(transitionAnimation: false), OnboardingScreen(), AuthScreen()]; // page router list
+  List<Widget?> initialPage = [
+    SplashScreen(),
+    MainApp(transitionAnimation: false),
+    OnboardingScreen(),
+    AuthScreen()
+  ]; // page router list
   StreamSubscription<DataStoreHubEvent>? stream;
   StreamSubscription<ConnectivityResult>? subscription;
 
@@ -58,11 +65,21 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   bool _isDataStoreReady = false;
   bool _isSignedIn = false;
   int _pageIndex = 0;
+  bool _isStartingUp = true;
 
   void observeEvents() {
-    stream = Amplify.Hub.listen(HubChannel.DataStore, (event) {
-      if(event.eventName == 'syncQueriesReady'){
+    stream =
+        Amplify.Hub.listen(HubChannel.DataStore, (DataStoreHubEvent event) {
+      if (event.eventName == 'syncQueriesReady') {
         setState(() => _isDataStoreReady = true);
+      }
+
+      if (event.eventName == 'outboxStatus') {
+        final outboxStatusPayload = event.payload as OutboxStatusEvent?;
+        if (_isStartingUp && !outboxStatusPayload!.isEmpty) {
+          Amplify.DataStore.clear();
+          Amplify.DataStore.start();
+        }
       }
     });
   }
@@ -79,13 +96,14 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
     AmplifyAPI apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
     AmplifyStorageS3 storagePlugin = AmplifyStorageS3();
-    AmplifyDataStore dataStorePlugin = AmplifyDataStore(modelProvider: ModelProvider.instance,
-      conflictHandler: (ConflictData data) {
-        final localData = data.local;
-        final remoteData = data.remote;
+    AmplifyDataStore dataStorePlugin = AmplifyDataStore(
+        modelProvider: ModelProvider.instance,
+        conflictHandler: (ConflictData data) {
+          final localData = data.local;
+          final remoteData = data.remote;
 
-        return ConflictResolutionDecision.retry(localData);
-    });
+          return ConflictResolutionDecision.retry(localData);
+        });
 
     await Amplify.addPlugins([
       authPlugin,
@@ -96,6 +114,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     ]);
 
     try {
+      observeEvents();
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
       Amplify.DataStore.start();
@@ -109,10 +128,11 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   Future<void> _attemptAutoLogin() async {
     try {
       final session = await Amplify.Auth.fetchAuthSession();
-
       if (session.isSignedIn == true) {
         authService.startAuthStreamListener(); // auth events listener
-        await ref.read(userAttributesAsyncController.notifier).setAttributes(); // set user attributes
+        await ref
+            .read(userAttributesAsyncController.notifier)
+            .setAttributes(); // set user attributes
       }
 
       setState(() => _isSignedIn = session.isSignedIn);
@@ -131,9 +151,12 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   @override
   void initState() {
     super.initState();
-    SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
-    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
-      if(result == ConnectivityResult.none){
+    SystemChannels.textInput
+        .invokeMethod('TextInput.hide'); // hide keyboard at start
+    subscription = Connectivity()
+        .onConnectivityChanged
+        .listen((ConnectivityResult result) {
+      if (result == ConnectivityResult.none) {
         setState(() {
           _pageIndex = 0;
         });
@@ -180,9 +203,12 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   getInitialPage() async {
     if (_isAmplifyConfigured) {
       if (_isSignedIn) {
-        bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
+        bool isOnBoardingComplete =
+            await onboardingService.checkIfUserIsOnboarded();
         if (isOnBoardingComplete) {
-          observeEvents();
+          setState(() {
+            _isStartingUp = false;
+          });
           final user = await Amplify.Auth.getCurrentUser();
           await ref.read(userAsyncController.notifier).setUser(user.userId);
           await ref.read(matchAsyncController.notifier).setMatches(user.userId);

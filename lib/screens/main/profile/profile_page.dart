@@ -37,17 +37,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   int pageIndex = 0;
 
   @override
-  void initState(){
+  void initState() {
     super.initState();
 
     ref.read(userAsyncController).whenData((value) {
       String? newProfilePic = value.profilePicture;
 
-      if(newProfilePic!.isNotEmpty){
+      if (newProfilePic!.isNotEmpty) {
         getProfilePicture(newProfilePic);
       }
     });
-
   }
 
   Future<void> getProfilePicture(String key) async {
@@ -59,8 +58,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
       await Amplify.Storage.downloadFile(
         key: key,
         local: file,
+        onProgress: (progress) {
+          print('Fraction completed: ${progress.getFractionCompleted()}');
+        },
       );
 
+      print("downloaded photo");
       setState(() => profilePicture = file);
     } on StorageException catch (e) {
       print('Error downloading file: $e');
@@ -102,16 +105,17 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
 
   @override
   Widget build(BuildContext context) {
-    ref.listen<AsyncValue<User>>(userAsyncController, (AsyncValue? previousState, AsyncValue newState) {
+    ref.listen<AsyncValue<User>>(userAsyncController,
+        (AsyncValue? previousState, AsyncValue newState) {
       String? newProfilePic = newState.value!.profilePicture;
       String? oldProfilePic = previousState?.value.profilePicture;
 
-      if(previousState == null){
+      if (previousState == null) {
         if (newProfilePic!.isNotEmpty) {
           getProfilePicture(newProfilePic);
         }
       } else {
-        if(oldProfilePic != newProfilePic && newProfilePic!.isNotEmpty){
+        if (oldProfilePic != newProfilePic && newProfilePic!.isNotEmpty) {
           getProfilePicture(newProfilePic);
         }
       }
@@ -135,7 +139,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                   padding: EdgeInsets.only(top: 20, right: 20),
                   child: GestureDetector(
                     onTap: goToSettings,
-                    child: SvgPicture.asset('assets/icons/settings_icon_24dp.svg'),
+                    child:
+                        SvgPicture.asset('assets/icons/settings_icon_24dp.svg'),
                   ),
                 ),
               ),
@@ -159,14 +164,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                         enlargeCenterPage: true,
                         enableInfiniteScroll: false,
                         autoPlay: false,
-                        onPageChanged: (index, _) => setState(() => pageIndex = index),
+                        onPageChanged: (index, _) =>
+                            setState(() => pageIndex = index),
                       ),
                       items: [
                         Padding(
                           padding: EdgeInsets.only(top: 40),
                           child: CircleAvatar(
                             radius: 80,
-                            child: Image.asset('assets/images/avatars/${userState.value!.avatar}'),
+                            child: Image.asset(
+                                'assets/images/avatars/${userState.value!.avatar}'),
                           ),
                         ),
                         Stack(
@@ -177,7 +184,10 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 radius: 80,
                                 backgroundColor: Color(0xFF494949),
                                 child: ClipOval(
-                                  child: profilePicture != null ? Image.file(profilePicture!) : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
+                                  child: profilePicture != null
+                                      ? Image.file(profilePicture!)
+                                      : SvgPicture.asset(
+                                          'assets/icons/add_picture_icon.svg'),
                                 ),
                               ),
                             ),
@@ -222,14 +232,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 20, bottom: 10),
                                   child: Text(
                                     "A little about me",
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400,
-                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                      color: ColorValues.textOnDark
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ),
@@ -240,28 +252,37 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 children: [
                                   Chip(
                                     label: Text(
-                                      userState.value!.major.toString().replaceAll('[', '').replaceAll(']', ''),
+                                      userState.value!.major
+                                          .toString()
+                                          .replaceAll('[', '')
+                                          .replaceAll(']', ''),
                                       style: GoogleFonts.roboto(
                                         fontWeight: FontWeight.w400,
-                                        color: ColorValues.textOnDark.withOpacity(0.8),
+                                        color: ColorValues.textOnDark
+                                            .withOpacity(0.8),
                                       ),
                                     ),
                                     backgroundColor: Color(0xFF3F3E3E),
                                     shape: StadiumBorder(
-                                      side: BorderSide(color: ColorValues.socaleOrange),
+                                      side: BorderSide(
+                                          color: ColorValues.socaleOrange),
                                     ),
                                   ),
                                   Chip(
                                     label: Text(
-                                      calculateAge(userState.value!.dateOfBirth.getDateTime()).toString(),
+                                      calculateAge(userState.value!.dateOfBirth
+                                              .getDateTime())
+                                          .toString(),
                                       style: GoogleFonts.roboto(
                                         fontWeight: FontWeight.w400,
-                                        color: ColorValues.textOnDark.withOpacity(0.8),
+                                        color: ColorValues.textOnDark
+                                            .withOpacity(0.8),
                                       ),
                                     ),
                                     backgroundColor: Color(0xFF3F3E3E),
                                     shape: StadiumBorder(
-                                      side: BorderSide(color: ColorValues.socaleOrange),
+                                      side: BorderSide(
+                                          color: ColorValues.socaleOrange),
                                     ),
                                   ),
                                   Chip(
@@ -269,12 +290,14 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                       userState.value!.college,
                                       style: GoogleFonts.roboto(
                                         fontWeight: FontWeight.w400,
-                                        color: ColorValues.textOnDark.withOpacity(0.8),
+                                        color: ColorValues.textOnDark
+                                            .withOpacity(0.8),
                                       ),
                                     ),
                                     backgroundColor: Color(0xFF3F3E3E),
                                     shape: StadiumBorder(
-                                      side: BorderSide(color: ColorValues.socaleOrange),
+                                      side: BorderSide(
+                                          color: ColorValues.socaleOrange),
                                     ),
                                   ),
                                 ],
@@ -286,14 +309,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 20, bottom: 10),
                                   child: Text(
                                     "My career goals are",
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400,
-                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                      color: ColorValues.textOnDark
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ),
@@ -303,7 +328,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 spacing: 20,
                                 runSpacing: 20,
                                 children: [
-                                  for (String goal in userState.value!.careerGoals)
+                                  for (String goal
+                                      in userState.value!.careerGoals)
                                     SizedBox(
                                       width: 80,
                                       child: Column(
@@ -312,7 +338,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                             width: 100,
                                             height: 80,
                                             decoration: BoxDecoration(
-                                              borderRadius: BorderRadius.circular(10),
+                                              borderRadius:
+                                                  BorderRadius.circular(10),
                                               border: Border.all(
                                                 color: ColorValues.socaleOrange,
                                               ),
@@ -322,8 +349,12 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               child: Text(
                                                 careersOptionsList.keys
                                                     .firstWhere(
-                                                      (element) => element == goal || careersOptionsList[element]!.contains(goal),
-                                                )
+                                                      (element) =>
+                                                          element == goal ||
+                                                          careersOptionsList[
+                                                                  element]!
+                                                              .contains(goal),
+                                                    )
                                                     .substring(0, 2),
                                                 style: TextStyle(
                                                   fontSize: 54,
@@ -354,14 +385,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 20, bottom: 10),
                                   child: Text(
                                     "My academic interests are",
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400,
-                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                      color: ColorValues.textOnDark
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ),
@@ -370,20 +403,26 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 alignment: WrapAlignment.center,
                                 spacing: 5,
                                 children: [
-                                  for (String interests in userState.value!.academicInterests)
+                                  for (String interests
+                                      in userState.value!.academicInterests)
                                     Chip(
                                       avatar: Text(
                                         academicInterestsOptionsList.keys
                                             .firstWhere(
-                                              (element) => element == interests || academicInterestsOptionsList[element]!.contains(interests),
-                                        )
+                                              (element) =>
+                                                  element == interests ||
+                                                  academicInterestsOptionsList[
+                                                          element]!
+                                                      .contains(interests),
+                                            )
                                             .substring(0, 2),
                                       ),
                                       label: Text(
                                         interests.removemoji,
                                         style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.w400,
-                                          color: ColorValues.textOnDark.withOpacity(0.8),
+                                          color: ColorValues.textOnDark
+                                              .withOpacity(0.8),
                                         ),
                                       ),
                                       backgroundColor: Color(0xFF3E4042),
@@ -397,14 +436,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 20, bottom: 10),
                                   child: Text(
                                     "My Non-Academic Interests are",
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400,
-                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                      color: ColorValues.textOnDark
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ),
@@ -413,20 +454,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 alignment: WrapAlignment.center,
                                 spacing: 5,
                                 children: [
-                                  for (String interests in userState.value!.leisureInterests)
+                                  for (String interests
+                                      in userState.value!.leisureInterests)
                                     Chip(
                                       avatar: Text(
                                         hobbiesOptionsList.keys
                                             .firstWhere(
-                                              (element) => element == interests || hobbiesOptionsList[element]!.contains(interests),
-                                        )
+                                              (element) =>
+                                                  element == interests ||
+                                                  hobbiesOptionsList[element]!
+                                                      .contains(interests),
+                                            )
                                             .substring(0, 2),
                                       ),
                                       label: Text(
                                         interests.removemoji,
                                         style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.w400,
-                                          color: ColorValues.textOnDark.withOpacity(0.8),
+                                          color: ColorValues.textOnDark
+                                              .withOpacity(0.8),
                                         ),
                                       ),
                                       backgroundColor: Color(0xFF3E4042),
@@ -440,14 +486,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 20, bottom: 10),
                                   child: Text(
                                     "I am",
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400,
-                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                      color: ColorValues.textOnDark
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ),
@@ -457,7 +505,8 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 spacing: 20,
                                 runSpacing: 20,
                                 children: [
-                                  for (String interests in userState.value!.selfDescription)
+                                  for (String interests
+                                      in userState.value!.selfDescription)
                                     SizedBox(
                                       width: 150,
                                       height: 135,
@@ -469,10 +518,13 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                               width: 150,
                                               height: 100,
                                               decoration: BoxDecoration(
-                                                borderRadius: BorderRadius.circular(10),
+                                                borderRadius:
+                                                    BorderRadius.circular(10),
                                                 border: Border.all(
                                                   width: 4,
-                                                  color: Colors.primaries[Random().nextInt(Colors.accents.length)],
+                                                  color: Colors.primaries[
+                                                      Random().nextInt(Colors
+                                                          .accents.length)],
                                                 ),
                                               ),
                                             ),
@@ -486,13 +538,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                                   height: 110,
                                                 ),
                                                 Align(
-                                                  alignment: Alignment.bottomCenter,
+                                                  alignment:
+                                                      Alignment.bottomCenter,
                                                   child: Text(
                                                     interests.removemoji,
                                                     style: GoogleFonts.poppins(
-                                                      fontWeight: FontWeight.bold,
+                                                      fontWeight:
+                                                          FontWeight.bold,
                                                       fontSize: 14,
-                                                      color: ColorValues.textOnDark,
+                                                      color: ColorValues
+                                                          .textOnDark,
                                                     ),
                                                   ),
                                                 )
@@ -511,14 +566,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               Align(
                                 alignment: Alignment.centerLeft,
                                 child: Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
+                                  padding: EdgeInsets.only(
+                                      left: 20, top: 20, bottom: 10),
                                   child: Text(
                                     "I am also skillful at ...",
                                     textAlign: TextAlign.start,
                                     style: GoogleFonts.roboto(
                                       fontSize: 18,
                                       fontWeight: FontWeight.w400,
-                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                                      color: ColorValues.textOnDark
+                                          .withOpacity(0.8),
                                     ),
                                   ),
                                 ),
@@ -527,20 +584,25 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                                 alignment: WrapAlignment.center,
                                 spacing: 5,
                                 children: [
-                                  for (String interests in userState.value!.skills)
+                                  for (String interests
+                                      in userState.value!.skills)
                                     Chip(
                                       avatar: Text(
                                         skillsOptionsList.keys
                                             .firstWhere(
-                                              (element) => element == interests || skillsOptionsList[element]!.contains(interests),
-                                        )
+                                              (element) =>
+                                                  element == interests ||
+                                                  skillsOptionsList[element]!
+                                                      .contains(interests),
+                                            )
                                             .substring(0, 2),
                                       ),
                                       label: Text(
                                         interests.removemoji,
                                         style: GoogleFonts.roboto(
                                           fontWeight: FontWeight.w400,
-                                          color: ColorValues.textOnDark.withOpacity(0.8),
+                                          color: ColorValues.textOnDark
+                                              .withOpacity(0.8),
                                         ),
                                       ),
                                       backgroundColor: Color(0xFF3E4042),
@@ -559,12 +621,16 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               onClickEventHandler: () {
                                 Navigator.of(context).push(
                                   PageRouteBuilder(
-                                    pageBuilder: (context, animation, secondaryAnimation) => SituationalQuestionsPage(),
-                                    transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                    pageBuilder: (context, animation,
+                                            secondaryAnimation) =>
+                                        SituationalQuestionsPage(),
+                                    transitionsBuilder: (context, animation,
+                                        secondaryAnimation, child) {
                                       return SharedAxisTransition(
                                         animation: animation,
                                         secondaryAnimation: secondaryAnimation,
-                                        transitionType: SharedAxisTransitionType.horizontal,
+                                        transitionType:
+                                            SharedAxisTransitionType.horizontal,
                                         child: child,
                                       );
                                     },

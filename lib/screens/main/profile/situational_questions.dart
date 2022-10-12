@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -14,10 +15,12 @@ class SituationalQuestionsPage extends ConsumerStatefulWidget {
   const SituationalQuestionsPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SituationalQuestionsPage> createState() => _SituationalQuestionsPageState();
+  ConsumerState<SituationalQuestionsPage> createState() =>
+      _SituationalQuestionsPageState();
 }
 
-class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsPage> {
+class _SituationalQuestionsPageState
+    extends ConsumerState<SituationalQuestionsPage> {
   List<int> answer = [0, 0, 0, 0, 0];
   File? profilePicture;
   int pageIndex = 0;
@@ -32,7 +35,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
   void onSaveData() async {
     final userState = ref.watch(userAsyncController);
     final userStateNotifier = ref.watch(userAsyncController.notifier);
-    userStateNotifier.changeUserValue(userState.value!.copyWith(situationalDecisions: answer));
+    userStateNotifier.changeUserValue(
+        userState.value!.copyWith(situationalDecisions: answer));
   }
 
   void onBack() async {
@@ -86,14 +90,16 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                         enlargeCenterPage: true,
                         enableInfiniteScroll: false,
                         autoPlay: false,
-                        onPageChanged: (index, _) => setState(() => pageIndex = index),
+                        onPageChanged: (index, _) =>
+                            setState(() => pageIndex = index),
                       ),
                       items: [
                         Padding(
                           padding: EdgeInsets.only(top: 40),
                           child: CircleAvatar(
                             radius: 80,
-                            child: Image.asset('assets/images/avatars/${userState.value!.avatar}'),
+                            child: Image.asset(
+                                'assets/images/avatars/${userState.value!.avatar}'),
                           ),
                         ),
                         Stack(
@@ -104,7 +110,10 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                 radius: 80,
                                 backgroundColor: Color(0xFF494949),
                                 child: ClipOval(
-                                  child: profilePicture != null ? Image.file(profilePicture!) : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
+                                  child: profilePicture != null
+                                      ? Image.file(profilePicture!)
+                                      : SvgPicture.asset(
+                                          'assets/icons/add_picture_icon.svg'),
                                 ),
                               ),
                             ),
@@ -133,7 +142,7 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                       ),
                     ),
                     Text(
-                      "${userState.value!.major.toString().replaceAll('[', '').replaceAll(']', '')} | @${userState.value!.college}",
+                      "${userState.value!.major.toString().replaceAll('[', '').replaceAll(']', '')} | ${userState.value!.college}",
                       style: GoogleFonts.roboto(
                         fontSize: 14,
                         fontWeight: FontWeight.w400,
@@ -160,7 +169,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -171,7 +181,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor: Colors.white.withOpacity(0.1),
+                                    inactiveColor:
+                                        Colors.white.withOpacity(0.1),
                                     value: answer[0].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -180,9 +191,11 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(
+                                      top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -229,7 +242,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -240,7 +254,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor: Colors.white.withOpacity(0.1),
+                                    inactiveColor:
+                                        Colors.white.withOpacity(0.1),
                                     value: answer[1].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -249,9 +264,11 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(
+                                      top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -298,7 +315,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -309,7 +327,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor: Colors.white.withOpacity(0.1),
+                                    inactiveColor:
+                                        Colors.white.withOpacity(0.1),
                                     value: answer[2].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -318,9 +337,11 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(
+                                      top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -367,7 +388,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -378,7 +400,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor: Colors.white.withOpacity(0.1),
+                                    inactiveColor:
+                                        Colors.white.withOpacity(0.1),
                                     value: answer[3].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -387,9 +410,11 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(
+                                      top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -436,7 +461,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                             ),
                           ),
                           Padding(
-                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding:
+                                EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -447,7 +473,8 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor: Colors.white.withOpacity(0.1),
+                                    inactiveColor:
+                                        Colors.white.withOpacity(0.1),
                                     value: answer[4].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -456,9 +483,11 @@ class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsP
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(
+                                      top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",

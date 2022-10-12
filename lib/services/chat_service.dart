@@ -129,8 +129,8 @@ class ChatService {
       updatedAt: TemporalDateTime.now(),
     );
 
-    await Amplify.DataStore.save(updatedRoom);
-    await Amplify.DataStore.save(message);
+    await mutateService.updateModel(updatedRoom);
+    await mutateService.createModel(message);
   }
 }
 
