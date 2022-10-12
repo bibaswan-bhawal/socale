@@ -14,6 +14,12 @@ class ChatStateNotifier extends StateNotifier<AsyncValue<List<types.Message>>> {
     getMessages();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _stream?.cancel();
+  }
+
   void getMessages() async {
     _stream = Amplify.DataStore.observeQuery(
       Message.classType,

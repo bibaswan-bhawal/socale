@@ -15,6 +15,12 @@ class RoomStateNotifier extends StateNotifier<AsyncValue<RoomListItem>> {
     getRoom();
   }
 
+  @override
+  void dispose() {
+    super.dispose();
+    _stream?.cancel();
+  }
+
   void getRoom() async {
     if (matchRoom.room != null) {
       state = AsyncData(matchRoom.room!);

@@ -117,7 +117,8 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       observeEvents();
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
-      Amplify.DataStore.start();
+      await Amplify.DataStore.clear();
+      await Amplify.DataStore.start();
       await _attemptAutoLogin(); // attempt auto login
       await getInitialPage(); // get initial page after splash screen
     } on AmplifyAlreadyConfiguredException {

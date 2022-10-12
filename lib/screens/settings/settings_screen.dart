@@ -94,9 +94,11 @@ class SettingsPage extends ConsumerWidget {
                   padding: const EdgeInsets.only(top: 8),
                   children: [
                     ListTile(
-                      leading: SvgPicture.asset('assets/icons/account_icon.svg'),
+                      leading:
+                          SvgPicture.asset('assets/icons/account_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Your Account",
@@ -109,26 +111,33 @@ class SettingsPage extends ConsumerWidget {
                       ),
                       subtitle: RichText(
                         text: TextSpan(
-                          text: "View and change information about your account.",
+                          text:
+                              "View and change information about your account.",
                           style: GoogleFonts.roboto(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      trailing:
+                          SvgPicture.asset('assets/icons/arrow_right.svg'),
                       onTap: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => AccountPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    AccountPage(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
-                                transitionType: SharedAxisTransitionType.horizontal,
+                                transitionType:
+                                    SharedAxisTransitionType.horizontal,
                                 child: child,
                               );
                             },
@@ -137,9 +146,11 @@ class SettingsPage extends ConsumerWidget {
                       },
                     ),
                     ListTile(
-                      leading: SvgPicture.asset('assets/icons/security_icon.svg'),
+                      leading:
+                          SvgPicture.asset('assets/icons/security_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Security & Password",
@@ -152,26 +163,33 @@ class SettingsPage extends ConsumerWidget {
                       ),
                       subtitle: RichText(
                         text: TextSpan(
-                          text: "Change your password and adjust your security settings.",
+                          text:
+                              "Change your password and adjust your security settings.",
                           style: GoogleFonts.roboto(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      trailing:
+                          SvgPicture.asset('assets/icons/arrow_right.svg'),
                       onTap: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => SecurityPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    SecurityPage(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
-                                transitionType: SharedAxisTransitionType.horizontal,
+                                transitionType:
+                                    SharedAxisTransitionType.horizontal,
                                 child: child,
                               );
                             },
@@ -180,9 +198,11 @@ class SettingsPage extends ConsumerWidget {
                       },
                     ),
                     ListTile(
-                      leading: SvgPicture.asset('assets/icons/privacy_icon.svg'),
+                      leading:
+                          SvgPicture.asset('assets/icons/privacy_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Your Privacy",
@@ -200,21 +220,27 @@ class SettingsPage extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      trailing:
+                          SvgPicture.asset('assets/icons/arrow_right.svg'),
                       onTap: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => PrivacyPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    PrivacyPage(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
-                                transitionType: SharedAxisTransitionType.horizontal,
+                                transitionType:
+                                    SharedAxisTransitionType.horizontal,
                                 child: child,
                               );
                             },
@@ -223,9 +249,11 @@ class SettingsPage extends ConsumerWidget {
                       },
                     ),
                     ListTile(
-                      leading: SvgPicture.asset('assets/icons/notification_icon.svg'),
+                      leading: SvgPicture.asset(
+                          'assets/icons/notification_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                      contentPadding:
+                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Notifications",
@@ -243,21 +271,27 @@ class SettingsPage extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      trailing: SvgPicture.asset('assets/icons/arrow_right.svg'),
+                      trailing:
+                          SvgPicture.asset('assets/icons/arrow_right.svg'),
                       onTap: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => NotificationsPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    NotificationsPage(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
-                                transitionType: SharedAxisTransitionType.horizontal,
+                                transitionType:
+                                    SharedAxisTransitionType.horizontal,
                                 child: child,
                               );
                             },
@@ -266,9 +300,11 @@ class SettingsPage extends ConsumerWidget {
                       },
                     ),
                     ListTile(
-                      leading: SvgPicture.asset('assets/icons/support_icon.svg'),
+                      leading:
+                          SvgPicture.asset('assets/icons/support_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 20),
+                      contentPadding: EdgeInsets.only(
+                          left: 16, top: 8, bottom: 8, right: 20),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Support",
@@ -281,20 +317,23 @@ class SettingsPage extends ConsumerWidget {
                       ),
                       subtitle: RichText(
                         text: TextSpan(
-                          text: "Reach out to us if you have questions or concerns.",
+                          text:
+                              "Reach out to us if you have questions or concerns.",
                           style: GoogleFonts.roboto(
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      trailing: SvgPicture.asset('assets/icons/external_icon.svg'),
+                      trailing:
+                          SvgPicture.asset('assets/icons/external_icon.svg'),
                       onTap: () {
                         launchUrl(
-                          Uri.parse('https://docs.google.com/forms/d/e/1FAIpQLScUhReI0LUNVtOf0oRvuTN-wB-ZFmf7OTFpJUcrXGGa181-RA/viewform'),
+                          Uri.parse('socale.co/support'),
                           mode: LaunchMode.externalApplication,
                         );
                       },
@@ -319,7 +358,8 @@ class SettingsPage extends ConsumerWidget {
                     color: ColorValues.white,
                     onClickEventHandler: () => onClickEventHandler(ref),
                     textColor: ColorValues.textOnLight,
-                    icon: SvgPicture.asset('assets/icons/log_out_icon.svg', color: ColorValues.textOnLight),
+                    icon: SvgPicture.asset('assets/icons/log_out_icon.svg',
+                        color: ColorValues.textOnLight),
                   ),
                 ),
                 Padding(
@@ -340,7 +380,9 @@ class SettingsPage extends ConsumerWidget {
                         margin: EdgeInsets.only(left: 5),
                         width: 16,
                         height: 16,
-                        child: Image.asset('assets/icons/face-blowing-a-kiss.png', fit: BoxFit.fill),
+                        child: Image.asset(
+                            'assets/icons/face-blowing-a-kiss.png',
+                            fit: BoxFit.fill),
                       ),
                     ],
                   ),

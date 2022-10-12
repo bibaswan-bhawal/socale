@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -92,9 +91,11 @@ class _PrivacyPageState extends ConsumerState<PrivacyPage> {
                   padding: const EdgeInsets.only(top: 8),
                   children: [
                     ListTile(
-                      leading: SvgPicture.asset('assets/icons/group_icon.svg', width: 18),
+                      leading: SvgPicture.asset('assets/icons/group_icon.svg',
+                          width: 18),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 16),
+                      contentPadding: EdgeInsets.only(
+                          left: 16, top: 8, bottom: 8, right: 16),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Share Profile",
@@ -112,23 +113,31 @@ class _PrivacyPageState extends ConsumerState<PrivacyPage> {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
                       ),
                       trailing: SettingsSwitch(
-                        thumbColor: shareProfile ? Color(0xFFFFFFFF) : Color(0xFF777777),
-                        trackColor: shareProfile ? Color(0xFFFFA133) : Color(0xFF505050),
+                        thumbColor: shareProfile
+                            ? Color(0xFFFFFFFF)
+                            : Color(0xFF777777),
+                        trackColor: shareProfile
+                            ? Color(0xFFFFA133)
+                            : Color(0xFF505050),
                         activeColor: Color(0xFFFFA133),
-                        onChanged: (bool? value) => setState(() => shareProfile = value ?? true),
+                        onChanged: (bool? value) =>
+                            setState(() => shareProfile = value ?? true),
                         value: shareProfile,
                       ),
                     ),
                     ListTile(
-                      leading: SvgPicture.asset('assets/icons/support_icon.svg'),
+                      leading:
+                          SvgPicture.asset('assets/icons/support_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 20),
+                      contentPadding: EdgeInsets.only(
+                          left: 16, top: 8, bottom: 8, right: 20),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Privacy Policy",
@@ -146,15 +155,17 @@ class _PrivacyPageState extends ConsumerState<PrivacyPage> {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
                       ),
-                      trailing: SvgPicture.asset('assets/icons/external_icon.svg'),
+                      trailing:
+                          SvgPicture.asset('assets/icons/external_icon.svg'),
                       onTap: () {
                         launchUrl(
-                          Uri.parse('http://socale.co/support'),
+                          Uri.parse('socale.co/privacypolicy'),
                           mode: LaunchMode.externalApplication,
                         );
                       },
