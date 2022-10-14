@@ -3,6 +3,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
 import '../../../utils/enums/social_item.dart';
 import '../social_sign_in_button.dart';
 

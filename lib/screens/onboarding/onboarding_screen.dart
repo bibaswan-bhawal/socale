@@ -41,6 +41,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   late PageController _pageController;
   bool isSchoolEmail = false;
   late DateTime startTime;
+
   @override
   void initState() {
     super.initState();
@@ -79,23 +80,9 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     if (page == 15 && isSchoolEmail) {
       Duration timeDifference = DateTime.now().difference(startTime);
-
-      // Amplify.Analytics.record({
-      //   name: 'albumVisit',
-      //   attributes: {},
-      //   metrics: { minutesListened: 30 }
-      // });
-      //
       timeDifference.inMinutes;
-    } else if (page == 16 && isSchoolEmail) {
+    } else if (page == 16 && !isSchoolEmail) {
       Duration timeDifference = DateTime.now().difference(startTime);
-
-      // Amplify.Analytics.record({
-      //   name: 'albumVisit',
-      //   attributes: {},
-      //   metrics: { minutesListened: 30 }
-      // });
-      //
       timeDifference.inMinutes;
     }
   }
