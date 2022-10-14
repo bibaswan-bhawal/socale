@@ -21,6 +21,7 @@ import 'package:socale/screens/onboarding/situational/question_four_page.dart';
 import 'package:socale/screens/onboarding/situational/question_one_page.dart';
 import 'package:socale/screens/onboarding/situational/question_three_page.dart';
 import 'package:socale/screens/onboarding/situational/question_two_page.dart';
+import 'package:socale/services/analytics_service.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/providers/providers.dart';
@@ -80,10 +81,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     if (page == 15 && isSchoolEmail) {
       Duration timeDifference = DateTime.now().difference(startTime);
+      analyticsService.recordOnboardingTime(timeDifference.inMinutes);
       timeDifference.inMinutes;
     } else if (page == 16 && !isSchoolEmail) {
       Duration timeDifference = DateTime.now().difference(startTime);
-      timeDifference.inMinutes;
+      analyticsService.recordOnboardingTime(timeDifference.inMinutes);
     }
   }
 

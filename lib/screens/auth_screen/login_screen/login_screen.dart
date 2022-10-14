@@ -128,7 +128,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (!isLoading) {
-      //authSnackBar.currentlyNotSupportedSnack(context);
+      authSnackBar.currentlyNotSupportedSnack(context);
       // bool isSignedIn = await authService.signInWithSocialWebUI(oAuth);
       // userDataLoader(isSignedIn);
     }
