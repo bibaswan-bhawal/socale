@@ -40,10 +40,11 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   late PageController _pageController;
   bool isSchoolEmail = false;
-
+  late DateTime startTime;
   @override
   void initState() {
     super.initState();
+    startTime = DateTime.now();
     setSystemUIDark();
   }
 
@@ -75,6 +76,28 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
   onPageChange(page) {
     FocusManager.instance.primaryFocus?.unfocus();
+
+    if (page == 15 && isSchoolEmail) {
+      Duration timeDifference = DateTime.now().difference(startTime);
+
+      // Amplify.Analytics.record({
+      //   name: 'albumVisit',
+      //   attributes: {},
+      //   metrics: { minutesListened: 30 }
+      // });
+      //
+      timeDifference.inMinutes;
+    } else if (page == 16 && isSchoolEmail) {
+      Duration timeDifference = DateTime.now().difference(startTime);
+
+      // Amplify.Analytics.record({
+      //   name: 'albumVisit',
+      //   attributes: {},
+      //   metrics: { minutesListened: 30 }
+      // });
+      //
+      timeDifference.inMinutes;
+    }
   }
 
   @override

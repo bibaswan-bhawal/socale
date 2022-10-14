@@ -3,12 +3,10 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/components/Buttons/ButtonGroups/SocialSignInButtonGroup.dart';
+import 'package:get/get.dart';
 import 'package:socale/components/Buttons/primary_loading_button.dart';
-import 'package:socale/components/Dividers/signInDivider.dart';
 import 'package:socale/components/Headers/login_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
-import 'package:get/get.dart';
 import 'package:socale/components/snackbar/auth_snackbars.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
 import 'package:socale/services/auth_service.dart';
@@ -56,7 +54,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   void goToVerifySignUpEmail() {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => VerifyEmailScreen(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            VerifyEmailScreen(
           email: _email,
           password: _password,
         ),
@@ -94,7 +93,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void trySignIn() async {
     try {
-      final result = await authService.signIn(_email, _password); // try signing in user.
+      final result =
+          await authService.signIn(_email, _password); // try signing in user.
 
       if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
         goToVerifySignUpEmail(); // user exists but isn't verified navigate to verify email page
@@ -128,7 +128,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (!isLoading) {
-      authSnackBar.currentlyNotSupportedSnack(context);
+      //authSnackBar.currentlyNotSupportedSnack(context);
       // bool isSignedIn = await authService.signInWithSocialWebUI(oAuth);
       // userDataLoader(isSignedIn);
     }
@@ -231,11 +231,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ],
                     ),
                   ),
-                  SignInDivider(),
-                  SocialSignInButtonGroup(
-                    handler: socialSignInHandler,
-                    text: "Sign In",
-                  ),
+                  // SignInDivider(),
+                  // SocialSignInButtonGroup(
+                  //   handler: socialSignInHandler,
+                  //   text: "Sign In",
+                  // ),
                 ],
               ),
             ),
