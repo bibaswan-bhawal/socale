@@ -23,7 +23,7 @@ class MatchStateNotifier extends StateNotifier<AsyncValue<Map<User, Match>>> {
     if (lastUpdated == null) {
       shouldUpdate = true;
     } else {
-      if (DateTime.parse(lastUpdated).difference(DateTime.now()).inHours > 1) {
+      if (DateTime.now().difference(DateTime.parse(lastUpdated)).inHours > 1) {
         shouldUpdate = true;
       }
     }
