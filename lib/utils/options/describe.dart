@@ -25,7 +25,7 @@ final List<String> descriptionOptionList = [
   'Emotionally stable',
   'Empathetic',
   'Energetic',
-  'Extravert',
+  'Extrovert',
   'Focused',
   'Free-spirited',
   'Friendly',
