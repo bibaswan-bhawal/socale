@@ -15,15 +15,14 @@ class SituationalQuestionsPage extends ConsumerStatefulWidget {
   const SituationalQuestionsPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<SituationalQuestionsPage> createState() =>
-      _SituationalQuestionsPageState();
+  ConsumerState<SituationalQuestionsPage> createState() => _SituationalQuestionsPageState();
 }
 
-class _SituationalQuestionsPageState
-    extends ConsumerState<SituationalQuestionsPage> {
+class _SituationalQuestionsPageState extends ConsumerState<SituationalQuestionsPage> {
   List<int> answer = [0, 0, 0, 0, 0];
   File? profilePicture;
   int pageIndex = 0;
+  bool _saveButtonEnabled = true;
 
   @override
   void didChangeDependencies() {
@@ -32,11 +31,11 @@ class _SituationalQuestionsPageState
     answer = userState.value!.situationalDecisions;
   }
 
-  void onSaveData() async {
+  void onSaveData(BuildContext context) {
     final userState = ref.watch(userAsyncController);
     final userStateNotifier = ref.watch(userAsyncController.notifier);
-    userStateNotifier.changeUserValue(
-        userState.value!.copyWith(situationalDecisions: answer));
+    userStateNotifier.changeUserValue(userState.value!.copyWith(situationalDecisions: answer));
+    Navigator.pop(context);
   }
 
   void onBack() async {
@@ -90,16 +89,14 @@ class _SituationalQuestionsPageState
                         enlargeCenterPage: true,
                         enableInfiniteScroll: false,
                         autoPlay: false,
-                        onPageChanged: (index, _) =>
-                            setState(() => pageIndex = index),
+                        onPageChanged: (index, _) => setState(() => pageIndex = index),
                       ),
                       items: [
                         Padding(
                           padding: EdgeInsets.only(top: 40),
                           child: CircleAvatar(
                             radius: 80,
-                            child: Image.asset(
-                                'assets/images/avatars/${userState.value!.avatar}'),
+                            child: Image.asset('assets/images/avatars/${userState.value!.avatar}'),
                           ),
                         ),
                         Stack(
@@ -112,8 +109,7 @@ class _SituationalQuestionsPageState
                                 child: ClipOval(
                                   child: profilePicture != null
                                       ? Image.file(profilePicture!)
-                                      : SvgPicture.asset(
-                                          'assets/icons/add_picture_icon.svg'),
+                                      : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
                                 ),
                               ),
                             ),
@@ -169,8 +165,7 @@ class _SituationalQuestionsPageState
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -181,8 +176,7 @@ class _SituationalQuestionsPageState
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor:
-                                        Colors.white.withOpacity(0.1),
+                                    inactiveColor: Colors.white.withOpacity(0.1),
                                     value: answer[0].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -191,11 +185,9 @@ class _SituationalQuestionsPageState
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -242,8 +234,7 @@ class _SituationalQuestionsPageState
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -254,8 +245,7 @@ class _SituationalQuestionsPageState
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor:
-                                        Colors.white.withOpacity(0.1),
+                                    inactiveColor: Colors.white.withOpacity(0.1),
                                     value: answer[1].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -264,11 +254,9 @@ class _SituationalQuestionsPageState
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -315,8 +303,7 @@ class _SituationalQuestionsPageState
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -327,8 +314,7 @@ class _SituationalQuestionsPageState
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor:
-                                        Colors.white.withOpacity(0.1),
+                                    inactiveColor: Colors.white.withOpacity(0.1),
                                     value: answer[2].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -337,11 +323,9 @@ class _SituationalQuestionsPageState
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -388,8 +372,7 @@ class _SituationalQuestionsPageState
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -400,8 +383,7 @@ class _SituationalQuestionsPageState
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor:
-                                        Colors.white.withOpacity(0.1),
+                                    inactiveColor: Colors.white.withOpacity(0.1),
                                     value: answer[3].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -410,11 +392,9 @@ class _SituationalQuestionsPageState
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -461,8 +441,7 @@ class _SituationalQuestionsPageState
                             ),
                           ),
                           Padding(
-                            padding:
-                                EdgeInsets.only(left: 20, right: 20, top: 20),
+                            padding: EdgeInsets.only(left: 20, right: 20, top: 20),
                             child: Column(
                               children: [
                                 Material(
@@ -473,8 +452,7 @@ class _SituationalQuestionsPageState
                                   ),
                                   child: Slider(
                                     activeColor: ColorValues.socaleOrange,
-                                    inactiveColor:
-                                        Colors.white.withOpacity(0.1),
+                                    inactiveColor: Colors.white.withOpacity(0.1),
                                     value: answer[4].toDouble(),
                                     max: 100,
                                     onChanged: (value) {
@@ -483,11 +461,9 @@ class _SituationalQuestionsPageState
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(
-                                      top: 10, right: 10, left: 10),
+                                  padding: EdgeInsets.only(top: 10, right: 10, left: 10),
                                   child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
                                         "Disagree",
@@ -517,6 +493,7 @@ class _SituationalQuestionsPageState
                     Padding(
                       padding: EdgeInsets.symmetric(vertical: 20),
                       child: PrimaryButton(
+                        enabled: _saveButtonEnabled,
                         width: size.width - 30,
                         height: 58,
                         text: "Save your answers",
@@ -524,7 +501,15 @@ class _SituationalQuestionsPageState
                           ColorValues.socaleOrange,
                           ColorValues.socaleDarkOrange,
                         ],
-                        onClickEventHandler: onSaveData,
+                        onClickEventHandler: () {
+                          setState(() {
+                            _saveButtonEnabled = false;
+                          });
+                          onSaveData(context);
+                          setState(() {
+                            _saveButtonEnabled = true;
+                          });
+                        },
                       ),
                     ),
                   ],

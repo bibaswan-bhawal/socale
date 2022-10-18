@@ -32,8 +32,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       setState(() => isLoading = true);
 
       try {
-        final result = await authService.signIn(
-            widget.email, widget.password); // try signing in user.
+        final result =
+            await authService.signIn(widget.email, widget.password); // try signing in user.
 
         if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
           setState(() => isLoading = false);
@@ -114,7 +114,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                       text: TextSpan(
                         children: [
                           TextSpan(
-                            text: 'verify your ',
+                            text: 'Verify your ',
                             style: GoogleFonts.poppins(
                               color: Colors.black,
                               fontSize: 32,
@@ -126,8 +126,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
-                              foreground: Paint()
-                                ..shader = ColorValues.socaleOrangeGradient,
+                              foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
                             ),
                           ),
                         ],
@@ -140,7 +139,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                     child: SizedBox(
                       width: 300,
                       child: Text(
-                        'Before getting started with socale please verify your email. We have sent a link the email you used to sign up.',
+                        'Before getting started with Socale, please verify the link sent to your email.',
                         style: GoogleFonts.poppins(
                           fontSize: 14,
                           textStyle: TextStyle(
@@ -185,16 +184,13 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 child: Text(
                   "Log Out",
                   style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      fontWeight: FontWeight.w500,
-                      color: ColorValues.socaleOrange),
+                      fontSize: 14, fontWeight: FontWeight.w500, color: ColorValues.socaleOrange),
                 ),
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
+            padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
           ),
         ],
       ),

@@ -7,6 +7,7 @@ class PrimaryButton extends StatelessWidget {
   final String text;
   final List<Color> colors;
   final Function() onClickEventHandler;
+  final bool enabled;
 
   const PrimaryButton(
       {Key? key,
@@ -14,7 +15,8 @@ class PrimaryButton extends StatelessWidget {
       required this.height,
       required this.text,
       required this.colors,
-      required this.onClickEventHandler})
+      required this.onClickEventHandler,
+      this.enabled = true})
       : super(key: key);
 
   @override
@@ -30,7 +32,7 @@ class PrimaryButton extends StatelessWidget {
       ),
       child: ElevatedButton(
         onPressed: () {
-          onClickEventHandler();
+          if (enabled) onClickEventHandler();
         },
         style: ElevatedButton.styleFrom(
             fixedSize: Size(width, height),
