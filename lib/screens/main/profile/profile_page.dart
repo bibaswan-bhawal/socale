@@ -532,50 +532,53 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                               ),
                             ],
                           ),
-                          Column(
-                            children: [
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: Padding(
-                                  padding: EdgeInsets.only(left: 20, top: 20, bottom: 10),
-                                  child: Text(
-                                    "I am also skillful at ...",
-                                    textAlign: TextAlign.start,
-                                    style: GoogleFonts.roboto(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.w400,
-                                      color: ColorValues.textOnDark.withOpacity(0.8),
+                          Padding(
+                            padding: EdgeInsets.only(left: 20, top: 20),
+                            child: Column(
+                              children: [
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Padding(
+                                    padding: EdgeInsets.only(bottom: 10),
+                                    child: Text(
+                                      "I am also skillful at ...",
+                                      textAlign: TextAlign.start,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: 18,
+                                        fontWeight: FontWeight.w400,
+                                        color: ColorValues.textOnDark.withOpacity(0.8),
+                                      ),
                                     ),
                                   ),
                                 ),
-                              ),
-                              Wrap(
-                                alignment: WrapAlignment.center,
-                                spacing: 5,
-                                children: [
-                                  for (String interests in userState.value!.skills)
-                                    Chip(
-                                      avatar: Text(
-                                        skillsOptionsList.keys
-                                            .firstWhere(
-                                              (element) =>
-                                                  element == interests ||
-                                                  skillsOptionsList[element]!.contains(interests),
-                                            )
-                                            .substring(0, 2),
-                                      ),
-                                      label: Text(
-                                        interests.removemoji,
-                                        style: GoogleFonts.roboto(
-                                          fontWeight: FontWeight.w400,
-                                          color: ColorValues.textOnDark.withOpacity(0.8),
+                                Wrap(
+                                  alignment: WrapAlignment.center,
+                                  spacing: 5,
+                                  children: [
+                                    for (String interests in userState.value!.skills)
+                                      Chip(
+                                        avatar: Text(
+                                          skillsOptionsList.keys
+                                              .firstWhere(
+                                                (element) =>
+                                                    element == interests ||
+                                                    skillsOptionsList[element]!.contains(interests),
+                                              )
+                                              .substring(0, 2),
                                         ),
+                                        label: Text(
+                                          interests.removemoji,
+                                          style: GoogleFonts.roboto(
+                                            fontWeight: FontWeight.w400,
+                                            color: ColorValues.textOnDark.withOpacity(0.8),
+                                          ),
+                                        ),
+                                        backgroundColor: Color(0xFF3E4042),
                                       ),
-                                      backgroundColor: Color(0xFF3E4042),
-                                    ),
-                                ],
-                              ),
-                            ],
+                                  ],
+                                ),
+                              ],
+                            ),
                           ),
                           Padding(
                             padding: EdgeInsets.symmetric(vertical: 20),

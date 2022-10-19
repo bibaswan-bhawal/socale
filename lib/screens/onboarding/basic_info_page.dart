@@ -308,7 +308,7 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    dataProvider.getBirthDate.day.toString(),
+                                    DateFormat.MMMM().format(dataProvider.getBirthDate),
                                     style: GoogleFonts.roboto(
                                       color: ColorValues.elementColor,
                                       fontWeight: FontWeight.w500,
@@ -324,7 +324,7 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                     color: ColorValues.elementColor,
                                   ),
                                   Text(
-                                    DateFormat.MMMM().format(dataProvider.getBirthDate),
+                                    dataProvider.getBirthDate.day.toString(),
                                     style: GoogleFonts.roboto(
                                       color: ColorValues.elementColor,
                                       fontWeight: FontWeight.w500,
