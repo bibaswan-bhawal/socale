@@ -61,8 +61,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     userAttributesProvider.whenData((value) async {
       String? email = value
-          .where((element) =>
-              element.userAttributeKey == CognitoUserAttributeKey.email)
+          .where((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
           .first
           .value;
       if (email.contains("ucsd.edu")) {
@@ -128,14 +127,16 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             onTap: () {
               authService.signOutCurrentUser(ref);
             },
-            child: Container(
-              padding: EdgeInsets.all(5),
-              child: Text(
-                "Log Out",
-                style: GoogleFonts.poppins(
-                  fontSize: 14,
-                  fontWeight: FontWeight.w500,
-                  color: ColorValues.socaleOrange,
+            child: Material(
+              child: Container(
+                padding: EdgeInsets.all(5),
+                child: Text(
+                  "Log Out",
+                  style: GoogleFonts.poppins(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    color: ColorValues.socaleOrange,
+                  ),
                 ),
               ),
             ),
