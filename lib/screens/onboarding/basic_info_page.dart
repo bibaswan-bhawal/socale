@@ -134,8 +134,9 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
     final dataNotifier = ref.read(basicDataProvider.notifier);
 
     if (!gotData) {
-      firstNameController.text = dataProvider.getFirstName;
-      lastNameController.text = dataProvider.getLastName;
+      // Bro why 😭?
+      // firstNameController.text = dataProvider.getFirstName;
+      // lastNameController.text = dataProvider.getLastName;
       setState(() => gotData = dataProvider.getGotData);
     }
 
@@ -213,7 +214,8 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                 style: StyleValues.textFieldContentStyle,
                                 cursorColor: ColorValues.elementColor,
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) return "Please enter your name";
+                                  if (value == null || value.isEmpty)
+                                    return "Please enter your name";
                                   return null;
                                 },
                                 decoration: InputDecoration(
@@ -229,7 +231,8 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                   enabledBorder: StyleValues.formTextFieldOutlinedBorderEnabled,
                                   focusedBorder: StyleValues.formTextFieldOutlinedBorderFocused,
                                   errorBorder: StyleValues.formTextFieldOutlinedBorderError,
-                                  focusedErrorBorder: StyleValues.formTextFieldOutlinedBorderErrorEnabled,
+                                  focusedErrorBorder:
+                                      StyleValues.formTextFieldOutlinedBorderErrorEnabled,
                                 ),
                               ),
                             ),
@@ -244,7 +247,8 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                 style: StyleValues.textFieldContentStyle,
                                 cursorColor: ColorValues.elementColor,
                                 validator: (value) {
-                                  if (value == null || value.isEmpty) return "Please enter your name";
+                                  if (value == null || value.isEmpty)
+                                    return "Please enter your name";
                                   return null;
                                 },
                                 decoration: InputDecoration(
@@ -260,7 +264,8 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                   enabledBorder: StyleValues.formTextFieldOutlinedBorderEnabled,
                                   focusedBorder: StyleValues.formTextFieldOutlinedBorderFocused,
                                   errorBorder: StyleValues.formTextFieldOutlinedBorderError,
-                                  focusedErrorBorder: StyleValues.formTextFieldOutlinedBorderErrorEnabled,
+                                  focusedErrorBorder:
+                                      StyleValues.formTextFieldOutlinedBorderErrorEnabled,
                                 ),
                               ),
                             ),
@@ -303,7 +308,7 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                 mainAxisAlignment: MainAxisAlignment.center,
                                 children: [
                                   Text(
-                                    dataProvider.getBirthDate.day.toString(),
+                                    DateFormat.MMMM().format(dataProvider.getBirthDate),
                                     style: GoogleFonts.roboto(
                                       color: ColorValues.elementColor,
                                       fontWeight: FontWeight.w500,
@@ -319,7 +324,7 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                                     color: ColorValues.elementColor,
                                   ),
                                   Text(
-                                    DateFormat.MMMM().format(dataProvider.getBirthDate),
+                                    dataProvider.getBirthDate.day.toString(),
                                     style: GoogleFonts.roboto(
                                       color: ColorValues.elementColor,
                                       fontWeight: FontWeight.w500,

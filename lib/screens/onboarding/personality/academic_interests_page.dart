@@ -122,7 +122,7 @@ class _AcademicInterestsPageState extends ConsumerState<AcademicInterestsPage> {
                         child: CategoryChipSelectInput(
                           gotData: dataProvider.getGotAcademicInterestsData,
                           initValue: dataProvider.getAcademicInterests,
-                          searchText: "search for academic interests",
+                          searchText: "Search for academic interests",
                           onChange: dataNotifier.setAcademicInterests,
                           map: academicInterestsOptionsList,
                         ),

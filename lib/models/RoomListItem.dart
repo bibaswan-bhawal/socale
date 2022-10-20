@@ -21,9 +21,8 @@ class RoomListItem implements Comparable<RoomListItem> {
     Map<String, dynamic> isHiddenData = jsonDecode(_room.isHidden);
 
     if (_users.length == 2) {
-      bool isHidden = _users[0].id == _currentUser.id
-          ? isProfileHidden(_users[1])
-          : isProfileHidden(_users[0]);
+      bool isHidden =
+          _users[0].id == _currentUser.id ? isProfileHidden(_users[1]) : isProfileHidden(_users[0]);
       User userToGet = _users[0].id == _currentUser.id ? _users[1] : _users[0];
       if (!isHidden) {
         if (userToGet.profilePicture!.isNotEmpty) {
@@ -85,7 +84,12 @@ class RoomListItem implements Comparable<RoomListItem> {
   List<types.User> get getChatUIUsers => _chatUIUsers;
 
   String get getLastMessage {
-    return _room.lastMessageSent ?? "Send your first message!";
+    if (_room.lastMessageSent != null) {
+      return _room.lastMessageSent!.length > 100
+          ? '${_room.lastMessageSent!.substring(0, 100)}...'
+          : _room.lastMessageSent!;
+    }
+    return "Send your first message!";
   }
 
   bool showHidden() {
@@ -133,11 +137,9 @@ class RoomListItem implements Comparable<RoomListItem> {
 
   Widget get getRoomPic {
     if (_users.length == 2) {
-      String avatarPic =
-          _users[0].id == _currentUser.id ? _users[1].avatar : _users[0].avatar;
-      bool isHidden = _users[0].id == _currentUser.id
-          ? isProfileHidden(_users[1])
-          : isProfileHidden(_users[0]);
+      String avatarPic = _users[0].id == _currentUser.id ? _users[1].avatar : _users[0].avatar;
+      bool isHidden =
+          _users[0].id == _currentUser.id ? isProfileHidden(_users[1]) : isProfileHidden(_users[0]);
 
       if (isHidden) {
         return Image.asset('assets/images/avatars/$avatarPic');
@@ -174,9 +176,7 @@ class RoomListItem implements Comparable<RoomListItem> {
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is RoomListItem &&
-          runtimeType == other.runtimeType &&
-          _room.id == other._room.id;
+      other is RoomListItem && runtimeType == other.runtimeType && _room.id == other._room.id;
 
   @override
   String toString() {

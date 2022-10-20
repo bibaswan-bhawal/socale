@@ -44,14 +44,16 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
       final isValid = form != null ? form.validate() : false;
 
       if (isValid) {
-        _secondPageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        _secondPageController.nextPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }
     } else if (_secondPageController.page == 1) {
       final form = minorFormKey.currentState;
       final isValid = form != null ? form.validate() : false;
 
       if (isValid) {
-        _secondPageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        _secondPageController.nextPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }
     } else if (_secondPageController.page == 2) {
       final form = collegeFormKey.currentState;
@@ -68,7 +70,8 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
   Future<bool> _onBackPress() async {
     if (_secondPageController.page! > 0) {
       onboardingService.setOnboardingStep(OnboardingStep.bio);
-      _secondPageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+      _secondPageController.previousPage(
+          duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       return false;
     }
 
@@ -90,7 +93,8 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
     AcademicDataNotifier dataProvider = ref.watch(academicDataProvider);
     final dataNotifier = ref.watch(academicDataProvider.notifier);
 
-    final availableHeight = size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
+    final availableHeight =
+        size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
 
     return NestedWillPopScope(
       onWillPop: _onBackPress,
@@ -127,7 +131,8 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
                                       style: GoogleFonts.poppins(
                                         fontSize: 32,
                                         fontWeight: FontWeight.bold,
-                                        foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                                        foreground: Paint()
+                                          ..shader = ColorValues.socaleOrangeGradient,
                                       ),
                                     ),
                                   ],
@@ -154,7 +159,7 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
                                 values: dataProvider.getMajors,
                                 list: majorsMinorOptionsList,
                                 width: size.width - 48,
-                                textInputLabel: "Majors",
+                                textInputLabel: dataProvider.getMajors.isEmpty ? "Majors" : "",
                                 decoration: InputDecoration(border: StyleValues.chipFieldBorder),
                                 validator: (values) {
                                   if (values == null || values.isEmpty) {
@@ -177,7 +182,7 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
                                 values: dataProvider.getMinors,
                                 list: majorsMinorOptionsList,
                                 width: size.width - 48,
-                                textInputLabel: "Minor",
+                                textInputLabel: dataProvider.getMinors.isEmpty ? "Minors" : "",
                                 decoration: InputDecoration(border: StyleValues.chipFieldBorder),
                                 validator: (values) {
                                   if (values != null && values.length > 2) {

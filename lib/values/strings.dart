@@ -1,5 +1,5 @@
 class StringValues {
-  static const String getStartedHeading = "Making Networking Easier";
+  static const String getStartedHeading = "Networking made easy";
   static const String getStartedDescription =
       "Boost your social and professional connections with the power of Socale.";
   static const String loginHeading = "Welcome Back";

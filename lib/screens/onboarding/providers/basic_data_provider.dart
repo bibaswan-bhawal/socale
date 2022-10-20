@@ -30,6 +30,7 @@ class BasicDataController with ChangeNotifier {
   bool get getGotData => _gotData;
 
   void setFirstName(String value) {
+    print(value);
     _firstName = value.trim();
     notifyListeners();
   }

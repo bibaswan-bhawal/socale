@@ -78,7 +78,9 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
   }
 
   Color textColor(String option) {
-    if (skillsSelected.contains(option) || categorySelected.contains(option) || categoryAdded.contains(option)) {
+    if (skillsSelected.contains(option) ||
+        categorySelected.contains(option) ||
+        categoryAdded.contains(option)) {
       return Color(0xFFFFFFFF);
     }
 
@@ -222,8 +224,8 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
           child: RawAutocomplete<String>(
             textEditingController: textEditingController,
             focusNode: focusNode,
-            fieldViewBuilder:
-                (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+            fieldViewBuilder: (BuildContext context, TextEditingController textEditingController,
+                FocusNode focusNode, VoidCallback onFieldSubmitted) {
               return TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
@@ -285,7 +287,7 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
         ),
         Flexible(
           child: Container(
-            margin: EdgeInsets.only(left: 20, right: 20, top: 20),
+            margin: EdgeInsets.only(left: 32, right: 32, top: 20),
             width: size.width,
             child: ScrollConfiguration(
               behavior: MaterialScrollBehavior().copyWith(overscroll: false),

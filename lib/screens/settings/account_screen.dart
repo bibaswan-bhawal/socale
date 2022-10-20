@@ -208,8 +208,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
       userStateNotifier.changeUserValue(
         userState.value!.copyWith(
           avatar: avatar,
-          firstName: firstName,
-          lastName: lastName,
+          firstName: firstName.isEmpty ? null : firstName,
+          lastName: lastName.isEmpty ? null : lastName,
           dateOfBirth: TemporalDate(dob),
           graduationMonth: TemporalDate(grad),
         ),
@@ -330,10 +330,12 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                                 onTap: () async {
                                   final result = await Navigator.of(context).push(
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) => AvatarPicker(
+                                      pageBuilder: (context, animation, secondaryAnimation) =>
+                                          AvatarPicker(
                                         initial: avatar,
                                       ),
-                                      transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                                      transitionsBuilder:
+                                          (context, animation, secondaryAnimation, child) {
                                         return SharedAxisTransition(
                                           animation: animation,
                                           secondaryAnimation: secondaryAnimation,
@@ -366,7 +368,6 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                         final XFile? image = await picker.pickImage(source: ImageSource.gallery);
 
                         if (image != null) {
-
                           CroppedFile? croppedFile = await ImageCropper().cropImage(
                             cropStyle: CropStyle.circle,
                             compressQuality: 50,
@@ -404,7 +405,9 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               radius: 80,
                               backgroundColor: Color(0xFF494949),
                               child: ClipOval(
-                                child: profilePicture != null ? Image.file(profilePicture!) : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
+                                child: profilePicture != null
+                                    ? Image.file(profilePicture!)
+                                    : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
                               ),
                             ),
                           ),
@@ -414,7 +417,8 @@ class _AccountPageState extends ConsumerState<AccountPage> {
                               top: 50,
                               child: Material(
                                 elevation: 5,
-                                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                                shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(100)),
                                 child: Container(
                                   width: 30,
                                   height: 30,
