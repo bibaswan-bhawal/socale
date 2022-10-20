@@ -333,7 +333,7 @@ class SettingsPage extends ConsumerWidget {
                           SvgPicture.asset('assets/icons/external_icon.svg'),
                       onTap: () {
                         launchUrl(
-                          Uri.parse('socale.co/support'),
+                          Uri.parse('https://www.socale.co/support'),
                           mode: LaunchMode.externalApplication,
                         );
                       },

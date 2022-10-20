@@ -54,7 +54,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           AnimatedOpacity(
             duration: Duration(milliseconds: 200),
             opacity: isDataLoading ? 1 : 0,
-            child: ChatLoading(),
+            child: ChatLoading(isLoading: isDataLoading),
           ),
           AnimatedOpacity(
             opacity: isDataLoading ? 0 : 1,

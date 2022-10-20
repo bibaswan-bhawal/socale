@@ -77,6 +77,8 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       if (event.eventName == 'outboxStatus') {
         final outboxStatusPayload = event.payload as OutboxStatusEvent?;
         if (_isStartingUp && !outboxStatusPayload!.isEmpty) {
+          print("calling failed uploads");
+          Amplify.DataStore.stop();
           Amplify.DataStore.clear();
           Amplify.DataStore.start();
         }
@@ -117,7 +119,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       observeEvents();
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
-      await Amplify.DataStore.clear();
       await Amplify.DataStore.start();
       await _attemptAutoLogin(); // attempt auto login
       await getInitialPage(); // get initial page after splash screen

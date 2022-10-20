@@ -39,8 +39,6 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
   }
 
   onItemClick(RoomListItem roomListItem) {
-    final roomState = ref.watch(roomsAsyncController);
-
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) =>

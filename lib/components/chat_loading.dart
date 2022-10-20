@@ -8,7 +8,8 @@ import '../utils/constraints/constraints.dart';
 import '../values/colors.dart';
 
 class ChatLoading extends StatefulWidget {
-  const ChatLoading({Key? key}) : super(key: key);
+  final bool isLoading;
+  const ChatLoading({Key? key, required this.isLoading}) : super(key: key);
 
   @override
   State<ChatLoading> createState() => _ChatLoadingState();
@@ -72,7 +73,7 @@ class _ChatLoadingState extends State<ChatLoading> {
                   itemCount: 10,
                   itemBuilder: (context, index) {
                     return ShimmerLoading(
-                      isLoading: true,
+                      isLoading: widget.isLoading,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: 10, vertical: index % 3 == 0 ? 15 : 5),
@@ -127,7 +128,7 @@ class _ChatLoadingState extends State<ChatLoading> {
                           color: Colors.white),
                     ),
                     ShimmerLoading(
-                      isLoading: true,
+                      isLoading: widget.isLoading,
                       child: ClipOval(
                         child: Container(
                           width: 50,
@@ -142,7 +143,7 @@ class _ChatLoadingState extends State<ChatLoading> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           ShimmerLoading(
-                            isLoading: true,
+                            isLoading: widget.isLoading,
                             child: Container(
                               margin: EdgeInsets.only(top: 18, bottom: 8),
                               width: 180,
@@ -154,7 +155,7 @@ class _ChatLoadingState extends State<ChatLoading> {
                             ),
                           ),
                           ShimmerLoading(
-                            isLoading: true,
+                            isLoading: widget.isLoading,
                             child: Container(
                               margin: EdgeInsets.only(),
                               width: 135,
