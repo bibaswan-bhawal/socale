@@ -5,7 +5,7 @@ const amplifyconfig = ''' {
         "plugins": {
             "awsPinpointAnalyticsPlugin": {
                 "pinpointAnalytics": {
-                    "appId": "f04066c90f9441359e4c6fde5406dd72",
+                    "appId": "3a82c17e9a2a4c298fdfb555d4447f3f",
                     "region": "us-west-2"
                 },
                 "pinpointTargeting": {
@@ -84,6 +84,17 @@ const amplifyconfig = ''' {
                         "verificationMechanisms": [
                             "EMAIL"
                         ]
+                    }
+                },
+                "PinpointAnalytics": {
+                    "Default": {
+                        "AppId": "3a82c17e9a2a4c298fdfb555d4447f3f",
+                        "Region": "us-west-2"
+                    }
+                },
+                "PinpointTargeting": {
+                    "Default": {
+                        "Region": "us-west-2"
                     }
                 },
                 "S3TransferUtility": {

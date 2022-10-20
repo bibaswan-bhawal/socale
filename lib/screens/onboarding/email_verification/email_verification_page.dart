@@ -46,7 +46,8 @@ class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
       final isValid = form != null ? form.validate() : false;
       if (isValid) {
         form.save();
-        _formPageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+        _formPageController.nextPage(
+            duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       }
     } else {
       final form = _formOtpKey.currentState;
@@ -60,7 +61,8 @@ class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
   // onBack handler
   Future<bool> _willPopScope() async {
     if (_formPageController.page == 1) {
-      _formPageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+      _formPageController.previousPage(
+          duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
       return false;
     }
 

@@ -48,7 +48,12 @@
       }
     }
   },
-  "analytics": {},
+  "analytics": {
+    "socale": {
+      "service": "Pinpoint",
+      "providerPlugin": "awscloudformation"
+    }
+  },
   "function": {
     "S3Trigger3d9ab619": {
       "service": "Lambda",

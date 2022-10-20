@@ -7,6 +7,7 @@ import 'package:hive/hive.dart';
 import 'package:injectable/injectable.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socale/models/User.dart';
+import 'package:socale/services/analytics_service.dart';
 import 'package:socale/services/fetch_service.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/utils/options/username_adjectives.dart';
@@ -61,6 +62,9 @@ class OnboardingService {
   // getters
 
   String? getSchoolEmail() {
+    SharedPreferences.getInstance().then(
+        (prefs) => prefs.setInt('onboardingStartTime', DateTime.now().millisecondsSinceEpoch));
+
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       var data = box.get('schoolEmail');
@@ -201,8 +205,8 @@ class OnboardingService {
     }
   }
 
-  Future<void> setBio(String firstName, String lastName, DateTime dateOfBirth,
-      DateTime graduationMonth) async {
+  Future<void> setBio(
+      String firstName, String lastName, DateTime dateOfBirth, DateTime graduationMonth) async {
     if (Hive.isBoxOpen(boxName)) {
       final box = Hive.box(boxName);
       box.put('firstName', firstName);
@@ -212,12 +216,8 @@ class OnboardingService {
     }
   }
 
-  Future<void> setCollegeInfo(
-      List<String> major, List<String> minor, String college) async {
-    if (major.length > 2 ||
-        major.isEmpty ||
-        minor.length > 2 ||
-        college.isEmpty) {
+  Future<void> setCollegeInfo(List<String> major, List<String> minor, String college) async {
+    if (major.length > 2 || major.isEmpty || minor.length > 2 || college.isEmpty) {
       throw ("College info wrong");
     }
     if (Hive.isBoxOpen(boxName)) {
@@ -280,8 +280,7 @@ class OnboardingService {
   }
 
   Future<void> setIdealFriendDescription(String idealFriendDescription) async {
-    if (idealFriendDescription.isEmpty ||
-        idealFriendDescription.length > 1000) {
+    if (idealFriendDescription.isEmpty || idealFriendDescription.length > 1000) {
       throw ("description empty or to large");
     }
 
@@ -345,8 +344,7 @@ class OnboardingService {
 
     if (box.get('schoolEmail') == null && email == null) return false;
 
-    List<AuthUserAttribute>? attributes =
-        await fetchService.fetchCurrentUserAttributes();
+    List<AuthUserAttribute>? attributes = await fetchService.fetchCurrentUserAttributes();
 
     if (attributes == null) return false;
 
@@ -356,8 +354,7 @@ class OnboardingService {
     final newUser = User(
       id: id,
       email: attributes
-          .where((element) =>
-              element.userAttributeKey == CognitoUserAttributeKey.email)
+          .where((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
           .first
           .value,
       schoolEmail: getSchoolEmail()!,
@@ -387,31 +384,28 @@ class OnboardingService {
 
     try {
       final queryUserRequest = ModelQueries.get(User.classType, newUser.id);
-      final queryUserResponse =
-          await Amplify.API.query(request: queryUserRequest).response;
+      final queryUserResponse = await Amplify.API.query(request: queryUserRequest).response;
 
-      if (queryUserResponse.errors.isNotEmpty)
-        throw Exception("Query Response Error");
+      if (queryUserResponse.errors.isNotEmpty) throw Exception("Query Response Error");
 
       User? queryData = queryUserResponse.data;
 
       if (queryData != null) {
-        final deleteUserRequest =
-            ModelMutations.deleteById(User.classType, newUser.id);
-        final deleteUserResponse =
-            await Amplify.API.mutate(request: deleteUserRequest).response;
+        final deleteUserRequest = ModelMutations.deleteById(User.classType, newUser.id);
+        final deleteUserResponse = await Amplify.API.mutate(request: deleteUserRequest).response;
 
-        if (deleteUserResponse.errors.isNotEmpty)
-          throw Exception("Error deleting existing user.");
+        if (deleteUserResponse.errors.isNotEmpty) throw Exception("Error deleting existing user.");
       }
 
       final createUserRequest = ModelMutations.create(newUser);
-      final createUserResponse =
-          await Amplify.API.mutate(request: createUserRequest).response;
+      final createUserResponse = await Amplify.API.mutate(request: createUserRequest).response;
 
-      if (createUserResponse.errors.isNotEmpty)
-        throw Exception("Error creating new user.");
-
+      if (createUserResponse.errors.isNotEmpty) throw Exception("Error creating new user.");
+      final prefs = await SharedPreferences.getInstance();
+      final time = prefs.getInt('onboardingStartTime');
+      if (time != null) {
+        analyticsService.recordOnboardingTime(DateTime.now().microsecondsSinceEpoch - time);
+      }
       return true;
     } on Exception catch (_) {
       return false;

@@ -2,7 +2,7 @@
   "version": "1",
   "cognitoConfig": {
     "identityPoolName": "testAuthIdentityPool",
-    "allowUnauthenticatedIdentities": false,
+    "allowUnauthenticatedIdentities": true,
     "resourceNameTruncated": "socale8996a42e",
     "userPoolName": "socale",
     "autoVerifiedAttributes": [
@@ -58,4 +58,4 @@
     "dependsOn": [],
     "hostedUI": false
   }
-}
+} 

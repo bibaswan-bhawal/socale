@@ -16,6 +16,7 @@ import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/translucent_background/bottom_translucent_card.dart';
 import 'package:socale/screens/settings/avatar_picker.dart';
+import 'package:socale/services/analytics_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
@@ -26,7 +27,8 @@ class AccountPage extends ConsumerStatefulWidget {
   ConsumerState<AccountPage> createState() => _AccountPageState();
 }
 
-class _AccountPageState extends ConsumerState<AccountPage> {
+class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingObserver {
+  DateTime? startTime;
   File? profilePicture;
   TextEditingController firstNameController = TextEditingController();
   TextEditingController lastNameController = TextEditingController();
@@ -51,6 +53,19 @@ class _AccountPageState extends ConsumerState<AccountPage> {
   @override
   void initState() {
     super.initState();
+  }
+
+  @override
+  void didChangeAppLifecycleState(AppLifecycleState state) {
+    if (state == AppLifecycleState.resumed) {
+      startTime = DateTime.now();
+    }
+
+    if (state == AppLifecycleState.detached || state == AppLifecycleState.paused) {
+      if (startTime == null) return;
+      final usageTime = DateTime.now().difference(startTime!);
+      analyticsService.editProfileTime(usageTime.inMilliseconds);
+    }
   }
 
   @override

@@ -36,8 +36,7 @@ import 'firebase_options.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(
-      fileName: "assets/.env"); // load environment variables files
+  await dotenv.load(fileName: "assets/.env"); // load environment variables files
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter(); // initialize local key storage
   configureDependencies(); // configure routing dependencies
@@ -68,8 +67,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   bool _isStartingUp = true;
 
   void observeEvents() {
-    stream =
-        Amplify.Hub.listen(HubChannel.DataStore, (DataStoreHubEvent event) {
+    stream = Amplify.Hub.listen(HubChannel.DataStore, (DataStoreHubEvent event) {
       if (event.eventName == 'syncQueriesReady') {
         setState(() => _isDataStoreReady = true);
       }
@@ -153,11 +151,8 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   @override
   void initState() {
     super.initState();
-    SystemChannels.textInput
-        .invokeMethod('TextInput.hide'); // hide keyboard at start
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
+    SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
+    subscription = Connectivity().onConnectivityChanged.listen((ConnectivityResult result) {
       if (result == ConnectivityResult.none) {
         setState(() {
           _pageIndex = 0;
@@ -205,8 +200,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   getInitialPage() async {
     if (_isAmplifyConfigured) {
       if (_isSignedIn) {
-        bool isOnBoardingComplete =
-            await onboardingService.checkIfUserIsOnboarded();
+        bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
         if (isOnBoardingComplete) {
           setState(() {
             _isStartingUp = false;
