@@ -6,9 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/Buttons/ButtonGroups/SocialSignInButtonGroup.dart';
 import 'package:socale/components/Buttons/primary_loading_button.dart';
-import 'package:socale/components/Dividers/signInDivider.dart';
 import 'package:socale/components/Headers/register_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/snackbar/auth_snackbars.dart';
@@ -16,7 +14,13 @@ import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/providers/providers.dart';
-import 'package:socale/utils/validato key);
+import 'package:socale/utils/validators.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class RegisterScreen extends ConsumerStatefulWidget {
+  final Function() back;
+
+  const RegisterScreen({Key? key, required this.back}) : super(key: key);
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
