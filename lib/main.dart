@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:amplify_analytics_pinpoint/amplify_analytics_pinpoint.dart';
 import 'package:amplify_api/amplify_api.dart';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_datastore/amplify_datastore.dart';
@@ -51,12 +52,7 @@ class SocaleApp extends ConsumerStatefulWidget {
 }
 
 class SocaleAppState extends ConsumerState<SocaleApp> {
-  List<Widget?> initialPage = [
-    SplashScreen(),
-    MainApp(transitionAnimation: false),
-    OnboardingScreen(),
-    AuthScreen()
-  ]; // page router list
+  List<Widget?> initialPage = [SplashScreen(), MainApp(transitionAnimation: false), OnboardingScreen(), AuthScreen()]; // page router list
   StreamSubscription<DataStoreHubEvent>? stream;
   StreamSubscription<ConnectivityResult>? subscription;
 
@@ -71,16 +67,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       if (event.eventName == 'syncQueriesReady') {
         setState(() => _isDataStoreReady = true);
       }
-
-      if (event.eventName == 'outboxStatus') {
-        final outboxStatusPayload = event.payload as OutboxStatusEvent?;
-        if (_isStartingUp && !outboxStatusPayload!.isEmpty) {
-          print("calling failed uploads");
-          Amplify.DataStore.stop();
-          Amplify.DataStore.clear();
-          Amplify.DataStore.start();
-        }
-      }
     });
   }
 
@@ -92,7 +78,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   }
 
   Future<void> _configureAmplify() async {
-    // PinpointAnalytics analyticsPlugin = PinpointAnalytics(appId: appId, region: 'us-west-2');
+    AmplifyAnalyticsPinpoint pinpointPlugin = AmplifyAnalyticsPinpoint();
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
     AmplifyAPI apiPlugin = AmplifyAPI(modelProvider: ModelProvider.instance);
     AmplifyStorageS3 storagePlugin = AmplifyStorageS3();
@@ -100,7 +86,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
         modelProvider: ModelProvider.instance,
         conflictHandler: (ConflictData data) {
           final localData = data.local;
-          final remoteData = data.remote;
 
           return ConflictResolutionDecision.retry(localData);
         });
@@ -110,7 +95,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       apiPlugin,
       storagePlugin,
       dataStorePlugin,
-      //analyticsPlugin, // library currently broken so can't use
+      pinpointPlugin,
     ]);
 
     try {
@@ -130,9 +115,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       final session = await Amplify.Auth.fetchAuthSession();
       if (session.isSignedIn == true) {
         authService.startAuthStreamListener(); // auth events listener
-        await ref
-            .read(userAttributesAsyncController.notifier)
-            .setAttributes(); // set user attributes
+        await ref.read(userAttributesAsyncController.notifier).setAttributes(); // set user attributes
       }
 
       setState(() => _isSignedIn = session.isSignedIn);
