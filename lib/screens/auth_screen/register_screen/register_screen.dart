@@ -13,6 +13,7 @@ import 'package:socale/components/TextFields/singleLineTextField/form_text_field
 import 'package:get/get.dart';
 import 'package:socale/components/snackbar/auth_snackbars.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
+import 'package:socale/services/analytics_service.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
 import 'package:socale/utils/validators.dart';
@@ -238,8 +239,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                     letterSpacing: -0.3,
                                   ),
                                   recognizer: TapGestureRecognizer()
-                                    ..onTap = () {
-                                      launchUrl(
+                                    ..onTap = () async {
+                                      await launchUrl(
                                         Uri.parse('http://socale.co/tos'),
                                         mode: LaunchMode.externalApplication,
                                       );
@@ -282,7 +283,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             isLoading: isLoading,
                             width: size.width,
                             height: 60,
-                            colors: [Color(0xFF39EDFF), Color(0xFF0051E1)],
+                            colors: [Color(0xFFE0BEF0), Color(0xFF9F78F3)],
                             text: "Register",
                             onClickEventHandler: emailSignUpHandler,
                           ),

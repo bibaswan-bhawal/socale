@@ -155,7 +155,9 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                             child: Padding(
                               padding: EdgeInsets.only(left: 20, top: 20, right: 20),
                               child: Text(
-                                dataProvider.getDescription.isNotEmpty ? dataProvider.getDescription : "Type Here...",
+                                dataProvider.getDescription.isNotEmpty
+                                    ? dataProvider.getDescription
+                                    : "Type Here...",
                                 style: GoogleFonts.poppins(
                                   color: Color(0x7F000000),
                                   fontWeight: FontWeight.w500,
@@ -228,7 +230,12 @@ class _EditTextAreaState extends ConsumerState<EditTextArea> {
                 TextField(
                   controller: _controller,
                   decoration: InputDecoration(
-                    hintText: "Type Here...",
+                    hintText: ([
+                      'Surfer at sunset | DJ at night time',
+                      'Never left CS Dungeon | Boba frantic',
+                      'Plant mom and 2 cats mom | R&B my jam'
+                    ]..shuffle())
+                        .first,
                     border: InputBorder.none,
                     counterText: "",
                   ),

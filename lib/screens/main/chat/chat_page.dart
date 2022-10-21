@@ -11,6 +11,7 @@ import 'package:socale/components/chat_loading.dart';
 import 'package:socale/models/MatchRoom.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/models/RoomListItem.dart';
+import 'package:socale/services/analytics_service.dart';
 import 'package:socale/services/chat_service.dart';
 import 'package:socale/services/mutate_service.dart';
 import 'package:socale/utils/constraints/constraints.dart';
@@ -31,7 +32,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
   bool showHiddenMessage = false;
   bool isLoading = false;
   bool isDataLoading = true;
-
+  DateTime startTime = DateTime.now();
   @override
   void initState() {
     super.initState();
@@ -39,6 +40,12 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     if (widget.room.room != null) {
       isDataLoading = false;
     }
+  }
+
+  @override
+  void dispose() {
+    analyticsService.recordChatSessionLength(DateTime.now().difference(startTime).inMilliseconds);
+    super.dispose();
   }
 
   @override
@@ -54,15 +61,14 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           AnimatedOpacity(
             duration: Duration(milliseconds: 200),
             opacity: isDataLoading ? 1 : 0,
-            child: ChatLoading(),
+            child: ChatLoading(isLoading: isDataLoading),
           ),
           AnimatedOpacity(
             opacity: isDataLoading ? 0 : 1,
             duration: Duration(milliseconds: 200),
             child: roomState.when(data: (room) {
               setState(() => isDataLoading = false);
-              setState(() =>
-                  showHiddenMessage = numMessages >= 50 && room.showHidden());
+              setState(() => showHiddenMessage = numMessages >= 50 && room.showHidden());
               var chatState = ref.watch(chatAsyncController(room));
               return Stack(
                 children: [
@@ -90,9 +96,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                         ),
                       ),
                       height: 4,
-                      width: !showHiddenMessage
-                          ? size.width * (numMessages) / 49
-                          : 0,
+                      width: !showHiddenMessage ? size.width * (numMessages) / 49 : 0,
                       duration: Duration(milliseconds: 100),
                       curve: Curves.easeInOut,
                     ),
@@ -190,8 +194,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                                 fontSize: 14,
                                 fontWeight: FontWeight.w500,
                                 letterSpacing: -0.3,
-                                foreground: Paint()
-                                  ..shader = ColorValues.socaleTextGradient,
+                                foreground: Paint()..shader = ColorValues.socaleTextGradient,
                               ),
                             ),
                           ],
@@ -232,8 +235,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ChatPage(room: MatchRoom(room: newRoomList)),
-            transitionsBuilder:
-                (context, animation, secondaryAnimation, child) {
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
               return SharedAxisTransition(
                 animation: animation,
                 secondaryAnimation: secondaryAnimation,
@@ -288,9 +290,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
                     children: [
                       Text(roomListItem.getRoomName),
                       Text(
-                        roomListItem.showHidden()
-                            ? "Anonymous Match"
-                            : "In your network",
+                        roomListItem.showHidden() ? "Anonymous Match" : "In your network",
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w300,
@@ -311,12 +311,10 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-  Widget chatRoomBuilder(
-      List<types.Message> messages, RoomListItem roomListItem) {
+  Widget chatRoomBuilder(List<types.Message> messages, RoomListItem roomListItem) {
     return chat_ui.Chat(
       messages: messages,
-      onSendPressed: (types.PartialText message) =>
-          _handleSendPressed(message, roomListItem),
+      onSendPressed: (types.PartialText message) => _handleSendPressed(message, roomListItem),
       user: roomListItem.getCurrentChatUIUser,
       showUserNames: true,
       theme: const chat_ui.DefaultChatTheme(
@@ -337,8 +335,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-  void _handleSendPressed(
-      types.PartialText message, RoomListItem roomListItem) {
+  void _handleSendPressed(types.PartialText message, RoomListItem roomListItem) {
     chatService.sendMessage(message.text, roomListItem.getRoom);
   }
 }

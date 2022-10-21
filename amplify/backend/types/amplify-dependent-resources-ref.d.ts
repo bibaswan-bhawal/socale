@@ -17,6 +17,13 @@ export type AmplifyDependentResourcesAttributes = {
             "AppClientID": "string"
         }
     },
+    "analytics": {
+        "socale": {
+            "Region": "string",
+            "Id": "string",
+            "appName": "string"
+        }
+    },
     "function": {
         "S3Trigger3d9ab619": {
             "Name": "string",

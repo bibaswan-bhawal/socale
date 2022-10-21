@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:get/get.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
@@ -29,7 +28,9 @@ class Routes {
       ),
       GetPage(
         name: '/settings',
-        page: () => SettingsPage(),
+        page: () => SettingsPage(
+          startTime: DateTime.now(),
+        ),
         transition: Transition.leftToRight,
         transitionDuration: Duration(milliseconds: 300),
       )

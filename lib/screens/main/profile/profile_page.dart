@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:math';
 
@@ -23,6 +24,8 @@ import 'package:socale/utils/options/hobbies.dart';
 import 'package:socale/utils/options/skills.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
+
+import '../../settings/account_screen.dart';
 
 class ProfilePage extends ConsumerStatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -71,19 +74,23 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
   }
 
   void goToSettings() {
-    Navigator.of(context).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => SettingsPage(),
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return SharedAxisTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            transitionType: SharedAxisTransitionType.horizontal,
-            child: child,
-          );
-        },
-      ),
-    );
+    Navigator.of(context)
+        .push(
+          PageRouteBuilder(
+            pageBuilder: (context, animation, secondaryAnimation) => SettingsPage(
+              startTime: DateTime.now(),
+            ),
+            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+              return SharedAxisTransition(
+                animation: animation,
+                secondaryAnimation: secondaryAnimation,
+                transitionType: SharedAxisTransitionType.horizontal,
+                child: child,
+              );
+            },
+          ),
+        )
+        .then((value) => null);
   }
 
   calculateAge(DateTime birthDate) {
@@ -177,13 +184,32 @@ class _ProfilePageState extends ConsumerState<ProfilePage> {
                           children: [
                             Padding(
                               padding: EdgeInsets.only(top: 40),
-                              child: CircleAvatar(
-                                radius: 80,
-                                backgroundColor: Color(0xFF494949),
-                                child: ClipOval(
-                                  child: profilePicture != null
-                                      ? Image.file(profilePicture!)
-                                      : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Navigator.of(context).push(
+                                    PageRouteBuilder(
+                                      pageBuilder: (context, animation, secondaryAnimation) =>
+                                          AccountPage(),
+                                      transitionsBuilder:
+                                          (context, animation, secondaryAnimation, child) {
+                                        return SharedAxisTransition(
+                                          animation: animation,
+                                          secondaryAnimation: secondaryAnimation,
+                                          transitionType: SharedAxisTransitionType.horizontal,
+                                          child: child,
+                                        );
+                                      },
+                                    ),
+                                  );
+                                },
+                                child: CircleAvatar(
+                                  radius: 80,
+                                  backgroundColor: Color(0xFF494949),
+                                  child: ClipOval(
+                                    child: profilePicture != null
+                                        ? Image.file(profilePicture!)
+                                        : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
+                                  ),
                                 ),
                               ),
                             ),
