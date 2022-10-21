@@ -4,26 +4,19 @@ import 'package:animations/animations.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/ButtonGroups/SocialSignInButtonGroup.dart';
 import 'package:socale/components/Buttons/primary_loading_button.dart';
 import 'package:socale/components/Dividers/signInDivider.dart';
 import 'package:socale/components/Headers/register_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
-import 'package:get/get.dart';
 import 'package:socale/components/snackbar/auth_snackbars.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
-import 'package:socale/services/analytics_service.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/validators.dart';
 import 'package:socale/utils/providers/providers.dart';
-import 'package:url_launcher/url_launcher.dart';
-
-class RegisterScreen extends ConsumerStatefulWidget {
-  final Function() back;
-
-  const RegisterScreen({Key? key, required this.back}) : super(key: key);
+import 'package:socale/utils/validato key);
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -59,7 +52,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   void goToVerifySignUpEmail() {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => VerifyEmailScreen(
+        pageBuilder: (context, animation, secondaryAnimation) =>
+            VerifyEmailScreen(
           email: _email,
           password: _password,
         ),
@@ -77,7 +71,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   void trySignIn() async {
     try {
-      final result = await authService.signIn(_email, _password); // try signing in user.
+      final result =
+          await authService.signIn(_email, _password); // try signing in user.
       if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
         goToVerifySignUpEmail(); // user exists but isn't verified navigate to verify email page
       } else {
@@ -97,7 +92,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   void trySignUp() async {
     try {
-      final result = await authService.signup(_email, _password); // try signing in user.
+      final result =
+          await authService.signup(_email, _password); // try signing in user.
 
       if (!result.isSignUpComplete) {
         goToVerifySignUpEmail(); // user exists but isn't verified navigate to verify email page
@@ -221,7 +217,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             text: TextSpan(
                               children: [
                                 TextSpan(
-                                  text: 'By signing up you agree to the Socale ',
+                                  text:
+                                      'By signing up you agree to the Socale ',
                                   style: GoogleFonts.poppins(
                                     color: Colors.black,
                                     fontSize: 12,
@@ -267,7 +264,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       launchUrl(
-                                        Uri.parse('http://socale.co/privacypolicy'),
+                                        Uri.parse(
+                                            'http://socale.co/privacypolicy'),
                                         mode: LaunchMode.externalApplication,
                                       );
                                     },
@@ -290,11 +288,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         ),
                       ],
                     ),
-                  ),
-                  SignInDivider(),
-                  SocialSignInButtonGroup(
-                    handler: handleSocialSignUp,
-                    text: "Sign Up",
                   ),
                 ],
               ),

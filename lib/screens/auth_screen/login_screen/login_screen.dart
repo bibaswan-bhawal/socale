@@ -117,8 +117,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (isSignedIn) {
-      //authAnalytics.recordUserSignIn(); // record user signed in
-      await Amplify.DataStore.start(); // load user data
       await ref.read(userAttributesAsyncController.notifier).setAttributes();
       checkIfOnboarded();
     }

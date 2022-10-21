@@ -11,6 +11,7 @@ import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/models/MatchRoom.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
+import 'package:socale/screens/main/main_app.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
@@ -24,12 +25,13 @@ class ChatListPage extends ConsumerStatefulWidget {
 class _ChatListPageState extends ConsumerState<ChatListPage>
     with TickerProviderStateMixin {
   late TabController _tabController;
-  int _selectedIndex = 0;
+  final TextEditingController controller = TextEditingController();
+  int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
 
     _tabController.addListener(() {
       setState(() {
@@ -92,6 +94,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
 
   Widget listItemBuilder(context, animation, item, index) {
     final roomState = ref.watch(roomsAsyncController);
+
     return SizeFadeTransition(
       sizeFraction: 0.7,
       curve: Curves.easeInOut,
@@ -100,229 +103,257 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
     );
   }
 
-  @override
-  Widget build(BuildContext context) {
-    final roomState = ref.watch(roomsAsyncController);
+  Widget emptyListBuilder(String text) {
     var size = MediaQuery.of(context).size;
 
-    return DefaultTabController(
-      length: 2,
-      initialIndex: 1,
-      child: Scaffold(
-        resizeToAvoidBottomInset: false,
-        body: KeyboardSafeArea(
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              return Column(
-                children: [
-                  SizedBox(
-                    height: 100,
-                    width: constraints.maxWidth,
-                    child: Padding(
-                      padding: const EdgeInsets.only(top: 20),
-                      child: Column(
-                        children: [
-                          Image.asset('assets/images/socale_logo_bw.png',
-                              width: 100),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
-                    child: SizedBox(
-                      width: size.width * 0.9,
-                      height: 40,
-                      child: TextFormField(
-                        style: GoogleFonts.roboto(color: Colors.white),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.search,
-                            color: Colors.white,
-                          ),
-                          hintText: "Search",
-                          hintStyle: GoogleFonts.roboto(color: Colors.white),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(50),
-                            borderSide:
-                                BorderSide(style: BorderStyle.none, width: 0),
-                          ),
-                          fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
-                          filled: true,
-                          isCollapsed: true,
-                          contentPadding: EdgeInsets.only(top: 10),
-                        ),
-                      ),
-                    ),
-                  ),
-                  TabBar(
-                    splashFactory: NoSplash.splashFactory,
-                    controller: _tabController,
-                    indicatorWeight: 3,
-                    indicatorColor: _selectedIndex == 0
-                        ? ColorValues.socaleOrange
-                        : Color(0xFFF151DD),
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          "Your Network",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            color: _selectedIndex == 0
-                                ? ColorValues.socaleOrange
-                                : Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      Tab(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'New Matches',
-                                style: GoogleFonts.poppins(
-                                  color: _selectedIndex == 0
-                                      ? Colors.white
-                                      : Color(0xFFF151DD),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight - 199,
-                    child: TabBarView(
-                      controller: _tabController,
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+                vertical: 40, horizontal: size.width * 0.14),
+            child: Text(
+              text,
+              textAlign: TextAlign.center,
+              style: GoogleFonts.poppins(
+                fontWeight: FontWeight.w500,
+                fontSize: 24,
+                letterSpacing: -0.3,
+                color: Colors.white,
+              ),
+            ),
+          ),
+          RoundedButton(
+            height: 60,
+            width: size.width * 0.8,
+            onClickEventHandler: () {
+              final pageController = ref.read(mainPageController);
+              pageController.nextPage(
+                  duration: Duration(milliseconds: 300),
+                  curve: Curves.easeInOut);
+            },
+            text: 'Start Matching',
+            colors: [
+              Color(0xFFFD6C00),
+              Color(0xFFFFA133),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    AsyncValue<List<RoomListItem>> roomState = ref.watch(roomsAsyncController);
+    var size = MediaQuery.of(context).size;
+
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: KeyboardSafeArea(
+        child: LayoutBuilder(
+          builder: (context, constraints) {
+            return Column(
+              children: [
+                SizedBox(
+                  height: 100,
+                  width: constraints.maxWidth,
+                  child: Padding(
+                    padding: const EdgeInsets.only(top: 20),
+                    child: Column(
                       children: [
-                        roomState.when(
-                          error: (Object error, StackTrace? stackTrace) {
-                            throw (stackTrace.toString());
-                          },
-                          loading: () {
-                            return Container();
-                          },
-                          data: (List<RoomListItem> data) {
-                            List<RoomListItem> networkRooms = [];
-
-                            for (RoomListItem room in data) {
-                              if (!room.showHidden()) {
-                                networkRooms.add(room);
-                              }
-                            }
-
-                            if (data.isEmpty) {
-                              return Center(
-                                child: SizedBox(
-                                  width: 250,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "Build out your network to see them here",
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.poppins(
-                                          color: ColorValues.textOnDark,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      RoundedButton(
-                                        height: 60,
-                                        width: size.width * 0.8,
-                                        onClickEventHandler: () => {},
-                                        text: 'Start Matching',
-                                        colors: [
-                                          Color(0xFFFD6C00),
-                                          Color(0xFFFFA133),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-
-                            return ImplicitlyAnimatedList(
-                              items: networkRooms,
-                              areItemsTheSame:
-                                  (RoomListItem room1, RoomListItem room2) =>
-                                      room1.getRoom.id == room2.getRoom.id,
-                              itemBuilder: listItemBuilder,
-                            );
-                          },
-                        ),
-                        // Anonymous Matches
-                        roomState.when(
-                          error: (Object error, StackTrace? stackTrace) {
-                            throw (stackTrace.toString());
-                          },
-                          loading: () {
-                            return Container();
-                          },
-                          data: (List<RoomListItem> data) {
-                            List<RoomListItem> networkRooms = [];
-
-                            for (RoomListItem room in data) {
-                              if (room.showHidden()) {
-                                networkRooms.add(room);
-                              }
-                            }
-
-                            if (data.isEmpty) {
-                              return Center(
-                                child: SizedBox(
-                                  width: 250,
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        "Build out your network to see them here",
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.poppins(
-                                          color: ColorValues.textOnDark,
-                                          fontSize: 18,
-                                          fontWeight: FontWeight.bold,
-                                        ),
-                                      ),
-                                      RoundedButton(
-                                        height: 60,
-                                        width: size.width * 0.8,
-                                        onClickEventHandler: () => {},
-                                        text: 'Start Matching',
-                                        colors: [
-                                          Color(0xFFFD6C00),
-                                          Color(0xFFFFA133),
-                                        ],
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              );
-                            }
-
-                            return ImplicitlyAnimatedList(
-                              items: networkRooms,
-                              areItemsTheSame:
-                                  (RoomListItem room1, RoomListItem room2) =>
-                                      room1.getRoom.id == room2.getRoom.id,
-                              itemBuilder: listItemBuilder,
-                            );
-                          },
-                        ),
+                        Image.asset('assets/images/socale_logo_bw.png',
+                            width: 100),
                       ],
                     ),
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(bottom: 10),
+                  child: SizedBox(
+                    width: size.width * 0.9,
+                    height: 40,
+                    child: TextFormField(
+                      controller: controller,
+                      onChanged: (value) {
+                        setState(() {});
+                      },
+                      style: GoogleFonts.roboto(color: Colors.white),
+                      decoration: InputDecoration(
+                        prefixIcon: Icon(
+                          Icons.search,
+                          color: Colors.white,
+                        ),
+                        hintText: "Search",
+                        hintStyle: GoogleFonts.roboto(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide:
+                              BorderSide(style: BorderStyle.none, width: 0),
+                        ),
+                        fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
+                        filled: true,
+                        isCollapsed: true,
+                        contentPadding: EdgeInsets.only(top: 10),
+                      ),
+                    ),
+                  ),
+                ),
+                TabBar(
+                  splashFactory: NoSplash.splashFactory,
+                  controller: _tabController,
+                  indicatorWeight: 3,
+                  indicatorColor: _selectedIndex == 0
+                      ? ColorValues.socaleOrange
+                      : Color(0xFFF151DD),
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        "Your Network",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: _selectedIndex == 0
+                              ? ColorValues.socaleOrange
+                              : Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                        ),
+                      ),
+                    ),
+                    Tab(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'New Matches',
+                              style: GoogleFonts.poppins(
+                                color: _selectedIndex == 0
+                                    ? Colors.white
+                                    : Color(0xFFF151DD),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: constraints.maxWidth,
+                  height: constraints.maxHeight - 199,
+                  child: TabBarView(
+                    controller: _tabController,
+                    children: [
+                      roomState.when(
+                        error: (Object error, StackTrace? stackTrace) {
+                          throw (stackTrace.toString());
+                        },
+                        loading: () {
+                          return Center(
+                            child: SizedBox(
+                              width: 48,
+                              height: 48,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },
+                        data: (List<RoomListItem> data) {
+                          List<RoomListItem> networkRooms = [];
+                          List<RoomListItem> fillteredNetworkRooms = [];
+
+                          for (RoomListItem room in data) {
+                            if (!room.showHidden()) {
+                              networkRooms.add(room);
+                            }
+                          }
+
+                          if (networkRooms.isEmpty) {
+                            return emptyListBuilder(
+                              "Hmm... Nothing is here yet",
+                            );
+                          }
+
+                          fillteredNetworkRooms = (networkRooms.where(
+                                  (element) => element.getRoomName
+                                      .toLowerCase()
+                                      .contains(controller.text.toLowerCase())))
+                              .toList();
+
+                          return ImplicitlyAnimatedList(
+                            items: fillteredNetworkRooms,
+                            areItemsTheSame:
+                                (RoomListItem room1, RoomListItem room2) =>
+                                    room1.getRoom.id == room2.getRoom.id,
+                            removeDuration: Duration(milliseconds: 200),
+                            insertDuration: Duration(milliseconds: 200),
+                            updateDuration: Duration(milliseconds: 200),
+                            itemBuilder: listItemBuilder,
+                            spawnIsolate: true,
+                          );
+                        },
+                      ),
+                      //Anonymous Matches
+
+                      roomState.when(
+                        error: (Object error, StackTrace? stackTrace) {
+                          throw (stackTrace.toString());
+                        },
+                        loading: () {
+                          return Center(
+                            child: SizedBox(
+                              width: 48,
+                              height: 48,
+                              child: CircularProgressIndicator(
+                                color: Colors.white,
+                              ),
+                            ),
+                          );
+                        },
+                        data: (List<RoomListItem> data) {
+                          List<RoomListItem> matchRooms = [];
+                          List<RoomListItem> fillteredMatchRooms = [];
+
+                          for (RoomListItem room in data) {
+                            if (room.showHidden()) {
+                              matchRooms.add(room);
+                            }
+                          }
+
+                          if (matchRooms.isEmpty) {
+                            return emptyListBuilder(
+                                "Find your new matches to fill up this space!");
+                          }
+
+                          fillteredMatchRooms = (matchRooms.where((element) =>
+                                  element.getRoomName
+                                      .toLowerCase()
+                                      .contains(controller.text.toLowerCase())))
+                              .toList();
+
+                          return ImplicitlyAnimatedList(
+                            items: fillteredMatchRooms,
+                            areItemsTheSame:
+                                (RoomListItem room1, RoomListItem room2) =>
+                                    room1.getRoom.id == room2.getRoom.id,
+                            itemBuilder: listItemBuilder,
+                            removeDuration: Duration(milliseconds: 200),
+                            insertDuration: Duration(milliseconds: 200),
+                            updateDuration: Duration(milliseconds: 200),
+                          );
+                        },
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

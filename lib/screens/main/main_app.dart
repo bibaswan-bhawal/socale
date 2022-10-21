@@ -11,6 +11,8 @@ import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/system_ui_setter.dart';
 import 'package:socale/values/colors.dart';
 
+final mainPageController = Provider((_) => PageController(initialPage: 1));
+
 class MainApp extends ConsumerStatefulWidget {
   final bool? transitionAnimation;
 
@@ -23,7 +25,6 @@ class MainApp extends ConsumerStatefulWidget {
 class _MainAppState extends ConsumerState<MainApp>
     with TickerProviderStateMixin {
   bool? transitionAnimation;
-  final PageController _pageController = PageController(initialPage: 1);
   final NotificationService notificationService = NotificationService();
   Animation<double>? containerAnimation;
   AnimationController? containerAnimationController;
@@ -49,6 +50,7 @@ class _MainAppState extends ConsumerState<MainApp>
   void didChangeDependencies() {
     final userState = ref.watch(userAsyncController);
     final matchState = ref.watch(matchAsyncController);
+    final roomState = ref.watch(roomsAsyncController);
 
     if (transitionAnimation != null && transitionAnimation!) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -88,17 +90,17 @@ class _MainAppState extends ConsumerState<MainApp>
     });
   }
 
-  handleBottomNavigationClick(value) {
-    _pageController.animateToPage(value,
+  void handleBottomNavigationClick(value) {
+    final pageController = ref.read(mainPageController);
+
+    pageController.animateToPage(value,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOutCubicEmphasized);
   }
 
   @override
   Widget build(BuildContext context) {
-    final roomState = ref.watch(roomsAsyncController);
-    roomState.whenData((value) => print("Got full room list"));
-
+    final pageController = ref.watch(mainPageController);
     var size = MediaQuery.of(context).size;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
@@ -113,7 +115,7 @@ class _MainAppState extends ConsumerState<MainApp>
                 flex: 1,
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
-                  controller: _pageController,
+                  controller: pageController,
                   children: [
                     ChatListPage(),
                     MatchPage(),

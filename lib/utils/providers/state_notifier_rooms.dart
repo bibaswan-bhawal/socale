@@ -84,7 +84,6 @@ class RoomsStateNotifier extends StateNotifier<AsyncValue<List<RoomListItem>>> {
 
                 roomsListItems.sort((room1, room2) => room1.compareTo(room2));
                 if (mounted) {
-                  print(roomsListItems);
                   state = AsyncData(roomsListItems.reversed.toList());
                 }
               }
