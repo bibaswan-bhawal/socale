@@ -4,11 +4,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/Buttons/rounded_button.dart';
 import 'package:socale/components/cards/gradient_border_card.dart';
 import 'package:socale/models/MatchRoom.dart';
-import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/screens/main/chat/chat_page.dart';
 import 'package:socale/models/User.dart';
 import 'package:socale/models/Match.dart';
-import 'package:socale/services/chat_service.dart';
 import 'package:socale/utils/match_value_to_string.dart';
 import 'package:socale/utils/options/academic_interests.dart';
 import 'package:socale/utils/options/hobbies.dart';
@@ -38,21 +36,21 @@ class _MatchCardState extends State<MatchCard> {
   }
 
   onItemClick() async {
-      if (mounted) {
-        Navigator.of(context).push(
-          PageRouteBuilder(
-            pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: MatchRoom(user: widget.user)),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
-              return SharedAxisTransition(
-                animation: animation,
-                secondaryAnimation: secondaryAnimation,
-                transitionType: SharedAxisTransitionType.horizontal,
-                child: child,
-              );
-            },
-          ),
-        );
-      }
+    if (mounted) {
+      Navigator.of(context).push(
+        PageRouteBuilder(
+          pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: MatchRoom(user: widget.user)),
+          transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            return SharedAxisTransition(
+              animation: animation,
+              secondaryAnimation: secondaryAnimation,
+              transitionType: SharedAxisTransitionType.horizontal,
+              child: child,
+            );
+          },
+        ),
+      );
+    }
   }
 
   @override

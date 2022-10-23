@@ -2,6 +2,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:socale/components/match_card/end_card.dart';
 import 'package:socale/components/match_card/match_card.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:flutter/material.dart';
@@ -54,20 +55,31 @@ class _MatchPageState extends ConsumerState<MatchPage> {
                         items: matchesProvider.when(data: (data) {
                           List<Widget> matchCards = [];
 
-                          data.forEach((user, matchData) {
-                            matchCards.add(
-                              LayoutBuilder(
-                                builder: (BuildContext context, BoxConstraints constraints) {
-                                  return MatchCard(
-                                    size: Size(constraints.maxWidth, constraints.maxHeight),
-                                    user: user,
-                                    match: matchData,
-                                  );
-                                },
-                              ),
-                            );
-                          });
+                          data.forEach(
+                            (user, matchData) {
+                              matchCards.add(
+                                LayoutBuilder(
+                                  builder: (BuildContext context, BoxConstraints constraints) {
+                                    return MatchCard(
+                                      size: Size(constraints.maxWidth, constraints.maxHeight),
+                                      user: user,
+                                      match: matchData,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
 
+                          matchCards.add(
+                            LayoutBuilder(
+                              builder: (BuildContext context, BoxConstraints constraints) {
+                                return EndCard(
+                                  size: Size(constraints.maxWidth, constraints.maxHeight),
+                                );
+                              },
+                            ),
+                          );
                           return matchCards;
                         }, error: (Object error, StackTrace? stackTrace) {
                           return [
