@@ -10,7 +10,8 @@ class EmailVerificationPage extends ConsumerStatefulWidget {
   const EmailVerificationPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<EmailVerificationPage> createState() => _EmailVerificationPageState();
+  ConsumerState<EmailVerificationPage> createState() =>
+      _EmailVerificationPageState();
 }
 
 class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
@@ -34,7 +35,8 @@ class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
 
   void _onOtpSaved(value) async {
     await onboardingService.setSchoolEmail(_email);
-    _pageController.nextPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
   }
 
   //Click handler
@@ -89,31 +91,33 @@ class _EmailVerificationPageState extends ConsumerState<EmailVerificationPage> {
                 height: size.height,
                 child: Column(
                   children: [
-                    EmailVerificationHeader(),
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: EmailVerificationPager(
-                        pageController: _formPageController,
-                        formEmailKey: _formEmailKey,
-                        formOptKey: _formOtpKey,
-                        onSavedEmail: _onEmailSaved,
-                        onOtpSaved: _onOtpSaved,
+                    Expanded(
+                      flex: 1,
+                      child: EmailVerificationHeader(),
+                    ),
+                    EmailVerificationPager(
+                      pageController: _formPageController,
+                      formEmailKey: _formEmailKey,
+                      formOptKey: _formOtpKey,
+                      onSavedEmail: _onEmailSaved,
+                      onOtpSaved: _onOtpSaved,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.only(
+                          left: 20,
+                          right: 20,
+                          bottom: 20 + MediaQuery.of(context).padding.bottom),
+                      child: PrimaryButton(
+                        width: size.width,
+                        height: 60,
+                        colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
+                        text: "Verify",
+                        onClickEventHandler:
+                            _onClickEventHandler, // onClickEventHandler,
                       ),
                     ),
                   ],
                 ),
-              ),
-            ),
-            Positioned(
-              bottom: 40,
-              left: 20,
-              right: 20,
-              child: PrimaryButton(
-                width: size.width,
-                height: 60,
-                colors: [Color(0xFF2F3136), Color(0xFF2F3136)],
-                text: "Verify",
-                onClickEventHandler: _onClickEventHandler, // onClickEventHandler,
               ),
             ),
           ],

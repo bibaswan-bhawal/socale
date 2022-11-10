@@ -6,4 +6,9 @@ class MatchRoom {
   final User? user;
 
   MatchRoom({this.room, this.user});
+
+  @override
+  String toString() {
+    return "${room?.getRoom.id}: ${user?.id}";
+  }
 }

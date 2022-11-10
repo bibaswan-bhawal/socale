@@ -28,7 +28,7 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
   final LayerLink _layerLink = LayerLink();
   final TextEditingController _fieldText = TextEditingController();
 
-  late OverlayEntry _overlayEntry;
+  OverlayEntry? _overlayEntry;
   late List<String> _searchResults;
   bool _isFocused = false;
 
@@ -36,6 +36,18 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
   void initState() {
     super.initState();
     _focusNode.addListener(_onFocusChange);
+
+    _fieldText.addListener(() {
+      if (_isFocused) {
+        showOverlay(false);
+        setState(() => _searchResults = widget.list
+            .where((element) =>
+                element.toLowerCase().contains(_fieldText.text.toLowerCase()))
+            .toList());
+        showOverlay(true);
+      }
+    });
+
     _searchResults = widget.list;
   }
 
@@ -49,11 +61,21 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
   void _onFocusChange() {
     if (_focusNode.hasPrimaryFocus) {
       _isFocused = true;
-      _overlayEntry = _createOverlayEntry();
-      Overlay.of(context)?.insert(_overlayEntry);
+      showOverlay(true);
     } else {
       _isFocused = false;
-      _overlayEntry.remove();
+      showOverlay(false);
+    }
+  }
+
+  void showOverlay(bool show) {
+    if (show) {
+      _overlayEntry ??= _createOverlayEntry();
+      Overlay.of(context)?.insert(_overlayEntry!);
+    } else {
+      if (_overlayEntry is OverlayEntry) {
+        _overlayEntry?.remove();
+      }
     }
   }
 
@@ -83,11 +105,12 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
                   return ListTile(
                     title: Text(_searchResults[index]),
                     onTap: () {
-                      _fieldText.clear();
                       if (!widget.values.contains(_searchResults[index])) {
                         widget.values.add(_searchResults[index]);
                         widget.onChanged(widget.values);
                       }
+
+                      _fieldText.clear();
                     },
                   );
                 },
@@ -102,7 +125,7 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: 52,
+      height: 88,
       child: Column(
         children: [
           CompositedTransformTarget(
@@ -155,8 +178,9 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
                         ),
                         Container(
                           padding: EdgeInsets.only(left: 5),
-                          constraints:
-                              BoxConstraints(minWidth: widget.values.isEmpty ? widget.width : 200),
+                          constraints: BoxConstraints(
+                              minWidth:
+                                  widget.values.isEmpty ? widget.width : 200),
                           child: IntrinsicWidth(
                             child: TextField(
                               focusNode: _focusNode,
@@ -165,22 +189,30 @@ class _ChipInputFieldState<T> extends State<ChipInputField<T>> {
                                 hintText: widget.textInputLabel,
                                 hintStyle: GoogleFonts.poppins(
                                     fontWeight: FontWeight.w500,
-                                    color: ColorValues.elementColor.withOpacity(0.7),
+                                    color: ColorValues.elementColor
+                                        .withOpacity(0.7),
                                     fontSize: 14),
                                 border: InputBorder.none,
                               ),
-                              onChanged: (value) {
-                                setState(() => _searchResults = widget.list
-                                    .where((element) =>
-                                        element.toLowerCase().contains(value.toLowerCase()))
-                                    .toList());
-                              },
                             ),
                           ),
                         ),
                       ],
                     ),
                   ),
+                ),
+              ),
+            ),
+          ),
+          Align(
+            alignment: Alignment.centerRight,
+            child: Padding(
+              padding: EdgeInsets.only(top: 5, right: 20),
+              child: Text(
+                "${widget.values.length}/2",
+                textAlign: TextAlign.right,
+                style: TextStyle(
+                  color: widget.values.length < 3 ? Colors.black : Colors.red,
                 ),
               ),
             ),

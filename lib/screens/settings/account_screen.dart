@@ -17,6 +17,7 @@ import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/translucent_background/bottom_translucent_card.dart';
 import 'package:socale/screens/settings/avatar_picker.dart';
 import 'package:socale/services/analytics_service.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 
@@ -27,7 +28,8 @@ class AccountPage extends ConsumerStatefulWidget {
   ConsumerState<AccountPage> createState() => _AccountPageState();
 }
 
-class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingObserver {
+class _AccountPageState extends ConsumerState<AccountPage>
+    with WidgetsBindingObserver {
   DateTime? startTime;
   File? profilePicture;
   TextEditingController firstNameController = TextEditingController();
@@ -61,7 +63,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
       startTime = DateTime.now();
     }
 
-    if (state == AppLifecycleState.detached || state == AppLifecycleState.paused) {
+    if (state == AppLifecycleState.detached ||
+        state == AppLifecycleState.paused) {
       if (startTime == null) return;
       final usageTime = DateTime.now().difference(startTime!);
       analyticsService.editProfileTime(usageTime.inMilliseconds);
@@ -87,7 +90,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
       lastNameController.text = lastName;
       emailController.text = email;
 
-      if (userState.value!.profilePicture != null && userState.value!.profilePicture!.isNotEmpty) {
+      if (userState.value!.profilePicture != null &&
+          userState.value!.profilePicture!.isNotEmpty) {
         getProfilePicture(userState.value!.profilePicture!);
       }
     }
@@ -161,6 +165,33 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
         },
       );
     }
+  }
+
+  void deleteAccount(BuildContext context) {
+    showCupertinoModalPopup<void>(
+      context: context,
+      builder: (BuildContext context) => CupertinoAlertDialog(
+        title: const Text('Delete Account'),
+        content: const Text(
+            'Are you sure you want to delete your account? This action is permanent.'),
+        actions: <CupertinoDialogAction>[
+          CupertinoDialogAction(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: const Text('No'),
+          ),
+          CupertinoDialogAction(
+            isDestructiveAction: true,
+            onPressed: () async {
+              if (mounted) Navigator.pop(context);
+              await authService.deleteUser(ref);
+            },
+            child: const Text('Yes'),
+          ),
+        ],
+      ),
+    );
   }
 
   Future<void> uploadProfilePic(String? currentKey, String newKey) async {
@@ -316,7 +347,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                     enlargeCenterPage: true,
                     enableInfiniteScroll: false,
                     autoPlay: false,
-                    onPageChanged: (index, _) => setState(() => pageIndex = index),
+                    onPageChanged: (index, _) =>
+                        setState(() => pageIndex = index),
                   ),
                   items: [
                     Stack(
@@ -333,7 +365,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                           top: 50,
                           child: Material(
                             elevation: 5,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(100)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(100)),
                             child: Container(
                               width: 30,
                               height: 30,
@@ -343,18 +376,23 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                               ),
                               child: GestureDetector(
                                 onTap: () async {
-                                  final result = await Navigator.of(context).push(
+                                  final result =
+                                      await Navigator.of(context).push(
                                     PageRouteBuilder(
-                                      pageBuilder: (context, animation, secondaryAnimation) =>
+                                      pageBuilder: (context, animation,
+                                              secondaryAnimation) =>
                                           AvatarPicker(
                                         initial: avatar,
                                       ),
-                                      transitionsBuilder:
-                                          (context, animation, secondaryAnimation, child) {
+                                      transitionsBuilder: (context, animation,
+                                          secondaryAnimation, child) {
                                         return SharedAxisTransition(
                                           animation: animation,
-                                          secondaryAnimation: secondaryAnimation,
-                                          transitionType: SharedAxisTransitionType.horizontal,
+                                          secondaryAnimation:
+                                              secondaryAnimation,
+                                          transitionType:
+                                              SharedAxisTransitionType
+                                                  .horizontal,
                                           child: child,
                                         );
                                       },
@@ -367,8 +405,10 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                                 },
                                 child: Center(
                                   child: Padding(
-                                    padding: EdgeInsets.only(left: 1, bottom: 0.5),
-                                    child: SvgPicture.asset('assets/icons/pencil_icon.svg'),
+                                    padding:
+                                        EdgeInsets.only(left: 1, bottom: 0.5),
+                                    child: SvgPicture.asset(
+                                        'assets/icons/pencil_icon.svg'),
                                   ),
                                 ),
                               ),
@@ -380,10 +420,12 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                     GestureDetector(
                       onTap: () async {
                         final ImagePicker picker = ImagePicker();
-                        final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+                        final XFile? image =
+                            await picker.pickImage(source: ImageSource.gallery);
 
                         if (image != null) {
-                          CroppedFile? croppedFile = await ImageCropper().cropImage(
+                          CroppedFile? croppedFile =
+                              await ImageCropper().cropImage(
                             cropStyle: CropStyle.circle,
                             compressQuality: 50,
                             aspectRatio: CropAspectRatio(ratioX: 1, ratioY: 1),
@@ -408,7 +450,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                           );
 
                           if (croppedFile != null) {
-                            setState(() => profilePicture = File(croppedFile.path));
+                            setState(
+                                () => profilePicture = File(croppedFile.path));
                           }
                         }
                       },
@@ -422,7 +465,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                               child: ClipOval(
                                 child: profilePicture != null
                                     ? Image.file(profilePicture!)
-                                    : SvgPicture.asset('assets/icons/add_picture_icon.svg'),
+                                    : SvgPicture.asset(
+                                        'assets/icons/add_picture_icon.svg'),
                               ),
                             ),
                           ),
@@ -445,8 +489,10 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                                     onTap: () {},
                                     child: Center(
                                       child: Padding(
-                                        padding: EdgeInsets.only(left: 1, bottom: 0.5),
-                                        child: SvgPicture.asset('assets/icons/pencil_icon.svg'),
+                                        padding: EdgeInsets.only(
+                                            left: 1, bottom: 0.5),
+                                        child: SvgPicture.asset(
+                                            'assets/icons/pencil_icon.svg'),
                                       ),
                                     ),
                                   ),
@@ -489,7 +535,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                               onChanged: (value) {
                                 setState(() => firstName = value);
                               },
-                              style: GoogleFonts.roboto(color: Color(0xFF479CFF)),
+                              style:
+                                  GoogleFonts.roboto(color: Color(0xFF479CFF)),
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.zero,
                                 border: InputBorder.none,
@@ -527,7 +574,8 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                               onChanged: (value) {
                                 setState(() => lastName = value);
                               },
-                              style: GoogleFonts.roboto(color: Color(0xFF479CFF)),
+                              style:
+                                  GoogleFonts.roboto(color: Color(0xFF479CFF)),
                               decoration: InputDecoration(
                                 contentPadding: EdgeInsets.zero,
                                 border: InputBorder.none,
@@ -664,6 +712,22 @@ class _AccountPageState extends ConsumerState<AccountPage> with WidgetsBindingOb
                   ),
                 ),
               ],
+            ),
+          ),
+          Positioned(
+            bottom: MediaQuery.of(context).padding.bottom + 20,
+            left: 0,
+            right: 0,
+            child: GestureDetector(
+              onTap: () => deleteAccount(context),
+              child: Text(
+                "Delete Account",
+                textAlign: TextAlign.center,
+                style: GoogleFonts.poppins(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.red,
+                ),
+              ),
             ),
           ),
         ],

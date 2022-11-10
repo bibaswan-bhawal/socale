@@ -28,8 +28,7 @@ class RoomStateNotifier extends StateNotifier<AsyncValue<RoomListItem>> {
 
     if (matchRoom.user != null) {
       try {
-        RoomListItem? roomListItem =
-            await chatService.getRoom(matchRoom.user!.id);
+        RoomListItem? roomListItem = await chatService.getRoom(matchRoom.user!.id);
         if (roomListItem == null) throw (Exception("couldn't get room"));
 
         state = AsyncData(roomListItem);
@@ -48,8 +47,8 @@ class RoomStateNotifier extends StateNotifier<AsyncValue<RoomListItem>> {
     ).listen((QuerySnapshot snapshot) {
       if (snapshot.isSynced) {
         Room room = snapshot.items.first as Room;
-        RoomListItem newRoomListItem = RoomListItem(
-            room, state.value!.getUserList, state.value!.getCurrentUser);
+        RoomListItem newRoomListItem =
+            RoomListItem(room, state.value!.getUserList, state.value!.getCurrentUser);
         state = AsyncData(newRoomListItem);
       }
     });

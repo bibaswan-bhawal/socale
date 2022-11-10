@@ -8,7 +8,8 @@ import 'package:socale/values/colors.dart';
 class MatchesHelpOverlay extends StatelessWidget {
   final Function() onDismiss;
 
-  const MatchesHelpOverlay({Key? key, required this.onDismiss}) : super(key: key);
+  const MatchesHelpOverlay({Key? key, required this.onDismiss})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -23,7 +24,7 @@ class MatchesHelpOverlay extends StatelessWidget {
         Center(
           child: SizedBox(
             width: size.width * 0.9,
-            height: size.height * 0.7,
+            height: size.height * 0.825,
             child: ClipRRect(
               borderRadius: const BorderRadius.all(Radius.circular(25)),
               child: BackdropFilter(
@@ -36,7 +37,7 @@ class MatchesHelpOverlay extends StatelessWidget {
                         children: [
                           Image.asset(
                             'assets/images/match_screen_help_animation.gif',
-                            width: 200,
+                            width: size.height * 0.25,
                           ),
                           RichText(
                             text: TextSpan(
@@ -54,7 +55,9 @@ class MatchesHelpOverlay extends StatelessWidget {
                                   style: GoogleFonts.poppins(
                                     fontSize: 24,
                                     fontWeight: FontWeight.bold,
-                                    foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                                    foreground: Paint()
+                                      ..shader =
+                                          ColorValues.socaleOrangeGradient,
                                   ),
                                 ),
                               ],
@@ -78,7 +81,8 @@ class MatchesHelpOverlay extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 25, right: 20),
+                                    padding: const EdgeInsets.only(
+                                        left: 25, right: 20),
                                     child: Text(
                                       "🤖",
                                       style: TextStyle(
@@ -106,7 +110,8 @@ class MatchesHelpOverlay extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 25, right: 20),
+                                    padding: const EdgeInsets.only(
+                                        left: 25, right: 20),
                                     child: Text(
                                       "👆",
                                       style: TextStyle(
@@ -134,7 +139,8 @@ class MatchesHelpOverlay extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 25, right: 20),
+                                    padding: const EdgeInsets.only(
+                                        left: 25, right: 20),
                                     child: Text(
                                       "🤩",
                                       style: TextStyle(
@@ -162,7 +168,8 @@ class MatchesHelpOverlay extends StatelessWidget {
                               child: Row(
                                 children: [
                                   Padding(
-                                    padding: const EdgeInsets.only(left: 25, right: 20),
+                                    padding: const EdgeInsets.only(
+                                        left: 25, right: 20),
                                     child: Text(
                                       "🙈",
                                       style: TextStyle(

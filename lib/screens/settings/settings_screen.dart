@@ -17,21 +17,38 @@ import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/values/colors.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class SettingsPage extends ConsumerWidget {
+class SettingsPage extends ConsumerStatefulWidget {
   final DateTime startTime;
   const SettingsPage({Key? key, required this.startTime}) : super(key: key);
 
-  void onClickEventHandler(WidgetRef ref) {
-    authService.signOutCurrentUser(ref);
-  }
+  @override
+  ConsumerState<SettingsPage> createState() => _SettingsPageState();
+}
+
+class _SettingsPageState extends ConsumerState<SettingsPage> {
+  bool loading = false;
 
   void onBack(BuildContext context) {
-    analyticsService.settingsTime(DateTime.now().difference(startTime).inMilliseconds);
+    analyticsService
+        .settingsTime(DateTime.now().difference(widget.startTime).inMilliseconds);
     Navigator.of(context).pop();
   }
 
+  void onClickEventHandler(WidgetRef ref) async {
+    if (!loading) {
+      loading = true;
+
+      final isSignedOut = await authService.signOutCurrentUser(ref);
+      if (isSignedOut && mounted) {
+        await Future.delayed(Duration(milliseconds: 100));
+        loading = false;
+        if (mounted) Navigator.of(context).popUntil((route) => route.isFirst);
+      }
+    }
+  }
+
   @override
-  Widget build(BuildContext context, WidgetRef ref) {
+  Widget build(BuildContext context) {
     final userState = ref.watch(userAsyncController);
 
     var size = MediaQuery.of(context).size;
@@ -117,7 +134,8 @@ class SettingsPage extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
@@ -126,8 +144,10 @@ class SettingsPage extends ConsumerWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => AccountPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                AccountPage(),
+                            transitionsBuilder:
+                                (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -160,7 +180,8 @@ class SettingsPage extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
@@ -169,8 +190,10 @@ class SettingsPage extends ConsumerWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => SecurityPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                SecurityPage(),
+                            transitionsBuilder:
+                                (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -203,7 +226,8 @@ class SettingsPage extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
@@ -212,8 +236,10 @@ class SettingsPage extends ConsumerWidget {
                       onTap: () {
                         Navigator.of(context).push(
                           PageRouteBuilder(
-                            pageBuilder: (context, animation, secondaryAnimation) => PrivacyPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            pageBuilder: (context, animation, secondaryAnimation) =>
+                                PrivacyPage(),
+                            transitionsBuilder:
+                                (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -246,7 +272,8 @@ class SettingsPage extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
@@ -257,7 +284,8 @@ class SettingsPage extends ConsumerWidget {
                           PageRouteBuilder(
                             pageBuilder: (context, animation, secondaryAnimation) =>
                                 NotificationsPage(),
-                            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+                            transitionsBuilder:
+                                (context, animation, secondaryAnimation, child) {
                               return SharedAxisTransition(
                                 animation: animation,
                                 secondaryAnimation: secondaryAnimation,
@@ -272,7 +300,8 @@ class SettingsPage extends ConsumerWidget {
                     ListTile(
                       leading: SvgPicture.asset('assets/icons/support_icon.svg'),
                       horizontalTitleGap: 0,
-                      contentPadding: EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 20),
+                      contentPadding:
+                          EdgeInsets.only(left: 16, top: 8, bottom: 8, right: 20),
                       visualDensity: VisualDensity.compact,
                       title: Text(
                         "Support",
@@ -290,7 +319,8 @@ class SettingsPage extends ConsumerWidget {
                             fontSize: 12,
                             fontWeight: FontWeight.w400,
                             letterSpacing: -0.3,
-                            foreground: Paint()..shader = ColorValues.socaleLightPurpleGradient,
+                            foreground: Paint()
+                              ..shader = ColorValues.socaleLightPurpleGradient,
                           ),
                         ),
                         textAlign: TextAlign.start,
@@ -345,8 +375,8 @@ class SettingsPage extends ConsumerWidget {
                         margin: EdgeInsets.only(left: 5),
                         width: 16,
                         height: 16,
-                        child:
-                            Image.asset('assets/icons/face-blowing-a-kiss.png', fit: BoxFit.fill),
+                        child: Image.asset('assets/icons/face-blowing-a-kiss.png',
+                            fit: BoxFit.fill),
                       ),
                     ],
                   ),

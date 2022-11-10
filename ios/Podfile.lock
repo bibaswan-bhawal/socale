@@ -2,6 +2,11 @@ PODS:
   - Amplify (1.23.0):
     - Amplify/Default (= 1.23.0)
   - Amplify/Default (1.23.0)
+  - amplify_analytics_pinpoint_ios (0.0.1):
+    - Amplify (= 1.23.0)
+    - amplify_flutter_ios
+    - AmplifyPlugins/AWSPinpointAnalyticsPlugin (= 1.23.0)
+    - Flutter
   - amplify_api_ios (0.0.1):
     - Amplify (= 1.23.0)
     - amplify_flutter_ios
@@ -35,6 +40,10 @@ PODS:
     - AWSCore (~> 2.27.0)
     - AWSPluginsCore (= 1.23.0)
     - SQLite.swift (= 0.13.2)
+  - AmplifyPlugins/AWSPinpointAnalyticsPlugin (1.23.0):
+    - AWSCore (~> 2.27.0)
+    - AWSPinpoint (~> 2.27.0)
+    - AWSPluginsCore (= 1.23.0)
   - AmplifyPlugins/AWSS3StoragePlugin (1.23.0):
     - AWSCore (~> 2.27.0)
     - AWSPluginsCore (= 1.23.0)
@@ -42,6 +51,8 @@ PODS:
   - AppSyncRealTimeClient (1.10.0):
     - Starscream (~> 4.0.4)
   - AWSCore (2.27.15)
+  - AWSPinpoint (2.27.15):
+    - AWSCore (= 2.27.15)
   - AWSPluginsCore (1.23.0):
     - Amplify (= 1.23.0)
     - AWSCore (~> 2.27.0)
@@ -168,6 +179,7 @@ PODS:
     - Flutter
 
 DEPENDENCIES:
+  - amplify_analytics_pinpoint_ios (from `.symlinks/plugins/amplify_analytics_pinpoint_ios/ios`)
   - amplify_api_ios (from `.symlinks/plugins/amplify_api_ios/ios`)
   - amplify_auth_cognito_ios (from `.symlinks/plugins/amplify_auth_cognito_ios/ios`)
   - amplify_datastore (from `.symlinks/plugins/amplify_datastore/ios`)
@@ -196,6 +208,7 @@ SPEC REPOS:
     - AmplifyPlugins
     - AppSyncRealTimeClient
     - AWSCore
+    - AWSPinpoint
     - AWSPluginsCore
     - AWSS3
     - Firebase
@@ -218,6 +231,8 @@ SPEC REPOS:
     - TOCropViewController
 
 EXTERNAL SOURCES:
+  amplify_analytics_pinpoint_ios:
+    :path: ".symlinks/plugins/amplify_analytics_pinpoint_ios/ios"
   amplify_api_ios:
     :path: ".symlinks/plugins/amplify_api_ios/ios"
   amplify_auth_cognito_ios:
@@ -263,6 +278,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   Amplify: 010d6a71db20812d9e3062db1fe827393d01e584
+  amplify_analytics_pinpoint_ios: c99f9930f18303e7c1fe1c0763674239ef97c568
   amplify_api_ios: d888bc1f0cfb4a86e780b7fe9fdff2645b1927da
   amplify_auth_cognito_ios: 672d66106aa0a3f3b014f24e58563031736eca4f
   amplify_datastore: 5e17ea5f25f810b9bfafb465b957459bece7a60f
@@ -272,6 +288,7 @@ SPEC CHECKSUMS:
   AmplifyPlugins: d939707cf36dfcd53c5fd6533e842e323a2287ab
   AppSyncRealTimeClient: 656ab4215e05f6ca47fe6d8c73f416d9984a8aac
   AWSCore: c67277201b6aca10e4cf24638eadaa67c85ebf03
+  AWSPinpoint: e2ea6471c4a4efd7a4d58546f34539c9dac185a7
   AWSPluginsCore: 120cfa265293694921b6595fe00d1cb5ab558847
   AWSS3: 09801b290f8818f532694cabd5d503c7474eb3df
   connectivity_plus: 413a8857dd5d9f1c399a39130850d02fe0feaf7e

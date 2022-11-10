@@ -3,10 +3,9 @@ import 'dart:async';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/models/RoomListItem.dart';
 import 'package:socale/services/fetch_service.dart';
-
-import '../../models/ModelProvider.dart';
 
 class RoomsStateNotifier extends StateNotifier<AsyncValue<List<RoomListItem>>> {
   StreamSubscription<QuerySnapshot<UserRoom>>? _streamUserRooms;
@@ -84,11 +83,12 @@ class RoomsStateNotifier extends StateNotifier<AsyncValue<List<RoomListItem>>> {
 
                 roomsListItems.sort((room1, room2) => room1.compareTo(room2));
                 if (mounted) {
-                  print(roomsListItems);
                   state = AsyncData(roomsListItems.reversed.toList());
                 }
               }
             });
+          } else {
+            state = AsyncData([]);
           }
         }
       },

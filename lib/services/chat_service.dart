@@ -52,6 +52,20 @@ class ChatService {
     }
   }
 
+  Future<void> deleteRoom(Room room) async {
+    try {
+      print("roomId: ${room.id}");
+      String userId = (await Amplify.Auth.getCurrentUser()).userId;
+      UserRoom userRoom = (await Amplify.DataStore.query(UserRoom.classType,
+              where: UserRoom.ROOM.eq(room.id).and(UserRoom.USER.eq(userId))))
+          .first;
+
+      await Amplify.DataStore.delete(userRoom);
+    } catch (e, stackTrace) {
+      print("error deleting user: $e \n StackTrace: $stackTrace");
+    }
+  }
+
   Future<RoomListItem?> getRoom(String otherUserId) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
 

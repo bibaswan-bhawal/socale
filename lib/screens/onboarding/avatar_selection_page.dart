@@ -19,7 +19,8 @@ class AvatarSelectionPage extends ConsumerStatefulWidget {
   const AvatarSelectionPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AvatarSelectionPage> createState() => _AvatarSelectionPageState();
+  ConsumerState<AvatarSelectionPage> createState() =>
+      _AvatarSelectionPageState();
 }
 
 class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
@@ -33,12 +34,14 @@ class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
     super.didChangeDependencies();
 
     final dataProvider = ref.watch(avatarDataProvider);
-    _avatarSelector = PageController(initialPage: dataProvider.getCurrentAvatar);
+    _avatarSelector =
+        PageController(initialPage: dataProvider.getCurrentAvatar);
   }
 
   Future<bool> _onBackPress() async {
     onboardingService.setOnboardingStep(OnboardingStep.situationalDecisions);
-    _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.previousPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }
 
@@ -46,7 +49,8 @@ class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
     final dataNotifier = ref.watch(avatarDataProvider.notifier);
     dataNotifier.uploadData();
     onboardingService.setOnboardingStep(OnboardingStep.completed);
-    _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -77,7 +81,7 @@ class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 90, left: 30),
+                      padding: EdgeInsets.only(top: 80, left: 30),
                       child: RichText(
                         text: TextSpan(
                           children: [
@@ -85,16 +89,19 @@ class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
                               text: 'Choose an ',
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.075,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             TextSpan(
                               text: 'Avatar',
                               style: GoogleFonts.poppins(
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.075,
                                 fontWeight: FontWeight.bold,
-                                foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                                foreground: Paint()
+                                  ..shader = ColorValues.socaleOrangeGradient,
                               ),
                             ),
                           ],
@@ -111,7 +118,7 @@ class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
                         "This will be your avatar until you decide to share your profile",
                         style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w400,
-                          fontSize: 18,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
                           color: Color(0xFF606060),
                         ),
                       ),
@@ -127,7 +134,10 @@ class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
                               physics: BouncingScrollPhysics(),
                               children: [
                                 for (String avatar in avatars)
-                                  AvatarSelectorItem(image: 'assets/images/avatars/$avatar', sub: avatar.replaceAll('.png', '')),
+                                  AvatarSelectorItem(
+                                    image: 'assets/images/avatars/$avatar',
+                                    sub: avatar.replaceAll('.png', ''),
+                                  ),
                               ],
                             ),
                           ),
@@ -138,7 +148,9 @@ class _AvatarSelectionPageState extends ConsumerState<AvatarSelectionPage> {
                           child: AvatarSelector(
                             onChange: (value) {
                               dataNotifier.setCurrentAvatar(value);
-                              _avatarSelector.animateToPage(value, duration: Duration(milliseconds: 300), curve: Curves.easeInOutCirc);
+                              _avatarSelector.animateToPage(value,
+                                  duration: Duration(milliseconds: 300),
+                                  curve: Curves.easeInOutCirc);
                             },
                           ),
                         ),

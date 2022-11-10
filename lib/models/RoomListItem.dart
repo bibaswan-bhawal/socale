@@ -26,8 +26,10 @@ class RoomListItem implements Comparable<RoomListItem> {
           : isProfileHidden(_users[0]);
       User userToGet = _users[0].id == _currentUser.id ? _users[1] : _users[0];
       if (!isHidden) {
-        if (userToGet.profilePicture!.isNotEmpty) {
-          fetchRoomPic(userToGet.profilePicture!);
+        if (userToGet.profilePicture != null) {
+          if (userToGet.profilePicture!.isNotEmpty) {
+            fetchRoomPic(userToGet.profilePicture!);
+          }
         }
       }
     }
@@ -86,8 +88,8 @@ class RoomListItem implements Comparable<RoomListItem> {
 
   String get getLastMessage {
     if (_room.lastMessageSent != null) {
-      return _room.lastMessageSent!.length > 100
-          ? '${_room.lastMessageSent!.substring(0, 100)}...'
+      return _room.lastMessageSent!.length > 85
+          ? '${_room.lastMessageSent!.substring(0, 85)}...'
           : _room.lastMessageSent!;
     }
     return "Send your first message!";
@@ -166,6 +168,14 @@ class RoomListItem implements Comparable<RoomListItem> {
       backgroundColor: Colors.brown.shade800,
       child: Text(shortName),
     );
+  }
+
+  bool isDeleted() {
+    if (getRoomName.isEmpty) {
+      return true;
+    }
+
+    return false;
   }
 
   RoomListItem copyWith({Room? room, List<User>? users, User? currentUser}) {

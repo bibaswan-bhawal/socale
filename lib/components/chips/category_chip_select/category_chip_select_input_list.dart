@@ -19,10 +19,12 @@ class CategoryChipSelectInputList extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CategoryChipSelectInputList> createState() => _CategoryChipSelectInputListState();
+  State<CategoryChipSelectInputList> createState() =>
+      _CategoryChipSelectInputListState();
 }
 
-class _CategoryChipSelectInputListState extends State<CategoryChipSelectInputList> {
+class _CategoryChipSelectInputListState
+    extends State<CategoryChipSelectInputList> {
   List<String> options = [];
   List<String> skillsSelected = [];
   List<String> autocompleteList = [];
@@ -81,8 +83,10 @@ class _CategoryChipSelectInputListState extends State<CategoryChipSelectInputLis
           child: RawAutocomplete<String>(
             textEditingController: textEditingController,
             focusNode: focusNode,
-            fieldViewBuilder:
-                (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+            fieldViewBuilder: (BuildContext context,
+                TextEditingController textEditingController,
+                FocusNode focusNode,
+                VoidCallback onFieldSubmitted) {
               return TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
@@ -106,11 +110,14 @@ class _CategoryChipSelectInputListState extends State<CategoryChipSelectInputLis
                 return const Iterable<String>.empty();
               }
               return autocompleteList.where((String option) {
-                return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                return option
+                    .toLowerCase()
+                    .contains(textEditingValue.text.toLowerCase());
               });
             },
             onSelected: (String selection) {
-              setState(() => skillsSelected.addIf(!skillsSelected.contains(selection), selection));
+              setState(() => skillsSelected.addIf(
+                  !skillsSelected.contains(selection), selection));
               widget.onChange(skillsSelected);
               textEditingController.clear();
             },
@@ -142,6 +149,18 @@ class _CategoryChipSelectInputListState extends State<CategoryChipSelectInputLis
                 ),
               );
             },
+          ),
+        ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(top: 5, right: 40),
+            child: Text(
+              "${skillsSelected.length}/5",
+              style: TextStyle(
+                color: skillsSelected.length < 6 ? Colors.black : Colors.red,
+              ),
+            ),
           ),
         ),
         Flexible(

@@ -1,22 +1,28 @@
-import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'dart:io' show Platform;
 
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:socale/values/colors.dart';
 
 class CustomBottomNavigationBar extends StatelessWidget {
   final Function(int) onNavBarClicked;
   final Size size;
 
-  const CustomBottomNavigationBar({Key? key, required this.size, required this.onNavBarClicked}) : super(key: key);
+  const CustomBottomNavigationBar(
+      {Key? key, required this.size, required this.onNavBarClicked})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final size = MediaQuery.of(context).size;
+
     double barHeight = 74;
     double heightShift = 0.7;
 
     if (Platform.isIOS) {
-      barHeight = 84;
+      barHeight =
+          ((size.height / MediaQuery.of(context).devicePixelRatio) * 0.18) +
+              (MediaQuery.of(context).padding.bottom * 0.8);
       heightShift = 0.6;
     }
 
@@ -57,7 +63,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   onPressed: () {
                     onNavBarClicked(0);
                   },
-                  icon: SvgPicture.asset("assets/icons/chat_icon.svg", color: ColorValues.white.withOpacity(0.69)),
+                  icon: SvgPicture.asset("assets/icons/chat_icon.svg",
+                      color: ColorValues.white.withOpacity(0.69)),
                 ),
                 Container(width: size.width * 0.20),
                 IconButton(
@@ -65,7 +72,8 @@ class CustomBottomNavigationBar extends StatelessWidget {
                   onPressed: () {
                     onNavBarClicked(2);
                   },
-                  icon: SvgPicture.asset("assets/icons/user_icon.svg", color: ColorValues.white.withOpacity(0.69)),
+                  icon: SvgPicture.asset("assets/icons/user_icon.svg",
+                      color: ColorValues.white.withOpacity(0.69)),
                 )
               ],
             ),
