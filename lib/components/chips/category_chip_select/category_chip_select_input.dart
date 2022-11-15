@@ -19,7 +19,8 @@ class CategoryChipSelectInput extends StatefulWidget {
   }) : super(key: key);
 
   @override
-  State<CategoryChipSelectInput> createState() => _CategoryChipSelectInputState();
+  State<CategoryChipSelectInput> createState() =>
+      _CategoryChipSelectInputState();
 }
 
 class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
@@ -49,7 +50,8 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
   void setInitValue() {
     for (String item in widget.initValue) {
       if (!widget.map.keys.contains(item)) {
-        var key = widget.map.keys.firstWhere((element) => widget.map[element]!.contains(item));
+        var key = widget.map.keys
+            .firstWhere((element) => widget.map[element]!.contains(item));
         if (!categoryAdded.contains(key)) {
           categoryAdded.add(key);
         }
@@ -96,7 +98,9 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
   void _onSelected(String selection) {
     if (!skillsSelected.contains(selection)) {
       setState(() => skillsSelected.add(selection));
-      String cat = widget.map.keys.where((key) => widget.map[key]!.contains(selection)).first;
+      String cat = widget.map.keys
+          .where((key) => widget.map[key]!.contains(selection))
+          .first;
       setState(() => categoryAdded.addIf(!categoryAdded.contains(cat), cat));
 
       setState(() => options.clear());
@@ -134,7 +138,8 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
       if (!isCategory) {
         setState(() => skillsSelected.remove(key));
         widget.onChange(skillsSelected);
-        String g = widget.map.keys.firstWhere((element) => widget.map[element]!.contains(key));
+        String g = widget.map.keys
+            .firstWhere((element) => widget.map[element]!.contains(key));
 
         var delKey = true;
 
@@ -157,7 +162,8 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
       if (skillsSelected.length < 5) {
         if (!isCategory) {
           setState(() => skillsSelected.add(key));
-          var k = widget.map.keys.firstWhere((element) => widget.map[element]!.contains(key));
+          var k = widget.map.keys
+              .firstWhere((element) => widget.map[element]!.contains(key));
 
           if (!categoryAdded.contains(k)) {
             setState(() => categoryAdded.add(k));
@@ -224,8 +230,10 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
           child: RawAutocomplete<String>(
             textEditingController: textEditingController,
             focusNode: focusNode,
-            fieldViewBuilder: (BuildContext context, TextEditingController textEditingController,
-                FocusNode focusNode, VoidCallback onFieldSubmitted) {
+            fieldViewBuilder: (BuildContext context,
+                TextEditingController textEditingController,
+                FocusNode focusNode,
+                VoidCallback onFieldSubmitted) {
               return TextFormField(
                 decoration: InputDecoration(
                   prefixIcon: Icon(Icons.search),
@@ -251,7 +259,9 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
                 return const Iterable<String>.empty();
               }
               return autocompleteList.where((String option) {
-                return option.toLowerCase().contains(textEditingValue.text.toLowerCase());
+                return option
+                    .toLowerCase()
+                    .contains(textEditingValue.text.toLowerCase());
               });
             },
             onSelected: _onSelected,
@@ -285,9 +295,21 @@ class _CategoryChipSelectInputState extends State<CategoryChipSelectInput> {
             },
           ),
         ),
+        Align(
+          alignment: Alignment.centerRight,
+          child: Padding(
+            padding: EdgeInsets.only(top: 5, right: 40),
+            child: Text(
+              "${skillsSelected.length}/5",
+              style: TextStyle(
+                color: skillsSelected.length < 6 ? Colors.black : Colors.red,
+              ),
+            ),
+          ),
+        ),
         Flexible(
           child: Container(
-            margin: EdgeInsets.only(left: 32, right: 32, top: 20),
+            margin: EdgeInsets.only(left: 32, right: 32, top: 5),
             width: size.width,
             child: ScrollConfiguration(
               behavior: MaterialScrollBehavior().copyWith(overscroll: false),

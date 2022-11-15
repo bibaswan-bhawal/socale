@@ -11,7 +11,7 @@ import 'package:socale/utils/providers/providers.dart';
 import 'package:socale/utils/system_ui_setter.dart';
 import 'package:socale/values/colors.dart';
 
-final mainPageController = Provider((_) => PageController(initialPage: 1));
+final mainPageController = Provider((ref) => PageController(initialPage: 1));
 
 class MainApp extends ConsumerStatefulWidget {
   final bool? transitionAnimation;
@@ -25,6 +25,8 @@ class MainApp extends ConsumerStatefulWidget {
 class _MainAppState extends ConsumerState<MainApp>
     with TickerProviderStateMixin {
   bool? transitionAnimation;
+  late PageController _pageController;
+
   final NotificationService notificationService = NotificationService();
   Animation<double>? containerAnimation;
   AnimationController? containerAnimationController;
@@ -36,6 +38,7 @@ class _MainAppState extends ConsumerState<MainApp>
     super.initState();
     setSystemUILight();
 
+    _pageController = ref.read(mainPageController);
     transitionAnimation = widget.transitionAnimation;
     notificationService.setWidgetRef(ref).init();
   }
@@ -55,7 +58,7 @@ class _MainAppState extends ConsumerState<MainApp>
     if (transitionAnimation != null && transitionAnimation!) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         transitionAnimation = false;
-        ref.read(matchAsyncController.notifier).setMatches(userState.value!.id);
+        ref.read(matchAsyncController.notifier).setMatches();
         initialAnimation();
       });
     }
@@ -100,7 +103,8 @@ class _MainAppState extends ConsumerState<MainApp>
 
   @override
   Widget build(BuildContext context) {
-    final pageController = ref.watch(mainPageController);
+    ref.watch(roomsAsyncController);
+
     var size = MediaQuery.of(context).size;
     ScaffoldMessenger.of(context).hideCurrentSnackBar();
 
@@ -123,10 +127,13 @@ class _MainAppState extends ConsumerState<MainApp>
                   ],
                 ),
               ),
-              CustomBottomNavigationBar(
-                key: navBarKey,
-                size: size,
-                onNavBarClicked: handleBottomNavigationClick,
+              Padding(
+                padding: EdgeInsets.only(top: 10),
+                child: CustomBottomNavigationBar(
+                  key: navBarKey,
+                  size: size,
+                  onNavBarClicked: handleBottomNavigationClick,
+                ),
               ),
             ],
           ),

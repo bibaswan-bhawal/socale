@@ -1,10 +1,10 @@
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:socale/components/match_card/end_card.dart';
 import 'package:socale/components/match_card/match_card.dart';
 import 'package:socale/utils/providers/providers.dart';
-import 'package:flutter/material.dart';
 import 'package:socale/values/colors.dart';
 
 class MatchPage extends ConsumerStatefulWidget {
@@ -28,10 +28,10 @@ class _MatchPageState extends ConsumerState<MatchPage> {
       child: Column(
         children: [
           Padding(
-            padding: EdgeInsets.only(top: 5),
+            padding: EdgeInsets.only(top: 10),
             child: Image.asset(
               'assets/images/socale_logo_bw.png',
-              height: 50,
+              height: mediaQuery.size.height * 0.05,
               fit: BoxFit.fitHeight,
             ),
           ),
@@ -49,30 +49,47 @@ class _MatchPageState extends ConsumerState<MatchPage> {
                           height: constraints.maxHeight - 40,
                           viewportFraction: 1,
                           enableInfiniteScroll: false,
-                          onPageChanged: (index, _) => setState(() => pageIndex = index),
+                          onPageChanged: (index, _) =>
+                              setState(() => pageIndex = index),
                         ),
                         items: matchesProvider.when(data: (data) {
                           List<Widget> matchCards = [];
 
-                          data.forEach((user, matchData) {
-                            matchCards.add(
-                              LayoutBuilder(
-                                builder: (BuildContext context, BoxConstraints constraints) {
-                                  return MatchCard(
-                                    size: Size(constraints.maxWidth, constraints.maxHeight),
-                                    user: user,
-                                    match: matchData,
-                                  );
-                                },
-                              ),
-                            );
-                          });
+                          data.forEach(
+                            (user, matchData) {
+                              matchCards.add(
+                                LayoutBuilder(
+                                  builder: (BuildContext context,
+                                      BoxConstraints constraints) {
+                                    return MatchCard(
+                                      size: Size(constraints.maxWidth,
+                                          constraints.maxHeight),
+                                      user: user,
+                                      match: matchData,
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          );
 
+                          matchCards.add(
+                            LayoutBuilder(
+                              builder: (BuildContext context,
+                                  BoxConstraints constraints) {
+                                return EndCard(
+                                  size: Size(constraints.maxWidth,
+                                      constraints.maxHeight),
+                                );
+                              },
+                            ),
+                          );
                           return matchCards;
                         }, error: (Object error, StackTrace? stackTrace) {
                           return [
                             Center(
-                              child: Text("There was an error getting your matches"),
+                              child: Text(
+                                  "There was an error getting your matches"),
                             ),
                           ];
                         }, loading: () {
@@ -105,8 +122,10 @@ class _MatchPageState extends ConsumerState<MatchPage> {
                             expansionFactor: 1.4,
                             dotHeight: 10,
                             dotWidth: 40,
-                            dotColor: ColorValues.elementColor.withOpacity(0.25),
-                            activeDotColor: ColorValues.elementColor.withOpacity(0.70),
+                            dotColor:
+                                ColorValues.elementColor.withOpacity(0.25),
+                            activeDotColor:
+                                ColorValues.elementColor.withOpacity(0.70),
                           ),
                         ),
                       )

@@ -38,12 +38,12 @@ type User @model @auth(rules: [{allow: public}]) {
 
 type UserRoom @model @auth(rules: [{allow: public}]) {
   id: ID!
-  userID: ID! @index(name: "byUser", sortKeyFields: ["roomID"])
-  roomID: ID! @index(name: "byRoom", sortKeyFields: ["userID"])
-  user: User! @belongsTo(fields: ["userID"])
-  room: Room! @belongsTo(fields: ["roomID"])
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+  userID: ID @index(name: "byUser", sortKeyFields: ["roomID"])
+  roomID: ID @index(name: "byRoom", sortKeyFields: ["userID"])
+  user: User @belongsTo(fields: ["userID"])
+  room: Room @belongsTo(fields: ["roomID"])
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
 
 type Room @model @auth(rules: [{allow: public}]) {
@@ -59,10 +59,10 @@ type Room @model @auth(rules: [{allow: public}]) {
 
 type Message @model @auth(rules: [{allow: public}]) {
   id: ID!
-  text: String!
-  room: Room! @belongsTo
-  author: User! @belongsTo
-  createdAt: AWSDateTime!
-  updatedAt: AWSDateTime!
+  text: String
+  room: Room @belongsTo
+  author: User @belongsTo
+  createdAt: AWSDateTime
+  updatedAt: AWSDateTime
 }
  

@@ -62,7 +62,8 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
       if (isValid) {
         dataNotifier.uploadData();
         onboardingService.setOnboardingStep(OnboardingStep.skills);
-        _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        _pageController.nextPage(
+            duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       }
     }
   }
@@ -76,7 +77,8 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
     }
 
     FocusManager.instance.primaryFocus?.unfocus();
-    _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.previousPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }
 
@@ -93,8 +95,9 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
     AcademicDataNotifier dataProvider = ref.watch(academicDataProvider);
     final dataNotifier = ref.watch(academicDataProvider.notifier);
 
-    final availableHeight =
-        size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom;
+    final availableHeight = size.height -
+        MediaQuery.of(context).padding.top -
+        MediaQuery.of(context).padding.bottom;
 
     return NestedWillPopScope(
       onWillPop: _onBackPress,
@@ -110,44 +113,53 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
                   height: availableHeight,
                   child: Column(
                     children: [
-                      Center(
-                        child: Column(
-                          children: [
-                            Padding(
-                              padding: EdgeInsets.fromLTRB(40, 70, 40, 0),
-                              child: RichText(
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                      text: "Let's find you some ",
-                                      style: GoogleFonts.poppins(
-                                        color: Colors.black,
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold,
-                                      ),
-                                    ),
-                                    TextSpan(
-                                      text: 'classmates!',
-                                      style: GoogleFonts.poppins(
-                                        fontSize: 32,
-                                        fontWeight: FontWeight.bold,
-                                        foreground: Paint()
-                                          ..shader = ColorValues.socaleOrangeGradient,
-                                      ),
-                                    ),
-                                  ],
+                      Padding(
+                        padding: EdgeInsets.only(
+                            left: 20, right: 20, top: 80, bottom: 20),
+                        child: Center(
+                          child: RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "Let's find you some ",
+                                  style: GoogleFonts.poppins(
+                                    color: Colors.black,
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.075,
+                                    fontWeight: FontWeight.bold,
+                                  ),
                                 ),
-                                textAlign: TextAlign.center,
-                              ),
+                                TextSpan(
+                                  text: 'classmates!',
+                                  style: GoogleFonts.poppins(
+                                    fontSize:
+                                        MediaQuery.of(context).size.width *
+                                            0.075,
+                                    fontWeight: FontWeight.bold,
+                                    foreground: Paint()
+                                      ..shader =
+                                          ColorValues.socaleOrangeGradient,
+                                  ),
+                                ),
+                              ],
                             ),
-                            Padding(
-                              padding: EdgeInsets.only(left: 32, right: 32, top: 32, bottom: 32),
-                              child: Image.asset("assets/images/onboarding_illustration_4.png"),
-                            ),
-                          ],
+                            textAlign: TextAlign.center,
+                          ),
                         ),
                       ),
                       Expanded(
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal:
+                                  MediaQuery.of(context).size.width * 0.1),
+                          child: Image.asset(
+                              "assets/images/onboarding_illustration_4.png"),
+                        ),
+                      ),
+                      SizedBox(
+                        width: double.infinity,
+                        height: 275,
                         child: PageView(
                           controller: _secondPageController,
                           onPageChanged: _onPageChanged,
@@ -159,8 +171,11 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
                                 values: dataProvider.getMajors,
                                 list: majorsMinorOptionsList,
                                 width: size.width - 48,
-                                textInputLabel: dataProvider.getMajors.isEmpty ? "Majors" : "",
-                                decoration: InputDecoration(border: StyleValues.chipFieldBorder),
+                                textInputLabel: dataProvider.getMajors.isEmpty
+                                    ? "Majors"
+                                    : "",
+                                decoration: InputDecoration(
+                                    border: StyleValues.chipFieldBorder),
                                 validator: (values) {
                                   if (values == null || values.isEmpty) {
                                     return "Please add at least one major";
@@ -182,8 +197,11 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
                                 values: dataProvider.getMinors,
                                 list: majorsMinorOptionsList,
                                 width: size.width - 48,
-                                textInputLabel: dataProvider.getMinors.isEmpty ? "Minors" : "",
-                                decoration: InputDecoration(border: StyleValues.chipFieldBorder),
+                                textInputLabel: dataProvider.getMinors.isEmpty
+                                    ? "Minors"
+                                    : "",
+                                decoration: InputDecoration(
+                                    border: StyleValues.chipFieldBorder),
                                 validator: (values) {
                                   if (values != null && values.length > 2) {
                                     return "Please add only two minors";
@@ -202,7 +220,8 @@ class _AcademicsPageState extends ConsumerState<AcademicsPage> {
                                 initValue: dataProvider.getCollege,
                                 onChange: dataNotifier.setCollege,
                                 list: collegesOptionsList,
-                                decoration: InputDecoration(border: StyleValues.chipFieldBorder),
+                                decoration: InputDecoration(
+                                    border: StyleValues.chipFieldBorder),
                                 validator: (String? value) {
                                   if (value == null) {
                                     return "Please select a college";

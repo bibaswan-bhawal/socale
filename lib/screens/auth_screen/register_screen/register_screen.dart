@@ -10,6 +10,7 @@ import 'package:socale/components/Buttons/primary_loading_button.dart';
 import 'package:socale/components/Headers/register_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/snackbar/auth_snackbars.dart';
+import 'package:socale/main.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
@@ -121,10 +122,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (isOnboardingDone) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      final user = await Amplify.Auth.getCurrentUser();
-      await ref.read(userAsyncController.notifier).setUser(user.userId);
-      await ref.read(matchAsyncController.notifier).setMatches(user.userId);
-      Get.offAllNamed('/main');
+      await Amplify.DataStore.start();
       return;
     } else {
       if (!mounted) return;
@@ -139,21 +137,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (isSignedIn) {
-      //authAnalytics.recordUserSignIn(); // record user signed in
-      await Amplify.DataStore.start(); // load user data
       await ref.read(userAttributesAsyncController.notifier).setAttributes();
+      ref.read(isLoggedInProvider.state).state = true;
       checkIfOnboarded();
-    }
-  }
-
-  handleSocialSignUp(AuthProvider oAuth) async {
-    FocusManager.instance.primaryFocus?.unfocus();
-
-    if (!isLoading) {
-      authSnackBar.currentlyNotSupportedSnack(context);
-
-      // bool isSignedIn = await authService.signUpWithSocialWebUI(oAuth);
-      // userDataLoader(isSignedIn);
     }
   }
 

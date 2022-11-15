@@ -17,7 +17,8 @@ class AcademicInterestsPage extends ConsumerStatefulWidget {
   const AcademicInterestsPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AcademicInterestsPage> createState() => _AcademicInterestsPageState();
+  ConsumerState<AcademicInterestsPage> createState() =>
+      _AcademicInterestsPageState();
 }
 
 class _AcademicInterestsPageState extends ConsumerState<AcademicInterestsPage> {
@@ -34,13 +35,15 @@ class _AcademicInterestsPageState extends ConsumerState<AcademicInterestsPage> {
 
     dataNotifier.uploadAcademicInterests();
     onboardingService.setOnboardingStep(OnboardingStep.careerGoals);
-    _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   Future<bool> _onBackPress() async {
     FocusManager.instance.primaryFocus?.unfocus();
     onboardingService.setOnboardingStep(OnboardingStep.skills);
-    _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.previousPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }
 
@@ -84,16 +87,19 @@ class _AcademicInterestsPageState extends ConsumerState<AcademicInterestsPage> {
                                 text: 'what are your academic ',
                                 style: GoogleFonts.poppins(
                                   color: Colors.black,
-                                  fontSize: 32,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.075,
                                   fontWeight: FontWeight.bold,
                                 ),
                               ),
                               TextSpan(
                                 text: 'Interests?',
                                 style: GoogleFonts.poppins(
-                                  fontSize: 32,
+                                  fontSize:
+                                      MediaQuery.of(context).size.width * 0.075,
                                   fontWeight: FontWeight.bold,
-                                  foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                                  foreground: Paint()
+                                    ..shader = ColorValues.socaleOrangeGradient,
                                 ),
                               ),
                             ],

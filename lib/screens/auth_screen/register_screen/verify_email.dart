@@ -32,8 +32,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       setState(() => isLoading = true);
 
       try {
-        final result =
-            await authService.signIn(widget.email, widget.password); // try signing in user.
+        final result = await authService.signIn(
+            widget.email, widget.password); // try signing in user.
 
         if (result.nextStep?.signInStep == "CONFIRM_SIGN_UP") {
           setState(() => isLoading = false);
@@ -126,7 +126,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                             style: GoogleFonts.poppins(
                               fontSize: 32,
                               fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                              foreground: Paint()
+                                ..shader = ColorValues.socaleOrangeGradient,
                             ),
                           ),
                         ],
@@ -176,15 +177,20 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
             top: 60,
             child: GestureDetector(
               behavior: HitTestBehavior.translucent,
-              onTap: () {
-                authService.signOutCurrentUser(ref);
+              onTap: () async {
+                final isSignedOut = await authService.signOutCurrentUser(ref);
+                if (isSignedOut && mounted) {
+                  Navigator.of(context).popUntil((route) => route.isFirst);
+                }
               },
               child: Container(
                 padding: EdgeInsets.all(5),
                 child: Text(
                   "Log Out",
                   style: GoogleFonts.poppins(
-                      fontSize: 14, fontWeight: FontWeight.w500, color: ColorValues.socaleOrange),
+                      fontSize: 14,
+                      fontWeight: FontWeight.w500,
+                      color: ColorValues.socaleOrange),
                 ),
               ),
             ),

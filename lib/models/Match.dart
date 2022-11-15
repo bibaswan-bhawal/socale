@@ -177,6 +177,10 @@ class Match extends Model {
   Map<String, dynamic> toJson() => {
     'id': id, 'matchingPercentage': _matchingPercentage, 'user': _user?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'matchUserId': _matchUserId
   };
+  
+  Map<String, Object?> toMap() => {
+    'id': id, 'matchingPercentage': _matchingPercentage, 'user': _user, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'matchUserId': _matchUserId
+  };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField MATCHINGPERCENTAGE = QueryField(fieldName: "matchingPercentage");

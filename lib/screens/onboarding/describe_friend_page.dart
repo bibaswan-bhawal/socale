@@ -33,7 +33,8 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
 
     var keyboardVisibilityController = KeyboardVisibilityController();
 
-    keyboardSubscription = keyboardVisibilityController.onChange.listen((bool visible) {
+    keyboardSubscription =
+        keyboardVisibilityController.onChange.listen((bool visible) {
       if (!visible && isShowing) {
         Navigator.pop(context, true);
       }
@@ -57,13 +58,15 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
 
     dataNotifier.uploadData();
     onboardingService.setOnboardingStep(OnboardingStep.situationalDecisions);
-    _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   Future<bool> _onBackPress() async {
     FocusManager.instance.primaryFocus?.unfocus();
     onboardingService.setOnboardingStep(OnboardingStep.leisureInterests);
-    _pageController.previousPage(duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
+    _pageController.previousPage(
+        duration: Duration(milliseconds: 500), curve: Curves.easeInOut);
     return false;
   }
 
@@ -95,7 +98,7 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                   Align(
                     alignment: Alignment.topLeft,
                     child: Padding(
-                      padding: EdgeInsets.only(top: 100, left: 30),
+                      padding: EdgeInsets.only(top: 80, left: 30),
                       child: RichText(
                         text: TextSpan(
                           children: [
@@ -103,16 +106,19 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                               text: 'How would you describe ',
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.075,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             TextSpan(
                               text: 'yourself?',
                               style: GoogleFonts.poppins(
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.075,
                                 fontWeight: FontWeight.bold,
-                                foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                                foreground: Paint()
+                                  ..shader = ColorValues.socaleOrangeGradient,
                               ),
                             ),
                           ],
@@ -137,7 +143,8 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 40, right: 40, top: 40),
-                    child: Image.asset('assets/images/onboarding_illustration_6.png'),
+                    child: Image.asset(
+                        'assets/images/onboarding_illustration_6.png'),
                   ),
                   Padding(
                     padding: const EdgeInsets.only(left: 30, right: 30),
@@ -147,13 +154,15 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                       closedShape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(25),
                       ),
-                      closedBuilder: (BuildContext context, VoidCallback closeContainer) {
+                      closedBuilder:
+                          (BuildContext context, VoidCallback closeContainer) {
                         return SizedBox(
                           height: 200,
                           width: size.width,
                           child: SingleChildScrollView(
                             child: Padding(
-                              padding: EdgeInsets.only(left: 20, top: 20, right: 20),
+                              padding:
+                                  EdgeInsets.only(left: 20, top: 20, right: 20),
                               child: Text(
                                 dataProvider.getDescription.isNotEmpty
                                     ? dataProvider.getDescription
@@ -168,7 +177,8 @@ class _DescribeFriendPageState extends ConsumerState<DescribeFriendPage> {
                           ),
                         );
                       },
-                      openBuilder: (BuildContext context, VoidCallback openContainer) {
+                      openBuilder:
+                          (BuildContext context, VoidCallback openContainer) {
                         isShowing = true;
                         return EditTextArea();
                       },
@@ -205,6 +215,12 @@ class EditTextArea extends ConsumerStatefulWidget {
 
 class _EditTextAreaState extends ConsumerState<EditTextArea> {
   final TextEditingController _controller = TextEditingController();
+  final hintText = ([
+    'Surfer at sunset | DJ at night time',
+    'Never left CS Dungeon | Boba frantic',
+    'Plant mom and 2 cats mom | R&B my jam'
+  ]..shuffle())
+      .first;
   bool gotData = false;
 
   @override
@@ -230,12 +246,7 @@ class _EditTextAreaState extends ConsumerState<EditTextArea> {
                 TextField(
                   controller: _controller,
                   decoration: InputDecoration(
-                    hintText: ([
-                      'Surfer at sunset | DJ at night time',
-                      'Never left CS Dungeon | Boba frantic',
-                      'Plant mom and 2 cats mom | R&B my jam'
-                    ]..shuffle())
-                        .first,
+                    hintText: hintText,
                     border: InputBorder.none,
                     counterText: "",
                   ),

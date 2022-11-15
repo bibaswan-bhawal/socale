@@ -4,6 +4,7 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
+import 'package:socale/main.dart';
 import 'package:socale/screens/onboarding/providers/academic_data_provider.dart';
 import 'package:socale/screens/onboarding/providers/basic_data_provider.dart';
 import 'package:socale/screens/onboarding/providers/personality_data_provider.dart';
@@ -84,11 +85,9 @@ class AuthService {
     }
   }
 
-  Future<void> signOutCurrentUser(WidgetRef ref) async {
+  Future<void> deleteUser(WidgetRef ref) async {
     try {
-      await Amplify.Auth.signOut(
-        options: const SignOutOptions(globalSignOut: true),
-      );
+      await Amplify.Auth.deleteUser();
       ref.read(academicDataProvider.notifier).clearData();
       ref.read(avatarDataProvider.notifier).clearData();
       ref.read(basicDataProvider.notifier).clearData();
@@ -104,6 +103,30 @@ class AuthService {
       return;
     } on NotAuthorizedException {
       return;
+    }
+  }
+
+  Future<bool> signOutCurrentUser(WidgetRef ref) async {
+    try {
+      ref.read(academicDataProvider.notifier).clearData();
+      ref.read(avatarDataProvider.notifier).clearData();
+      ref.read(basicDataProvider.notifier).clearData();
+      ref.read(describeFriendDataProvider.notifier).clearData();
+      ref.read(personalityDataProvider.notifier).clearData();
+
+      Amplify.DataStore.clear();
+      onboardingService.clearAll();
+
+      ref.read(isLoggedInProvider.state).state = false;
+
+      await Amplify.Auth.signOut();
+      return true;
+    } on SignedOutException catch (_) {
+      return false;
+    } on AuthException catch (_) {
+      return false;
+    } on NotAuthorizedException {
+      return false;
     }
   }
 }

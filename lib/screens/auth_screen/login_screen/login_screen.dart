@@ -8,6 +8,7 @@ import 'package:socale/components/Buttons/primary_loading_button.dart';
 import 'package:socale/components/Headers/login_header.dart';
 import 'package:socale/components/TextFields/singleLineTextField/form_text_field.dart';
 import 'package:socale/components/snackbar/auth_snackbars.dart';
+import 'package:socale/main.dart';
 import 'package:socale/screens/auth_screen/register_screen/verify_email.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/services/onboarding_service.dart';
@@ -77,10 +78,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (isOnboardingDone) {
       if (!mounted) return;
       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-      final user = await Amplify.Auth.getCurrentUser();
-      await ref.read(userAsyncController.notifier).setUser(user.userId);
-      await ref.read(matchAsyncController.notifier).setMatches(user.userId);
-      Get.offAllNamed('/main');
+      await Amplify.DataStore.start();
       return;
     } else {
       if (!mounted) return;
@@ -118,17 +116,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     if (isSignedIn) {
       await ref.read(userAttributesAsyncController.notifier).setAttributes();
+      ref.read(isLoggedInProvider.state).state = true;
       checkIfOnboarded();
-    }
-  }
-
-  socialSignInHandler(AuthProvider oAuth) async {
-    FocusManager.instance.primaryFocus?.unfocus();
-
-    if (!isLoading) {
-      authSnackBar.currentlyNotSupportedSnack(context);
-      // bool isSignedIn = await authService.signInWithSocialWebUI(oAuth);
-      // userDataLoader(isSignedIn);
     }
   }
 
@@ -192,29 +181,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             ),
                           ),
                         ),
-                        // Padding(
-                        //   padding: EdgeInsets.fromLTRB(70, 0, 70, 0),
-                        //   child: RichText(
-                        //     text: TextSpan(
-                        //       children: [
-                        //         TextSpan(
-                        //           text: 'Forgot Password',
-                        //           style: GoogleFonts.poppins(
-                        //               color: Colors.black,
-                        //               decoration: TextDecoration.underline,
-                        //               fontSize: 14,
-                        //               fontWeight: FontWeight.w500,
-                        //               letterSpacing: -0.3),
-                        //           recognizer: TapGestureRecognizer()
-                        //             ..onTap = () => {
-                        //                   // implement onClick
-                        //                 },
-                        //         ),
-                        //       ],
-                        //     ),
-                        //     textAlign: TextAlign.center,
-                        //   ),
-                        // ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(20, 10, 20, 0),
                           child: PrimaryLoadingButton(
@@ -229,11 +195,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ],
                     ),
                   ),
-                  // SignInDivider(),
-                  // SocialSignInButtonGroup(
-                  //   handler: socialSignInHandler,
-                  //   text: "Sign In",
-                  // ),
                 ],
               ),
             ),

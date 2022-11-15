@@ -12,7 +12,11 @@ class BasicDataController with ChangeNotifier {
 
   BasicDataController() {
     onboardingService.getBio().then((value) {
-      if (value == null) return;
+      if (value == null) {
+        _gotData = true;
+        notifyListeners();
+        return;
+      }
 
       _firstName = value[0] ?? "";
       _lastName = value[1] ?? "";
@@ -51,7 +55,8 @@ class BasicDataController with ChangeNotifier {
   }
 
   void uploadData() {
-    onboardingService.setBio(_firstName.trim(), _lastName.trim(), _birthDate, _gradDate);
+    onboardingService.setBio(
+        _firstName.trim(), _lastName.trim(), _birthDate, _gradDate);
   }
 
   void clearData() {

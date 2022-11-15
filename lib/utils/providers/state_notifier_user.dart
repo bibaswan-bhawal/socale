@@ -22,8 +22,6 @@ class UserStateNotifier extends StateNotifier<AsyncValue<User>> {
   }
 
   Future<bool> changeUserValue(User user) async {
-    print(state);
-    print(user);
     state = AsyncData(user);
     User? updatedUser = await mutateService.updateModel(user) as User?;
 

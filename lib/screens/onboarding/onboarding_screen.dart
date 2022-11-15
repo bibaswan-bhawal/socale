@@ -123,8 +123,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
           top: 60,
           child: GestureDetector(
             behavior: HitTestBehavior.translucent,
-            onTap: () {
-              authService.signOutCurrentUser(ref);
+            onTap: () async {
+              final isSignedOut = await authService.signOutCurrentUser(ref);
+              if (isSignedOut && mounted) {
+                Navigator.of(context).popUntil((route) => route.isFirst);
+              }
             },
             child: Material(
               child: Container(

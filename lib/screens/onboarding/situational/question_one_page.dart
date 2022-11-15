@@ -7,7 +7,6 @@ import 'package:socale/components/nest_will_pop_scope.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/onboarding/providers/situational_data_provider.dart';
 import 'package:socale/services/onboarding_service.dart';
-import 'package:socale/utils/constraints/constraints.dart';
 import 'package:socale/utils/enums/onboarding_fields.dart';
 import 'package:socale/values/colors.dart';
 
@@ -22,12 +21,14 @@ class _QuestionOnePageState extends ConsumerState<QuestionOnePage> {
   late PageController _pageController;
 
   void _onClickEventHandler() {
-    _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   Future<bool> _onBackPress() async {
     onboardingService.setOnboardingStep(OnboardingStep.idealFriendDescription);
-    _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.previousPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }
 
@@ -73,16 +74,19 @@ class _QuestionOnePageState extends ConsumerState<QuestionOnePage> {
                               text: "Let's get to know you ",
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.075,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             TextSpan(
                               text: 'better!',
                               style: GoogleFonts.poppins(
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.075,
                                 fontWeight: FontWeight.bold,
-                                foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                                foreground: Paint()
+                                  ..shader = ColorValues.socaleOrangeGradient,
                               ),
                             ),
                           ],
@@ -99,18 +103,15 @@ class _QuestionOnePageState extends ConsumerState<QuestionOnePage> {
                         "How much does this following statement describe you?",
                         style: GoogleFonts.roboto(
                           fontWeight: FontWeight.w400,
-                          fontSize: 16,
+                          fontSize: MediaQuery.of(context).size.width * 0.04,
                           color: Color(0xFF606060),
                         ),
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(
-                      left: constraints.onboardingSituational1ImagePadding,
-                      right: constraints.onboardingSituational1ImagePadding,
-                    ),
-                    child: Image.asset('assets/images/onboarding_illustration_7.png'),
+                  Expanded(
+                    child: Image.asset(
+                        'assets/images/onboarding_illustration_7.png'),
                   ),
                   Center(
                     child: Padding(
@@ -138,14 +139,16 @@ class _QuestionOnePageState extends ConsumerState<QuestionOnePage> {
                           ),
                           child: Slider(
                             activeColor: ColorValues.socaleOrange,
-                            inactiveColor: ColorValues.elementColor.withOpacity(0.1),
+                            inactiveColor:
+                                ColorValues.elementColor.withOpacity(0.1),
                             value: dataProvider.getQuestions[0].toDouble(),
                             max: 100,
                             onChanged: onChanged,
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10, right: 10, left: 10),
+                          padding:
+                              EdgeInsets.only(top: 10, right: 10, left: 10),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
@@ -168,20 +171,23 @@ class _QuestionOnePageState extends ConsumerState<QuestionOnePage> {
                         )
                       ],
                     ),
-                  )
+                  ),
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left: 20,
+                      right: 20,
+                      bottom: 20 + MediaQuery.of(context).padding.bottom,
+                      top: 20,
+                    ),
+                    child: PrimaryButton(
+                      width: size.width,
+                      height: 60,
+                      colors: [Color(0xFFFD6C00), Color(0xFFFFA133)],
+                      text: "Continue",
+                      onClickEventHandler: _onClickEventHandler,
+                    ),
+                  ),
                 ],
-              ),
-              Positioned(
-                bottom: 20,
-                left: 20,
-                right: 20,
-                child: PrimaryButton(
-                  width: size.width,
-                  height: 60,
-                  colors: [Color(0xFFFD6C00), Color(0xFFFFA133)],
-                  text: "Continue",
-                  onClickEventHandler: _onClickEventHandler,
-                ),
               ),
             ],
           ),

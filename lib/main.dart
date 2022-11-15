@@ -15,6 +15,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:get/get.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socale/models/ModelProvider.dart';
 import 'package:socale/screens/auth_screen/auth_screen.dart';
 import 'package:socale/screens/main/main_app.dart';
@@ -34,11 +35,15 @@ import 'package:socale/utils/routes.dart';
 import 'amplifyconfiguration.dart';
 import 'firebase_options.dart';
 
+const String appVersionNumber = "0.1.14";
+
+final isLoggedInProvider = StateProvider<bool>((ref) => false);
+
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  await dotenv.load(
-      fileName: "assets/.env"); // load environment variables files
+  await dotenv.load(fileName: "assets/.env"); // load environment vars
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter(); // initialize local key storage
   configureDependencies(); // configure routing dependencies
@@ -57,29 +62,56 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     SplashScreen(),
     MainApp(transitionAnimation: false),
     OnboardingScreen(),
-    AuthScreen()
+    AuthScreen(),
   ]; // page router list
-  StreamSubscription<DataStoreHubEvent>? stream;
+
+  StreamSubscription<DataStoreHubEvent>? dsEventStream;
+  StreamSubscription<AuthHubEvent>? authEventStream;
+
   StreamSubscription<ConnectivityResult>? subscription;
 
   bool _isAmplifyConfigured = false;
-  bool _isDataStoreReady = false;
-  bool _isSignedIn = false;
+  bool _isDataStoreReady = true;
   int _pageIndex = 0;
-  bool _isStartingUp = true;
 
-  void observeEvents() {
-    stream =
-        Amplify.Hub.listen(HubChannel.DataStore, (DataStoreHubEvent event) {
-      if (event.eventName == 'syncQueriesReady') {
-        setState(() => _isDataStoreReady = true);
+  void observeAuthEvents() {
+    authEventStream = Amplify.Hub.listen(HubChannel.Auth, (AuthHubEvent event) async {
+      if (event.eventName == "SIGNED_OUT") {
+        getInitialPage();
+      }
+    });
+  }
+
+  void observeDatastoreEvents() {
+    dsEventStream = Amplify.Hub.listen(HubChannel.DataStore, (DataStoreHubEvent event) {
+      if (event.eventName == "ready") {
+        if (mounted) {
+          setState(() {
+            _isDataStoreReady = true;
+          });
+        } else {
+          _isDataStoreReady = true;
+        }
+
+        getInitialPage();
+      }
+
+      if (event.eventName == "syncQueriesStarted") {
+        if (mounted) {
+          setState(() {
+            _isDataStoreReady = false;
+          });
+        } else {
+          _isDataStoreReady = false;
+        }
       }
     });
   }
 
   @override
   void dispose() {
-    stream?.cancel();
+    dsEventStream?.cancel();
+    authEventStream?.cancel();
     subscription?.cancel();
     super.dispose();
   }
@@ -93,7 +125,6 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
         modelProvider: ModelProvider.instance,
         conflictHandler: (ConflictData data) {
           final localData = data.local;
-
           return ConflictResolutionDecision.retry(localData);
         });
 
@@ -106,17 +137,30 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
     ]);
 
     try {
-      observeEvents();
       await Amplify.configure(amplifyconfig);
       setState(() => _isAmplifyConfigured = true);
-      await Amplify.DataStore.stop();
-      await Amplify.DataStore.clear();
-      await Amplify.DataStore.start();
+
+      observeDatastoreEvents();
+      observeAuthEvents();
+      await checkAppVersion();
       await _attemptAutoLogin(); // attempt auto login
-      await getInitialPage(); // get initial page after splash screen
+      getInitialPage();
     } on AmplifyAlreadyConfiguredException {
       throw ("Tried to reconfigure Amplify.");
     }
+  }
+
+  Future<void> checkAppVersion() async {
+    final prefs = await SharedPreferences.getInstance();
+    final appVersion = prefs.getString("appVersion");
+
+    if (appVersion == null || appVersion != appVersionNumber) {
+      print("appVersion: $appVersion");
+      await Amplify.DataStore.clear();
+      prefs.setString("appVersion", appVersionNumber);
+    }
+
+    await Amplify.DataStore.start();
   }
 
   Future<void> _attemptAutoLogin() async {
@@ -124,38 +168,28 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       final session = await Amplify.Auth.fetchAuthSession();
       if (session.isSignedIn == true) {
         authService.startAuthStreamListener(); // auth events listener
-        await ref
-            .read(userAttributesAsyncController.notifier)
-            .setAttributes(); // set user attributes
+        await ref.read(userAttributesAsyncController.notifier).setAttributes();
+
       }
 
-      setState(() => _isSignedIn = session.isSignedIn);
+      ref.read(isLoggedInProvider.state).state = session.isSignedIn;
     } on NotAuthorizedException catch (_) {
       await Amplify.DataStore.clear();
-      setState(() => _isSignedIn = false);
+      ref.read(isLoggedInProvider.state).state = false;
     } on UserNotFoundException catch (_) {
       await Amplify.DataStore.clear();
-      setState(() => _isSignedIn = false);
+      ref.read(isLoggedInProvider.state).state = false;
     } on AuthException catch (_) {
       await Amplify.DataStore.clear();
-      setState(() => _isSignedIn = false);
+      ref.read(isLoggedInProvider.state).state = false;
     }
   }
 
   @override
   void initState() {
     super.initState();
-    SystemChannels.textInput
-        .invokeMethod('TextInput.hide'); // hide keyboard at start
-    subscription = Connectivity()
-        .onConnectivityChanged
-        .listen((ConnectivityResult result) {
-      if (result == ConnectivityResult.none) {
-        setState(() {
-          _pageIndex = 0;
-        });
-      }
-    });
+    SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
+
     _configureAmplify();
   }
 
@@ -195,17 +229,15 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   }
 
   getInitialPage() async {
-    if (_isAmplifyConfigured) {
-      if (_isSignedIn) {
-        bool isOnBoardingComplete =
-            await onboardingService.checkIfUserIsOnboarded();
+    if (_isAmplifyConfigured && _isDataStoreReady) {
+      final isLoggedIn = ref.read(isLoggedInProvider);
+      if (isLoggedIn) {
+        bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
+
         if (isOnBoardingComplete) {
-          setState(() {
-            _isStartingUp = false;
-          });
           final user = await Amplify.Auth.getCurrentUser();
           await ref.read(userAsyncController.notifier).setUser(user.userId);
-          await ref.read(matchAsyncController.notifier).setMatches(user.userId);
+          await ref.read(matchAsyncController.notifier).setMatches();
           setState(() => _pageIndex = 1);
         } else {
           setState(() => _pageIndex = 2);

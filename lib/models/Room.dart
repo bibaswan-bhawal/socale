@@ -196,6 +196,10 @@ class Room extends Model {
   Map<String, dynamic> toJson() => {
     'id': id, 'lastMessageSent': _lastMessageSent, 'roomType': _roomType, 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList(), 'isHidden': _isHidden, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
+  
+  Map<String, Object?> toMap() => {
+    'id': id, 'lastMessageSent': _lastMessageSent, 'roomType': _roomType, 'messages': _messages, 'userRoom': _userRoom, 'isHidden': _isHidden, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+  };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField LASTMESSAGESENT = QueryField(fieldName: "lastMessageSent");

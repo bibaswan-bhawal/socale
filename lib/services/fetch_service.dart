@@ -17,7 +17,7 @@ class FetchService {
     final response = await Amplify.API.query(request: request).response;
 
     if (response.errors.isNotEmpty) {
-      print ("Error fetching user by id at fetch service: ${response.errors}");
+      print("Error fetching user by id at fetch service: ${response.errors}");
       return null;
     }
 
@@ -30,7 +30,7 @@ class FetchService {
     return user;
   }
 
-  Future<Match> fetchMatch(String matchId) async {
+  Future<Match?> fetchMatch(String matchId) async {
     final request = ModelQueries.get(Match.classType, matchId);
     final response = await Amplify.API.query(request: request).response;
 
@@ -38,7 +38,7 @@ class FetchService {
       throw ("Error fetching match by id at fetch service: ${response.errors}");
     }
 
-    return response.data!;
+    return response.data;
   }
 
   Future<List<UserRoom?>> fetchAllUserRoomsForUser(User user) async {
@@ -52,7 +52,7 @@ class FetchService {
     final userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.ROOM.eq(room.id));
 
     for (UserRoom userRoom in userRooms) {
-      users.add(userRoom.user);
+      users.add(userRoom.user!);
     }
 
     return users;

@@ -24,7 +24,8 @@ class _GetStartPageState extends ConsumerState<GetStartPage> {
 
   void _onClickEventHandler() {
     onboardingService.setOnboardingStep(OnboardingStep.bio);
-    _pageController.nextPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.nextPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -60,16 +61,19 @@ class _GetStartPageState extends ConsumerState<GetStartPage> {
                               text: 'Welcome to ',
                               style: GoogleFonts.poppins(
                                 color: Colors.black,
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.07,
                                 fontWeight: FontWeight.bold,
                               ),
                             ),
                             TextSpan(
                               text: 'Socale',
                               style: GoogleFonts.poppins(
-                                fontSize: 32,
+                                fontSize:
+                                    MediaQuery.of(context).size.width * 0.07,
                                 fontWeight: FontWeight.bold,
-                                foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                                foreground: Paint()
+                                  ..shader = ColorValues.socaleOrangeGradient,
                               ),
                             ),
                           ],
@@ -78,20 +82,18 @@ class _GetStartPageState extends ConsumerState<GetStartPage> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.fromLTRB(0, 30, 0, 0),
-                      child: SizedBox(
-                        width: 300,
-                        child: Text(
-                          'The first social network to use the power of Machine Learning to find people you will vibe with on campus.',
-                          style: GoogleFonts.poppins(
-                            fontSize: 14,
-                            textStyle: TextStyle(
-                              color: const Color(0xFF7A7A7A),
-                              height: 1.4,
-                            ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: MediaQuery.of(context).size.width * 0.15),
+                      child: Text(
+                        'The first social network to use the power of Machine Learning to find people you will vibe with on campus.',
+                        style: GoogleFonts.poppins(
+                          fontSize: MediaQuery.of(context).size.width * 0.035,
+                          textStyle: TextStyle(
+                            color: const Color(0xFF7A7A7A),
+                            height: 1.4,
                           ),
-                          textAlign: TextAlign.center,
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ),
                   ],

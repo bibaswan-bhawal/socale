@@ -10,7 +10,9 @@ class GetStartedScreen extends StatelessWidget {
   final Function() goToLogin;
   final Function() goToRegister;
 
-  const GetStartedScreen({Key? key, required this.goToLogin, required this.goToRegister}) : super(key: key);
+  const GetStartedScreen(
+      {Key? key, required this.goToLogin, required this.goToRegister})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -34,11 +36,12 @@ class GetStartedScreen extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
-                  child: Image.asset(
-                    'assets/images/onboarding_illustration_1.png',
-                    height: size.height / 2.4,
+                Expanded(
+                  child: Padding(
+                    padding: EdgeInsets.fromLTRB(0, 40, 0, 0),
+                    child: Image.asset(
+                      'assets/images/onboarding_illustration_1.png',
+                    ),
                   ),
                 ),
                 Padding(
@@ -70,7 +73,9 @@ class GetStartedScreen extends StatelessWidget {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 12),
+                  padding: EdgeInsets.only(
+                      top: 12,
+                      bottom: 20 + MediaQuery.of(context).padding.bottom),
                   child: CustomOutlinedButton(
                     width: size.width - 60,
                     height: 60,

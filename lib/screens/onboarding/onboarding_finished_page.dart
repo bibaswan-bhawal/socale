@@ -2,7 +2,6 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/keyboard_safe_area.dart';
 import 'package:socale/components/nest_will_pop_scope.dart';
@@ -17,10 +16,12 @@ class OnboardingFinishedPage extends ConsumerStatefulWidget {
   const OnboardingFinishedPage({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<OnboardingFinishedPage> createState() => _OnboardingFinishedPageState();
+  ConsumerState<OnboardingFinishedPage> createState() =>
+      _OnboardingFinishedPageState();
 }
 
-class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage> with SingleTickerProviderStateMixin {
+class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
+    with SingleTickerProviderStateMixin {
   Animation<double>? containerAnimation;
   AnimationController? containerAnimationController;
   late PageController _pageController;
@@ -47,25 +48,30 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
     final user = await Amplify.Auth.getCurrentUser();
 
     await ref.read(userAsyncController.notifier).setUser(user.userId);
-    await ref.read(matchAsyncController.notifier).setMatches(user.userId);
+    await ref.read(matchAsyncController.notifier).setMatches();
 
     startTransition();
   }
 
   Future<bool> _onBackPress() async {
-    _pageController.previousPage(duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    _pageController.previousPage(
+        duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
     return false;
   }
 
   void startTransition() {
     final size = MediaQuery.of(context).size;
 
-    containerAnimationController = AnimationController(duration: const Duration(milliseconds: 500), vsync: this);
-    containerAnimation = Tween<double>(begin: 0, end: size.height).animate(containerAnimationController!)
+    containerAnimationController = AnimationController(
+        duration: const Duration(milliseconds: 500), vsync: this);
+    containerAnimation = Tween<double>(begin: 0, end: size.height)
+        .animate(containerAnimationController!)
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
-          Navigator.of(context)
-              .pushAndRemoveUntil(MaterialPageRoute(builder: (context) => MainApp(transitionAnimation: true)), (Route route) => false);
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(
+                  builder: (context) => MainApp(transitionAnimation: true)),
+              (Route route) => false);
         }
       })
       ..addListener(() {
@@ -105,16 +111,19 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
                             text: 'We are finding your ',
                             style: GoogleFonts.poppins(
                               color: Colors.black,
-                              fontSize: 32,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.075,
                               fontWeight: FontWeight.bold,
                             ),
                           ),
                           TextSpan(
                             text: 'Matches...',
                             style: GoogleFonts.poppins(
-                              fontSize: 32,
+                              fontSize:
+                                  MediaQuery.of(context).size.width * 0.075,
                               fontWeight: FontWeight.bold,
-                              foreground: Paint()..shader = ColorValues.socaleOrangeGradient,
+                              foreground: Paint()
+                                ..shader = ColorValues.socaleOrangeGradient,
                             ),
                           ),
                         ],
@@ -122,9 +131,10 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
                       textAlign: TextAlign.center,
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(top: 20),
-                    child: Image.asset('assets/images/onboarding_uploading_animation.gif', width: 300),
+                  Expanded(
+                    child: Image.asset(
+                      'assets/images/onboarding_uploading_animation.gif',
+                    ),
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 20),
@@ -145,7 +155,8 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
                                 "Did you know? UCSD is one of the most LGBTQ-friendly universities in the nation!",
                                 style: GoogleFonts.poppins(
                                   fontSize: 12,
-                                  color: ColorValues.elementColor.withOpacity(0.7),
+                                  color:
+                                      ColorValues.elementColor.withOpacity(0.7),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -156,7 +167,8 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
                                 "Fun Fact! Students can grow organic vegetables and herbs at six community gardens on campus.",
                                 style: GoogleFonts.poppins(
                                   fontSize: 12,
-                                  color: ColorValues.elementColor.withOpacity(0.7),
+                                  color:
+                                      ColorValues.elementColor.withOpacity(0.7),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -167,7 +179,8 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
                                 "Sustainability is huge in UCSD. From Solar hot water heating to rooftop gardens and sea breeze ventilation.",
                                 style: GoogleFonts.poppins(
                                   fontSize: 12,
-                                  color: ColorValues.elementColor.withOpacity(0.7),
+                                  color:
+                                      ColorValues.elementColor.withOpacity(0.7),
                                 ),
                                 textAlign: TextAlign.center,
                               ),
@@ -182,12 +195,16 @@ class _OnboardingFinishedPageState extends ConsumerState<OnboardingFinishedPage>
               alignment: Alignment.bottomCenter,
               child: Container(
                 width: size.width,
-                height: containerAnimation != null ? containerAnimation?.value : 0,
+                height:
+                    containerAnimation != null ? containerAnimation?.value : 0,
                 decoration: BoxDecoration(
                   gradient: LinearGradient(
                     begin: Alignment.topLeft,
                     end: Alignment.bottomRight,
-                    colors: [ColorValues.socaleOrange, ColorValues.socaleDarkOrange],
+                    colors: [
+                      ColorValues.socaleOrange,
+                      ColorValues.socaleDarkOrange
+                    ],
                   ),
                 ),
               ),

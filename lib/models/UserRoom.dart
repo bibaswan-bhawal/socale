@@ -42,61 +42,25 @@ class UserRoom extends Model {
     return id;
   }
   
-  User get user {
-    try {
-      return _user!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  User? get user {
+    return _user;
   }
   
-  Room get room {
-    try {
-      return _room!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  Room? get room {
+    return _room;
   }
   
-  TemporalDateTime get createdAt {
-    try {
-      return _createdAt!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  TemporalDateTime? get createdAt {
+    return _createdAt;
   }
   
-  TemporalDateTime get updatedAt {
-    try {
-      return _updatedAt!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  TemporalDateTime? get updatedAt {
+    return _updatedAt;
   }
   
-  const UserRoom._internal({required this.id, required user, required room, required createdAt, required updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
+  const UserRoom._internal({required this.id, user, room, createdAt, updatedAt}): _user = user, _room = room, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory UserRoom({String? id, required User user, required Room room, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
+  factory UserRoom({String? id, User? user, Room? room, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
     return UserRoom._internal(
       id: id == null ? UUID.getUUID() : id,
       user: user,
@@ -161,6 +125,10 @@ class UserRoom extends Model {
   Map<String, dynamic> toJson() => {
     'id': id, 'user': _user?.toJson(), 'room': _room?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
+  
+  Map<String, Object?> toMap() => {
+    'id': id, 'user': _user, 'room': _room, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+  };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField USER = QueryField(
@@ -195,27 +163,27 @@ class UserRoom extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: UserRoom.USER,
-      isRequired: true,
+      isRequired: false,
       targetName: "userID",
       ofModelName: (User).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: UserRoom.ROOM,
-      isRequired: true,
+      isRequired: false,
       targetName: "roomID",
       ofModelName: (Room).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: UserRoom.CREATEDAT,
-      isRequired: true,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: UserRoom.UPDATEDAT,
-      isRequired: true,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
   });
