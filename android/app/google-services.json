@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "944978704234",
+    "project_id": "socale-next",
+    "storage_bucket": "socale-next.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:944978704234:android:335ebe310222b07a9ed713",
+        "android_client_info": {
+          "package_name": "co.socale.socale"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "944978704234-4864ptu3jugpl4t16t88m64ka4v8v10i.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBuMzlXOL2rhkmL4Dwe9NiOpWwj9ImEYfs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "944978704234-4864ptu3jugpl4t16t88m64ka4v8v10i.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "944978704234-1tgcfmkegp1kku0cvinjnouiej7a5vka.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.notificationTest"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

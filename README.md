@@ -1,16 +1,15 @@
 # socale
 
-A new Flutter project.
+The next version of Socale built with a custom local cache using IsarDB and Amplify
 
-## Getting Started
+- Milestone 1: Goal to match all existing features of Socale
 
-This project is a starting point for a Flutter application.
+    - Auth and Onboarding flow
+    - Chat Screen
+    - Rooms Screen
+    - Matches Screen
+    - Profile Screen
+    - Settings Screen
 
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://flutter.dev/docs/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://flutter.dev/docs/cookbook)
-
-For help getting started with Flutter, view our
-[online documentation](https://flutter.dev/docs), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+- Milestone 2:
+    - Add ability to search of certain kinds of people based on new algorithm

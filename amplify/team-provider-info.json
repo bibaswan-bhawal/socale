@@ -1,0 +1,28 @@
+{
+  "dev": {
+    "awscloudformation": {
+      "AuthRoleName": "amplify-socale-dev-114352-authRole",
+      "UnauthRoleArn": "arn:aws:iam::761585288120:role/amplify-socale-dev-114352-unauthRole",
+      "AuthRoleArn": "arn:aws:iam::761585288120:role/amplify-socale-dev-114352-authRole",
+      "Region": "us-west-1",
+      "DeploymentBucketName": "amplify-socale-dev-114352-deployment",
+      "UnauthRoleName": "amplify-socale-dev-114352-unauthRole",
+      "StackName": "amplify-socale-dev-114352",
+      "StackId": "arn:aws:cloudformation:us-west-1:761585288120:stack/amplify-socale-dev-114352/229226d0-5a15-11ed-acf1-0219138d1c47",
+      "AmplifyAppId": "d1xnccdgzfuo1a",
+      "AuthTriggerTemplateURL": "https://s3.amazonaws.com/amplify-socale-dev-114352-deployment/amplify-cfn-templates/auth/auth-trigger-cloudformation-template.json"
+    },
+    "categories": {
+      "auth": {
+        "socaleAuth": {},
+        "userPoolGroups": {}
+      },
+      "function": {
+        "socaleAuthCustomMessage": {
+          "deploymentBucketName": "amplify-socale-dev-114352-deployment",
+          "s3Key": "amplify-builds/socaleAuthCustomMessage-676e35594739352b5934-build.zip"
+        }
+      }
+    }
+  }
+}
