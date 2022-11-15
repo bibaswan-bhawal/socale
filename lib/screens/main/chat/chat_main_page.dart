@@ -23,8 +23,7 @@ class ChatListPage extends ConsumerStatefulWidget {
   ConsumerState<ChatListPage> createState() => _ChatListPageState();
 }
 
-class _ChatListPageState extends ConsumerState<ChatListPage>
-    with TickerProviderStateMixin {
+class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProviderStateMixin {
   final TextEditingController _textEditingController = TextEditingController();
   late TabController _tabController;
   final TextEditingController controller = TextEditingController();
@@ -45,8 +44,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
   onItemClick(RoomListItem roomListItem) {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            ChatPage(room: MatchRoom(room: roomListItem)),
+        pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: MatchRoom(room: roomListItem)),
         transitionDuration: Duration(milliseconds: 500),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SharedAxisTransition(
@@ -129,11 +127,8 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
             child: RoundedButton(
               height: 54,
               width: size.width * 0.69,
-              onClickEventHandler: () => {
-                ref.read(mainPageController).animateToPage(1,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOutCubicEmphasized)
-              },
+              onClickEventHandler: () =>
+                  {ref.read(mainPageController).animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.easeInOutCubicEmphasized)},
               text: 'Start Matching',
               colors: [
                 Color(0xFFFD6C00),
@@ -200,18 +195,14 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                     splashFactory: NoSplash.splashFactory,
                     controller: _tabController,
                     indicatorWeight: 3,
-                    indicatorColor: _selectedIndex == 0
-                        ? ColorValues.socaleOrange
-                        : Color(0xFFF151DD),
+                    indicatorColor: _selectedIndex == 0 ? ColorValues.socaleOrange : Color(0xFFF151DD),
                     tabs: [
                       Tab(
                         child: Text(
                           "Your Network",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.poppins(
-                            color: _selectedIndex == 0
-                                ? ColorValues.socaleOrange
-                                : Colors.white,
+                            color: _selectedIndex == 0 ? ColorValues.socaleOrange : Colors.white,
                             fontSize: 18,
                             fontWeight: FontWeight.bold,
                           ),
@@ -224,9 +215,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                               TextSpan(
                                 text: 'New Matches',
                                 style: GoogleFonts.poppins(
-                                  color: _selectedIndex == 0
-                                      ? Colors.white
-                                      : Color(0xFFF151DD),
+                                  color: _selectedIndex == 0 ? Colors.white : Color(0xFFF151DD),
                                   fontSize: 18,
                                   fontWeight: FontWeight.bold,
                                 ),
@@ -260,17 +249,13 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
 
                             if (_textEditingController.text.isNotEmpty) {
                               networkRooms = networkRooms
-                                  .where((element) => element.getRoomName
-                                      .toLowerCase()
-                                      .contains(
-                                          _textEditingController.text.toUpperCase()))
+                                  .where((element) => element.getRoomName.toLowerCase().contains(_textEditingController.text.toUpperCase()))
                                   .toList();
                             }
 
                             return ImplicitlyAnimatedList(
                               items: networkRooms,
-                              areItemsTheSame: (RoomListItem room1, RoomListItem room2) =>
-                                  room1.getRoom.id == room2.getRoom.id,
+                              areItemsTheSame: (RoomListItem room1, RoomListItem room2) => room1.getRoom.id == room2.getRoom.id,
                               itemBuilder: listItemBuilder,
                             );
                           },
@@ -295,22 +280,17 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
 
                             if (_textEditingController.text.isNotEmpty) {
                               matchRooms = matchRooms
-                                  .where((element) => element.getRoomName
-                                      .toLowerCase()
-                                      .contains(
-                                          _textEditingController.text.toLowerCase()))
+                                  .where((element) => element.getRoomName.toLowerCase().contains(_textEditingController.text.toLowerCase()))
                                   .toList();
                             }
 
                             if (matchRooms.isEmpty) {
-                              return listEmptyMessage(
-                                  "Find your new matches to fill up this space!");
+                              return listEmptyMessage("Find your new matches to fill up this space!");
                             }
 
                             return ImplicitlyAnimatedList(
                               items: matchRooms,
-                              areItemsTheSame: (RoomListItem room1, RoomListItem room2) =>
-                                  room1.getRoom.id == room2.getRoom.id,
+                              areItemsTheSame: (RoomListItem room1, RoomListItem room2) => room1.getRoom.id == room2.getRoom.id,
                               itemBuilder: listItemBuilder,
                               insertDuration: const Duration(milliseconds: 150),
                               removeDuration: const Duration(milliseconds: 150),
