@@ -23,8 +23,7 @@ class ChatListPage extends ConsumerStatefulWidget {
   ConsumerState<ChatListPage> createState() => _ChatListPageState();
 }
 
-class _ChatListPageState extends ConsumerState<ChatListPage>
-    with TickerProviderStateMixin {
+class _ChatListPageState extends ConsumerState<ChatListPage> with TickerProviderStateMixin {
   final TextEditingController _textEditingController = TextEditingController();
   late TabController _tabController;
   final TextEditingController controller = TextEditingController();
@@ -45,8 +44,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
   onItemClick(RoomListItem roomListItem) {
     Navigator.of(context).push(
       PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) =>
-            ChatPage(room: MatchRoom(room: roomListItem)),
+        pageBuilder: (context, animation, secondaryAnimation) => ChatPage(room: MatchRoom(room: roomListItem)),
         transitionDuration: Duration(milliseconds: 500),
         transitionsBuilder: (context, animation, secondaryAnimation, child) {
           return SharedAxisTransition(
@@ -108,7 +106,6 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
   Widget listEmptyMessage(String message) {
     final size = MediaQuery.of(context).size;
 
-
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -130,11 +127,8 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
             child: RoundedButton(
               height: 54,
               width: size.width * 0.69,
-              onClickEventHandler: () => {
-                ref.read(mainPageController).animateToPage(1,
-                    duration: Duration(milliseconds: 300),
-                    curve: Curves.easeInOutCubicEmphasized)
-              },
+              onClickEventHandler: () =>
+                  {ref.read(mainPageController).animateToPage(1, duration: Duration(milliseconds: 300), curve: Curves.easeInOutCubicEmphasized)},
               text: 'Start Matching',
               colors: [
                 Color(0xFFFD6C00),
@@ -156,7 +150,6 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
       length: 2,
       initialIndex: 1,
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
         body: KeyboardSafeArea(
           child: LayoutBuilder(
             builder: (context, constraints) {
@@ -167,15 +160,11 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                     width: constraints.maxWidth,
                     child: Padding(
                       padding: const EdgeInsets.only(top: 20),
-                      child: Column(
-                        children: [
-                          Image.asset('assets/images/socale_logo_bw.png', width: 100),
-                        ],
-                      ),
+                      child: Image.asset('assets/images/socale_logo_bw.png', width: 100),
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(bottom: 10),
+                    padding: EdgeInsets.only(bottom: 10),
                     child: SizedBox(
                       width: size.width * 0.9,
                       height: 40,
@@ -199,159 +188,126 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                           isCollapsed: true,
                           contentPadding: EdgeInsets.only(top: 10),
                         ),
-                        hintText: "Search",
-                        hintStyle: GoogleFonts.roboto(color: Colors.white),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(50),
-                          borderSide:
-                              BorderSide(style: BorderStyle.none, width: 0),
-                        ),
-                        fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
-                        filled: true,
-                        isCollapsed: true,
-                        contentPadding: EdgeInsets.only(top: 10),
                       ),
                     ),
                   ),
-                ),
-                TabBar(
-                  splashFactory: NoSplash.splashFactory,
-                  controller: _tabController,
-                  indicatorWeight: 3,
-                  indicatorColor: _selectedIndex == 0
-                      ? ColorValues.socaleOrange
-                      : Color(0xFFF151DD),
-                  tabs: [
-                    Tab(
-                      child: Text(
-                        "Your Network",
-                        textAlign: TextAlign.center,
-                        style: GoogleFonts.poppins(
-                          color: _selectedIndex == 0
-                              ? ColorValues.socaleOrange
-                              : Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
+                  TabBar(
+                    splashFactory: NoSplash.splashFactory,
+                    controller: _tabController,
+                    indicatorWeight: 3,
+                    indicatorColor: _selectedIndex == 0 ? ColorValues.socaleOrange : Color(0xFFF151DD),
+                    tabs: [
+                      Tab(
+                        child: Text(
+                          "Your Network",
+                          textAlign: TextAlign.center,
+                          style: GoogleFonts.poppins(
+                            color: _selectedIndex == 0 ? ColorValues.socaleOrange : Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                          ),
                         ),
                       ),
-                    ),
-                    Tab(
-                      child: RichText(
-                        text: TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'New Matches',
-                              style: GoogleFonts.poppins(
-                                color: _selectedIndex == 0
-                                    ? Colors.white
-                                    : Color(0xFFF151DD),
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold,
+                      Tab(
+                        child: RichText(
+                          text: TextSpan(
+                            children: [
+                              TextSpan(
+                                text: 'New Matches',
+                                style: GoogleFonts.poppins(
+                                  color: _selectedIndex == 0 ? Colors.white : Color(0xFFF151DD),
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                          ],
+                            ],
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
-                  SizedBox(
-                    width: constraints.maxWidth,
-                    height: constraints.maxHeight - 199,
-                    child: TabBarView(
-                      controller: _tabController,
-                      children: [
-                        roomState.when(
-                          error: (Object error, StackTrace? stackTrace) {
-                            throw (stackTrace.toString());
-                          },
-                          loading: () {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                          data: (List<RoomListItem> data) {
-                            List<RoomListItem> networkRooms = [];
+                  TabBarView(
+                    controller: _tabController,
+                    children: [
+                      roomState.when(
+                        data: (List<RoomListItem> data) {
+                          List<RoomListItem> networkRooms = [];
 
-                            for (RoomListItem room in data) {
-                              if (!room.showHidden() && !room.isDeleted()) {
-                                networkRooms.add(room);
-                              }
-                            }
-
-                            if (networkRooms.isEmpty) {
-                              return listEmptyMessage("Hmm... Nothing is here yet");
-                            }
-
-                            if (_textEditingController.text.isNotEmpty) {
-                              networkRooms = networkRooms
-                                  .where((element) => element.getRoomName
-                                      .toLowerCase()
-                                      .contains(
-                                          _textEditingController.text.toUpperCase()))
-                                  .toList();
+                          for (RoomListItem room in data) {
+                            if (!room.showHidden() && !room.isDeleted()) {
+                              networkRooms.add(room);
                             }
                           }
 
-                            return ImplicitlyAnimatedList(
-                              items: networkRooms,
-                              areItemsTheSame: (RoomListItem room1, RoomListItem room2) =>
-                                  room1.getRoom.id == room2.getRoom.id,
-                              itemBuilder: listItemBuilder,
-                            );
-                          },
-                        ),
-                        // Anonymous Matches
-                        roomState.when(
-                          error: (Object error, StackTrace? stackTrace) {
-                            throw (stackTrace.toString());
-                          },
-                          loading: () {
-                            return Center(
-                              child: CircularProgressIndicator(),
-                            );
-                          },
-                          data: (List<RoomListItem> data) {
-                            List<RoomListItem> matchRooms = [];
+                          if (networkRooms.isEmpty) {
+                            return listEmptyMessage("Hmm... Nothing is here yet");
+                          }
 
-                            for (RoomListItem room in data) {
-                              if (room.showHidden() && !room.isDeleted()) {
-                                matchRooms.add(room);
-                              }
-                            }
+                          if (_textEditingController.text.isNotEmpty) {
+                            networkRooms = networkRooms
+                                .where((element) => element.getRoomName.toLowerCase().contains(_textEditingController.text.toUpperCase()))
+                                .toList();
+                          }
 
-                            if (_textEditingController.text.isNotEmpty) {
-                              matchRooms = matchRooms
-                                  .where((element) => element.getRoomName
-                                      .toLowerCase()
-                                      .contains(
-                                          _textEditingController.text.toLowerCase()))
-                                  .toList();
-                            }
+                          return ImplicitlyAnimatedList(
+                            items: networkRooms,
+                            areItemsTheSame: (RoomListItem room1, RoomListItem room2) => room1.getRoom.id == room2.getRoom.id,
+                            itemBuilder: listItemBuilder,
+                          );
+                        },
+                        error: (Object error, StackTrace? stackTrace) {
+                          throw (stackTrace.toString());
+                        },
+                        loading: () {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      ),
+                      roomState.when(
+                        data: (List<RoomListItem> data) {
+                          List<RoomListItem> matchRooms = [];
 
-                            if (matchRooms.isEmpty) {
-                              return listEmptyMessage(
-                                  "Find your new matches to fill up this space!");
+                          for (RoomListItem room in data) {
+                            if (room.showHidden() && !room.isDeleted()) {
+                              matchRooms.add(room);
                             }
                           }
 
-                            return ImplicitlyAnimatedList(
-                              items: matchRooms,
-                              areItemsTheSame: (RoomListItem room1, RoomListItem room2) =>
-                                  room1.getRoom.id == room2.getRoom.id,
-                              itemBuilder: listItemBuilder,
-                              insertDuration: const Duration(milliseconds: 150),
-                              removeDuration: const Duration(milliseconds: 150),
-                            );
-                          },
-                        ),
-                      ],
-                    ),
+                          if (_textEditingController.text.isNotEmpty) {
+                            matchRooms = matchRooms
+                                .where((element) => element.getRoomName.toLowerCase().contains(_textEditingController.text.toLowerCase()))
+                                .toList();
+                          }
+
+                          if (matchRooms.isEmpty) {
+                            return listEmptyMessage("Find your new matches to fill up this space!");
+                          }
+
+                          return ImplicitlyAnimatedList(
+                            items: matchRooms,
+                            areItemsTheSame: (RoomListItem room1, RoomListItem room2) => room1.getRoom.id == room2.getRoom.id,
+                            itemBuilder: listItemBuilder,
+                            insertDuration: const Duration(milliseconds: 150),
+                            removeDuration: const Duration(milliseconds: 150),
+                          );
+                        },
+                        error: (Object error, StackTrace? stackTrace) {
+                          throw (stackTrace.toString());
+                        },
+                        loading: () {
+                          return Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        },
+                      ),
+                    ],
                   ),
-                ),
-              ],
-            );
-          },
+                ],
+              );
+            },
+          ),
         ),
       ),
     );

@@ -22,8 +22,7 @@ class MainApp extends ConsumerStatefulWidget {
   ConsumerState<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends ConsumerState<MainApp>
-    with TickerProviderStateMixin {
+class _MainAppState extends ConsumerState<MainApp> with TickerProviderStateMixin {
   bool? transitionAnimation;
   late PageController _pageController;
 
@@ -73,10 +72,8 @@ class _MainAppState extends ConsumerState<MainApp>
   void initialAnimation() {
     final size = MediaQuery.of(context).size;
 
-    containerAnimationController = AnimationController(
-        duration: const Duration(milliseconds: 750), vsync: this);
-    containerAnimation = Tween<double>(begin: size.height, end: 0)
-        .animate(containerAnimationController!)
+    containerAnimationController = AnimationController(duration: const Duration(milliseconds: 750), vsync: this);
+    containerAnimation = Tween<double>(begin: size.height, end: 0).animate(containerAnimationController!)
       ..addListener(() {
         setState(() {});
       });
@@ -96,9 +93,7 @@ class _MainAppState extends ConsumerState<MainApp>
   void handleBottomNavigationClick(value) {
     final pageController = ref.read(mainPageController);
 
-    pageController.animateToPage(value,
-        duration: Duration(milliseconds: 300),
-        curve: Curves.easeInOutCubicEmphasized);
+    pageController.animateToPage(value, duration: Duration(milliseconds: 300), curve: Curves.easeInOutCubicEmphasized);
   }
 
   @override
@@ -119,7 +114,7 @@ class _MainAppState extends ConsumerState<MainApp>
                 flex: 1,
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
-                  controller: pageController,
+                  controller: ref.watch(mainPageController),
                   children: [
                     ChatListPage(),
                     MatchPage(),
@@ -145,16 +140,12 @@ class _MainAppState extends ConsumerState<MainApp>
             alignment: Alignment.topCenter,
             child: Container(
               width: size.width,
-              height:
-                  containerAnimation != null ? containerAnimation?.value : 0,
+              height: containerAnimation != null ? containerAnimation?.value : 0,
               decoration: BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topLeft,
                   end: Alignment.bottomRight,
-                  colors: [
-                    ColorValues.socaleOrange,
-                    ColorValues.socaleDarkOrange
-                  ],
+                  colors: [ColorValues.socaleOrange, ColorValues.socaleDarkOrange],
                 ),
               ),
             ),
