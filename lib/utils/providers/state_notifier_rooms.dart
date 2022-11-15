@@ -38,8 +38,7 @@ class RoomsStateNotifier extends StateNotifier<AsyncValue<List<RoomListItem>>> {
           List<String> newRoomId = [];
 
           for (UserRoom userRoom in snapshot.items) {
-            newRoomId.addIf(
-                !newRoomId.contains(userRoom.room.id), userRoom.room.id);
+            newRoomId.addIf(!newRoomId.contains(userRoom.room!.id), userRoom.room!.id);
           }
 
           if (_streamRooms != null) {
@@ -51,12 +50,10 @@ class RoomsStateNotifier extends StateNotifier<AsyncValue<List<RoomListItem>>> {
             QueryPredicateGroup? multiRoomPredicate;
 
             if (newRoomId.length > 1) {
-              multiRoomPredicate =
-                  Room.ID.eq(newRoomId[0]).or(Room.ID.eq(newRoomId[1]));
+              multiRoomPredicate = Room.ID.eq(newRoomId[0]).or(Room.ID.eq(newRoomId[1]));
 
               for (int i = 2; i < newRoomId.length; i++) {
-                multiRoomPredicate =
-                    multiRoomPredicate!.or(Room.ID.eq(newRoomId[i]));
+                multiRoomPredicate = multiRoomPredicate!.or(Room.ID.eq(newRoomId[i]));
               }
             }
 
@@ -70,15 +67,11 @@ class RoomsStateNotifier extends StateNotifier<AsyncValue<List<RoomListItem>>> {
                 List<RoomListItem> roomsListItems = [];
 
                 for (Room room in snapshot.items) {
-                  List<User> usersForRoom =
-                      await fetchService.fetchAllUsersForRoom(room);
-                  User? currentUser =
-                      await fetchService.fetchUserById(currentUserId);
+                  List<User> usersForRoom = await fetchService.fetchAllUsersForRoom(room);
+                  User? currentUser = await fetchService.fetchUserById(currentUserId);
                   if (currentUser == null) continue;
-                  RoomListItem itemToAdd =
-                      RoomListItem(room, usersForRoom, currentUser);
-                  roomsListItems.addIf(
-                      !roomsListItems.contains(itemToAdd), itemToAdd);
+                  RoomListItem itemToAdd = RoomListItem(room, usersForRoom, currentUser);
+                  roomsListItems.addIf(!roomsListItems.contains(itemToAdd), itemToAdd);
                 }
 
                 roomsListItems.sort((room1, room2) => room1.compareTo(room2));

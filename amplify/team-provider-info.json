@@ -13,23 +13,16 @@
     },
     "categories": {
       "auth": {
-        "undefined": {},
-        "true": {
-          "facebookAppId": "413220534092388",
-          "googleClientId": "1038363379354-438rslugb563casado20hbsumhp777l3.apps.googleusercontent.com",
-          "appleAppId": "co.socale.socale.ios"
-        },
-        "socale205c936d": {},
         "socale": {}
+      },
+      "storage": {
+        "s3f5814f67": {}
       },
       "function": {
         "S3Trigger3d9ab619": {
           "deploymentBucketName": "amplify-socale-dev-105154-deployment",
           "s3Key": "amplify-builds/S3Trigger3d9ab619-7a627679485a6b4d3656-build.zip"
         }
-      },
-      "storage": {
-        "s3f5814f67": {}
       },
       "api": {
         "socale": {}

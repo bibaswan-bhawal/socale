@@ -25,9 +25,7 @@ class FetchService {
   }
 
   Future<User> fetchUserByIdDataStore(String userId) async {
-    User user = (await Amplify.DataStore.query(User.classType,
-            where: User.ID.eq(userId)))
-        .first;
+    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId))).first;
 
     return user;
   }
@@ -44,19 +42,17 @@ class FetchService {
   }
 
   Future<List<UserRoom?>> fetchAllUserRoomsForUser(User user) async {
-    List<UserRoom> userRooms = await Amplify.DataStore.query(UserRoom.classType,
-        where: UserRoom.USER.eq(user.id));
+    List<UserRoom> userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.USER.eq(user.id));
     return userRooms;
   }
 
   Future<List<User>> fetchAllUsersForRoom(Room room) async {
     List<User> users = [];
 
-    final userRooms = await Amplify.DataStore.query(UserRoom.classType,
-        where: UserRoom.ROOM.eq(room.id));
+    final userRooms = await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.ROOM.eq(room.id));
 
     for (UserRoom userRoom in userRooms) {
-      users.add(userRoom.user);
+      users.add(userRoom.user!);
     }
 
     return users;

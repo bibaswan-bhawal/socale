@@ -548,6 +548,10 @@ class User extends Model {
   Map<String, dynamic> toJson() => {
     'id': id, 'email': _email, 'schoolEmail': _schoolEmail, 'firstName': _firstName, 'lastName': _lastName, 'dateOfBirth': _dateOfBirth?.format(), 'graduationMonth': _graduationMonth?.format(), 'major': _major, 'minor': _minor, 'college': _college, 'skills': _skills, 'careerGoals': _careerGoals, 'selfDescription': _selfDescription, 'leisureInterests': _leisureInterests, 'idealFriendDescription': _idealFriendDescription, 'situationalDecisions': _situationalDecisions, 'academicInterests': _academicInterests, 'avatar': _avatar, 'anonymousUsername': _anonymousUsername, 'introMatchingCompleted': _introMatchingCompleted, 'matches': _matches, 'profilePicture': _profilePicture, 'notificationToken': _notificationToken, 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format(), 'messages': _messages?.map((Message? e) => e?.toJson()).toList(), 'userRoom': _userRoom?.map((UserRoom? e) => e?.toJson()).toList()
   };
+  
+  Map<String, Object?> toMap() => {
+    'id': id, 'email': _email, 'schoolEmail': _schoolEmail, 'firstName': _firstName, 'lastName': _lastName, 'dateOfBirth': _dateOfBirth, 'graduationMonth': _graduationMonth, 'major': _major, 'minor': _minor, 'college': _college, 'skills': _skills, 'careerGoals': _careerGoals, 'selfDescription': _selfDescription, 'leisureInterests': _leisureInterests, 'idealFriendDescription': _idealFriendDescription, 'situationalDecisions': _situationalDecisions, 'academicInterests': _academicInterests, 'avatar': _avatar, 'anonymousUsername': _anonymousUsername, 'introMatchingCompleted': _introMatchingCompleted, 'matches': _matches, 'profilePicture': _profilePicture, 'notificationToken': _notificationToken, 'createdAt': _createdAt, 'updatedAt': _updatedAt, 'messages': _messages, 'userRoom': _userRoom
+  };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField EMAIL = QueryField(fieldName: "email");

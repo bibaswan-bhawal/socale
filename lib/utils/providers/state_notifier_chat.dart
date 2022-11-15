@@ -32,11 +32,10 @@ class ChatStateNotifier extends StateNotifier<AsyncValue<List<types.Message>>> {
           newMessages.add(
             types.TextMessage(
               id: message.id,
-              author:
-                  room.getChatUIUsers.where((user) => user.id == message.author.id).first,
+              author: room.getChatUIUsers.where((user) => user.id == message.author!.id).first,
               roomId: room.getRoom.id,
-              text: message.text,
-              createdAt: message.createdAt.getDateTimeInUtc().millisecondsSinceEpoch,
+              text: message.text!,
+              createdAt: message.createdAt!.getDateTimeInUtc().millisecondsSinceEpoch,
             ),
           );
         }

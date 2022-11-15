@@ -39,11 +39,9 @@ class ChatService {
     try {
       Room? createdRoom = (await mutateService.createModel(room)) as Room?;
       if (createdRoom == null) return null;
-      UserRoom? createdUserRoom1 =
-          (await mutateService.createModel(userRoom1)) as UserRoom?;
+      UserRoom? createdUserRoom1 = (await mutateService.createModel(userRoom1)) as UserRoom?;
       if (createdUserRoom1 == null) return null;
-      UserRoom? createdUserRoom2 =
-          (await mutateService.createModel(userRoom2)) as UserRoom?;
+      UserRoom? createdUserRoom2 = (await mutateService.createModel(userRoom2)) as UserRoom?;
       if (createdUserRoom2 == null) return null;
 
       return RoomListItem(createdRoom, [currentUser, otherUser], currentUser);
@@ -56,9 +54,7 @@ class ChatService {
     try {
       print("roomId: ${room.id}");
       String userId = (await Amplify.Auth.getCurrentUser()).userId;
-      UserRoom userRoom = (await Amplify.DataStore.query(UserRoom.classType,
-              where: UserRoom.ROOM.eq(room.id).and(UserRoom.USER.eq(userId))))
-          .first;
+      UserRoom userRoom = (await Amplify.DataStore.query(UserRoom.classType, where: UserRoom.ROOM.eq(room.id).and(UserRoom.USER.eq(userId)))).first;
 
       await Amplify.DataStore.delete(userRoom);
     } catch (e, stackTrace) {
@@ -75,10 +71,8 @@ class ChatService {
     if (currentUser == null || otherUser == null) return null;
 
     try {
-      List<UserRoom?> userRooms =
-          await fetchService.fetchAllUserRoomsForUser(currentUser);
-      List<UserRoom?> otherUserRooms =
-          await fetchService.fetchAllUserRoomsForUser(otherUser);
+      List<UserRoom?> userRooms = await fetchService.fetchAllUserRoomsForUser(currentUser);
+      List<UserRoom?> otherUserRooms = await fetchService.fetchAllUserRoomsForUser(otherUser);
 
       HashMap<String, bool> allRooms = HashMap<String, bool>();
       List<Room> commonRooms = [];
@@ -89,7 +83,7 @@ class ChatService {
           return null;
         }
 
-        allRooms.putIfAbsent(userRoom.room.id, () => true);
+        allRooms.putIfAbsent(userRoom.room!.id, () => true);
       }
 
       for (UserRoom? userRoom in otherUserRooms) {
@@ -98,8 +92,8 @@ class ChatService {
           return null;
         }
 
-        if (allRooms.putIfAbsent(userRoom.room.id, () => false)) {
-          commonRooms.add(userRoom.room);
+        if (allRooms.putIfAbsent(userRoom.room!.id, () => false)) {
+          commonRooms.add(userRoom.room!);
         }
       }
 
@@ -108,9 +102,7 @@ class ChatService {
       }
 
       RoomListItem roomListItem = RoomListItem(
-        commonRooms
-            .where((room) => room.roomType == types.RoomType.direct.toString())
-            .first,
+        commonRooms.where((room) => room.roomType == types.RoomType.direct.toString()).first,
         [currentUser, otherUser],
         currentUser,
       );
@@ -123,12 +115,8 @@ class ChatService {
 
   Future<void> sendMessage(String text, Room currentRoom) async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
-    User user = (await Amplify.DataStore.query(User.classType,
-            where: User.ID.eq(userId)))
-        .first;
-    Room room = (await Amplify.DataStore.query(Room.classType,
-            where: Room.ID.eq(currentRoom.id)))
-        .first;
+    User user = (await Amplify.DataStore.query(User.classType, where: User.ID.eq(userId))).first;
+    Room room = (await Amplify.DataStore.query(Room.classType, where: Room.ID.eq(currentRoom.id))).first;
 
     final message = Message(
       text: text,

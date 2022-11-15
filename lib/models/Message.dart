@@ -43,74 +43,29 @@ class Message extends Model {
     return id;
   }
   
-  String get text {
-    try {
-      return _text!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  String? get text {
+    return _text;
   }
   
-  Room get room {
-    try {
-      return _room!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  Room? get room {
+    return _room;
   }
   
-  User get author {
-    try {
-      return _author!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  User? get author {
+    return _author;
   }
   
-  TemporalDateTime get createdAt {
-    try {
-      return _createdAt!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  TemporalDateTime? get createdAt {
+    return _createdAt;
   }
   
-  TemporalDateTime get updatedAt {
-    try {
-      return _updatedAt!;
-    } catch(e) {
-      throw new AmplifyCodeGenModelException(
-          AmplifyExceptionMessages.codeGenRequiredFieldForceCastExceptionMessage,
-          recoverySuggestion:
-            AmplifyExceptionMessages.codeGenRequiredFieldForceCastRecoverySuggestion,
-          underlyingException: e.toString()
-          );
-    }
+  TemporalDateTime? get updatedAt {
+    return _updatedAt;
   }
   
-  const Message._internal({required this.id, required text, required room, required author, required createdAt, required updatedAt}): _text = text, _room = room, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
+  const Message._internal({required this.id, text, room, author, createdAt, updatedAt}): _text = text, _room = room, _author = author, _createdAt = createdAt, _updatedAt = updatedAt;
   
-  factory Message({String? id, required String text, required Room room, required User author, required TemporalDateTime createdAt, required TemporalDateTime updatedAt}) {
+  factory Message({String? id, String? text, Room? room, User? author, TemporalDateTime? createdAt, TemporalDateTime? updatedAt}) {
     return Message._internal(
       id: id == null ? UUID.getUUID() : id,
       text: text,
@@ -180,6 +135,10 @@ class Message extends Model {
   Map<String, dynamic> toJson() => {
     'id': id, 'text': _text, 'room': _room?.toJson(), 'author': _author?.toJson(), 'createdAt': _createdAt?.format(), 'updatedAt': _updatedAt?.format()
   };
+  
+  Map<String, Object?> toMap() => {
+    'id': id, 'text': _text, 'room': _room, 'author': _author, 'createdAt': _createdAt, 'updatedAt': _updatedAt
+  };
 
   static final QueryField ID = QueryField(fieldName: "id");
   static final QueryField TEXT = QueryField(fieldName: "text");
@@ -210,33 +169,33 @@ class Message extends Model {
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Message.TEXT,
-      isRequired: true,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.string)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: Message.ROOM,
-      isRequired: true,
+      isRequired: false,
       targetName: "roomMessagesId",
       ofModelName: (Room).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.belongsTo(
       key: Message.AUTHOR,
-      isRequired: true,
+      isRequired: false,
       targetName: "userMessagesId",
       ofModelName: (User).toString()
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Message.CREATEDAT,
-      isRequired: true,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
     
     modelSchemaDefinition.addField(ModelFieldDefinition.field(
       key: Message.UPDATEDAT,
-      isRequired: true,
+      isRequired: false,
       ofType: ModelFieldType(ModelFieldTypeEnum.dateTime)
     ));
   });

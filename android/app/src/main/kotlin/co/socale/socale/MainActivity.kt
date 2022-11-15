@@ -1,5 +1,4 @@
 package co.socale.socale
-
 import io.flutter.embedding.android.FlutterActivity
 import android.os.Bundle
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
