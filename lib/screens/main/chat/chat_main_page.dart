@@ -27,12 +27,13 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
     with TickerProviderStateMixin {
   final TextEditingController _textEditingController = TextEditingController();
   late TabController _tabController;
-  int _selectedIndex = 0;
+  final TextEditingController controller = TextEditingController();
+  int _selectedIndex = 1;
 
   @override
   void initState() {
     super.initState();
-    _tabController = TabController(length: 2, vsync: this);
+    _tabController = TabController(length: 2, vsync: this, initialIndex: 1);
 
     _tabController.addListener(() {
       setState(() {
@@ -107,6 +108,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
   Widget listEmptyMessage(String message) {
     final size = MediaQuery.of(context).size;
 
+
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -147,7 +149,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
 
   @override
   Widget build(BuildContext context) {
-    final roomState = ref.watch(roomsAsyncController);
+    AsyncValue<List<RoomListItem>> roomState = ref.watch(roomsAsyncController);
     var size = MediaQuery.of(context).size;
 
     return DefaultTabController(
@@ -197,48 +199,59 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                           isCollapsed: true,
                           contentPadding: EdgeInsets.only(top: 10),
                         ),
+                        hintText: "Search",
+                        hintStyle: GoogleFonts.roboto(color: Colors.white),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(50),
+                          borderSide:
+                              BorderSide(style: BorderStyle.none, width: 0),
+                        ),
+                        fillColor: Color(0xFFB7B0B0).withOpacity(0.25),
+                        filled: true,
+                        isCollapsed: true,
+                        contentPadding: EdgeInsets.only(top: 10),
                       ),
                     ),
                   ),
-                  TabBar(
-                    splashFactory: NoSplash.splashFactory,
-                    controller: _tabController,
-                    indicatorWeight: 3,
-                    indicatorColor: _selectedIndex == 0
-                        ? ColorValues.socaleOrange
-                        : Color(0xFFF151DD),
-                    tabs: [
-                      Tab(
-                        child: Text(
-                          "Your Network",
-                          textAlign: TextAlign.center,
-                          style: GoogleFonts.poppins(
-                            color: _selectedIndex == 0
-                                ? ColorValues.socaleOrange
-                                : Colors.white,
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                          ),
+                ),
+                TabBar(
+                  splashFactory: NoSplash.splashFactory,
+                  controller: _tabController,
+                  indicatorWeight: 3,
+                  indicatorColor: _selectedIndex == 0
+                      ? ColorValues.socaleOrange
+                      : Color(0xFFF151DD),
+                  tabs: [
+                    Tab(
+                      child: Text(
+                        "Your Network",
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.poppins(
+                          color: _selectedIndex == 0
+                              ? ColorValues.socaleOrange
+                              : Colors.white,
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
                         ),
                       ),
-                      Tab(
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: 'New Matches',
-                                style: GoogleFonts.poppins(
-                                  color: _selectedIndex == 0
-                                      ? Colors.white
-                                      : Color(0xFFF151DD),
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.bold,
-                                ),
+                    ),
+                    Tab(
+                      child: RichText(
+                        text: TextSpan(
+                          children: [
+                            TextSpan(
+                              text: 'New Matches',
+                              style: GoogleFonts.poppins(
+                                color: _selectedIndex == 0
+                                    ? Colors.white
+                                    : Color(0xFFF151DD),
+                                fontSize: 18,
+                                fontWeight: FontWeight.bold,
                               ),
-                            ],
-                          ),
-                          textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
+                        textAlign: TextAlign.center,
                       ),
                     ],
                   ),
@@ -278,6 +291,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                                           _textEditingController.text.toUpperCase()))
                                   .toList();
                             }
+                          }
 
                             return ImplicitlyAnimatedList(
                               items: networkRooms,
@@ -319,6 +333,7 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                               return listEmptyMessage(
                                   "Find your new matches to fill up this space!");
                             }
+                          }
 
                             return ImplicitlyAnimatedList(
                               items: matchRooms,
@@ -333,10 +348,10 @@ class _ChatListPageState extends ConsumerState<ChatListPage>
                       ],
                     ),
                   ),
-                ],
-              );
-            },
-          ),
+                ),
+              ],
+            );
+          },
         ),
       ),
     );

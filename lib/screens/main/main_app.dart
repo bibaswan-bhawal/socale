@@ -26,6 +26,7 @@ class _MainAppState extends ConsumerState<MainApp>
     with TickerProviderStateMixin {
   bool? transitionAnimation;
   late PageController _pageController;
+
   final NotificationService notificationService = NotificationService();
   Animation<double>? containerAnimation;
   AnimationController? containerAnimationController;
@@ -52,6 +53,7 @@ class _MainAppState extends ConsumerState<MainApp>
   void didChangeDependencies() {
     final userState = ref.watch(userAsyncController);
     final matchState = ref.watch(matchAsyncController);
+    final roomState = ref.watch(roomsAsyncController);
 
     if (transitionAnimation != null && transitionAnimation!) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -91,8 +93,10 @@ class _MainAppState extends ConsumerState<MainApp>
     });
   }
 
-  handleBottomNavigationClick(value) {
-    _pageController.animateToPage(value,
+  void handleBottomNavigationClick(value) {
+    final pageController = ref.read(mainPageController);
+
+    pageController.animateToPage(value,
         duration: Duration(milliseconds: 300),
         curve: Curves.easeInOutCubicEmphasized);
   }
@@ -115,7 +119,7 @@ class _MainAppState extends ConsumerState<MainApp>
                 flex: 1,
                 child: PageView(
                   physics: NeverScrollableScrollPhysics(),
-                  controller: _pageController,
+                  controller: pageController,
                   children: [
                     ChatListPage(),
                     MatchPage(),

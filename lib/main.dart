@@ -43,6 +43,7 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   await dotenv.load(fileName: "assets/.env"); // load environment vars
+
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   await Hive.initFlutter(); // initialize local key storage
   configureDependencies(); // configure routing dependencies
@@ -66,6 +67,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
 
   StreamSubscription<DataStoreHubEvent>? dsEventStream;
   StreamSubscription<AuthHubEvent>? authEventStream;
+
   StreamSubscription<ConnectivityResult>? subscription;
 
   bool _isAmplifyConfigured = false;
@@ -167,6 +169,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       if (session.isSignedIn == true) {
         authService.startAuthStreamListener(); // auth events listener
         await ref.read(userAttributesAsyncController.notifier).setAttributes();
+
       }
 
       ref.read(isLoggedInProvider.state).state = session.isSignedIn;
@@ -186,6 +189,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
   void initState() {
     super.initState();
     SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
+
     _configureAmplify();
   }
 
@@ -229,6 +233,7 @@ class SocaleAppState extends ConsumerState<SocaleApp> {
       final isLoggedIn = ref.read(isLoggedInProvider);
       if (isLoggedIn) {
         bool isOnBoardingComplete = await onboardingService.checkIfUserIsOnboarded();
+
         if (isOnBoardingComplete) {
           final user = await Amplify.Auth.getCurrentUser();
           await ref.read(userAsyncController.notifier).setUser(user.userId);

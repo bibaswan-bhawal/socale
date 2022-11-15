@@ -1,18 +1,16 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
 import 'package:socale/screens/auth_screen/get_started_screen/get_started_screen.dart';
 import 'package:socale/screens/auth_screen/login_screen/login_screen.dart';
 import 'package:socale/screens/auth_screen/register_screen/register_screen.dart';
 import 'package:socale/utils/enums/auth_pages.dart';
-import 'dart:io';
-
 import 'package:socale/utils/system_ui_setter.dart';
 
 class AuthScreen extends StatefulWidget {
   final AuthPages initialScreen;
-  const AuthScreen({Key? key, this.initialScreen = AuthPages.getStarted}) : super(key: key);
+  const AuthScreen({Key? key, this.initialScreen = AuthPages.getStarted})
+      : super(key: key);
 
   @override
   State<AuthScreen> createState() => _AuthScreenState();

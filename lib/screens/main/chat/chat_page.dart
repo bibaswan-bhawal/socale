@@ -222,7 +222,7 @@ class _ChatPageState extends ConsumerState<ChatPage> {
               Container(
                 padding: EdgeInsets.only(left: 10),
                 width: 54,
-                child: room.getRoomPic,
+                child: ClipOval(child: room.getRoomPic),
               ),
               Expanded(
                 child: Padding(
@@ -321,7 +321,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
           PageRouteBuilder(
             pageBuilder: (context, animation, secondaryAnimation) =>
                 ChatPage(room: MatchRoom(room: newRoomList)),
-            transitionsBuilder: (context, animation, secondaryAnimation, child) {
+            transitionsBuilder:
+                (context, animation, secondaryAnimation, child) {
               return SharedAxisTransition(
                 animation: animation,
                 secondaryAnimation: secondaryAnimation,
@@ -413,7 +414,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-  Widget chatRoomBuilder(List<types.Message> messages, RoomListItem roomListItem) {
+  Widget chatRoomBuilder(
+      List<types.Message> messages, RoomListItem roomListItem) {
     return chat_ui.Chat(
       messages: messages,
       onSendPressed: (types.PartialText message) =>
@@ -438,7 +440,8 @@ class _ChatPageState extends ConsumerState<ChatPage> {
     );
   }
 
-  void _handleSendPressed(types.PartialText message, RoomListItem roomListItem) {
+  void _handleSendPressed(
+      types.PartialText message, RoomListItem roomListItem) {
     chatService.sendMessage(message.text, roomListItem.getRoom);
   }
 }

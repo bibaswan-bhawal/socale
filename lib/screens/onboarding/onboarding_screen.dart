@@ -1,6 +1,5 @@
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/translucent_background/translucent_background.dart';
@@ -29,7 +28,6 @@ import 'package:socale/utils/system_ui_setter.dart';
 import 'package:socale/values/colors.dart';
 
 final onboardingPageController = Provider((_) => PageController());
-final bobPageController = Provider((_) => PageController());
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -61,7 +59,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 
     userAttributesProvider.whenData((value) async {
       String? email = value
-          .where((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
+          .where((element) =>
+              element.userAttributeKey == CognitoUserAttributeKey.email)
           .first
           .value;
       if (email.contains("ucsd.edu")) {
