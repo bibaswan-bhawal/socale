@@ -9,79 +9,17 @@ environment:
   sdk: ">=2.16.1 <3.0.0"
 
 dependencies:
-  flutter_riverpod: ^2.0.2
-  hive: ^2.2.3
-  hive_flutter: ^1.1.0
-  cupertino_icons: ^1.0.2
-  flutter_svg: ^1.1.5
-  get: ^4.6.1
-  get_it: ^7.2.0
-  google_fonts: ^3.0.1
-  image_picker: ^0.8.4+11
-  injectable: ^1.5.3
-  pin_code_fields: ^7.4.0
-  flutter_image_compress: ^1.1.0
-  path_provider: ^2.0.11
-  flutter_dotenv: ^5.0.2
-  encrypt: ^5.0.1
-  animations: ^2.0.3
-  provider: ^6.0.3
-  flutter_chat_ui: ^1.6.4
-  flutter_chat_types: ^3.4.5
-  flutter_launcher_icons: ^0.10.0
-  intl: ^0.17.0
-  flutter_keyboard_visibility: ^5.3.0
   flutter:
     sdk: flutter
-  carousel_slider: ^4.1.1
-  uuid: 3.0.6
-  firebase_messaging: ^13.0.1
-  firebase_core: ^1.22.0
-  flutter_local_notifications: ^11.0.0
-  url_launcher: ^6.1.5
-  image_cropper: ^3.0.0
-  smooth_page_indicator: ^1.0.0+2
-  amplify_flutter: ^1.0.0-next.0+3
-  amplify_api: ^1.0.0-next.0+3
-  amplify_auth_cognito: ^1.0.0-next.0+5
-  amplify_datastore: ^1.0.0-next.0+2
-  amplify_storage_s3: ^1.0.0-next.0+2
-  amplify_secure_storage: ^0.1.0
-  amplify_analytics_pinpoint: ^1.0.0-next.0+3
-  aws_signature_v4: ^0.2.2
-  aws_request: ^0.4.0+1
-  remove_emoji: ^0.0.7
-  animated_list_plus: ^0.4.4
-  flutter_native_timezone:
-  device_info_plus:
-  connectivity_plus: ^2.3.9
-  shared_preferences: ^2.0.15
-  flutter_cupertino_date_picker: ^1.0.26+2
+
 
 dev_dependencies:
   flutter_lints: ^2.0.1
-  hive_generator:
-  injectable_generator:
   build_runner:
   flutter_test:
     sdk: flutter
-  integration_test:
-    sdk: flutter
-
-flutter_icons:
-  android: "launcher_icon"
-  ios: true
-  adaptive_icon_background: "#021023"
-  adaptive_icon_foreground: "assets/android_foreground.png"
-  image_path_ios: "assets/logo_ios.png"
-  image_path_android: "assets/logo_android.png"
-  min_sdk_android: 24 # android min sdk min:16, default 21
 
 flutter:
   uses-material-design: true
   assets:
-    - assets/
-    - assets/icons/
-    - assets/images/
-    - assets/images/avatars/
     - google_fonts/

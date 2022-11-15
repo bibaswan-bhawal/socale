@@ -1,1 +1,0 @@
-const numberOfMessagesPerPage = 20;
