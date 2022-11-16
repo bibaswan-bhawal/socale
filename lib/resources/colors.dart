@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 
 class ColorValues {
@@ -9,18 +11,42 @@ class ColorValues {
   static const Color darkPurple = Color(0xFF7E3ECF);
   static const Color lightPurple = Color(0xFFF151DD);
 
-  static const Color lightBlue = Color(0xFF36D1DC);
-  static const Color darkBlue = Color(0xFF479CFF);
+  static const Color lightBlue = Color(0xFF7190FF);
+  static const Color darkBlue = Color(0xFF0C42FF);
 
-  // Social Sign in colors
-  static const Color googleColor = Color(0xFFFFFFFF);
-  static const Color facebookColor = Color(0xFF1877F2);
-  static const Color appleColor = Color(0xFF000000);
+  static const LinearGradient orangeButtonGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [socaleDarkOrange, socaleOrange],
+    stops: [0.3, 0.7],
+    transform: GradientRotation((pi / 180) * -72),
+  );
 
-  static const LinearGradient socaleGradient = LinearGradient(
-    begin: Alignment.topRight,
-    end: Alignment.bottomLeft,
-    colors: [socaleOrange, socaleDarkOrange],
+  static const LinearGradient purpleButtonGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [darkBlue, lightBlue],
+    stops: [0.3, 0.7],
+    transform: GradientRotation((pi / 180) * -72),
+  );
+
+  static final Gradient groupInputBackgroundGradient = (LinearGradient(
+    begin: Alignment.topLeft,
+    end: Alignment.centerRight,
+    colors: [
+      const Color(0x0DA18FEC),
+      const Color(0x0D80A9F9),
+      const Color(0x0DFF83F3),
+      const Color(0x0DE5CFA4),
+      const Color(0x0DEB7960),
+    ],
+  ).lerpTo(LinearGradient(colors: [Colors.white, Colors.white]), 0.95))!;
+
+  static const LinearGradient orangeBackgroundGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [socaleDarkOrange, socaleOrange],
+    transform: GradientRotation((pi / 180) * 30),
   );
 
   static const LinearGradient purpleGradient = LinearGradient(

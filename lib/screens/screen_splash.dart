@@ -29,7 +29,7 @@ class _SplashScreenState extends State<SplashScreen> {
         width: size.width,
         height: size.height,
         decoration: const BoxDecoration(
-          gradient: ColorValues.socaleGradient,
+          gradient: ColorValues.orangeBackgroundGradient,
         ),
         child: Center(
           child: SvgPicture.asset(

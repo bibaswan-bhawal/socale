@@ -18,12 +18,15 @@ class LightOnboardingBackground extends StatelessWidget {
           height: size.height,
         ),
         drawCircles(circleRadius),
-        BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
-          child: Container(
-            color: Colors.white.withOpacity(0.85),
-            width: size.width,
-            height: size.height,
+        Positioned(
+          left: -40,
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
+            child: Container(
+              color: Colors.white.withOpacity(0.85),
+              width: size.width + 40,
+              height: size.height,
+            ),
           ),
         ),
       ],

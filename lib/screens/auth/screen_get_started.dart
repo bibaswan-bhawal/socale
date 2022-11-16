@@ -1,5 +1,3 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,8 +8,9 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/outlined_button.dart';
 import 'package:socale/main.dart';
 import 'package:socale/resources/colors.dart';
+import 'package:socale/screens/auth/register_screen.dart';
+import 'package:socale/utils/animated_navigators.dart';
 import 'package:socale/utils/debug_print_statements.dart';
-import 'package:socale/utils/size_config.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class GetStartedScreen extends ConsumerStatefulWidget {
@@ -26,13 +25,15 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
   late AnimationController animationController;
 
   void goToLogin() async {}
-  goToRegister() async {}
+  goToRegister() async {
+    AnimatedNavigators.goToWithSlide(context, RegisterScreen());
+  }
 
   @override
   void initState() {
     super.initState();
     SystemUI.setSystemUIDark();
-    animationController = AnimationController(duration: const Duration(seconds: 5), vsync: this);
+    animationController = AnimationController(duration: const Duration(seconds: 8), vsync: this);
     animation = CurvedAnimation(parent: animationController, curve: Curves.easeInOutSine)
       ..addListener(() {
         setState(() {});
@@ -41,6 +42,12 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
     animationController.repeat(reverse: true);
 
     printRunTime(appStartTime, "total app startTime");
+  }
+
+  @override
+  void dispose() {
+    animationController.stop(canceled: true);
+    super.dispose();
   }
 
   @override
@@ -59,18 +66,16 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                 children: [
                   Padding(
                     padding: const EdgeInsets.only(top: 20),
-                    child: SvgPicture.asset('assets/logo/color_logo.svg'),
+                    child: Hero(
+                      tag: "auth_logo",
+                      child: SvgPicture.asset('assets/logo/color_logo.svg'),
+                    ),
                   ),
                   Expanded(
                     child: Transform.translate(
                       offset: Offset(0, ((size.height * 0.04) * (animation.value - 0.5))),
                       child: Center(
-                        child: SimpleShadow(
-                          opacity: 0.10,
-                          offset: const Offset(1, 1),
-                          sigma: 2,
-                          child: Image.asset('assets/get_started/cover_illustration.png'),
-                        ),
+                        child: Image.asset('assets/get_started/cover_illustration.png'),
                       ),
                     ),
                   ),
@@ -118,28 +123,23 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
-                    child: SimpleShadow(
-                      opacity: 0.25,
-                      offset: const Offset(1, 1),
-                      sigma: 3,
-                      child: GradientButton(
-                        width: size.width - 60,
-                        height: 48,
-                        linearGradient: ColorValues.socaleGradient,
-                        buttonContent: Text(
-                          "Sign In",
-                          style: GoogleFonts.roboto(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18,
-                          ),
+                    child: GradientButton(
+                      width: size.width - 60,
+                      height: 48,
+                      linearGradient: ColorValues.orangeButtonGradient,
+                      buttonContent: Text(
+                        "Sign In",
+                        style: GoogleFonts.roboto(
+                          color: Colors.white,
+                          fontWeight: FontWeight.bold,
+                          fontSize: 16,
                         ),
-                        onClickEvent: goToLogin,
                       ),
+                      onClickEvent: goToLogin,
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: MediaQuery.of(context).padding.bottom != 0 ? 10 : 20),
+                    padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).padding.bottom),
                     child: OutlineButton(
                       width: size.width - 60,
                       height: 48,
@@ -148,7 +148,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                         style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,
-                          fontSize: 18,
+                          fontSize: 16,
                         ),
                       ),
                       onClickEvent: goToRegister,
