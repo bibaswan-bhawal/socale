@@ -15,9 +15,9 @@ dependencies:
   amplify_flutter: 0.6.10
   amplify_auth_cognito: 0.6.10
 
-  firebase_core: 1.24.0
-  firebase_core_platform_interface: 4.5.1
-  firebase_messaging: 13.1.0
+  firebase_core_platform_interface: 4.0.1
+  firebase_core: 1.8.0
+  firebase_messaging: 10.0.9
 
   cupertino_icons: 1.0.2
   flutter_svg: 1.1.5

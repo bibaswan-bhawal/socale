@@ -1,11 +1,11 @@
 import 'dart:io';
 
-import 'package:flutter/foundation.dart';
-import 'package:socale/firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
-import 'package:socale/services/native_methods_service.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:socale/firebase_options.dart';
+import 'package:socale/services/native_methods_service.dart';
 
 late AndroidNotificationChannel channel;
 late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
@@ -13,7 +13,6 @@ late FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin;
 bool isFlutterLocalNotificationsInitialized = false;
 
 // Handle notifications that arrive in the background for android and IOS, does not get called if app is terminated in IOS.
-
 @pragma('vm:entry-point')
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (kDebugMode) print('Handling a background message ${message.data}');
@@ -29,6 +28,8 @@ Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
 Future<void> setupFlutterNotifications() async {
   if (isFlutterLocalNotificationsInitialized) return;
 
+  await Firebase.initializeApp();
+
   channel = const AndroidNotificationChannel(
     'message_notification_channel',
     'Messages',
@@ -42,7 +43,8 @@ Future<void> setupFlutterNotifications() async {
       .resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>()
       ?.createNotificationChannel(channel);
 
-  await FirebaseMessaging.instance.setForegroundNotificationPresentationOptions(alert: false, badge: false, sound: false);
+  await FirebaseMessaging.instance
+      .setForegroundNotificationPresentationOptions(alert: false, badge: false, sound: false);
 
   isFlutterLocalNotificationsInitialized = true;
 }
@@ -78,16 +80,20 @@ void showFlutterNotification(RemoteMessage message, AuthorizationStatus permissi
 }
 
 class NotificationService {
+  static String? deviceToken;
+
   late FirebaseMessaging fcmMessaging;
   late NotificationSettings notificationSettings;
   AuthorizationStatus permissionAuthStatus = AuthorizationStatus.notDetermined;
-
   NotificationService();
 
   Future<void> initNotificationService() async {
     fcmMessaging = FirebaseMessaging.instance;
 
     await requestPermissions();
+
+    deviceToken = await FirebaseMessaging.instance.getToken();
+    print(deviceToken);
 
     FirebaseMessaging.onMessage.listen(onMessageReceived);
     FirebaseMessaging.onMessageOpenedApp.listen(onMessageReceived);
@@ -104,7 +110,8 @@ class NotificationService {
   }
 
   Future<void> requestPermissions() async {
-    notificationSettings = await fcmMessaging.requestPermission(alert: true, badge: true, sound: true);
+    notificationSettings =
+        await fcmMessaging.requestPermission(alert: true, badge: true, sound: true);
     permissionAuthStatus = notificationSettings.authorizationStatus;
     if (kDebugMode) print("Notification permission status: $permissionAuthStatus");
   }
@@ -116,7 +123,7 @@ class NotificationService {
 
   static Future<void> initBackgroundNotificationService() async {
     // Init Firebase and FCM
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    await Firebase.initializeApp(name: "socale", options: DefaultFirebaseOptions.currentPlatform);
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     // Check for notifications that came in while app was terminated

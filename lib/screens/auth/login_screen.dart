@@ -103,13 +103,15 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextSpan(text: "Don't have an account? "),
                         TextSpan(
                           text: "Register",
-                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black.withOpacity(0.5)),
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 40 - MediaQuery.of(context).padding.bottom),
+                    padding: EdgeInsets.only(top: 15, bottom: 20),
                     child: Hero(
                       tag: "login_button",
                       child: GradientButton(
@@ -129,7 +131,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 20),
+                    padding: EdgeInsets.only(bottom: 10),
                     child: Text(
                       "Forgot Password?",
                       style: TextStyle(

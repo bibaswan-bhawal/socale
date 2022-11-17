@@ -9,6 +9,7 @@ void main() async {
   appStartTime = DateTime.now();
 
   WidgetsFlutterBinding.ensureInitialized();
+
   await NotificationService.initBackgroundNotificationService();
 
   runApp(const ProviderScope(child: MainApp()));

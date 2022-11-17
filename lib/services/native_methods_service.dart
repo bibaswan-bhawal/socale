@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/services.dart';
 
-const platform = MethodChannel('co.socale.socale/ios');
+const platform = MethodChannel('com.socale.socale/ios');
 
 Future<void> getNotificationsFromIosCoreData() async {
   List notifications;
