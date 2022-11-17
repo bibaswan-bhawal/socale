@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +7,9 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/grouped_input_field.dart';
 import 'package:socale/components/text_fields/group_input_fields/grouped_input_form.dart';
 import 'package:socale/resources/colors.dart';
+import 'package:socale/screens/auth/login_screen.dart';
+import 'package:socale/utils/animated_navigators.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends StatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
@@ -125,6 +129,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
                               ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  await launchUrl(
+                                    Uri.parse('http://socale.co/tos'),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
                             ),
                             TextSpan(text: " & "),
                             TextSpan(
@@ -132,6 +143,13 @@ class _RegisterScreenState extends State<RegisterScreen> {
                               style: TextStyle(
                                 decoration: TextDecoration.underline,
                               ),
+                              recognizer: TapGestureRecognizer()
+                                ..onTap = () async {
+                                  await launchUrl(
+                                    Uri.parse('http://socale.co/privacypolicy'),
+                                    mode: LaunchMode.externalApplication,
+                                  );
+                                },
                             ),
                           ],
                         ),
@@ -151,12 +169,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                       children: [
                         TextSpan(text: "Already have an account? "),
                         TextSpan(
-                          text: "Sign In",
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Colors.black.withOpacity(0.5),
-                          ),
-                        ),
+                            text: "Sign In",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black.withOpacity(0.5),
+                            ),
+                            recognizer: TapGestureRecognizer()
+                              ..onTap = () {
+                                AnimatedNavigators.replaceGoToWithSlide(context, LoginScreen());
+                              }),
                       ],
                     ),
                   ),

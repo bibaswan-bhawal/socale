@@ -38,6 +38,7 @@ class _GroupedInputFieldState extends State<GroupedInputField> {
         fontSize: 15,
         letterSpacing: -0.3,
       ),
+      initialValue: "bob",
       cursorColor: ColorValues.socaleOrange,
       cursorRadius: Radius.circular(1),
       keyboardType: widget.textInputType,

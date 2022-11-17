@@ -21,8 +21,7 @@ class GetStartedScreen extends ConsumerStatefulWidget {
   ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
-    with SingleTickerProviderStateMixin {
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with SingleTickerProviderStateMixin {
   late CurvedAnimation animation;
   late AnimationController animationController;
 
@@ -147,8 +146,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                        top: 10, bottom: 40 - MediaQuery.of(context).padding.bottom),
+                    padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).padding.bottom),
                     child: OutlineButton(
                       width: size.width - 60,
                       height: 48,

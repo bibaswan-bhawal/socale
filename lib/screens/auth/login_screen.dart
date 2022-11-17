@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -6,6 +7,9 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/grouped_input_field.dart';
 import 'package:socale/components/text_fields/group_input_fields/grouped_input_form.dart';
 import 'package:socale/resources/colors.dart';
+import 'package:socale/screens/auth/register_screen.dart';
+import 'package:socale/utils/animated_navigators.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -103,9 +107,11 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextSpan(text: "Don't have an account? "),
                         TextSpan(
                           text: "Register",
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.black.withOpacity(0.5)),
+                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              AnimatedNavigators.replaceGoToWithSlide(context, RegisterScreen());
+                            },
                         ),
                       ],
                     ),

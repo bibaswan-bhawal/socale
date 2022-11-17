@@ -1,5 +1,5 @@
 import 'package:animations/animations.dart';
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 
 class AnimatedNavigators {
   static void goToWithSlide(BuildContext context, Widget screen) {
@@ -11,6 +11,22 @@ class AnimatedNavigators {
             animation: animation,
             secondaryAnimation: secondaryAnimation,
             transitionType: SharedAxisTransitionType.horizontal,
+            child: child,
+          );
+        },
+      ),
+    );
+  }
+
+  static void replaceGoToWithSlide(BuildContext context, Widget screen) {
+    Navigator.of(context).pushReplacement(
+      PageRouteBuilder(
+        pageBuilder: (context, animation, secondaryAnimation) => screen,
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          return FadeThroughTransition(
+            animation: animation,
+            secondaryAnimation: secondaryAnimation,
+            fillColor: Colors.white,
             child: child,
           );
         },

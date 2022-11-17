@@ -31,6 +31,7 @@ dependencies:
   flutter_local_notifications: 12.0.3
   simple_shadow: 0.3.0
   inner_shadow_widget: ^0.0.3
+  url_launcher: ^6.1.6
 
 dev_dependencies:
   flutter_test:
