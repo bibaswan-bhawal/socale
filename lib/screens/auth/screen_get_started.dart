@@ -8,6 +8,7 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/outlined_button.dart';
 import 'package:socale/main.dart';
 import 'package:socale/resources/colors.dart';
+import 'package:socale/screens/auth/login_screen.dart';
 import 'package:socale/screens/auth/register_screen.dart';
 import 'package:socale/utils/animated_navigators.dart';
 import 'package:socale/utils/debug_print_statements.dart';
@@ -24,7 +25,10 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
   late CurvedAnimation animation;
   late AnimationController animationController;
 
-  void goToLogin() async {}
+  void goToLogin() async {
+    AnimatedNavigators.goToWithSlide(context, LoginScreen());
+  }
+
   goToRegister() async {
     AnimatedNavigators.goToWithSlide(context, RegisterScreen());
   }
@@ -123,19 +127,22 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                   ),
                   Padding(
                     padding: const EdgeInsets.only(top: 10),
-                    child: GradientButton(
-                      width: size.width - 60,
-                      height: 48,
-                      linearGradient: ColorValues.orangeButtonGradient,
-                      buttonContent: Text(
-                        "Sign In",
-                        style: GoogleFonts.roboto(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
+                    child: Hero(
+                      tag: "login_button",
+                      child: GradientButton(
+                        width: size.width - 60,
+                        height: 48,
+                        linearGradient: ColorValues.orangeButtonGradient,
+                        buttonContent: Text(
+                          "Sign In",
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
                         ),
+                        onClickEvent: goToLogin,
                       ),
-                      onClickEvent: goToLogin,
                     ),
                   ),
                   Padding(
