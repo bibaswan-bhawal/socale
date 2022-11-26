@@ -20,17 +20,7 @@ class AnimatedNavigators {
 
   static void replaceGoToWithSlide(BuildContext context, Widget screen) {
     Navigator.of(context).pushReplacement(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, secondaryAnimation) => screen,
-        transitionsBuilder: (context, animation, secondaryAnimation, child) {
-          return FadeThroughTransition(
-            animation: animation,
-            secondaryAnimation: secondaryAnimation,
-            fillColor: Colors.white,
-            child: child,
-          );
-        },
-      ),
+      PageRouteBuilder(pageBuilder: (context, animation, secondaryAnimation) => screen),
     );
   }
 }

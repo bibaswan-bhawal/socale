@@ -1,4 +1,5 @@
 import 'dart:core';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/providers.dart';
@@ -51,13 +52,16 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
   }
 
   Widget mainUIBuilder() {
-    return MaterialApp(
-      navigatorKey: navigatorKey,
-      theme: Themes.materialAppThemeData,
-      debugShowCheckedModeBanner: false,
-      title: 'Socale',
-      initialRoute: Routes.main,
-      routes: Routes.appRoutes,
+    return GestureDetector(
+      onTap: () => WidgetsBinding.instance.focusManager.primaryFocus?.unfocus(),
+      child: MaterialApp(
+        navigatorKey: navigatorKey,
+        theme: Themes.materialAppThemeData,
+        debugShowCheckedModeBanner: false,
+        title: 'Socale',
+        initialRoute: Routes.main,
+        routes: Routes.appRoutes,
+      ),
     );
   }
 }

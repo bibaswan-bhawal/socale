@@ -42,10 +42,8 @@ function confirm() {
   var cognitoidentityserviceprovider = new AWS.CognitoIdentityServiceProvider();
 
   cognitoidentityserviceprovider.confirmSignUp(params, function (err, data) {
-    console.log(redirectUrl);
     if (err) {
-    console.log(err.message);
-      if (err.message === 'User cannot be confirmed. Current status is CONFIRMED') {
+      if (err.message === 'User cannot be confirm. Current status is CONFIRMED') {
         window.location.replace(redirectUrl);
       }
     } else {

@@ -4,11 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
-import 'package:socale/components/text_fields/group_input_fields/grouped_input_field.dart';
-import 'package:socale/components/text_fields/group_input_fields/grouped_input_form.dart';
+import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
+import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/login_screen.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/animated_navigators.dart';
+import 'package:socale/utils/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -19,6 +21,82 @@ class RegisterScreen extends StatefulWidget {
 }
 
 class _RegisterScreenState extends State<RegisterScreen> {
+  GlobalKey<FormState> formState = GlobalKey<FormState>();
+  GlobalKey<FormFieldState> emailFieldState = GlobalKey<FormFieldState>();
+  GlobalKey<FormFieldState> passwordFieldState = GlobalKey<FormFieldState>();
+  GlobalKey<FormFieldState> confirmPasswordFieldState = GlobalKey<FormFieldState>();
+
+  bool formError = false;
+  bool isLoading = false;
+
+  String errorMessage = "";
+
+  String? email;
+  String? password;
+  String? confirmPassword;
+
+  saveEmail(value) => email = value;
+  savePassword(value) => password = value;
+  saveConfirmPassword(value) => confirmPassword = value;
+
+  Future<void> onClickRegister() async {
+    final form = formState.currentState!;
+    if (form.validate() && !isLoading) {
+      setState(() => isLoading = true);
+
+      setState(() => formError = false);
+      setState(() => errorMessage = "");
+      form.save();
+
+      if (password != confirmPassword) {
+        setState(() {
+          formError = true;
+          errorMessage = "Password don't match";
+        });
+
+        setState(() => isLoading = false);
+        return;
+      }
+
+      print("Register Account with email:$email and password:$password");
+
+      await AuthService.signUpUser(email!, password!);
+
+      setState(() => isLoading = false);
+    } else {
+      showError();
+    }
+  }
+
+  void showError() {
+    final emailField = emailFieldState.currentState!;
+    final passwordField = passwordFieldState.currentState!;
+    final confirmPasswordField = confirmPasswordFieldState.currentState!;
+
+    if (emailField.errorText != null && passwordField.errorText != null) {
+      setState(() {
+        formError = true;
+        errorMessage = "Enter a valid email and password";
+      });
+    }
+    if (emailField.errorText != null) {
+      setState(() {
+        formError = true;
+        errorMessage = "Enter a valid email";
+      });
+    } else if (passwordField.errorText != null) {
+      setState(() {
+        formError = true;
+        errorMessage = "Enter a valid 8 character password";
+      });
+    } else if (confirmPasswordField.errorText != null) {
+      setState(() {
+        formError = true;
+        errorMessage = "Password don't match";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -28,11 +106,11 @@ class _RegisterScreenState extends State<RegisterScreen> {
       body: Stack(
         children: [
           LightOnboardingBackground(),
-          Padding(
-            padding: const EdgeInsets.only(left: 24, top: 60),
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              behavior: HitTestBehavior.translucent,
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            behavior: HitTestBehavior.translucent,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24, top: 60),
               child: SvgPicture.asset('assets/icons/back.svg'),
             ),
           ),
@@ -69,38 +147,46 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
-                    child: GroupedInputForm(
-                      children: [
-                        GroupedInputField(
-                          hintText: "Email Address",
-                          textInputType: TextInputType.emailAddress,
-                          prefixIcon: SvgPicture.asset(
-                            'assets/icons/email.svg',
-                            color: Color(0xFF808080),
-                            width: 16,
+                    child: Form(
+                      key: formState,
+                      child: GroupInputForm(
+                        isError: formError,
+                        errorMessage: errorMessage,
+                        children: [
+                          GroupInputFormField(
+                            key: emailFieldState,
+                            hintText: "Email Address",
+                            textInputType: TextInputType.emailAddress,
+                            textInputAction: TextInputAction.next,
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: Color(0xFF808080), width: 16),
+                            onSaved: saveEmail,
+                            validator: Validators.validateEmail,
                           ),
-                        ),
-                        GroupedInputField(
-                          hintText: "Password",
-                          textInputType: TextInputType.visiblePassword,
-                          prefixIcon: SvgPicture.asset(
-                            'assets/icons/lock.svg',
-                            color: Color(0xFF808080),
-                            width: 16,
+                          GroupInputFormField(
+                            key: passwordFieldState,
+                            hintText: "Password",
+                            textInputType: TextInputType.visiblePassword,
+                            textInputAction: TextInputAction.next,
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
+                            isObscured: true,
+                            onSaved: savePassword,
+                            validator: Validators.validatePassword,
                           ),
-                          isObscured: true,
-                        ),
-                        GroupedInputField(
-                          hintText: "Confirm Password",
-                          textInputType: TextInputType.visiblePassword,
-                          prefixIcon: SvgPicture.asset(
-                            'assets/icons/lock.svg',
-                            color: Color(0xFF808080),
-                            width: 16,
+                          GroupInputFormField(
+                            key: confirmPasswordFieldState,
+                            hintText: "Confirm Password",
+                            textInputType: TextInputType.visiblePassword,
+                            textInputAction: TextInputAction.done,
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
+                            isObscured: true,
+                            onSaved: saveConfirmPassword,
+                            validator: Validators.validatePassword,
                           ),
-                          isObscured: true,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Column(
@@ -182,7 +268,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 40 - MediaQuery.of(context).padding.bottom),
+                    padding: EdgeInsets.only(
+                        top: 15, bottom: 40 - MediaQuery.of(context).padding.bottom),
                     child: GradientButton(
                       width: size.width - 60,
                       height: 48,
@@ -195,7 +282,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                           fontSize: 16,
                         ),
                       ),
-                      onClickEvent: () => {},
+                      onClickEvent: onClickRegister,
                     ),
                   ),
                 ],

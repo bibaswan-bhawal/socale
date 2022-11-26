@@ -1,6 +1,14 @@
 [
   {
-    "groupName": "ucsd",
+    "groupName": "UCSD",
     "precedence": 1
+  },
+  {
+    "groupName": "UCLA",
+    "precedence": 2
+  },
+  {
+    "groupName": "UCBerkley",
+    "precedence": 3
   }
 ]

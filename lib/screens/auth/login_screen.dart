@@ -4,12 +4,13 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
-import 'package:socale/components/text_fields/group_input_fields/grouped_input_field.dart';
-import 'package:socale/components/text_fields/group_input_fields/grouped_input_form.dart';
+import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
+import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
+import 'package:socale/components/utils/keyboard_safe_area.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/register_screen.dart';
 import 'package:socale/utils/animated_navigators.dart';
-import 'package:url_launcher/url_launcher.dart';
+import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
@@ -19,6 +20,56 @@ class LoginScreen extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<LoginScreen> {
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  GlobalKey<FormFieldState> emailFieldState = GlobalKey<FormFieldState>();
+  GlobalKey<FormFieldState> passwordFieldState = GlobalKey<FormFieldState>();
+
+  bool formError = false;
+  String errorMessage = "";
+
+  String? email;
+  String? password;
+
+  saveEmail(value) => email = value;
+  savePassword(value) => password = value;
+
+  Future<void> onClickLogin() async {
+    final form = formKey.currentState!;
+
+    if (form.validate()) {
+      setState(() => formError = false);
+      setState(() => errorMessage = "");
+
+      form.save();
+
+      print("Sign In Account with email:$email and password:$password");
+    } else {
+      showError();
+    }
+  }
+
+  void showError() {
+    final emailField = emailFieldState.currentState!;
+    final passwordField = passwordFieldState.currentState!;
+
+    if (emailField.errorText != null && passwordField.errorText != null) {
+      setState(() {
+        formError = true;
+        errorMessage = "Enter a valid email and password";
+      });
+    } else if (emailField.errorText != null) {
+      setState(() {
+        formError = true;
+        errorMessage = "Enter a valid email";
+      });
+    } else if (passwordField.errorText != null) {
+      setState(() {
+        formError = true;
+        errorMessage = "Enter a valid password";
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
@@ -28,15 +79,15 @@ class _LoginScreenState extends State<LoginScreen> {
       body: Stack(
         children: [
           const LightOnboardingBackground(),
-          Padding(
-            padding: const EdgeInsets.only(left: 24, top: 60),
-            child: GestureDetector(
-              onTap: () => Navigator.pop(context),
-              behavior: HitTestBehavior.translucent,
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            behavior: HitTestBehavior.translucent,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24, top: 60),
               child: SvgPicture.asset('assets/icons/back.svg'),
             ),
           ),
-          SafeArea(
+          KeyboardSafeArea(
             child: Center(
               child: Column(
                 children: [
@@ -69,28 +120,35 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
-                    child: GroupedInputForm(
-                      children: [
-                        GroupedInputField(
-                          hintText: "Email Address",
-                          textInputType: TextInputType.emailAddress,
-                          prefixIcon: SvgPicture.asset(
-                            'assets/icons/email.svg',
-                            color: Color(0xFF808080),
-                            width: 16,
+                    child: Form(
+                      key: formKey,
+                      child: GroupInputForm(
+                        isError: formError,
+                        errorMessage: errorMessage,
+                        children: [
+                          GroupInputFormField(
+                            key: emailFieldState,
+                            hintText: "Email Address",
+                            textInputType: TextInputType.emailAddress,
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: Color(0xFF808080), width: 16),
+                            onSaved: saveEmail,
+                            validator: Validators.validateEmail,
+                            textInputAction: TextInputAction.next,
                           ),
-                        ),
-                        GroupedInputField(
-                          hintText: "Password",
-                          textInputType: TextInputType.visiblePassword,
-                          prefixIcon: SvgPicture.asset(
-                            'assets/icons/lock.svg',
-                            color: Color(0xFF808080),
-                            width: 16,
+                          GroupInputFormField(
+                            key: passwordFieldState,
+                            hintText: "Password",
+                            textInputType: TextInputType.visiblePassword,
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
+                            isObscured: true,
+                            onSaved: savePassword,
+                            validator: Validators.validatePassword,
+                            textInputAction: TextInputAction.done,
                           ),
-                          isObscured: true,
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                   Expanded(child: Container()),
@@ -107,7 +165,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextSpan(text: "Don't have an account? "),
                         TextSpan(
                           text: "Register",
-                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black.withOpacity(0.5)),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               AnimatedNavigators.replaceGoToWithSlide(context, RegisterScreen());
@@ -132,7 +192,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             fontSize: 16,
                           ),
                         ),
-                        onClickEvent: () {},
+                        onClickEvent: onClickLogin,
                       ),
                     ),
                   ),

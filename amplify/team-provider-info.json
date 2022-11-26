@@ -19,8 +19,11 @@
       },
       "function": {
         "socaleAuthCustomMessage": {
+          "REDIRECTURL": "www.socale.co/account/verified",
+          "EMAILSUBJECT": "Your verification code",
+          "EMAILMESSAGE": "blah blah blah",
           "deploymentBucketName": "amplify-socale-dev-114352-deployment",
-          "s3Key": "amplify-builds/socaleAuthCustomMessage-676e35594739352b5934-build.zip"
+          "s3Key": "amplify-builds/socaleAuthCustomMessage-332b3235667274494f47-build.zip"
         }
       }
     }

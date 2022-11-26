@@ -1,10 +1,10 @@
 {
   "version": "1",
   "cognitoConfig": {
-    "identityPoolName": "socale_auth_dev",
+    "identityPoolName": "socale_identity_pool",
     "allowUnauthenticatedIdentities": false,
-    "resourceNameTruncated": "socaledc8294a3",
-    "userPoolName": "socale-userpool-dev",
+    "resourceNameTruncated": "socale5f46e01c",
+    "userPoolName": "socale_userpool",
     "autoVerifiedAttributes": [
       "email"
     ],
@@ -14,10 +14,10 @@
     ],
     "smsAuthenticationMessage": "Your authentication code is {####}",
     "smsVerificationMessage": "Your verification code is {####}",
-    "emailVerificationSubject": "Verify your Socale email",
-    "emailVerificationMessage": "Welcome to Socale, we are excited to have join our community. Verify your link using this {####}",
-    "defaultPasswordPolicy": false,
-    "passwordPolicyMinLength": "8",
+    "emailVerificationSubject": "Your verification code",
+    "emailVerificationMessage": "Your verification code is {####}",
+    "defaultPasswordPolicy": true,
+    "passwordPolicyMinLength": 8,
     "passwordPolicyCharacters": [],
     "requiredAttributes": [
       "email"
@@ -31,14 +31,13 @@
     "userpoolClientReadAttributes": [
       "email"
     ],
-    "userpoolClientLambdaRole": "socaledc8294a3_userpoolclient_lambda_role",
+    "userpoolClientLambdaRole": "socale5f46e01c_userpoolclient_lambda_role",
     "userpoolClientSetAttributes": false,
-    "sharedId": "dc8294a3",
+    "sharedId": "5f46e01c",
     "resourceName": "socaleAuth",
     "authSelections": "identityPoolAndUserPool",
     "useDefault": "manual",
     "thirdPartyAuth": false,
-    "authProviders": [],
     "usernameAttributes": [
       "email"
     ],
@@ -51,43 +50,13 @@
     },
     "hostedUI": false,
     "userPoolGroupList": [
-      "ucsd"
+      "UCSD",
+      "UCLA",
+      "UCBerkley"
     ],
     "serviceName": "Cognito",
-    "usernameCaseSensitive": false,
-    "useEnabledMfas": true,
-    "authRoleArn": {
-      "Fn::GetAtt": [
-        "AuthRole",
-        "Arn"
-      ]
-    },
-    "unauthRoleArn": {
-      "Fn::GetAtt": [
-        "UnauthRole",
-        "Arn"
-      ]
-    },
-    "breakCircularDependency": true,
-    "dependsOn": [
-      {
-        "category": "function",
-        "resourceName": "socaleAuthCustomMessage",
-        "triggerProvider": "Cognito",
-        "attributes": [
-          "Arn",
-          "Name"
-        ]
-      }
-    ],
-    "signinwithappleAuthorizeScopes": [
-      "email"
-    ],
     "verificationBucketName": "socaleauthverificationbucket",
-    "parentStack": {
-      "Ref": "AWS::StackId"
-    },
-    "permissions": [],
-    "authTriggerConnections": "[\n  {\n    \"triggerType\": \"CustomMessage\",\n    \"lambdaFunctionName\": \"socaleAuthCustomMessage\"\n  }\n]"
+    "usernameCaseSensitive": false,
+    "useEnabledMfas": true
   }
-}
+} 

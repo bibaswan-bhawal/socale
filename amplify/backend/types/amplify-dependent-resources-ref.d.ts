@@ -1,7 +1,9 @@
 export type AmplifyDependentResourcesAttributes = {
     "auth": {
         "userPoolGroups": {
-            "ucsdGroupRole": "string"
+            "UCSDGroupRole": "string",
+            "UCLAGroupRole": "string",
+            "UCBerkleyGroupRole": "string"
         },
         "socaleAuth": {
             "IdentityPoolId": "string",
@@ -10,10 +12,7 @@ export type AmplifyDependentResourcesAttributes = {
             "UserPoolArn": "string",
             "UserPoolName": "string",
             "AppClientIDWeb": "string",
-            "AppClientID": "string",
-            "GoogleWebClient": "string",
-            "FacebookWebClient": "string",
-            "AppleWebClient": "string"
+            "AppClientID": "string"
         }
     },
     "function": {
