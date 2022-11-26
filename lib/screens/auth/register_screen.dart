@@ -58,8 +58,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
 
-      print("Register Account with email:$email and password:$password");
-
       await AuthService.signUpUser(email!, password!);
 
       setState(() => isLoading = false);
@@ -87,12 +85,12 @@ class _RegisterScreenState extends State<RegisterScreen> {
     } else if (passwordField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Enter a valid 8 character password";
+        errorMessage = "Password must be at least 8 characters";
       });
     } else if (confirmPasswordField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Password don't match";
+        errorMessage = "Passwords don't match";
       });
     }
   }
@@ -158,8 +156,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             hintText: "Email Address",
                             textInputType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                           ),
@@ -168,8 +165,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             hintText: "Password",
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -179,8 +175,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                             hintText: "Confirm Password",
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: saveConfirmPassword,
                             validator: Validators.validatePassword,
@@ -268,8 +263,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(
-                        top: 15, bottom: 40 - MediaQuery.of(context).padding.bottom),
+                    padding: EdgeInsets.only(top: 15, bottom: 40 - MediaQuery.of(context).padding.bottom),
                     child: GradientButton(
                       width: size.width - 60,
                       height: 48,

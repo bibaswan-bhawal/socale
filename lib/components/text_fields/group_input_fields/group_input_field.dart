@@ -32,11 +32,18 @@ class _GroupInputFieldState extends State<GroupInputField> {
   bool shouldObscure = false;
 
   @override
-  void initState() {
-    super.initState();
+  void didChangeDependencies() {
+    super.didChangeDependencies();
 
     controller = TextEditingController(text: widget.initialValue ?? "");
+
     if (widget.isObscured) shouldObscure = widget.isObscured;
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (widget.onChanged != null && widget.initialValue != null) {
+        widget.onChanged!(widget.initialValue!);
+      }
+    });
   }
 
   @override
@@ -49,8 +56,8 @@ class _GroupInputFieldState extends State<GroupInputField> {
   Widget build(BuildContext context) {
     return TextField(
       controller: controller,
-      style: GoogleFonts.roboto(fontSize: 15, letterSpacing: -0.3),
       onChanged: widget.onChanged,
+      style: GoogleFonts.roboto(fontSize: 15, letterSpacing: -0.3),
       cursorColor: ColorValues.socaleOrange,
       cursorRadius: Radius.circular(1),
       keyboardType: widget.textInputType,

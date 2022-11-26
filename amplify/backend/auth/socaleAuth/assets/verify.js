@@ -43,7 +43,7 @@ function confirm() {
 
   cognitoidentityserviceprovider.confirmSignUp(params, function (err, data) {
     if (err) {
-      if (err.message === 'User cannot be confirm. Current status is CONFIRMED') {
+      if (err.message === 'User cannot be confirmed. Current status is CONFIRMED') {
         window.location.replace(redirectUrl);
       }
     } else {

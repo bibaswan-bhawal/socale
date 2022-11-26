@@ -8,6 +8,7 @@ import 'package:socale/components/text_fields/group_input_fields/group_input_for
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
 import 'package:socale/resources/colors.dart';
+import 'package:socale/screens/auth/forgot_password_screen.dart';
 import 'package:socale/screens/auth/register_screen.dart';
 import 'package:socale/utils/animated_navigators.dart';
 import 'package:socale/utils/validators.dart';
@@ -76,6 +77,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.white,
       body: Stack(
         children: [
           const LightOnboardingBackground(),
@@ -130,8 +132,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             key: emailFieldState,
                             hintText: "Email Address",
                             textInputType: TextInputType.emailAddress,
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                             textInputAction: TextInputAction.next,
@@ -140,8 +141,7 @@ class _LoginScreenState extends State<LoginScreen> {
                             key: passwordFieldState,
                             hintText: "Password",
                             textInputType: TextInputType.visiblePassword,
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -166,8 +166,9 @@ class _LoginScreenState extends State<LoginScreen> {
                         TextSpan(
                           text: "Register",
                           style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.black.withOpacity(0.5)),
+                            decoration: TextDecoration.underline,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
                               AnimatedNavigators.replaceGoToWithSlide(context, RegisterScreen());
@@ -198,13 +199,19 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   Padding(
                     padding: EdgeInsets.only(bottom: 10),
-                    child: Text(
-                      "Forgot Password?",
-                      style: TextStyle(
-                        decoration: TextDecoration.underline,
-                        fontWeight: FontWeight.w500,
-                        fontSize: 12,
-                        color: Colors.black.withOpacity(0.75),
+                    child: GestureDetector(
+                      onTap: () {
+                        AnimatedNavigators.goToWithSlide(context, ForgotPasswordScreen());
+                      },
+                      behavior: HitTestBehavior.translucent,
+                      child: Text(
+                        "Forgot Password?",
+                        style: TextStyle(
+                          decoration: TextDecoration.underline,
+                          fontWeight: FontWeight.w500,
+                          fontSize: 12,
+                          color: Colors.black.withOpacity(0.75),
+                        ),
                       ),
                     ),
                   ),

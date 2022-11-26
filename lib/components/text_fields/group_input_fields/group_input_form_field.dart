@@ -27,6 +27,7 @@ class GroupInputFormField extends FormField<String> {
           builder: (FormFieldState<String> state) {
             return GroupInputField(
               hintText: hintText,
+              initialValue: initialValue,
               textInputType: textInputType,
               textInputAction: textInputAction,
               prefixIcon: prefixIcon,

@@ -13,14 +13,13 @@
       "value": "resourceName"
     }
   ],
-  "triggerDir": "/snapshot/repo/build/node_modules/@aws-amplify/amplify-category-auth/provider-utils/awscloudformation/triggers/CustomMessage",
+  "triggerDir": "C:\\snapshot\\repo\\build\\node_modules\\@aws-amplify\\amplify-category-auth\\provider-utils\\awscloudformation\\triggers\\CustomMessage",
   "triggerTemplate": "CustomMessage.json.ejs",
   "triggerEventPath": "CustomMessage.event.json",
   "roleName": "socaleAuthCustomMessage",
   "skipEdit": true,
-  "REDIRECTURL": "www.socale.co/account/verified",
-  "EMAILSUBJECT": "Your verification code",
-  "EMAILMESSAGE": "blah blah blah",
+  "REDIRECTURL": "https://www.socale.co/account/verified",
+  "EMAILSUBJECT": "Verify your email for Socale",
   "RESOURCENAME": "resourceName",
   "enableCors": false
 }

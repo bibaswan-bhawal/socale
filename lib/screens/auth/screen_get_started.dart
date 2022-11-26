@@ -76,10 +76,12 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                     ),
                   ),
                   Expanded(
-                    child: Transform.translate(
-                      offset: Offset(0, ((size.height * 0.04) * (animation.value - 0.5))),
-                      child: Center(
-                        child: Image.asset('assets/get_started/cover_illustration.png'),
+                    child: RepaintBoundary(
+                      child: Transform.translate(
+                        offset: Offset(0, ((size.height * 0.04) * (animation.value - 0.5))),
+                        child: Center(
+                          child: Image.asset('assets/get_started/cover_illustration.png'),
+                        ),
                       ),
                     ),
                   ),
@@ -113,6 +115,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                           textAlign: TextAlign.center,
                           style: GoogleFonts.roboto(
                             fontSize: (size.width * 0.04),
+                            color: ColorValues.textSubtitle,
                           ),
                         ),
                         Text(
@@ -120,6 +123,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                           textAlign: TextAlign.center,
                           style: GoogleFonts.roboto(
                             fontSize: (size.width * 0.04),
+                            color: ColorValues.textSubtitle,
                           ),
                         ),
                       ],

@@ -14,6 +14,8 @@ class ColorValues {
   static const Color lightBlue = Color(0xFF7190FF);
   static const Color darkBlue = Color(0xFF0C42FF);
 
+  static const Color textSubtitle = Color(0xFF7A7A7A);
+
   static const LinearGradient orangeButtonGradient = LinearGradient(
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,
@@ -59,6 +61,14 @@ class ColorValues {
     begin: Alignment.topRight,
     end: Alignment.bottomLeft,
     colors: [lightBlue, darkBlue],
+  );
+
+  static const LinearGradient blackButtonGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [Color(0xFF202020), Color(0xFF4B4B4B)],
+    stops: [0.3, 0.7],
+    transform: GradientRotation((pi / 180) * -72),
   );
 
   static const RadialGradient shadowGradient = RadialGradient(
