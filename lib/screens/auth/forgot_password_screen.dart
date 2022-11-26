@@ -169,18 +169,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   child: SingleInputForm(
                                     isError: formEmailError,
                                     errorMessage: errorEmailMessage,
-                                    children: [
-                                      GroupInputFormField(
-                                        key: emailFieldState,
-                                        hintText: "Email Address",
-                                        initialValue: email,
-                                        textInputType: TextInputType.emailAddress,
-                                        prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
-                                        onSaved: saveEmail,
-                                        validator: Validators.validateEmail,
-                                        textInputAction: TextInputAction.next,
-                                      ),
-                                    ],
+                                    child: GroupInputFormField(
+                                      key: emailFieldState,
+                                      hintText: "Email Address",
+                                      initialValue: email,
+                                      textInputType: TextInputType.emailAddress,
+                                      prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
+                                      onSaved: saveEmail,
+                                      validator: Validators.validateEmail,
+                                      textInputAction: TextInputAction.next,
+                                    ),
                                   ),
                                 ),
                               ),

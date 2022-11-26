@@ -3,13 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/resources/colors.dart';
 
 class SingleInputForm extends StatefulWidget {
-  final List<Widget> children;
+  final Widget child;
   final bool isError;
   final String errorMessage;
 
   const SingleInputForm({
     Key? key,
-    this.children = const [],
+    required this.child,
     this.isError = false,
     this.errorMessage = "",
   }) : super(key: key);
@@ -37,21 +37,7 @@ class _SingleInputFormState extends State<SingleInputForm> {
               ),
             ],
           ),
-          child: ListView.separated(
-            padding: EdgeInsets.symmetric(horizontal: 20),
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return widget.children[index];
-            },
-            separatorBuilder: (context, index) {
-              return Divider(
-                height: 1,
-                thickness: 1.5,
-                color: Color(0xFFE7E7E7),
-              );
-            },
-            itemCount: widget.children.length,
-          ),
+          child: widget.child,
         ),
         AnimatedContainer(
           margin: EdgeInsets.only(left: 15, top: 8),

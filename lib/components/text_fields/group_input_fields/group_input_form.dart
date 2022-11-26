@@ -38,6 +38,7 @@ class GroupedInputFromState extends State<GroupInputForm> {
             ],
           ),
           child: ListView.separated(
+            physics: NeverScrollableScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: 20),
             shrinkWrap: true,
             itemBuilder: (context, index) {
