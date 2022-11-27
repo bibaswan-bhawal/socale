@@ -49,8 +49,6 @@
 	<key>UIMainStoryboardFile</key>
 	<string>Main</string>
 	<key>UISupportedInterfaceOrientations</key>
-	<key>FLTEnableImpeller</key>
-	<true/>
 	<array>
 		<string>UIInterfaceOrientationPortrait</string>
 	</array>

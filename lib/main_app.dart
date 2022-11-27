@@ -43,7 +43,7 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
         throw ("Material App has not been initialized before trying to get navigator context");
       }
 
-      Navigator.pushReplacementNamed(navigatorKey.currentContext!, Routes.verifyEmail, arguments: VerifyScreenArguments("bibaswan3600@gmail.com"));
+      Navigator.pushReplacementNamed(navigatorKey.currentContext!, Routes.getStarted);
     }
   }
 
