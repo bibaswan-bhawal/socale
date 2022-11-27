@@ -1,83 +1,53 @@
 PODS:
-  - Amplify (1.28.2):
-    - Amplify/Default (= 1.28.2)
-  - Amplify/Default (1.28.2)
+  - Amplify (1.23.0):
+    - Amplify/Default (= 1.23.0)
+  - Amplify/Default (1.23.0)
   - amplify_auth_cognito_ios (0.0.1):
-    - Amplify (= 1.28.2)
-    - amplify_core
-    - AmplifyPlugins/AWSCognitoAuthPlugin (= 1.28.2)
+    - Amplify (= 1.23.0)
+    - amplify_flutter_ios
     - Flutter
-    - ObjectMapper
-  - amplify_core (0.0.1):
-    - Flutter
-    - SwiftFormat/CLI
-    - SwiftLint (= 0.48.0)
   - amplify_flutter_ios (0.0.1):
-    - Amplify (= 1.28.2)
-    - amplify_core
-    - AmplifyPlugins/AWSCognitoAuthPlugin (= 1.28.2)
-    - AWSPluginsCore (= 1.28.2)
+    - Amplify (= 1.23.0)
+    - AWSPluginsCore (= 1.23.0)
     - Flutter
-    - SwiftFormat/CLI
-    - SwiftLint (= 0.48.0)
-  - AmplifyPlugins/AWSCognitoAuthPlugin (1.28.2):
-    - AWSAuthCore (~> 2.28.0)
-    - AWSCognitoIdentityProvider (~> 2.28.0)
-    - AWSCognitoIdentityProviderASF (~> 2.28.0)
-    - AWSCore (~> 2.28.0)
-    - AWSMobileClient (~> 2.28.0)
-    - AWSPluginsCore (= 1.28.2)
-  - AWSAuthCore (2.28.3):
-    - AWSCore (= 2.28.3)
-  - AWSCognitoIdentityProvider (2.28.3):
-    - AWSCognitoIdentityProviderASF (= 2.28.3)
-    - AWSCore (= 2.28.3)
-  - AWSCognitoIdentityProviderASF (2.28.3):
-    - AWSCore (= 2.28.3)
-  - AWSCore (2.28.3)
-  - AWSMobileClient (2.28.3):
-    - AWSAuthCore (= 2.28.3)
-    - AWSCognitoIdentityProvider (= 2.28.3)
-    - AWSCognitoIdentityProviderASF (= 2.28.3)
-    - AWSCore (= 2.28.3)
-  - AWSPluginsCore (1.28.2):
-    - Amplify (= 1.28.2)
-    - AWSCore (~> 2.28.0)
-  - Firebase/CoreOnly (8.8.0):
-    - FirebaseCore (= 8.8.0)
-  - Firebase/Messaging (8.8.0):
+  - amplify_secure_storage (0.0.1):
+    - Flutter
+  - AWSCore (2.27.15)
+  - AWSPluginsCore (1.23.0):
+    - Amplify (= 1.23.0)
+    - AWSCore (~> 2.27.0)
+  - Firebase/CoreOnly (10.2.0):
+    - FirebaseCore (= 10.2.0)
+  - Firebase/Messaging (10.2.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 8.8.0)
-  - firebase_core (1.8.0):
-    - Firebase/CoreOnly (= 8.8.0)
+    - FirebaseMessaging (~> 10.2.0)
+  - firebase_core (2.3.0):
+    - Firebase/CoreOnly (= 10.2.0)
     - Flutter
-  - firebase_messaging (10.0.9):
-    - Firebase/Messaging (= 8.8.0)
+  - firebase_messaging (14.1.2):
+    - Firebase/Messaging (= 10.2.0)
     - firebase_core
     - Flutter
-  - FirebaseCore (8.8.0):
-    - FirebaseCoreDiagnostics (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.4)
-    - GoogleUtilities/Logger (~> 7.4)
-  - FirebaseCoreDiagnostics (8.15.0):
-    - GoogleDataTransport (~> 9.1)
-    - GoogleUtilities/Environment (~> 7.7)
-    - GoogleUtilities/Logger (~> 7.7)
-    - nanopb (~> 2.30908.0)
-  - FirebaseInstallations (8.15.0):
-    - FirebaseCore (~> 8.0)
-    - GoogleUtilities/Environment (~> 7.7)
-    - GoogleUtilities/UserDefaults (~> 7.7)
-    - PromisesObjC (< 3.0, >= 1.2)
-  - FirebaseMessaging (8.8.0):
-    - FirebaseCore (~> 8.0)
-    - FirebaseInstallations (~> 8.0)
-    - GoogleDataTransport (~> 9.0)
-    - GoogleUtilities/AppDelegateSwizzler (~> 7.4)
-    - GoogleUtilities/Environment (~> 7.4)
-    - GoogleUtilities/Reachability (~> 7.4)
-    - GoogleUtilities/UserDefaults (~> 7.4)
-    - nanopb (~> 2.30908.0)
+  - FirebaseCore (10.2.0):
+    - FirebaseCoreInternal (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/Logger (~> 7.8)
+  - FirebaseCoreInternal (10.2.0):
+    - "GoogleUtilities/NSData+zlib (~> 7.8)"
+  - FirebaseInstallations (10.2.0):
+    - FirebaseCore (~> 10.0)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/UserDefaults (~> 7.8)
+    - PromisesObjC (~> 2.1)
+  - FirebaseMessaging (10.2.0):
+    - FirebaseCore (~> 10.0)
+    - FirebaseInstallations (~> 10.0)
+    - GoogleDataTransport (~> 9.2)
+    - GoogleUtilities/AppDelegateSwizzler (~> 7.8)
+    - GoogleUtilities/Environment (~> 7.8)
+    - GoogleUtilities/Reachability (~> 7.8)
+    - GoogleUtilities/UserDefaults (~> 7.8)
+    - nanopb (< 2.30910.0, >= 2.30908.0)
   - Flutter (1.0.0)
   - flutter_local_notifications (0.0.1):
     - Flutter
@@ -104,26 +74,23 @@ PODS:
     - GoogleUtilities/Logger
   - isar_flutter_libs (1.0.0):
     - Flutter
-  - nanopb (2.30908.0):
-    - nanopb/decode (= 2.30908.0)
-    - nanopb/encode (= 2.30908.0)
-  - nanopb/decode (2.30908.0)
-  - nanopb/encode (2.30908.0)
-  - ObjectMapper (4.2.0)
+  - nanopb (2.30909.0):
+    - nanopb/decode (= 2.30909.0)
+    - nanopb/encode (= 2.30909.0)
+  - nanopb/decode (2.30909.0)
+  - nanopb/encode (2.30909.0)
   - path_provider_ios (0.0.1):
     - Flutter
   - PromisesObjC (2.1.1)
   - shared_preferences_ios (0.0.1):
     - Flutter
-  - SwiftFormat/CLI (0.50.3)
-  - SwiftLint (0.48.0)
   - url_launcher_ios (0.0.1):
     - Flutter
 
 DEPENDENCIES:
   - amplify_auth_cognito_ios (from `.symlinks/plugins/amplify_auth_cognito_ios/ios`)
-  - amplify_core (from `.symlinks/plugins/amplify_core/ios`)
   - amplify_flutter_ios (from `.symlinks/plugins/amplify_flutter_ios/ios`)
+  - amplify_secure_storage (from `.symlinks/plugins/amplify_secure_storage/ios`)
   - Firebase/Messaging
   - firebase_core (from `.symlinks/plugins/firebase_core/ios`)
   - firebase_messaging (from `.symlinks/plugins/firebase_messaging/ios`)
@@ -137,33 +104,25 @@ DEPENDENCIES:
 SPEC REPOS:
   trunk:
     - Amplify
-    - AmplifyPlugins
-    - AWSAuthCore
-    - AWSCognitoIdentityProvider
-    - AWSCognitoIdentityProviderASF
     - AWSCore
-    - AWSMobileClient
     - AWSPluginsCore
     - Firebase
     - FirebaseCore
-    - FirebaseCoreDiagnostics
+    - FirebaseCoreInternal
     - FirebaseInstallations
     - FirebaseMessaging
     - GoogleDataTransport
     - GoogleUtilities
     - nanopb
-    - ObjectMapper
     - PromisesObjC
-    - SwiftFormat
-    - SwiftLint
 
 EXTERNAL SOURCES:
   amplify_auth_cognito_ios:
     :path: ".symlinks/plugins/amplify_auth_cognito_ios/ios"
-  amplify_core:
-    :path: ".symlinks/plugins/amplify_core/ios"
   amplify_flutter_ios:
     :path: ".symlinks/plugins/amplify_flutter_ios/ios"
+  amplify_secure_storage:
+    :path: ".symlinks/plugins/amplify_secure_storage/ios"
   firebase_core:
     :path: ".symlinks/plugins/firebase_core/ios"
   firebase_messaging:
@@ -182,36 +141,28 @@ EXTERNAL SOURCES:
     :path: ".symlinks/plugins/url_launcher_ios/ios"
 
 SPEC CHECKSUMS:
-  Amplify: 5dfd8bdcd41f8a67d96ebd72e5ef1c5aab8500b5
-  amplify_auth_cognito_ios: 5995925d2e821ab78dd445f047aff8aa525aadc9
-  amplify_core: 0876b2fbbcec7619f5b58b20c59ecc0118f65a47
-  amplify_flutter_ios: 8b85da543bdfdcb746c48a420771b8259dd9ba31
-  AmplifyPlugins: ab878c981d9d51654288d075653a40fe22b27c61
-  AWSAuthCore: 2062ef888b45b7e4426124f7c68930b04a9fe426
-  AWSCognitoIdentityProvider: f608ba338bc3b1676ab8a027f8c17a0a8de7fa25
-  AWSCognitoIdentityProviderASF: 3c0a873dcb270e770da06772c7762b1648897e41
-  AWSCore: 27c26d9c0a2f072f7aeb26337f3a5f4098eea8b8
-  AWSMobileClient: 0b8bb9f3d7f04ee9febed719887189e86794a721
-  AWSPluginsCore: 0842f0ec7df892adddeea71b05c8e9bee84b2eb0
-  Firebase: 629510f1a9ddb235f3a7c5c8ceb23ba887f0f814
-  firebase_core: 3b4c707f5a8eff38f52fd5580895bcd89357bf42
-  firebase_messaging: c2570c4b5aeb1b9dc1b40a3b4a246e246cd583a8
-  FirebaseCore: 98b29e3828f0a53651c363937a7f7d92a19f1ba2
-  FirebaseCoreDiagnostics: 92e07a649aeb66352b319d43bdd2ee3942af84cb
-  FirebaseInstallations: 40bd9054049b2eae9a2c38ef1c3dd213df3605cd
-  FirebaseMessaging: 419b5c9d84f294a753c6501d8cfb9ced1ce37304
+  Amplify: 010d6a71db20812d9e3062db1fe827393d01e584
+  amplify_auth_cognito_ios: 672d66106aa0a3f3b014f24e58563031736eca4f
+  amplify_flutter_ios: b850afebaa322d97d55aae63851fb8209ea36743
+  amplify_secure_storage: 501cbdac671a050090d48dfcc002d5637d3f4a55
+  AWSCore: c67277201b6aca10e4cf24638eadaa67c85ebf03
+  AWSPluginsCore: 120cfa265293694921b6595fe00d1cb5ab558847
+  Firebase: a3ea7eba4382afd83808376edb99acdaff078dcf
+  firebase_core: db1432de826785171029b7c1a26e5b22ce1dd477
+  firebase_messaging: 7d54a2ef65a4a28c5729241bbdd5854d305e86ec
+  FirebaseCore: 813838072b797b64f529f3c2ee35e696e5641dd1
+  FirebaseCoreInternal: 091bde13e47bb1c5e9fe397634f3593dc390430f
+  FirebaseInstallations: 004915af170935e3a583faefd5f8bc851afc220f
+  FirebaseMessaging: cc9f40f5b7494680f3844d08e517e92aa4e8d9f7
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   GoogleDataTransport: 1c8145da7117bd68bbbed00cf304edb6a24de00f
   GoogleUtilities: bad72cb363809015b1f7f19beb1f1cd23c589f95
   isar_flutter_libs: bc88affa0adeeb8800ffd2ca0177669dc18cd201
-  nanopb: a0ba3315591a9ae0a16a309ee504766e90db0c96
-  ObjectMapper: 1eb41f610210777375fa806bf161dc39fb832b81
+  nanopb: b552cce312b6c8484180ef47159bc0f65a1f0431
   path_provider_ios: 14f3d2fd28c4fdb42f44e0f751d12861c43cee02
   PromisesObjC: ab77feca74fa2823e7af4249b8326368e61014cb
   shared_preferences_ios: 548a61f8053b9b8a49ac19c1ffbc8b92c50d68ad
-  SwiftFormat: 61cda3819dc3a7d69795ce0430e1e1d53c4a4fb2
-  SwiftLint: 284cea64b6187c5d6bd83e9a548a64104d546447
   url_launcher_ios: 839c58cdb4279282219f5e248c3321761ff3c4de
 
 PODFILE CHECKSUM: 719d242586626014632f9bf7b07fd701676aab6e
