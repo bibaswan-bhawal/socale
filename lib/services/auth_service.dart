@@ -19,4 +19,23 @@ class AuthService {
       safePrint("[AUTH SERVICE]: ${e.message}");
     }
   }
+
+  Future<void> confirmUser(String email, String password) async {
+    // confirm user verified
+  }
+
+  static Future<bool> sendResetPasswordCode(String email) async {
+    try {
+      final result = await Amplify.Auth.resetPassword(username: email);
+      return result.isPasswordReset;
+    } on AmplifyException catch (e) {
+      safePrint(e);
+    }
+
+    return false;
+  }
+
+  static Future<void> confirmResetPassword(String email, String newPassword, String code) async {
+    await Amplify.Auth.confirmResetPassword(username: email, newPassword: newPassword, confirmationCode: code);
+  }
 }

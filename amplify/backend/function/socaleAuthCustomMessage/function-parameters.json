@@ -1,7 +1,8 @@
 {
   "trigger": true,
   "modules": [
-    "verification-link"
+    "verification-link",
+    "reset-password-code"
   ],
   "parentResource": "socaleAuth",
   "functionName": "socaleAuthCustomMessage",

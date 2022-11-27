@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -11,6 +12,7 @@ import 'package:socale/components/text_fields/input_field/single_input_form.dart
 import 'package:socale/components/utils/keyboard_safe_area.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/validators.dart';
 
 class ForgotPasswordScreen extends StatefulWidget {
@@ -22,6 +24,7 @@ class ForgotPasswordScreen extends StatefulWidget {
 
 class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   GlobalKey<FormState> formEmailKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formPinCodeKey = GlobalKey<FormState>();
   GlobalKey<FormState> formPasswordKey = GlobalKey<FormState>();
 
   GlobalKey<FormFieldState> emailFieldState = GlobalKey<FormFieldState>();
@@ -42,15 +45,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   String email = "";
   String password = "";
   String confirmPassword = "";
+  String code = "";
+
+  int pageIndex = 0;
 
   saveEmail(value) => email = value;
   savePassword(value) => password = value;
   saveConfirmPassword(value) => confirmPassword = value;
-
-  int pageIndex = 0;
+  saveCode(value) => code = value;
 
   Future<bool> onBack() async {
-    if (pageIndex == 0 || pageIndex == 2) {
+    if (pageIndex == 0) {
       return true;
     }
 
@@ -63,7 +68,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return false;
   }
 
-  void onNext() {
+  void onNext() async {
     if (pageIndex == 3) {
       if (mounted) Navigator.pop(context);
       return;
@@ -76,7 +81,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         setState(() => errorEmailMessage = "");
 
         emailForm.save();
+        AuthService.sendResetPasswordCode(email);
         WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+        setState(() => pageIndex++);
+        pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
       } else {
         setState(() {
           formEmailError = true;
@@ -86,12 +94,77 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       }
     }
 
-    if (pageIndex == 2) {}
+    if (pageIndex == 1) {
+      if (formPinCodeKey.currentState == null) {
+        const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+        ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        return;
+      }
 
-    setState(() {
-      pageIndex++;
-    });
+      final codeForm = formPinCodeKey.currentState!;
+      if (codeForm.validate()) {
+        codeForm.save();
+      } else {
+        return;
+      }
+    }
 
+    if (pageIndex == 2) {
+      final passwordForm = formPasswordKey.currentState!;
+      if (passwordForm.validate()) {
+        setState(() => formPasswordError = false);
+        setState(() => errorPasswordMessage = "");
+
+        passwordForm.save();
+
+        if (password != confirmPassword) {
+          print(password);
+          print(confirmPassword);
+
+          setState(() {
+            formPasswordError = true;
+            errorPasswordMessage = "Passwords don't match";
+          });
+
+          return;
+        }
+
+        try {
+          await AuthService.confirmResetPassword(email, password, code);
+          print("changed password");
+        } on CodeMismatchException catch (e) {
+          print(e);
+          const snackBar = SnackBar(content: Text('Invalid one time code'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          return;
+        } catch (e) {
+          print(e);
+          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          return;
+        }
+
+        WidgetsBinding.instance.focusManager.primaryFocus?.unfocus();
+      } else {
+        final passwordField = passwordFieldState.currentState!;
+        final confirmPasswordField = confirmPasswordFieldState.currentState!;
+
+        if (passwordField.errorText != null) {
+          setState(() {
+            formPasswordError = true;
+            errorPasswordMessage = "Password must be at least 8 characters";
+          });
+        } else if (confirmPasswordField.errorText != null) {
+          setState(() {
+            formPasswordError = true;
+            errorPasswordMessage = "Passwords don't match";
+          });
+        }
+        return;
+      }
+    }
+
+    setState(() => pageIndex++);
     pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
@@ -227,25 +300,28 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   ),
                                 ),
                                 Padding(
-                                  padding: EdgeInsets.only(top: 15),
+                                  padding: EdgeInsets.only(top: 25),
                                   child: SizedBox(
-                                    width: size.width * 0.6,
-                                    child: PinCodeTextField(
-                                      length: 4,
-                                      useHapticFeedback: true,
-                                      pinTheme: Themes.optPinTheme,
-                                      cursorColor: Colors.black,
-                                      hintCharacter: "0",
-                                      animationType: AnimationType.none,
-                                      autovalidateMode: AutovalidateMode.disabled,
-                                      keyboardType: TextInputType.number,
-                                      autoFocus: true,
-                                      autoDismissKeyboard: true,
-                                      appContext: context,
-                                      errorTextSpace: 20,
-                                      onSaved: (value) {},
-                                      onChanged: (value) {},
-                                      validator: (value) => "Bob",
+                                    width: size.width * 0.8,
+                                    child: Form(
+                                      key: formPinCodeKey,
+                                      child: PinCodeTextField(
+                                        length: 6,
+                                        useHapticFeedback: true,
+                                        pinTheme: Themes.optPinTheme,
+                                        cursorColor: Colors.black,
+                                        hintCharacter: "0",
+                                        animationType: AnimationType.none,
+                                        autovalidateMode: AutovalidateMode.disabled,
+                                        keyboardType: TextInputType.number,
+                                        autoFocus: true,
+                                        autoDismissKeyboard: true,
+                                        appContext: context,
+                                        errorTextSpace: 20,
+                                        onSaved: saveCode,
+                                        onChanged: (value) {},
+                                        validator: Validators.validateCode,
+                                      ),
                                     ),
                                   ),
                                 ),
@@ -316,7 +392,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           textInputType: TextInputType.visiblePassword,
                                           prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                                           isObscured: true,
-                                          onSaved: savePassword,
+                                          onSaved: saveConfirmPassword,
                                           validator: Validators.validatePassword,
                                           textInputAction: TextInputAction.done,
                                         ),

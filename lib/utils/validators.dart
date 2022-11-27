@@ -16,4 +16,12 @@ class Validators {
 
     return null;
   }
+
+  static String? validateCode(String? value) {
+    if (value == null || value.isEmpty || value.length != 6 || !(int.tryParse(value) != null)) {
+      return "Invalid code";
+    }
+
+    return null;
+  }
 }

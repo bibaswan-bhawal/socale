@@ -51,7 +51,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
       if (password != confirmPassword) {
         setState(() {
           formError = true;
-          errorMessage = "Password don't match";
+          errorMessage = "Passwords don't match";
         });
 
         setState(() => isLoading = false);

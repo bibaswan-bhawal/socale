@@ -37,7 +37,10 @@ class _SingleInputFormState extends State<SingleInputForm> {
               ),
             ],
           ),
-          child: widget.child,
+          child: Padding(
+            padding: EdgeInsets.only(left: 16),
+            child: widget.child,
+          ),
         ),
         AnimatedContainer(
           margin: EdgeInsets.only(left: 15, top: 8),

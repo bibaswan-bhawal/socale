@@ -59,4 +59,5 @@ flutter:
     - assets/icons/
     - assets/get_started/
     - assets/forgot_password/
+    - assets/verify_email/
     - google_fonts/

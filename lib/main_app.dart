@@ -1,6 +1,7 @@
 import 'dart:core';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/themes.dart';
@@ -28,6 +29,7 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
     ref.read(notificationServiceProvider).initNotificationService();
     ref.read(amplifyBackendServiceProvider).configureAmplify();
     ref.read(localDatabaseServiceProvider).initLocalDatabase();
+    SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
   }
 
   @override
@@ -41,7 +43,7 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
         throw ("Material App has not been initialized before trying to get navigator context");
       }
 
-      Navigator.pushReplacementNamed(navigatorKey.currentContext!, Routes.getStarted);
+      Navigator.pushReplacementNamed(navigatorKey.currentContext!, Routes.verifyEmail, arguments: VerifyScreenArguments("bibaswan3600@gmail.com"));
     }
   }
 

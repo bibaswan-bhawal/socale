@@ -23,7 +23,7 @@
           "EMAILSUBJECT": "click here to verify email",
           "EMAILMESSAGE": "Click here to verify email",
           "deploymentBucketName": "amplify-socale-dev-114352-deployment",
-          "s3Key": "amplify-builds/socaleAuthCustomMessage-7041464557625a4e6532-build.zip"
+          "s3Key": "amplify-builds/socaleAuthCustomMessage-74666c4f655159494d77-build.zip"
         }
       }
     }
