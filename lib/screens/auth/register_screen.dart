@@ -1,26 +1,30 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
+import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/login_screen.dart';
+import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/services/auth_service.dart';
+import 'package:socale/state_machines/states/auth_state.dart';
 import 'package:socale/utils/animated_navigators.dart';
 import 'package:socale/utils/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class RegisterScreen extends StatefulWidget {
+class RegisterScreen extends ConsumerStatefulWidget {
   const RegisterScreen({Key? key}) : super(key: key);
 
   @override
-  State<RegisterScreen> createState() => _RegisterScreenState();
+  ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
 }
 
-class _RegisterScreenState extends State<RegisterScreen> {
+class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
   GlobalKey<FormFieldState> emailFieldState = GlobalKey<FormFieldState>();
   GlobalKey<FormFieldState> passwordFieldState = GlobalKey<FormFieldState>();
@@ -58,10 +62,33 @@ class _RegisterScreenState extends State<RegisterScreen> {
         return;
       }
 
-      await AuthService.signUpUser(email!, password!);
-
+      final result = await AuthService.signUpUser(email!, password!);
       setState(() => isLoading = false);
+
+      if (result == AuthState.unverified) {
+        if (mounted) AnimatedNavigators.goToWithSlide(context, VerifyEmailScreen(email: email!, password: password!));
+        return;
+      }
+
+      if (result == AuthState.error) {
+        const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+        if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+        return;
+      }
+
+      if (result != AuthState.notAuthorized) {
+        setState(() {
+          formError = true;
+          errorMessage = "Incorrect password";
+        });
+
+        return;
+      }
+
+      ref.read(authStateProvider.notifier).state = result;
     } else {
+      setState(() => isLoading = false);
       showError();
     }
   }
@@ -265,6 +292,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: 15, bottom: 40 - MediaQuery.of(context).padding.bottom),
                     child: GradientButton(
+                      isLoading: isLoading,
                       width: size.width - 60,
                       height: 48,
                       linearGradient: ColorValues.purpleButtonGradient,

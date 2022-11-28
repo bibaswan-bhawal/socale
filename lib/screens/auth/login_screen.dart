@@ -1,5 +1,6 @@
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
@@ -7,20 +8,24 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
+import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/forgot_password_screen.dart';
 import 'package:socale/screens/auth/register_screen.dart';
+import 'package:socale/screens/auth/verify_email_screen.dart';
+import 'package:socale/services/auth_service.dart';
+import 'package:socale/state_machines/states/auth_state.dart';
 import 'package:socale/utils/animated_navigators.dart';
 import 'package:socale/utils/validators.dart';
 
-class LoginScreen extends StatefulWidget {
+class LoginScreen extends ConsumerStatefulWidget {
   const LoginScreen({Key? key}) : super(key: key);
 
   @override
-  State<LoginScreen> createState() => _LoginScreenState();
+  ConsumerState<LoginScreen> createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends ConsumerState<LoginScreen> {
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
   GlobalKey<FormFieldState> emailFieldState = GlobalKey<FormFieldState>();
   GlobalKey<FormFieldState> passwordFieldState = GlobalKey<FormFieldState>();
@@ -31,21 +36,58 @@ class _LoginScreenState extends State<LoginScreen> {
   String? email;
   String? password;
 
+  bool isLoading = false;
+
   saveEmail(value) => email = value;
   savePassword(value) => password = value;
 
   Future<void> onClickLogin() async {
     final form = formKey.currentState!;
 
-    if (form.validate()) {
-      setState(() => formError = false);
-      setState(() => errorMessage = "");
+    if (!isLoading) {
+      setState(() => isLoading = true);
 
-      form.save();
+      if (form.validate()) {
+        setState(() => formError = false);
+        setState(() => errorMessage = "");
 
-      print("Sign In Account with email:$email and password:$password");
-    } else {
-      showError();
+        form.save();
+
+        final result = await AuthService.signInUser(email!, password!);
+        setState(() => isLoading = false);
+
+        if (result == AuthState.userDoesNotExist) {
+          const snackBar = SnackBar(content: Text("Looks like you haven't made an account yet.", textAlign: TextAlign.center));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          return;
+        }
+
+        if (result == AuthState.unverified) {
+          if (mounted) AnimatedNavigators.goToWithSlide(context, VerifyEmailScreen(email: email!, password: password!));
+          return;
+        }
+
+        if (result == AuthState.error) {
+          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          return;
+        }
+
+        if (result == AuthState.notAuthorized) {
+          setState(() {
+            formError = true;
+            errorMessage = "Incorrect password";
+          });
+
+          return;
+        }
+
+        ref.read(authStateProvider.notifier).state = result;
+      } else {
+        setState(() => isLoading = false);
+        showError();
+      }
     }
   }
 
@@ -182,6 +224,7 @@ class _LoginScreenState extends State<LoginScreen> {
                     child: Hero(
                       tag: "login_button",
                       child: GradientButton(
+                        isLoading: isLoading,
                         width: size.width - 60,
                         height: 48,
                         linearGradient: ColorValues.orangeButtonGradient,

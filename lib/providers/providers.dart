@@ -1,10 +1,11 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/services/amplify_backend_service.dart';
+import 'package:socale/state_machines/states/auth_state.dart';
 import 'package:socale/services/local_database_service.dart';
 import 'package:socale/services/notification_service.dart';
 
 // App State providers
-final isSignedInProvider = StateProvider((ref) => false);
+final authStateProvider = StateProvider((ref) => AuthState.uninitialized);
 final isAmplifyLoadedProvider = StateProvider((ref) => false);
 final isLocalDatabaseLoadedProvider = StateProvider((ref) => false);
 

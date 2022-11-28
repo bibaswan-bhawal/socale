@@ -5,6 +5,9 @@ import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/themes.dart';
+import 'package:socale/services/auth_service.dart';
+import 'package:socale/state_machines/auth_state_machine.dart';
+import 'package:socale/state_machines/states/auth_state.dart';
 import 'package:socale/utils/routes.dart';
 
 class MainApp extends ConsumerStatefulWidget {
@@ -17,11 +20,6 @@ class MainApp extends ConsumerStatefulWidget {
 class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
   final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
-  int mainScreenController = 0; // Page controller
-
-  bool isAmplifyConfigured = false;
-  bool isDatabaseLoaded = false;
-
   @override
   void initState() {
     super.initState();
@@ -32,24 +30,33 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
     SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
   }
 
-  @override
-  void dispose() {
-    super.dispose();
+  void onAppInitialized(_, state) async {
+    print(state);
+    if (state) {
+      final result = await AuthService.autoLoginUser();
+      ref.read(authStateProvider.notifier).state = result;
+    }
   }
 
-  void onAppInitialized(_, state) {
-    if (state == true) {
-      if (navigatorKey.currentContext == null) {
-        throw ("Material App has not been initialized before trying to get navigator context");
-      }
+  void onAuthStateChange(oldState, newState) {
+    print("auth state changed: $newState");
 
-      Navigator.pushReplacementNamed(navigatorKey.currentContext!, Routes.getStarted);
+    if (navigatorKey.currentContext == null) {
+      return;
+    }
+
+    final newScreen = AuthStateMachine().getStateAction(newState);
+
+    if (newScreen != null) {
+      Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!, newScreen, (Route<dynamic> route) => false);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authStateProvider, onAuthStateChange);
     ref.listen(appInitializerStateProvider, onAppInitialized);
+
     return mainUIBuilder();
   }
 

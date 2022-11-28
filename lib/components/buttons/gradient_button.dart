@@ -7,6 +7,8 @@ class GradientButton extends StatelessWidget {
   final LinearGradient linearGradient;
   final Widget buttonContent;
   final Function() onClickEvent;
+  final bool isLoading;
+
   const GradientButton({
     Key? key,
     required this.width,
@@ -14,6 +16,7 @@ class GradientButton extends StatelessWidget {
     required this.linearGradient,
     required this.buttonContent,
     required this.onClickEvent,
+    this.isLoading = false,
   }) : super(key: key);
 
   @override
@@ -31,7 +34,7 @@ class GradientButton extends StatelessWidget {
         ),
         child: Center(
           child: ElevatedButton(
-            onPressed: onClickEvent,
+            onPressed: isLoading ? () {} : onClickEvent,
             style: ElevatedButton.styleFrom(
                 fixedSize: Size(width, height),
                 foregroundColor: Colors.white,
@@ -41,7 +44,13 @@ class GradientButton extends StatelessWidget {
                   borderRadius: BorderRadius.circular(height * 0.3),
                 ),
                 splashFactory: InkRipple.splashFactory),
-            child: buttonContent,
+            child: isLoading
+                ? SizedBox(
+                    width: 20,
+                    height: 20,
+                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                  )
+                : buttonContent,
           ),
         ),
       ),

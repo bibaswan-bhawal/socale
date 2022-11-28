@@ -96,8 +96,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     if (pageIndex == 1) {
       if (formPinCodeKey.currentState == null) {
-        const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
-        ScaffoldMessenger.of(context).showSnackBar(snackBar);
         return;
       }
 

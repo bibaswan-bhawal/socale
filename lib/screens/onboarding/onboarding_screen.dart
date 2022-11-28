@@ -1,15 +1,26 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/providers/providers.dart';
+import 'package:socale/services/auth_service.dart';
 
-class OnboardingScreen extends StatefulWidget {
+class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
 
   @override
-  State<OnboardingScreen> createState() => _OnboardingScreenState();
+  ConsumerState<OnboardingScreen> createState() => _OnboardingScreenState();
 }
 
-class _OnboardingScreenState extends State<OnboardingScreen> {
+class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Center(
+      child: ElevatedButton(
+        onPressed: () async {
+          final result = await AuthService.signOutUser();
+          ref.read(authStateProvider.notifier).state = result;
+        },
+        child: Text("Sign Out"),
+      ),
+    );
   }
 }
