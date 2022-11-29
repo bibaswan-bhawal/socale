@@ -66,12 +66,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       setState(() => isLoading = false);
 
       if (result == AuthState.unverified) {
-        if (mounted) AnimatedNavigators.goToWithSlide(context, VerifyEmailScreen(email: email!, password: password!));
+        if (mounted)
+          AnimatedNavigators.goToWithSlide(
+              context, VerifyEmailScreen(email: email!, password: password!));
         return;
       }
 
       if (result == AuthState.error) {
-        const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+        const snackBar =
+            SnackBar(content: Text('Something went wrong try again in a few minutes.'));
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
         return;
@@ -131,20 +134,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       body: Stack(
         children: [
           LightOnboardingBackground(),
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            behavior: HitTestBehavior.translucent,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24, top: 60),
-              child: SvgPicture.asset('assets/icons/back.svg'),
-            ),
-          ),
           SafeArea(
             child: Center(
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 80),
+                    padding: EdgeInsets.only(top: size.height * 0.08),
                     child: Hero(
                       tag: "auth_logo",
                       child: SvgPicture.asset(
@@ -171,7 +166,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
+                    padding: EdgeInsets.only(top: 48, left: 30, right: 30),
                     child: Form(
                       key: formState,
                       child: GroupInputForm(
@@ -183,7 +178,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             hintText: "Email Address",
                             textInputType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: [AutofillHints.email],
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                           ),
@@ -192,7 +189,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             hintText: "Password",
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: [AutofillHints.newPassword],
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -202,7 +201,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             hintText: "Confirm Password",
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: [AutofillHints.password],
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: saveConfirmPassword,
                             validator: Validators.validatePassword,
@@ -290,7 +291,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 40 - MediaQuery.of(context).padding.bottom),
+                    padding: EdgeInsets.only(top: 15, bottom: 20),
                     child: GradientButton(
                       isLoading: isLoading,
                       width: size.width - 60,
@@ -309,6 +310,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            behavior: HitTestBehavior.translucent,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24, top: 60),
+              child: SvgPicture.asset('assets/icons/back.svg'),
             ),
           ),
         ],

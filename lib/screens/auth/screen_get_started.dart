@@ -21,7 +21,8 @@ class GetStartedScreen extends ConsumerStatefulWidget {
   ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with SingleTickerProviderStateMixin {
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
+    with SingleTickerProviderStateMixin {
   late CurvedAnimation animation;
   late AnimationController animationController;
 
@@ -92,7 +93,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                       offset: const Offset(1, 1),
                       sigma: 1,
                       child: Text(
-                        "Networking Made Easy",
+                        "Networking made easy",
                         textAlign: TextAlign.center,
                         style: GoogleFonts.poppins(
                           fontWeight: FontWeight.bold,
@@ -103,7 +104,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                   ),
                   Padding(
                     padding: EdgeInsets.only(
-                      top: 10,
+                      top: 5,
                       left: size.width * 0.14,
                       right: size.width * 0.14,
                       bottom: 20,
@@ -114,7 +115,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                           "Boost your social and professional",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.roboto(
-                            fontSize: (size.width * 0.04),
+                            fontSize: (size.width * 0.038),
                             color: ColorValues.textSubtitle,
                           ),
                         ),
@@ -122,7 +123,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                           "connections with the power of Socale.",
                           textAlign: TextAlign.center,
                           style: GoogleFonts.roboto(
-                            fontSize: (size.width * 0.04),
+                            fontSize: (size.width * 0.038),
                             color: ColorValues.textSubtitle,
                           ),
                         ),
@@ -150,7 +151,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).padding.bottom),
+                    padding: EdgeInsets.only(top: 10, bottom: 20),
                     child: OutlineButton(
                       width: size.width - 60,
                       height: 48,

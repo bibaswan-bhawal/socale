@@ -11,6 +11,7 @@ class GroupInputField extends StatefulWidget {
   final bool isObscured;
   final Function(String)? onChanged;
   final String? initialValue;
+  final Iterable<String> autofillHints;
 
   const GroupInputField({
     Key? key,
@@ -21,6 +22,7 @@ class GroupInputField extends StatefulWidget {
     this.isObscured = false,
     this.onChanged,
     this.initialValue,
+    this.autofillHints = const [],
   }) : super(key: key);
 
   @override
@@ -62,6 +64,7 @@ class _GroupInputFieldState extends State<GroupInputField> {
       cursorRadius: Radius.circular(1),
       keyboardType: widget.textInputType,
       textInputAction: widget.textInputAction,
+      autofillHints: [AutofillHints.email],
       obscureText: shouldObscure,
       decoration: InputDecoration(
         isCollapsed: true,

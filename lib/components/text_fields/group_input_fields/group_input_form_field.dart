@@ -8,6 +8,7 @@ class GroupInputFormField extends FormField<String> {
   final Widget? prefixIcon;
   final bool isObscured;
   final Function(String)? onError;
+  final Iterable<String> autofillHints;
 
   GroupInputFormField({
     Key? key,
@@ -16,6 +17,7 @@ class GroupInputFormField extends FormField<String> {
     this.textInputAction,
     this.prefixIcon,
     this.isObscured = false,
+    this.autofillHints = const [],
     FormFieldSetter<String>? onSaved,
     FormFieldValidator<String>? validator,
     String initialValue = "",
@@ -32,6 +34,7 @@ class GroupInputFormField extends FormField<String> {
               textInputAction: textInputAction,
               prefixIcon: prefixIcon,
               isObscured: isObscured,
+              autofillHints: autofillHints,
               onChanged: state.didChange,
             );
           },

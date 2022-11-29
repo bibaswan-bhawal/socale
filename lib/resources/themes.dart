@@ -19,7 +19,7 @@ class Themes {
     shape: PinCodeFieldShape.underline,
     borderRadius: BorderRadius.circular(5),
     fieldHeight: 40,
-    fieldWidth: 40,
+    fieldWidth: 35,
     activeColor: Colors.black,
     selectedColor: ColorValues.socaleDarkOrange,
     inactiveColor: Colors.black,

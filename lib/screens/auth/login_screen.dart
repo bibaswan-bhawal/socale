@@ -57,18 +57,23 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => isLoading = false);
 
         if (result == AuthState.userDoesNotExist) {
-          const snackBar = SnackBar(content: Text("Looks like you haven't made an account yet.", textAlign: TextAlign.center));
+          const snackBar = SnackBar(
+              content:
+                  Text("Looks like you haven't made an account yet.", textAlign: TextAlign.center));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
         }
 
         if (result == AuthState.unverified) {
-          if (mounted) AnimatedNavigators.goToWithSlide(context, VerifyEmailScreen(email: email!, password: password!));
+          if (mounted)
+            AnimatedNavigators.goToWithSlide(
+                context, VerifyEmailScreen(email: email!, password: password!));
           return;
         }
 
         if (result == AuthState.error) {
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          const snackBar =
+              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
           return;
@@ -123,20 +128,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       body: Stack(
         children: [
           const LightOnboardingBackground(),
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            behavior: HitTestBehavior.translucent,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24, top: 60),
-              child: SvgPicture.asset('assets/icons/back.svg'),
-            ),
-          ),
           KeyboardSafeArea(
             child: Center(
               child: Column(
                 children: [
                   Padding(
-                    padding: EdgeInsets.only(top: 80),
+                    padding: EdgeInsets.only(top: size.height * 0.08),
                     child: Hero(
                       tag: "auth_logo",
                       child: SvgPicture.asset(
@@ -174,7 +171,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             key: emailFieldState,
                             hintText: "Email Address",
                             textInputType: TextInputType.emailAddress,
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: [AutofillHints.email],
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                             textInputAction: TextInputAction.next,
@@ -183,7 +182,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             key: passwordFieldState,
                             hintText: "Password",
                             textInputType: TextInputType.visiblePassword,
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: [AutofillHints.password],
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -220,7 +221,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 20),
+                    padding: EdgeInsets.only(top: 20, bottom: 30),
                     child: Hero(
                       tag: "login_button",
                       child: GradientButton(
@@ -241,7 +242,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 10),
+                    padding: EdgeInsets.only(bottom: 30),
                     child: GestureDetector(
                       onTap: () {
                         AnimatedNavigators.goToWithSlide(context, ForgotPasswordScreen());
@@ -260,6 +261,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   ),
                 ],
               ),
+            ),
+          ),
+          GestureDetector(
+            onTap: () => Navigator.pop(context),
+            behavior: HitTestBehavior.translucent,
+            child: Padding(
+              padding: const EdgeInsets.only(left: 24, top: 60),
+              child: SvgPicture.asset('assets/icons/back.svg'),
             ),
           ),
         ],
