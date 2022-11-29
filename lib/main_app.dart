@@ -7,7 +7,6 @@ import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/themes.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/state_machines/auth_state_machine.dart';
-import 'package:socale/state_machines/states/auth_state.dart';
 import 'package:socale/utils/routes.dart';
 
 class MainApp extends ConsumerStatefulWidget {
@@ -48,7 +47,11 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
     final newScreen = AuthStateMachine().getStateAction(newState);
 
     if (newScreen != null) {
-      Navigator.pushNamedAndRemoveUntil(navigatorKey.currentContext!, newScreen, (Route<dynamic> route) => false);
+      Navigator.pushNamedAndRemoveUntil(
+        navigatorKey.currentContext!,
+        newScreen,
+        (Route<dynamic> route) => false,
+      );
     }
   }
 
