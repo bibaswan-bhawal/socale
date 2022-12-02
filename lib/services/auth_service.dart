@@ -1,24 +1,24 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart' hide AuthState;
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:socale/state_machines/states/auth_state.dart';
+import 'package:socale/state_machines/state_values/auth_state_values.dart';
 
 class AuthService {
-  static Future<AuthState> autoLoginUser() async {
+  static Future<AuthStateValue> autoLoginUser() async {
     AuthSession result = await Amplify.Auth.fetchAuthSession();
     if (result.isSignedIn) {
-      return AuthState.signedIn;
+      return AuthStateValue.signedIn;
     }
-    return AuthState.signedOut;
+    return AuthStateValue.signedOut;
   }
 
-  static Future<AuthState> signUpUser(String email, String password) async {
+  static Future<AuthStateValue> signUpUser(String email, String password) async {
     try {
       await Amplify.Auth.signUp(username: email, password: password);
-      return AuthState.unverified;
+      return AuthStateValue.unverified;
     } on UsernameExistsException catch (_) {
       return await signInUser(email, password);
     } on AuthException catch (_) {
-      return AuthState.error;
+      return AuthStateValue.error;
     }
   }
 
@@ -33,21 +33,21 @@ class AuthService {
     }
   }
 
-  static Future<AuthState> signInUser(String email, String password) async {
+  static Future<AuthStateValue> signInUser(String email, String password) async {
     try {
       final result = await Amplify.Auth.signIn(username: email, password: password);
 
       if (result.nextStep!.signInStep == "CONFIRM_SIGN_UP") {
-        return AuthState.unverified;
+        return AuthStateValue.unverified;
       }
 
-      return AuthState.signedIn;
+      return AuthStateValue.signedIn;
     } on NotAuthorizedException catch (_) {
-      return AuthState.notAuthorized;
+      return AuthStateValue.notAuthorized;
     } on UserNotFoundException catch (_) {
-      return AuthState.userDoesNotExist;
+      return AuthStateValue.userDoesNotExist;
     } on AuthException catch (_) {
-      return AuthState.error;
+      return AuthStateValue.error;
     }
   }
 
@@ -66,13 +66,13 @@ class AuthService {
     await Amplify.Auth.confirmResetPassword(username: email, newPassword: newPassword, confirmationCode: code);
   }
 
-  static Future<AuthState> signOutUser() async {
+  static Future<AuthStateValue> signOutUser() async {
     try {
       await Amplify.Auth.signOut();
-      return AuthState.signedOut;
+      return AuthStateValue.signedOut;
     } on AuthException catch (e) {
       print(e.message);
-      return AuthState.error;
+      return AuthStateValue.error;
     }
   }
 }

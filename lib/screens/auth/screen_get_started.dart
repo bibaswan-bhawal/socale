@@ -7,9 +7,11 @@ import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/outlined_button.dart';
 import 'package:socale/main.dart';
+import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/login_screen.dart';
 import 'package:socale/screens/auth/register_screen.dart';
+import 'package:socale/state_machines/state_values/auth_flow_state_value.dart';
 import 'package:socale/utils/animated_navigators.dart';
 import 'package:socale/utils/debug_print_statements.dart';
 import 'package:socale/utils/system_ui.dart';
@@ -21,17 +23,16 @@ class GetStartedScreen extends ConsumerStatefulWidget {
   ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
-    with SingleTickerProviderStateMixin {
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with SingleTickerProviderStateMixin {
   late CurvedAnimation animation;
   late AnimationController animationController;
 
   void goToLogin() async {
-    AnimatedNavigators.goToWithSlide(context, LoginScreen());
+    ref.read(authFlowStateProvider.notifier).setAuthFlowStep(AuthFlowStateValue.signIn);
   }
 
   goToRegister() async {
-    AnimatedNavigators.goToWithSlide(context, RegisterScreen());
+    ref.read(authFlowStateProvider.notifier).setAuthFlowStep(AuthFlowStateValue.signUp);
   }
 
   @override
@@ -46,7 +47,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
 
     animationController.repeat(reverse: true);
 
-    printRunTime(appStartTime, "total app startTime");
+    //printRunTime(appStartTime, "total app startTime");
   }
 
   @override

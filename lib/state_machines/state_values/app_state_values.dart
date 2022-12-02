@@ -1,0 +1,4 @@
+enum AppStateValue {
+  uninitialized,
+  initialized,
+}

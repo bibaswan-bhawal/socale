@@ -5,6 +5,7 @@ const platform = MethodChannel('com.socale.socale/ios');
 
 Future<void> getNotificationsFromIosCoreData() async {
   List notifications;
+
   try {
     notifications = await platform.invokeMethod('getNotifications');
     await deleteNotificationsInIosCoreData();

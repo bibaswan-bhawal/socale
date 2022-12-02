@@ -1,13 +1,25 @@
-import 'package:socale/state_machines/states/auth_state.dart';
-import 'package:socale/utils/routes.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/navigation/routes.dart';
+import 'package:socale/state_machines/state_values/auth_state_values.dart';
 
 class AuthStateMachine {
-  String? getStateAction(AuthState state) {
-    if (state == AuthState.signedIn) {
+  static void authStateChanged(AuthStateValue state, WidgetRef ref, BuildContext context) {
+    if (state == AuthStateValue.userDoesNotExist) {
+      return;
+    }
+
+    if (state == AuthStateValue.signedIn) {}
+
+    if (state == AuthStateValue.signedOut) {}
+  }
+
+  String? getStateAction(AuthStateValue state) {
+    if (state == AuthStateValue.signedIn) {
       return Routes.onboarding;
     }
 
-    if (state == AuthState.signedOut) {
+    if (state == AuthStateValue.signedOut) {
       return Routes.getStarted;
     }
 

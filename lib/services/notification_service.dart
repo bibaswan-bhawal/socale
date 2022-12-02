@@ -17,7 +17,7 @@ bool isFlutterLocalNotificationsInitialized = false;
 Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
   if (kDebugMode) print('Handling a background message ${message.data}');
 
-  if (Platform.isIOS) {
+  if (!kIsWeb && Platform.isIOS) {
     deleteNotificationsInIosCoreData();
   }
 
@@ -101,7 +101,7 @@ class NotificationService {
 
     showFlutterNotification(message, permissionAuthStatus);
 
-    if (Platform.isIOS) {
+    if (!kIsWeb && Platform.isIOS) {
       deleteNotificationsInIosCoreData();
     }
   }
@@ -124,10 +124,10 @@ class NotificationService {
     FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
 
     // Check for notifications that came in while app was terminated
-    if (Platform.isIOS) getNotificationsFromIosCoreData();
+    if (!kIsWeb && Platform.isIOS) getNotificationsFromIosCoreData();
 
     // init local notifications
-    if (Platform.isAndroid || Platform.isIOS) await setupFlutterNotifications();
+    if (!kIsWeb && (Platform.isAndroid || Platform.isIOS)) await setupFlutterNotifications();
 
     RemoteMessage? remoteMessage = await FirebaseMessaging.instance.getInitialMessage();
 

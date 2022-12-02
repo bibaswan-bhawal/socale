@@ -18,7 +18,7 @@ class AmplifyBackendService {
     await Amplify.addPlugins([authPlugin]);
     await Amplify.configure(amplifyconfig);
 
-    providerRef.read(isAmplifyLoadedProvider.notifier).state = true;
+    providerRef.read(appStateProvider.notifier).amplifyConfigured();
 
     printRunTime(startTime, "Amplify initialisation");
   }

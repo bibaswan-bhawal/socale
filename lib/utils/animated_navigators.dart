@@ -2,10 +2,7 @@ import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedNavigators {
-  static void goToWithSlide(
-    BuildContext context,
-    Widget screen,
-  ) {
+  static void goToWithSlide(BuildContext context, Widget screen) {
     Navigator.of(context).push(
       PageRouteBuilder(
         pageBuilder: (context, animation, secondaryAnimation) => screen,

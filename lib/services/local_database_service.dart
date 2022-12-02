@@ -11,7 +11,7 @@ class LocalDatabaseService {
     DateTime startTime = DateTime.now();
 
     await Future.delayed(const Duration(seconds: 1), () {
-      providerRef.read(isLocalDatabaseLoadedProvider.notifier).state = true;
+      providerRef.read(appStateProvider.notifier).localDBConfigured();
     });
 
     printRunTime(startTime, "Local DB initialisation");

@@ -10,7 +10,7 @@ void main() async {
 
   WidgetsFlutterBinding.ensureInitialized();
 
-  await NotificationService.initBackgroundNotificationService();
+  // await NotificationService.initBackgroundNotificationService();
 
   runApp(const ProviderScope(child: MainApp()));
 }

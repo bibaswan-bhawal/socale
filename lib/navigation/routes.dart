@@ -15,6 +15,7 @@ class Routes {
   static const String main = '/';
   static const String getStarted = '/get_started';
   static const String onboarding = '/onboarding';
+  static const String splashScreen = '/';
 
   static final Map<String, WidgetBuilder> appRoutes = {
     main: (context) => SplashScreen(),

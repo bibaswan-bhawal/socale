@@ -12,7 +12,7 @@ import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/login_screen.dart';
 import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/services/auth_service.dart';
-import 'package:socale/state_machines/states/auth_state.dart';
+import 'package:socale/state_machines/state_values/auth_state_values.dart';
 import 'package:socale/utils/animated_navigators.dart';
 import 'package:socale/utils/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -65,22 +65,19 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       final result = await AuthService.signUpUser(email!, password!);
       setState(() => isLoading = false);
 
-      if (result == AuthState.unverified) {
-        if (mounted)
-          AnimatedNavigators.goToWithSlide(
-              context, VerifyEmailScreen(email: email!, password: password!));
+      if (result == AuthStateValue.unverified) {
+        if (mounted) AnimatedNavigators.goToWithSlide(context, VerifyEmailScreen(email: email!, password: password!));
         return;
       }
 
-      if (result == AuthState.error) {
-        const snackBar =
-            SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+      if (result == AuthStateValue.error) {
+        const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
         return;
       }
 
-      if (result != AuthState.notAuthorized) {
+      if (result != AuthStateValue.notAuthorized) {
         setState(() {
           formError = true;
           errorMessage = "Incorrect password";
@@ -179,8 +176,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             autofillHints: [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                           ),
@@ -190,8 +186,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
                             autofillHints: [AutofillHints.newPassword],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -202,8 +197,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
                             autofillHints: [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: saveConfirmPassword,
                             validator: Validators.validatePassword,

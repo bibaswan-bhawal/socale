@@ -7,7 +7,7 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
-import 'package:socale/state_machines/states/auth_state.dart';
+import 'package:socale/state_machines/state_values/auth_state_values.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   final String email;
@@ -40,14 +40,14 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       final result = await AuthService.signInUser(widget.email, widget.password);
       setState(() => isLoading = false);
 
-      if (result == AuthState.unverified) {
+      if (result == AuthStateValue.unverified) {
         const snackBar = SnackBar(content: Text("Your email hasn't been verified yet", textAlign: TextAlign.center));
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
         return;
       }
 
-      if (result == AuthState.error) {
+      if (result == AuthStateValue.error) {
         const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
