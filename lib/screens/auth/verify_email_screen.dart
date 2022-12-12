@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         return;
       }
 
-      ref.read(authStateProvider.notifier).state = result;
+      ref.read(authStateFProvider.notifier).state = result;
     }
   }
 

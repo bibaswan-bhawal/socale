@@ -1,0 +1,4 @@
+enum AuthLoginAction {
+  noAction,
+  forgotPassword,
+}

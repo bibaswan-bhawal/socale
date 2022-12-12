@@ -5,14 +5,16 @@ import 'package:socale/services/amplify_backend_service.dart';
 import 'package:socale/services/local_database_service.dart';
 import 'package:socale/services/notification_service.dart';
 import 'package:socale/managers/screen_navigation_manager.dart';
-import 'package:socale/state_machines/state_values/auth_state_values.dart';
+import 'package:socale/state_machines/state_values/auth/auth_action_value.dart';
+import 'package:socale/state_machines/state_values/auth/auth_login_action_value.dart';
+import 'package:socale/state_machines/state_values/auth/auth_state_value.dart';
 import 'package:socale/state_machines/states/app_state.dart';
-import 'package:socale/state_machines/states/auth_flow_state.dart';
 
 final appStateProvider = StateNotifierProvider<AppStateNotifier, AppState>((ref) => AppStateNotifier());
-final authFlowStateProvider = StateNotifierProvider<AuthFlowStateNotifier, AuthFlowState>((ref) => AuthFlowStateNotifier());
 
-final authStateProvider = StateProvider((StateProviderRef ref) => AuthStateValue.uninitialized);
+final authStateProvider = StateProvider((ref) => AuthState.notAuthorised);
+final authActionProvider = StateProvider((ref) => AuthAction.noAction);
+final authLoginActionProvider = StateProvider((ref) => AuthLoginAction.noAction);
 
 // Service providers
 final notificationServiceProvider = Provider((ProviderRef ref) => NotificationService());

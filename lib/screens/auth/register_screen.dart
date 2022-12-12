@@ -86,7 +86,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         return;
       }
 
-      ref.read(authStateProvider.notifier).state = result;
+      ref.read(authStateFProvider.notifier).state = result;
     } else {
       setState(() => isLoading = false);
       showError();

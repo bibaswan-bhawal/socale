@@ -17,7 +17,7 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
       child: ElevatedButton(
         onPressed: () async {
           final result = await AuthService.signOutUser();
-          ref.read(authStateProvider.notifier).state = result;
+          ref.read(authStateFProvider.notifier).state = result;
         },
         child: Text("Sign Out"),
       ),
