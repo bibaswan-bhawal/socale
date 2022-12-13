@@ -9,11 +9,9 @@ import 'package:socale/components/text_fields/group_input_fields/group_input_for
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/screens/auth/login_screen.dart';
-import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/services/auth_service.dart';
-import 'package:socale/state_machines/state_values/auth_state_values.dart';
-import 'package:socale/utils/animated_navigators.dart';
+import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_result.dart';
 import 'package:socale/utils/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -65,28 +63,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       final result = await AuthService.signUpUser(email!, password!);
       setState(() => isLoading = false);
 
-      if (result == AuthStateValue.unverified) {
-        if (mounted) AnimatedNavigators.goToWithSlide(context, VerifyEmailScreen(email: email!, password: password!));
-        return;
+      switch (result) {
+        case AuthResult.success:
+          // Successfully Signed up user.
+          break;
+        case AuthResult.unverified:
+          ref.read(authActionProvider.notifier).state = AuthAction.verify;
+          break;
+        case AuthResult.genericError:
+          const snackBar =
+              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          break;
+        case AuthResult.notAuthorized:
+          setState(() {
+            formError = true;
+            errorMessage = "Incorrect password";
+          });
+
+          break;
+        case AuthResult.userNotFound:
+          const snackBar =
+              SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          break;
       }
-
-      if (result == AuthStateValue.error) {
-        const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-        return;
-      }
-
-      if (result != AuthStateValue.notAuthorized) {
-        setState(() {
-          formError = true;
-          errorMessage = "Incorrect password";
-        });
-
-        return;
-      }
-
-      ref.read(authStateFProvider.notifier).state = result;
+      // ref.read(authStateFProvider.notifier).state = result;
     } else {
       setState(() => isLoading = false);
       showError();
@@ -176,7 +178,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             autofillHints: [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                           ),
@@ -186,7 +189,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
                             autofillHints: [AutofillHints.newPassword],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -197,7 +201,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
                             autofillHints: [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: saveConfirmPassword,
                             validator: Validators.validatePassword,
@@ -279,7 +284,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             ),
                             recognizer: TapGestureRecognizer()
                               ..onTap = () {
-                                AnimatedNavigators.replaceGoToWithSlide(context, LoginScreen());
+                                ref.read(authActionProvider.notifier).state = AuthAction.signIn;
                               }),
                       ],
                     ),

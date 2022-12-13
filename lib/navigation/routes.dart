@@ -1,8 +1,7 @@
 import 'package:flutter/cupertino.dart';
-import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 
-import '../screens/auth/screen_get_started.dart';
+import '../screens/auth/get_started_screen.dart';
 import '../screens/screen_splash.dart';
 
 class VerifyScreenArguments {

@@ -4,16 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
-import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
-import 'package:socale/state_machines/state_values/auth_state_values.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   final String email;
   final String password;
 
-  const VerifyEmailScreen({Key? key, required this.email, required this.password}) : super(key: key);
+  const VerifyEmailScreen({Key? key, required this.email, required this.password})
+      : super(key: key);
 
   @override
   ConsumerState<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
@@ -25,10 +24,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   void resendCode() async {
     final result = await AuthService.resendVerifyLink(widget.email);
     if (result) {
-      const snackBar = SnackBar(content: Text("A new link as been sent to your email", textAlign: TextAlign.center));
+      const snackBar = SnackBar(
+          content: Text("A new link as been sent to your email", textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      const snackBar = SnackBar(content: Text("There was an error, try again later", textAlign: TextAlign.center));
+      const snackBar = SnackBar(
+          content: Text("There was an error, try again later", textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -40,21 +41,21 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       final result = await AuthService.signInUser(widget.email, widget.password);
       setState(() => isLoading = false);
 
-      if (result == AuthStateValue.unverified) {
-        const snackBar = SnackBar(content: Text("Your email hasn't been verified yet", textAlign: TextAlign.center));
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-        return;
-      }
-
-      if (result == AuthStateValue.error) {
-        const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-
-        return;
-      }
-
-      ref.read(authStateFProvider.notifier).state = result;
+      // if (result == AuthStateValue.unverified) {
+      //   const snackBar = SnackBar(content: Text("Your email hasn't been verified yet", textAlign: TextAlign.center));
+      //   if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      //
+      //   return;
+      // }
+      //
+      // if (result == AuthStateValue.error) {
+      //   const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+      //   if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      //
+      //   return;
+      // }
+      //
+      // ref.read(authStateFProvider.notifier).state = result;
     }
   }
 
@@ -97,14 +98,18 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                         ).createShader(bounds),
                         child: Text(
                           "email",
-                          style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: GoogleFonts.poppins(
+                              fontSize: size.width * 0.058,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                  padding: EdgeInsets.only(
+                      top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
                   child: Column(
                     children: [
                       Text(

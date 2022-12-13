@@ -1,25 +1,29 @@
-import 'package:socale/state_machines/state_values/auth_flow_state_value.dart';
+import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_login_action.dart';
 
 class AuthRoutePath {
-  AuthFlowStateValue authFlowStateValue;
   bool isUnknown;
+  AuthAction authAction;
+  AuthLoginAction authLoginAction;
 
   AuthRoutePath.getStarted()
-      : authFlowStateValue = AuthFlowStateValue.getStarted,
-        isUnknown = false;
+      : isUnknown = false,
+        authLoginAction = AuthLoginAction.noAction,
+        authAction = AuthAction.noAction;
   AuthRoutePath.signUp()
-      : authFlowStateValue = AuthFlowStateValue.signUp,
-        isUnknown = false;
+      : isUnknown = false,
+        authLoginAction = AuthLoginAction.noAction,
+        authAction = AuthAction.signUp;
   AuthRoutePath.signIn()
-      : authFlowStateValue = AuthFlowStateValue.signIn,
-        isUnknown = false;
+      : isUnknown = false,
+        authLoginAction = AuthLoginAction.noAction,
+        authAction = AuthAction.signIn;
   AuthRoutePath.verifyEmail()
-      : authFlowStateValue = AuthFlowStateValue.verifyEmail,
-        isUnknown = false;
+      : isUnknown = false,
+        authLoginAction = AuthLoginAction.noAction,
+        authAction = AuthAction.noAction;
   AuthRoutePath.forgotPassword()
-      : authFlowStateValue = AuthFlowStateValue.forgotPassword,
-        isUnknown = false;
-  AuthRoutePath.unknown()
-      : authFlowStateValue = AuthFlowStateValue.getStarted,
-        isUnknown = true;
+      : isUnknown = false,
+        authLoginAction = AuthLoginAction.forgotPassword,
+        authAction = AuthAction.signIn;
 }

@@ -8,13 +8,12 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
+import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/screens/auth/forgot_password_screen.dart';
-import 'package:socale/screens/auth/register_screen.dart';
-import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/services/auth_service.dart';
-import 'package:socale/state_machines/state_values/auth_state_values.dart';
-import 'package:socale/utils/animated_navigators.dart';
+import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_login_action.dart';
+import 'package:socale/types/auth/auth_result.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -55,25 +54,32 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         final result = await AuthService.signInUser(email!, password!);
         setState(() => isLoading = false);
 
-        if (result == AuthStateValue.unverified) {
-          if (mounted) AnimatedNavigators.goToWithSlide(context, VerifyEmailScreen(email: email!, password: password!));
-          return;
-        }
+        print(result);
 
-        if (result == AuthStateValue.error) {
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        switch (result) {
+          case AuthResult.success:
+            // Successfully Signed up user.
+            break;
+          case AuthResult.unverified:
+            ref.read(authActionProvider.notifier).state = AuthAction.verify;
+            break;
+          case AuthResult.genericError:
+            const snackBar =
+                SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+            if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            break;
+          case AuthResult.notAuthorized:
+            setState(() {
+              formError = true;
+              errorMessage = "Incorrect password";
+            });
 
-          return;
-        }
-
-        if (result == AuthStateValue.notAuthorized) {
-          setState(() {
-            formError = true;
-            errorMessage = "Incorrect password";
-          });
-
-          return;
+            break;
+          case AuthResult.userNotFound:
+            const snackBar =
+                SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+            if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+            break;
         }
       } else {
         setState(() => isLoading = false);
@@ -158,7 +164,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             hintText: "Email Address",
                             textInputType: TextInputType.emailAddress,
                             autofillHints: [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                             textInputAction: TextInputAction.next,
@@ -168,7 +175,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             hintText: "Password",
                             textInputType: TextInputType.visiblePassword,
                             autofillHints: [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -198,14 +206,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                           ),
                           recognizer: TapGestureRecognizer()
                             ..onTap = () async {
-                              AnimatedNavigators.replaceGoToWithSlide(context, RegisterScreen());
+                              ref.read(authActionProvider.notifier).state = AuthAction.signUp;
                             },
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20, bottom: 30),
+                    padding: EdgeInsets.only(top: 20),
                     child: Hero(
                       tag: "login_button",
                       child: GradientButton(
@@ -225,13 +233,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                       ),
                     ),
                   ),
-                  Padding(
-                    padding: EdgeInsets.only(bottom: 30),
-                    child: GestureDetector(
-                      onTap: () {
-                        AnimatedNavigators.goToWithSlide(context, ForgotPasswordScreen());
-                      },
-                      behavior: HitTestBehavior.translucent,
+                  GestureDetector(
+                    onTap: () {
+                      ref.read(authLoginActionProvider.notifier).state =
+                          AuthLoginAction.forgotPassword;
+                    },
+                    behavior: HitTestBehavior.translucent,
+                    child: Padding(
+                      padding: EdgeInsets.only(bottom: 30, top: 30),
                       child: Text(
                         "Forgot Password?",
                         style: TextStyle(
