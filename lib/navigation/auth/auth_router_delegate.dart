@@ -19,10 +19,15 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
   AuthAction authAction;
   AuthLoginAction authLoginAction;
 
+  String email;
+  String password;
+
   AuthRouterDelegate(WidgetRef widgetRef)
       : navigatorKey = GlobalKey<NavigatorState>(),
         ref = widgetRef,
         authAction = widgetRef.read(authActionProvider),
+        email = "",
+        password = "",
         authLoginAction = widgetRef.read(authLoginActionProvider) {
     ref.listen(authActionProvider, updateAuthAction);
     ref.listen(authLoginActionProvider, updateAuthLoginAction);
@@ -36,6 +41,14 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
   void updateAuthAction(_, newState) {
     authAction = newState;
     notifyListeners();
+  }
+
+  void updateEmail(String email) {
+    this.email = email;
+  }
+
+  void updatePassword(String password) {
+    this.password = password;
   }
 
   @override
@@ -61,16 +74,29 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
     return Navigator(
       key: navigatorKey,
       pages: [
-        MaterialPage(child: GetStartedScreen()),
-        if (authAction == AuthAction.signIn) MaterialPage(child: LoginScreen()),
-        if (authAction == AuthAction.signUp) MaterialPage(child: RegisterScreen()),
+        MaterialPage(
+          child: GetStartedScreen(),
+        ),
+        if (authAction == AuthAction.signIn)
+          MaterialPage(
+            child: LoginScreen(
+              updateEmail: updateEmail,
+              updatePassword: updatePassword,
+            ),
+          ),
+        if (authAction == AuthAction.signUp)
+          MaterialPage(
+            child: RegisterScreen(),
+          ),
         if (authLoginAction == AuthLoginAction.forgotPassword)
-          MaterialPage(child: ForgotPasswordScreen()),
+          MaterialPage(
+            child: ForgotPasswordScreen(),
+          ),
         if (authAction == AuthAction.verify)
           MaterialPage(
             child: VerifyEmailScreen(
-              email: '',
-              password: "",
+              email: email,
+              password: password,
             ),
           ),
       ],
@@ -83,13 +109,7 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
         }
 
         switch (authAction) {
-          case AuthAction.signIn:
-            ref.read(authActionProvider.notifier).state = AuthAction.noAction;
-            break;
-          case AuthAction.signUp:
-            ref.read(authActionProvider.notifier).state = AuthAction.noAction;
-            break;
-          case AuthAction.noAction:
+          default:
             ref.read(authActionProvider.notifier).state = AuthAction.noAction;
             break;
         }

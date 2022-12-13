@@ -4,8 +4,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
+import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
+import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_result.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   final String email;
@@ -41,21 +44,28 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       final result = await AuthService.signInUser(widget.email, widget.password);
       setState(() => isLoading = false);
 
-      // if (result == AuthStateValue.unverified) {
-      //   const snackBar = SnackBar(content: Text("Your email hasn't been verified yet", textAlign: TextAlign.center));
-      //   if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      //
-      //   return;
-      // }
-      //
-      // if (result == AuthStateValue.error) {
-      //   const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
-      //   if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-      //
-      //   return;
-      // }
-      //
-      // ref.read(authStateFProvider.notifier).state = result;
+      switch (result) {
+        case AuthResult.success:
+          // Successfully Signed up user.
+          break;
+        case AuthResult.unverified:
+          const snackBar = SnackBar(content: Text("Your email is not verified yet."));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          break;
+        case AuthResult.genericError:
+          const snackBar =
+              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          break;
+        case AuthResult.notAuthorized:
+          ref.read(authActionProvider.notifier).state = AuthAction.noAction;
+          break;
+        case AuthResult.userNotFound:
+          const snackBar =
+              SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          break;
+      }
     }
   }
 

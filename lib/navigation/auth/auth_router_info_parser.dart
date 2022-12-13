@@ -20,8 +20,6 @@ class AuthRouteInformationParser extends RouteInformationParser<AuthRoutePath> {
           return AuthRoutePath.signUp();
         case 'reset_password':
           return AuthRoutePath.forgotPassword();
-        case 'verify':
-          return AuthRoutePath.verifyEmail();
       }
     }
 
@@ -33,17 +31,16 @@ class AuthRouteInformationParser extends RouteInformationParser<AuthRoutePath> {
     if (configuration.authLoginAction == AuthLoginAction.forgotPassword) {
       return RouteInformation(location: '/reset_password');
     } else {
-      if (configuration.authAction == AuthAction.noAction) {
-        return RouteInformation(location: '/');
-      }
-      if (configuration.authAction == AuthAction.signIn) {
-        return RouteInformation(location: '/login');
-      }
-      if (configuration.authAction == AuthAction.signUp) {
-        return RouteInformation(location: '/register');
+      switch (configuration.authAction) {
+        case AuthAction.noAction:
+          return RouteInformation(location: '/');
+        case AuthAction.signIn:
+          return RouteInformation(location: '/login');
+        case AuthAction.signUp:
+          return RouteInformation(location: '/register');
+        case AuthAction.verify:
+          return RouteInformation(location: '/verify');
       }
     }
-
-    return RouteInformation(location: '/');
   }
 }

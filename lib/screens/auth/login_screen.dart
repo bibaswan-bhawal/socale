@@ -17,7 +17,14 @@ import 'package:socale/types/auth/auth_result.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  final Function updateEmail;
+  final Function updatePassword;
+
+  const LoginScreen({
+    Key? key,
+    required this.updateEmail,
+    required this.updatePassword,
+  }) : super(key: key);
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -61,6 +68,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             // Successfully Signed up user.
             break;
           case AuthResult.unverified:
+            widget.updateEmail(email);
+            widget.updatePassword(password);
             ref.read(authActionProvider.notifier).state = AuthAction.verify;
             break;
           case AuthResult.genericError:

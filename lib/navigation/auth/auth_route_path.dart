@@ -21,7 +21,7 @@ class AuthRoutePath {
   AuthRoutePath.verifyEmail()
       : isUnknown = false,
         authLoginAction = AuthLoginAction.noAction,
-        authAction = AuthAction.noAction;
+        authAction = AuthAction.verify;
   AuthRoutePath.forgotPassword()
       : isUnknown = false,
         authLoginAction = AuthLoginAction.forgotPassword,
