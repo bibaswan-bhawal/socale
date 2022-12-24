@@ -14,8 +14,7 @@ class VerifyEmailScreen extends ConsumerStatefulWidget {
   final String email;
   final String password;
 
-  const VerifyEmailScreen({Key? key, required this.email, required this.password})
-      : super(key: key);
+  const VerifyEmailScreen({Key? key, required this.email, required this.password}) : super(key: key);
 
   @override
   ConsumerState<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
@@ -27,12 +26,10 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   void resendCode() async {
     final result = await AuthService.resendVerifyLink(widget.email);
     if (result) {
-      const snackBar = SnackBar(
-          content: Text("A new link as been sent to your email", textAlign: TextAlign.center));
+      const snackBar = SnackBar(content: Text("A new link as been sent to your email", textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      const snackBar = SnackBar(
-          content: Text("There was an error, try again later", textAlign: TextAlign.center));
+      const snackBar = SnackBar(content: Text("There was an error, try again later", textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -40,7 +37,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   void confirmEmail() async {
     if (!isLoading) {
       setState(() => isLoading = true);
-
+      print("${widget.email}, ${widget.password}");
       final result = await AuthService.signInUser(widget.email, widget.password);
       setState(() => isLoading = false);
 
@@ -49,20 +46,22 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           // Successfully Signed up user.
           break;
         case AuthResult.unverified:
-          const snackBar = SnackBar(content: Text("Your email is not verified yet."));
+          const snackBar = SnackBar(
+              content: Text(
+            "Your email is not verified yet.",
+            textAlign: TextAlign.center,
+          ));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.genericError:
-          const snackBar =
-              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.notAuthorized:
           ref.read(authActionProvider.notifier).state = AuthAction.noAction;
           break;
         case AuthResult.userNotFound:
-          const snackBar =
-              SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+          const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
       }
@@ -108,18 +107,14 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                         ).createShader(bounds),
                         child: Text(
                           "email",
-                          style: GoogleFonts.poppins(
-                              fontSize: size.width * 0.058,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                          style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                      top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                  padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
                   child: Column(
                     children: [
                       Text(

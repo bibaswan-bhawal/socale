@@ -8,8 +8,8 @@ class AppState {
 
   AppState updateState({bool? isAmplifyConfigured, bool? isLocalDBConfigured}) {
     return AppState(
-      isAmplifyConfigured: isAmplifyConfigured ?? false,
-      isLocalDBConfigured: isLocalDBConfigured ?? false,
+      isAmplifyConfigured: isAmplifyConfigured ?? this.isAmplifyConfigured,
+      isLocalDBConfigured: isLocalDBConfigured ?? this.isLocalDBConfigured,
     );
   }
 
@@ -26,6 +26,6 @@ class AppState {
 class AppStateNotifier extends StateNotifier<AppState> {
   AppStateNotifier() : super(AppState());
 
-  void amplifyConfigured() => state = state.updateState(isAmplifyConfigured: true, isLocalDBConfigured: state.isLocalDBConfigured);
-  void localDBConfigured() => state = state.updateState(isAmplifyConfigured: state.isAmplifyConfigured, isLocalDBConfigured: true);
+  void amplifyConfigured() => state = state.updateState(isAmplifyConfigured: true);
+  void localDBConfigured() => state = state.updateState(isLocalDBConfigured: true);
 }

@@ -6,9 +6,7 @@ import 'package:socale/navigation/main/main_router_delegate.dart';
 import 'package:socale/navigation/main/main_router_info_parser.dart';
 import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/themes.dart';
-import 'package:socale/navigation/routes.dart';
-
-import 'state_machines/states/app_state.dart';
+import 'package:socale/services/amplify_backend_service.dart';
 
 class MainApp extends ConsumerStatefulWidget {
   const MainApp({Key? key}) : super(key: key);
@@ -22,12 +20,18 @@ class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
   void initState() {
     super.initState();
 
-    ref.read(amplifyBackendServiceProvider).configureAmplify();
+    // Initialise Amplify
+    AmplifyBackendService.configureAmplify(ref);
+
+    // Initialise Local Database
     ref.read(localDatabaseServiceProvider).initLocalDatabase();
   }
 
   @override
   Widget build(BuildContext context) {
+    MainRouterDelegate mainRouterDelegate = MainRouterDelegate(ref);
+    MainRouteInformationParser mainRouteInformationParser = MainRouteInformationParser();
+
     return GestureDetector(
       onTap: () => WidgetsBinding.instance.focusManager.primaryFocus?.unfocus(), // dismiss keyboard on tap
       child: MaterialApp.router(

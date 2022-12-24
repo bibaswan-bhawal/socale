@@ -63,17 +63,14 @@ class AuthService {
   }
 
   static Future<void> confirmResetPassword(String email, String newPassword, String code) async {
-    await Amplify.Auth.confirmResetPassword(
-        username: email, newPassword: newPassword, confirmationCode: code);
+    await Amplify.Auth.confirmResetPassword(username: email, newPassword: newPassword, confirmationCode: code);
   }
 
-  // static Future<AuthStateValue> signOutUser() async {
-  //   try {
-  //     await Amplify.Auth.signOut();
-  //     return AuthStateValue.signedOut;
-  //   } on AuthException catch (e) {
-  //     print(e.message);
-  //     return AuthStateValue.error;
-  //   }
-  // }
+  static Future<void> signOutUser() async {
+    try {
+      await Amplify.Auth.signOut();
+    } on AuthException catch (e) {
+      print(e.message);
+    }
+  }
 }
