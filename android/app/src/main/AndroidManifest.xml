@@ -8,7 +8,7 @@
 
    <application
         android:label="Socale"
-       android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/ic_launcher"
         android:name="${applicationName}">
 
         <activity

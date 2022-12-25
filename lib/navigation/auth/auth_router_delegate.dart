@@ -10,8 +10,7 @@ import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/types/auth/auth_action.dart';
 import 'package:socale/types/auth/auth_login_action.dart';
 
-class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
   final WidgetRef ref;
@@ -109,6 +108,11 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
         }
 
         switch (authAction) {
+          case AuthAction.verify:
+            email = "";
+            password = "";
+            ref.read(authActionProvider.notifier).state = AuthAction.noAction;
+            break;
           default:
             ref.read(authActionProvider.notifier).state = AuthAction.noAction;
             break;

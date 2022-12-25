@@ -6,11 +6,7 @@ import 'package:socale/providers/providers.dart';
 import 'package:socale/utils/debug_print_statements.dart';
 
 class AmplifyBackendService {
-  ProviderRef providerRef;
-
-  AmplifyBackendService(this.providerRef);
-
-  Future<void> configureAmplify() async {
+  static Future<void> configureAmplify(WidgetRef ref) async {
     DateTime startTime = DateTime.now();
 
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
@@ -18,7 +14,7 @@ class AmplifyBackendService {
     await Amplify.addPlugins([authPlugin]);
     await Amplify.configure(amplifyconfig);
 
-    providerRef.read(appStateProvider.notifier).amplifyConfigured();
+    ref.read(appStateProvider.notifier).amplifyConfigured();
 
     printRunTime(startTime, "Amplify initialisation");
   }
