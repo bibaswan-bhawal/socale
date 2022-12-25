@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:socale/navigation/main/main_route_path.dart';
 import 'package:socale/providers/providers.dart';
+import 'package:socale/providers/state_notifiers/app_state.dart';
 import 'package:socale/screens/auth/auth_router_screen.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/screen_splash.dart';
-import 'package:socale/state_machines/states/app_state.dart';
 
 class MainRouterDelegate extends RouterDelegate<MainRoutePath>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin<MainRoutePath> {
