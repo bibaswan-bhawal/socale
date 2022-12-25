@@ -65,7 +65,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
         switch (result) {
           case AuthResult.success:
-            // Successfully Signed up user.
+            ref.read(appStateProvider.notifier).login();
             break;
           case AuthResult.unverified:
             widget.updateEmail(email);

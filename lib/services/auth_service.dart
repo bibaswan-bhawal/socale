@@ -67,13 +67,13 @@ class AuthService {
         username: email, newPassword: newPassword, confirmationCode: code);
   }
 
-  // static Future<AuthStateValue> signOutUser() async {
-  //   try {
-  //     await Amplify.Auth.signOut();
-  //     return AuthStateValue.signedOut;
-  //   } on AuthException catch (e) {
-  //     print(e.message);
-  //     return AuthStateValue.error;
-  //   }
-  // }
+  static Future<bool> signOutUser() async {
+    try {
+      await Amplify.Auth.signOut();
+      return true;
+    } on AuthException catch (e) {
+      print(e.message);
+      return false;
+    }
+  }
 }

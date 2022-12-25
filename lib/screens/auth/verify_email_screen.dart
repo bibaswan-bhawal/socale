@@ -46,7 +46,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
       switch (result) {
         case AuthResult.success:
-          // Successfully Signed up user.
+          ref.read(appStateProvider.notifier).login();
           break;
         case AuthResult.unverified:
           const snackBar = SnackBar(content: Text("Your email is not verified yet."));
@@ -57,13 +57,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
               SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
-        case AuthResult.notAuthorized:
+        default:
           ref.read(authActionProvider.notifier).state = AuthAction.noAction;
-          break;
-        case AuthResult.userNotFound:
-          const snackBar =
-              SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
       }
     }

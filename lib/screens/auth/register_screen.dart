@@ -65,7 +65,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       switch (result) {
         case AuthResult.success:
-          // Successfully Signed up user.
+          ref.read(appStateProvider.notifier).login();
           break;
         case AuthResult.unverified:
           ref.read(authActionProvider.notifier).state = AuthAction.verify;
@@ -88,7 +88,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
       }
-      // ref.read(authStateFProvider.notifier).state = result;
     } else {
       setState(() => isLoading = false);
       showError();

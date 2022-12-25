@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/providers/providers.dart';
+import 'package:socale/services/auth_service.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
   const OnboardingScreen({Key? key}) : super(key: key);
@@ -14,8 +16,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     return Center(
       child: ElevatedButton(
         onPressed: () async {
-          //final result = await AuthService.signOutUser();
-          //ref.read(authStateFProvider.notifier).state = result;
+          final result = await AuthService.signOutUser();
+          if (result) ref.read(appStateProvider.notifier).signOut();
         },
         child: Text("Sign Out"),
       ),
