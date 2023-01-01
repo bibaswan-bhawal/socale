@@ -1,18 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:simple_shadow/simple_shadow.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class GradientButton extends StatelessWidget {
-  final double width;
-  final double height;
   final LinearGradient linearGradient;
-  final Widget buttonContent;
-  final Function() onClickEvent;
+  final String buttonContent;
   final bool isLoading;
+
+  final Function() onClickEvent;
 
   const GradientButton({
     Key? key,
-    required this.width,
-    required this.height,
     required this.linearGradient,
     required this.buttonContent,
     required this.onClickEvent,
@@ -21,39 +18,64 @@ class GradientButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SimpleShadow(
-      opacity: 0.25,
-      offset: const Offset(1, 1),
-      sigma: 3,
-      child: Container(
-        width: width,
-        height: height,
-        decoration: BoxDecoration(
-          gradient: linearGradient,
-          borderRadius: BorderRadius.circular(height * 0.3),
-        ),
-        child: Center(
-          child: ElevatedButton(
-            onPressed: isLoading ? () {} : onClickEvent,
-            style: ElevatedButton.styleFrom(
-                fixedSize: Size(width, height),
-                foregroundColor: Colors.white,
-                backgroundColor: Colors.transparent,
-                shadowColor: Colors.transparent,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(height * 0.3),
-                ),
-                splashFactory: InkRipple.splashFactory),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        return Container(
+          decoration: BoxDecoration(
+            gradient: linearGradient,
+            borderRadius: BorderRadius.circular(15),
+            boxShadow: [
+              BoxShadow(
+                color: Color(0xFF000000).withOpacity(0.25),
+                offset: Offset(1, 1),
+                blurRadius: 4,
+              ),
+            ],
+          ),
+          child: Material(
+            color: Colors.transparent,
+            borderRadius: BorderRadius.circular(15),
             child: isLoading
                 ? SizedBox(
-                    width: 20,
-                    height: 20,
-                    child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                    height: 48,
+                    width: constraints.maxWidth,
+                    child: Center(
+                      child: SizedBox(
+                        width: 20,
+                        height: 20,
+                        child: CircularProgressIndicator(
+                          color: Colors.white,
+                          strokeWidth: 2,
+                        ),
+                      ),
+                    ),
                   )
-                : buttonContent,
+                : InkWell(
+                    onTap: onClickEvent,
+                    splashFactory: InkRipple.splashFactory,
+                    borderRadius: BorderRadius.circular(15),
+                    splashColor: Color(0xFFFFFFFF).withOpacity(0.30),
+                    highlightColor: Color(0xFFFFFFFF).withOpacity(0.30),
+                    focusColor: Color(0xFF000000).withOpacity(0.10),
+                    hoverColor: Color(0xFFFFFFFF).withOpacity(0.15),
+                    child: SizedBox(
+                      height: 48,
+                      width: constraints.maxWidth,
+                      child: Center(
+                        child: Text(
+                          buttonContent,
+                          style: GoogleFonts.roboto(
+                            color: Colors.white,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

@@ -10,20 +10,17 @@ class LightOnboardingBackground extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final circleRadius = size.width * 1.4;
+
     return Stack(
       children: [
-        Container(
-          color: Colors.white,
-          width: size.width,
-          height: size.height,
-        ),
+        Container(color: Colors.white, width: size.width, height: size.height),
         drawCircles(circleRadius),
         Positioned(
           left: -40,
           child: BackdropFilter(
             filter: ImageFilter.blur(sigmaX: 50.0, sigmaY: 50.0),
             child: Container(
-              color: Colors.white.withOpacity(0.85),
+              color: Colors.white.withOpacity(0.9),
               width: size.width + 40,
               height: size.height,
             ),

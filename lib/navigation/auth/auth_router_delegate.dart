@@ -1,44 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
+import 'package:socale/navigation/auth/pages/login_material_page.dart';
+import 'package:socale/navigation/main/main_route_path.dart';
 import 'package:socale/providers/providers.dart';
+import 'package:socale/providers/state_notifiers/auth_state.dart';
 import 'package:socale/screens/auth/forgot_password_screen.dart';
 import 'package:socale/screens/auth/get_started_screen.dart';
 import 'package:socale/screens/auth/login_screen.dart';
 import 'package:socale/screens/auth/register_screen.dart';
 import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/types/auth/auth_action.dart';
-import 'package:socale/types/auth/auth_login_action.dart';
 
-class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin {
+class AuthRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
-  final WidgetRef ref;
 
-  AuthAction authAction;
-  AuthLoginAction authLoginAction;
+  AuthState authState;
+
+  WidgetRef ref;
 
   String email;
   String password;
 
-  AuthRouterDelegate(WidgetRef widgetRef)
+  AuthRouterDelegate(this.ref)
       : navigatorKey = GlobalKey<NavigatorState>(),
-        ref = widgetRef,
-        authAction = widgetRef.read(authActionProvider),
+        authState = ref.read(authStateProvider),
         email = "",
-        password = "",
-        authLoginAction = widgetRef.read(authLoginActionProvider) {
-    ref.listen(authActionProvider, updateAuthAction);
-    ref.listen(authLoginActionProvider, updateAuthLoginAction);
+        password = "" {
+    ref.listen(authStateProvider, updateAuthState);
   }
 
-  void updateAuthLoginAction(_, newState) {
-    authLoginAction = newState;
-    notifyListeners();
-  }
-
-  void updateAuthAction(_, newState) {
-    authAction = newState;
+  void updateAuthState(_, newState) {
+    authState = newState;
     notifyListeners();
   }
 
@@ -50,100 +44,88 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
     this.password = password;
   }
 
-  @override
-  AuthRoutePath get currentConfiguration {
-    if (authLoginAction == AuthLoginAction.forgotPassword) {
-      return AuthRoutePath.forgotPassword();
+  List<Page> pagesBuilder() {
+    List<Page> pages = [];
+
+    pages.add(
+      MaterialPage(
+        child: GetStartedScreen(),
+      ),
+    );
+
+    switch (authState.authAction) {
+      case AuthAction.signIn:
+        pages.add(
+          LoginMaterialPage(
+            child: LoginScreen(
+              updateEmail: updateEmail,
+              updatePassword: updatePassword,
+            ),
+          ),
+        );
+        if (authState.resetPassword) {
+          pages.add(
+            MaterialPage(
+              child: ForgotPasswordScreen(),
+            ),
+          );
+        }
+        break;
+      case AuthAction.signUp:
+        pages.add(
+          MaterialPage(
+            child: RegisterScreen(
+              updateEmail: updateEmail,
+              updatePassword: updatePassword,
+            ),
+          ),
+        );
+        break;
+      default:
+        break;
     }
 
-    switch (authAction) {
-      case AuthAction.signIn:
-        return AuthRoutePath.signIn();
-      case AuthAction.signUp:
-        return AuthRoutePath.signUp();
-      case AuthAction.verify:
-        return AuthRoutePath.verifyEmail();
-      case AuthAction.noAction:
-        return AuthRoutePath.getStarted();
+    if (authState.notVerified) {
+      pages.add(
+        MaterialPage(
+          child: VerifyEmailScreen(email: email, password: password),
+        ),
+      );
     }
+
+    return pages;
   }
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
       key: navigatorKey,
-      pages: [
-        MaterialPage(
-          child: GetStartedScreen(),
-        ),
-        if (authAction == AuthAction.signIn)
-          MaterialPage(
-            child: LoginScreen(
-              updateEmail: updateEmail,
-              updatePassword: updatePassword,
-            ),
-          ),
-        if (authAction == AuthAction.signUp)
-          MaterialPage(
-            child: RegisterScreen(),
-          ),
-        if (authLoginAction == AuthLoginAction.forgotPassword)
-          MaterialPage(
-            child: ForgotPasswordScreen(),
-          ),
-        if (authAction == AuthAction.verify)
-          MaterialPage(
-            child: VerifyEmailScreen(
-              email: email,
-              password: password,
-            ),
-          ),
-      ],
+      transitionDelegate: DefaultTransitionDelegate(),
+      pages: pagesBuilder(),
       onPopPage: (route, result) {
-        if (!route.didPop(result)) return false;
-
-        if (authLoginAction == AuthLoginAction.forgotPassword) {
-          ref.read(authLoginActionProvider.notifier).state = AuthLoginAction.noAction;
-          return true;
+        if (authState.notVerified) {
+          ref.read(authStateProvider.notifier).verifyEmail(false);
+          return route.didPop(result);
         }
 
-        switch (authAction) {
-          case AuthAction.verify:
-            email = "";
-            password = "";
-            ref.read(authActionProvider.notifier).state = AuthAction.noAction;
-            break;
+        if (authState.resetPassword) {
+          ref.read(authStateProvider.notifier).resetPassword(false);
+          return route.didPop(result);
+        }
+
+        switch (authState.authAction) {
+          case AuthAction.noAction:
+            return true;
           default:
-            ref.read(authActionProvider.notifier).state = AuthAction.noAction;
-            break;
+            ref.read(authStateProvider.notifier).setAuthAction(AuthAction.noAction);
+            return route.didPop(result);
         }
-
-        return true;
       },
     );
   }
 
   @override
-  Future<void> setNewRoutePath(AuthRoutePath configuration) async {
-    if (configuration.authLoginAction == AuthLoginAction.forgotPassword) {
-      ref.read(authLoginActionProvider.notifier).state = AuthLoginAction.forgotPassword;
-      ref.read(authActionProvider.notifier).state = AuthAction.signIn;
-      return;
-    }
-
-    switch (configuration.authAction) {
-      case AuthAction.noAction:
-        ref.read(authActionProvider.notifier).state = AuthAction.noAction;
-        break;
-      case AuthAction.signIn:
-        ref.read(authActionProvider.notifier).state = AuthAction.signIn;
-        break;
-      case AuthAction.signUp:
-        ref.read(authActionProvider.notifier).state = AuthAction.signUp;
-        break;
-      case AuthAction.verify:
-        ref.read(authActionProvider.notifier).state = AuthAction.verify;
-    }
+  Future<void> setNewRoutePath(AppRoutePath configuration) async {
     return;
   }
 }

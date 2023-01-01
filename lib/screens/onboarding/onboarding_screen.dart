@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/providers/providers.dart';
+import 'package:socale/screens/onboarding/basic_info_page.dart';
 import 'package:socale/services/auth_service.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -13,13 +15,16 @@ class OnboardingScreen extends ConsumerStatefulWidget {
 class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () async {
-          final result = await AuthService.signOutUser();
-          if (result) ref.read(appStateProvider.notifier).signOut();
-        },
-        child: Text("Sign Out"),
+    return Scaffold(
+      body: Stack(
+        children: [
+          LightOnboardingBackground(),
+          PageView(
+            children: [
+              BasicInfoPage(),
+            ],
+          ),
+        ],
       ),
     );
   }

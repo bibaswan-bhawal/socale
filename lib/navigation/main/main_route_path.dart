@@ -1,14 +1,10 @@
-class MainRoutePath {
-  final bool isGetStarted;
-  final bool isApp;
+import 'package:socale/providers/state_notifiers/app_state.dart';
 
-  MainRoutePath.splashScreen()
-      : isGetStarted = false,
-        isApp = false;
-  MainRoutePath.auth()
-      : isGetStarted = true,
-        isApp = false;
-  MainRoutePath.app()
-      : isGetStarted = false,
-        isApp = true;
+class MainRoutePath extends AppRoutePath {
+  AppState appState;
+
+  MainRoutePath.splashScreen() : appState = AppState();
+  MainRoutePath.app() : appState = AppState(isInitialized: true, isLoggedIn: false);
 }
+
+abstract class AppRoutePath {}

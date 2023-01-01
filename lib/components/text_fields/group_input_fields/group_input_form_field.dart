@@ -3,37 +3,44 @@ import 'package:socale/components/text_fields/group_input_fields/group_input_fie
 
 class GroupInputFormField extends FormField<String> {
   final String hintText;
-  final TextInputType? textInputType;
-  final TextInputAction? textInputAction;
-  final Widget? prefixIcon;
+
   final bool isObscured;
-  final Function(String)? onError;
+
+  final TextInputType textInputType;
+  final TextInputAction textInputAction;
+
   final Iterable<String> autofillHints;
 
+  final Function(String)? onError;
+
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
   GroupInputFormField({
     Key? key,
     required this.hintText,
-    this.textInputType,
-    this.textInputAction,
-    this.prefixIcon,
     this.isObscured = false,
+    this.textInputType = TextInputType.text,
+    this.textInputAction = TextInputAction.done,
     this.autofillHints = const [],
+    this.prefixIcon,
+    this.suffixIcon,
     FormFieldSetter<String>? onSaved,
     FormFieldValidator<String>? validator,
-    String initialValue = "",
     this.onError,
+    String initialValue = "",
   }) : super(
           key: key,
+          initialValue: initialValue,
           onSaved: onSaved,
           validator: validator,
           builder: (FormFieldState<String> state) {
             return GroupInputField(
               hintText: hintText,
+              isObscured: isObscured,
               initialValue: initialValue,
               textInputType: textInputType,
               textInputAction: textInputAction,
               prefixIcon: prefixIcon,
-              isObscured: isObscured,
               autofillHints: autofillHints,
               onChanged: state.didChange,
             );

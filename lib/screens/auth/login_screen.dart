@@ -12,7 +12,6 @@ import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/types/auth/auth_action.dart';
-import 'package:socale/types/auth/auth_login_action.dart';
 import 'package:socale/types/auth/auth_result.dart';
 import 'package:socale/utils/validators.dart';
 
@@ -70,11 +69,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           case AuthResult.unverified:
             widget.updateEmail(email);
             widget.updatePassword(password);
-            ref.read(authActionProvider.notifier).state = AuthAction.verify;
+            ref.read(authStateProvider.notifier).verifyEmail(true);
             break;
           case AuthResult.genericError:
-            const snackBar =
-                SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+            const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
             if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
           case AuthResult.notAuthorized:
@@ -85,8 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             break;
           case AuthResult.userNotFound:
-            const snackBar =
-                SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+            const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
             if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
         }
@@ -125,7 +122,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.white,
       body: Stack(
         children: [
           const LightOnboardingBackground(),
@@ -173,8 +169,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             hintText: "Email Address",
                             textInputType: TextInputType.emailAddress,
                             autofillHints: [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), fit: BoxFit.contain),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                             textInputAction: TextInputAction.next,
@@ -184,8 +179,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             hintText: "Password",
                             textInputType: TextInputType.visiblePassword,
                             autofillHints: [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), fit: BoxFit.contain),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -213,40 +207,25 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             decoration: TextDecoration.underline,
                             color: Colors.black.withOpacity(0.5),
                           ),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () async {
-                              ref.read(authActionProvider.notifier).state = AuthAction.signUp;
-                            },
+                          recognizer: TapGestureRecognizer()..onTap = () => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signUp),
                         ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20),
+                    padding: EdgeInsets.only(top: 20, left: 36, right: 36),
                     child: Hero(
                       tag: "login_button",
                       child: GradientButton(
                         isLoading: isLoading,
-                        width: size.width - 60,
-                        height: 48,
                         linearGradient: ColorValues.orangeButtonGradient,
-                        buttonContent: Text(
-                          "Sign In",
-                          style: GoogleFonts.roboto(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
+                        buttonContent: "Sign In",
                         onClickEvent: onClickLogin,
                       ),
                     ),
                   ),
                   GestureDetector(
-                    onTap: () {
-                      ref.read(authLoginActionProvider.notifier).state =
-                          AuthLoginAction.forgotPassword;
-                    },
+                    onTap: () => ref.read(authStateProvider.notifier).resetPassword(true),
                     behavior: HitTestBehavior.translucent,
                     child: Padding(
                       padding: EdgeInsets.only(bottom: 30, top: 30),

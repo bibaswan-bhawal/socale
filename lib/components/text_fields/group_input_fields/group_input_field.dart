@@ -1,28 +1,38 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:rive/rive.dart';
 import 'package:socale/resources/colors.dart';
 
 class GroupInputField extends StatefulWidget {
   final String hintText;
-  final TextInputType? textInputType;
-  final TextInputAction? textInputAction;
-  final Widget? prefixIcon;
+
   final bool isObscured;
-  final Function(String)? onChanged;
-  final String? initialValue;
+
+  final String initialValue;
+
+  final TextInputType textInputType;
+  final TextInputAction textInputAction;
+
   final Iterable<String> autofillHints;
+
+  final Function(String) onChanged;
+
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   const GroupInputField({
     Key? key,
     required this.hintText,
-    this.textInputType,
-    this.textInputAction,
-    this.prefixIcon,
     this.isObscured = false,
-    this.onChanged,
-    this.initialValue,
+    this.initialValue = "",
+    this.textInputType = TextInputType.text,
+    this.textInputAction = TextInputAction.done,
     this.autofillHints = const [],
+    required this.onChanged,
+    this.prefixIcon,
+    this.suffixIcon,
   }) : super(key: key);
 
   @override
@@ -33,17 +43,36 @@ class _GroupInputFieldState extends State<GroupInputField> {
   late TextEditingController controller;
   bool shouldObscure = false;
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  Artboard? _board;
+  StateMachineController? _controller;
+  SMITrigger? _trigger;
 
-    controller = TextEditingController(text: widget.initialValue ?? "");
+  @override
+  void initState() {
+    super.initState();
+
+    rootBundle.load('assets/animations/icons/hide_show.riv').then((data) async {
+      final file = RiveFile.import(data);
+
+      final board = file.mainArtboard;
+      var controller = StateMachineController.fromArtboard(board, 'logic');
+
+      if (controller != null) {
+        board.addController(controller);
+        _trigger = controller.findInput<bool>('pressed') as SMITrigger;
+        _controller = controller;
+      }
+
+      setState(() => _board = board);
+    });
+
+    controller = TextEditingController(text: widget.initialValue);
 
     if (widget.isObscured) shouldObscure = widget.isObscured;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (widget.onChanged != null && widget.initialValue != null) {
-        widget.onChanged!(widget.initialValue!);
+      if (widget.initialValue.isNotEmpty) {
+        widget.onChanged(widget.initialValue);
       }
     });
   }
@@ -54,44 +83,62 @@ class _GroupInputFieldState extends State<GroupInputField> {
     super.dispose();
   }
 
-  @override
-  Widget build(BuildContext context) {
-    return TextField(
-      controller: controller,
-      onChanged: widget.onChanged,
-      style: GoogleFonts.roboto(fontSize: 15, letterSpacing: -0.3),
-      cursorColor: ColorValues.socaleOrange,
-      cursorRadius: Radius.circular(1),
-      keyboardType: widget.textInputType,
-      textInputAction: widget.textInputAction,
-      autofillHints: [AutofillHints.email],
-      obscureText: shouldObscure,
-      decoration: InputDecoration(
-        isCollapsed: true,
-        prefixIcon: Padding(
-          padding: EdgeInsets.only(right: 10),
-          child: widget.prefixIcon,
-        ),
-        suffixIcon: Padding(
-          padding: EdgeInsets.only(right: 4),
-          child: widget.isObscured
-              ? GestureDetector(
-                  onTap: () => setState(() => shouldObscure = !shouldObscure),
-                  behavior: HitTestBehavior.translucent,
-                  child: SvgPicture.asset(
-                    shouldObscure ? 'assets/icons/show.svg' : 'assets/icons/hide.svg',
-                    color: Color(0xFF808080),
-                    width: 24,
-                  ),
-                )
-              : null,
-        ),
-        suffixIconConstraints: BoxConstraints(maxHeight: 24),
-        prefixIconConstraints: BoxConstraints(maxHeight: 24),
-        contentPadding: EdgeInsets.symmetric(vertical: 14),
-        border: InputBorder.none,
-        hintText: widget.hintText,
+  Widget? suffixIconBuilder() {
+    if (widget.suffixIcon != null) return widget.suffixIcon!;
+    if (!widget.isObscured) return null;
+
+    return SizedBox(
+      width: 20,
+      height: 20,
+      child: InkResponse(
+        onTap: () {
+          _trigger?.fire();
+          setState(() => shouldObscure = !shouldObscure);
+        },
+        splashFactory: InkRipple.splashFactory,
+        radius: 10,
+        child: _board != null ? Rive(artboard: _board!, fit: BoxFit.contain) : null,
       ),
     );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      return Container(
+        width: constraints.maxWidth,
+        padding: EdgeInsets.symmetric(vertical: 10),
+        child: Row(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(right: 14),
+              child: widget.prefixIcon,
+            ),
+            Expanded(
+              child: TextField(
+                controller: controller,
+                onChanged: widget.onChanged,
+                style: GoogleFonts.roboto(fontSize: 14, letterSpacing: -0.3),
+                cursorColor: ColorValues.socaleOrange,
+                cursorRadius: Radius.circular(1),
+                keyboardType: widget.textInputType,
+                textInputAction: widget.textInputAction,
+                autofillHints: widget.autofillHints,
+                obscureText: shouldObscure,
+                decoration: InputDecoration(
+                  isCollapsed: true,
+                  border: InputBorder.none,
+                  hintText: widget.hintText,
+                ),
+              ),
+            ),
+            Padding(
+              padding: EdgeInsets.only(left: 14),
+              child: suffixIconBuilder(),
+            ),
+          ],
+        ),
+      );
+    });
   }
 }

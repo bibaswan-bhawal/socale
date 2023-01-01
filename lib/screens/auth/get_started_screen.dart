@@ -18,18 +18,12 @@ class GetStartedScreen extends ConsumerStatefulWidget {
   ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
-    with SingleTickerProviderStateMixin {
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with SingleTickerProviderStateMixin {
   late CurvedAnimation animation;
   late AnimationController animationController;
 
-  void goToLogin() async {
-    ref.read(authActionProvider.notifier).state = AuthAction.signIn;
-  }
-
-  goToRegister() async {
-    ref.read(authActionProvider.notifier).state = AuthAction.signUp;
-  }
+  void goToLogin() => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signIn);
+  void goToRegister() => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signUp);
 
   @override
   void initState() {
@@ -42,8 +36,6 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
       });
 
     animationController.repeat(reverse: true);
-
-    //printRunTime(appStartTime, "total app startTime");
   }
 
   @override
@@ -57,6 +49,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
     final size = MediaQuery.of(context).size;
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
       body: Stack(
         children: [
           const LightOnboardingBackground(),
@@ -78,7 +71,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
                       child: Transform.translate(
                         offset: Offset(0, ((size.height * 0.04) * (animation.value - 0.5))),
                         child: Center(
-                          child: Image.asset('assets/get_started/cover_illustration.png'),
+                          child: Image.asset('assets/illustrations/get_started/cover_illustration.png'),
                         ),
                       ),
                     ),
@@ -128,38 +121,20 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsets.only(top: 10),
+                    padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
                     child: Hero(
                       tag: "login_button",
                       child: GradientButton(
-                        width: size.width - 60,
-                        height: 48,
                         linearGradient: ColorValues.orangeButtonGradient,
-                        buttonContent: Text(
-                          "Sign In",
-                          style: GoogleFonts.roboto(
-                            color: Colors.white,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 16,
-                          ),
-                        ),
+                        buttonContent: "Sign In",
                         onClickEvent: goToLogin,
                       ),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 10, bottom: 20),
+                    padding: EdgeInsets.only(top: 10, bottom: 20, left: 36, right: 36),
                     child: OutlineButton(
-                      width: size.width - 60,
-                      height: 48,
-                      buttonContent: Text(
-                        "Register",
-                        style: GoogleFonts.roboto(
-                          color: Colors.black,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
+                      buttonContent: "Register",
                       onClickEvent: goToRegister,
                     ),
                   ),

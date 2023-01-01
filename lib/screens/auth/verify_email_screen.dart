@@ -4,6 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
+import 'package:socale/navigation/main/main_route_path.dart';
 import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
@@ -14,8 +15,7 @@ class VerifyEmailScreen extends ConsumerStatefulWidget {
   final String email;
   final String password;
 
-  const VerifyEmailScreen({Key? key, required this.email, required this.password})
-      : super(key: key);
+  const VerifyEmailScreen({Key? key, required this.email, required this.password}) : super(key: key);
 
   @override
   ConsumerState<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
@@ -27,12 +27,10 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   void resendCode() async {
     final result = await AuthService.resendVerifyLink(widget.email);
     if (result) {
-      const snackBar = SnackBar(
-          content: Text("A new link as been sent to your email", textAlign: TextAlign.center));
+      const snackBar = SnackBar(content: Text("A new link as been sent to your email", textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      const snackBar = SnackBar(
-          content: Text("There was an error, try again later", textAlign: TextAlign.center));
+      const snackBar = SnackBar(content: Text("There was an error, try again later", textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -53,12 +51,11 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.genericError:
-          const snackBar =
-              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         default:
-          ref.read(authActionProvider.notifier).state = AuthAction.noAction;
+          ref.read(authStateProvider.notifier).setAuthAction(AuthAction.noAction);
           break;
       }
     }
@@ -103,18 +100,14 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                         ).createShader(bounds),
                         child: Text(
                           "email",
-                          style: GoogleFonts.poppins(
-                              fontSize: size.width * 0.058,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.white),
+                          style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(
-                      top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                  padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
                   child: Column(
                     children: [
                       Text(
@@ -163,17 +156,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 ),
                 GradientButton(
                   isLoading: isLoading,
-                  width: size.width - 60,
-                  height: 48,
                   linearGradient: ColorValues.orangeButtonGradient,
-                  buttonContent: Text(
-                    "Continue",
-                    style: GoogleFonts.roboto(
-                      color: Colors.white,
-                      fontWeight: FontWeight.bold,
-                      fontSize: 16,
-                    ),
-                  ),
+                  buttonContent: "Continue",
                   onClickEvent: confirmEmail,
                 ),
                 Padding(

@@ -7,6 +7,7 @@ import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
+import 'package:socale/components/utils/keyboard_safe_area.dart';
 import 'package:socale/providers/providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
@@ -16,7 +17,14 @@ import 'package:socale/utils/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  final Function updateEmail;
+  final Function updatePassword;
+
+  const RegisterScreen({
+    Key? key,
+    required this.updateEmail,
+    required this.updatePassword,
+  }) : super(key: key);
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -68,11 +76,12 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           ref.read(appStateProvider.notifier).login();
           break;
         case AuthResult.unverified:
-          ref.read(authActionProvider.notifier).state = AuthAction.verify;
+          widget.updateEmail(email);
+          widget.updatePassword(password);
+          ref.read(authStateProvider.notifier).verifyEmail(true);
           break;
         case AuthResult.genericError:
-          const snackBar =
-              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.notAuthorized:
@@ -83,8 +92,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
           break;
         case AuthResult.userNotFound:
-          const snackBar =
-              SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+          const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
       }
@@ -132,7 +140,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       body: Stack(
         children: [
           LightOnboardingBackground(),
-          SafeArea(
+          KeyboardSafeArea(
             child: Center(
               child: Column(
                 children: [
@@ -177,8 +185,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             autofillHints: [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                           ),
@@ -188,8 +195,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
                             autofillHints: [AutofillHints.newPassword],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -200,8 +206,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
                             autofillHints: [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: saveConfirmPassword,
                             validator: Validators.validatePassword,
@@ -276,33 +281,22 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       children: [
                         TextSpan(text: "Already have an account? "),
                         TextSpan(
-                            text: "Sign In",
-                            style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.black.withOpacity(0.5),
-                            ),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                ref.read(authActionProvider.notifier).state = AuthAction.signIn;
-                              }),
+                          text: "Sign In",
+                          style: TextStyle(
+                            decoration: TextDecoration.underline,
+                            color: Colors.black.withOpacity(0.5),
+                          ),
+                          recognizer: TapGestureRecognizer()..onTap = () => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signIn),
+                        ),
                       ],
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 20),
+                    padding: EdgeInsets.only(top: 15, bottom: 20, left: 36, right: 36),
                     child: GradientButton(
                       isLoading: isLoading,
-                      width: size.width - 60,
-                      height: 48,
                       linearGradient: ColorValues.purpleButtonGradient,
-                      buttonContent: Text(
-                        "Create an Account",
-                        style: GoogleFonts.roboto(
-                          color: Colors.white,
-                          fontWeight: FontWeight.bold,
-                          fontSize: 16,
-                        ),
-                      ),
+                      buttonContent: "Create an Account",
                       onClickEvent: onClickRegister,
                     ),
                   ),

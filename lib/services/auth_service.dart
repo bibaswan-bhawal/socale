@@ -4,11 +4,17 @@ import 'package:socale/types/auth/auth_result.dart';
 
 class AuthService {
   static Future<AuthResult> autoLoginUser() async {
-    AuthSession result = await Amplify.Auth.fetchAuthSession();
-    if (result.isSignedIn) {
-      return AuthResult.success;
+    try {
+      AuthSession result = await Amplify.Auth.fetchAuthSession();
+
+      if (result.isSignedIn) {
+        return AuthResult.success;
+      }
+
+      return AuthResult.notAuthorized;
+    } on AuthException catch (e) {
+      return AuthResult.genericError;
     }
-    return AuthResult.success;
   }
 
   static Future<AuthResult> signUpUser(String email, String password) async {
@@ -63,8 +69,7 @@ class AuthService {
   }
 
   static Future<void> confirmResetPassword(String email, String newPassword, String code) async {
-    await Amplify.Auth.confirmResetPassword(
-        username: email, newPassword: newPassword, confirmationCode: code);
+    await Amplify.Auth.confirmResetPassword(username: email, newPassword: newPassword, confirmationCode: code);
   }
 
   static Future<bool> signOutUser() async {

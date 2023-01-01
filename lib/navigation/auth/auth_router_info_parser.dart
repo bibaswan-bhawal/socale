@@ -1,11 +1,10 @@
 import 'package:flutter/cupertino.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
+import 'package:socale/providers/state_notifiers/auth_state.dart';
 import 'package:socale/types/auth/auth_action.dart';
-import 'package:socale/types/auth/auth_login_action.dart';
 
-class AuthRouteInformationParser extends RouteInformationParser<AuthRoutePath> {
-  @override
-  Future<AuthRoutePath> parseRouteInformation(RouteInformation routeInformation) async {
+class AuthRouteInformationParser {
+  static AuthRoutePath? parseRouteInformation(RouteInformation routeInformation) {
     final uri = Uri.parse(routeInformation.location!);
 
     if (uri.pathSegments.isEmpty) {
@@ -18,29 +17,29 @@ class AuthRouteInformationParser extends RouteInformationParser<AuthRoutePath> {
           return AuthRoutePath.signIn();
         case 'register':
           return AuthRoutePath.signUp();
-        case 'reset_password':
+        case 'reset-password':
           return AuthRoutePath.forgotPassword();
+        default:
+          return AuthRoutePath.getStarted();
       }
     }
 
-    return AuthRoutePath.getStarted();
+    return null;
   }
 
-  @override
-  RouteInformation restoreRouteInformation(AuthRoutePath configuration) {
-    if (configuration.authLoginAction == AuthLoginAction.forgotPassword) {
-      return RouteInformation(location: '/reset_password');
-    } else {
-      switch (configuration.authAction) {
-        case AuthAction.noAction:
-          return RouteInformation(location: '/');
-        case AuthAction.signIn:
-          return RouteInformation(location: '/login');
-        case AuthAction.signUp:
-          return RouteInformation(location: '/register');
-        case AuthAction.verify:
-          return RouteInformation(location: '/verify');
-      }
+  static RouteInformation restoreRouteInformation(AuthRoutePath configuration) {
+    AuthState state = configuration.appState;
+
+    if (state.notVerified) return RouteInformation(location: '/verify');
+    if (state.resetPassword) return RouteInformation(location: '/reset-password');
+
+    switch (state.authAction) {
+      case AuthAction.signIn:
+        return RouteInformation(location: '/login');
+      case AuthAction.signUp:
+        return RouteInformation(location: '/register');
+      default:
+        return RouteInformation(location: '/get-started');
     }
   }
 }

@@ -7,10 +7,12 @@ class AppState {
   final bool isLoggedIn;
 
   AppState({
-    this.isAmplifyConfigured = false,
-    this.isLocalDBConfigured = false,
+    isAmplifyConfigured = false,
+    isLocalDBConfigured = false,
     this.isLoggedIn = false,
-  });
+    bool? isInitialized,
+  })  : isLocalDBConfigured = isInitialized ?? isLocalDBConfigured,
+        isAmplifyConfigured = isInitialized ?? isAmplifyConfigured;
 
   AppState updateState({bool? isAmplifyConfigured, bool? isLocalDBConfigured, bool? isLoggedIn}) {
     return AppState(
@@ -30,10 +32,7 @@ class AppStateNotifier extends StateNotifier<AppState> {
 
   void amplifyConfigured() => state = state.updateState(isAmplifyConfigured: true);
   void localDBConfigured() => state = state.updateState(isLocalDBConfigured: true);
-  void login() {
-    print("User signed in");
-    state = state.updateState(isLoggedIn: true);
-  }
 
+  void login() => state = state.updateState(isLoggedIn: true);
   void signOut() => state = state.updateState(isLoggedIn: false);
 }
