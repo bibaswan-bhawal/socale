@@ -1,8 +1,8 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/transitions/curves.dart';
 
-class FadeOutTransition extends StatefulWidget {
+class FadeOutTransition extends StatelessWidget {
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
   final Widget child;
@@ -14,67 +14,37 @@ class FadeOutTransition extends StatefulWidget {
     required this.child,
   });
 
-  @override
-  State createState() => _FadeOutTransitionState();
-}
+  bool get exiting => secondaryAnimation.status == AnimationStatus.forward;
+  bool get entering => secondaryAnimation.status == AnimationStatus.reverse;
 
-class _FadeOutTransitionState extends State<FadeOutTransition> {
-  bool onTop = true;
-
-  @override
-  void initState() {
-    super.initState();
-
-    widget.animation.addListener(handleAnimationChange);
-    widget.secondaryAnimation.addListener(handleSecondaryAnimationChange);
-  }
-
-  @override
-  void didUpdateWidget(FadeOutTransition oldWidget) {
-    super.didUpdateWidget(oldWidget);
-
-    oldWidget.animation.removeListener(handleAnimationChange);
-    widget.animation.addListener(handleAnimationChange);
-
-    oldWidget.secondaryAnimation.removeListener(handleSecondaryAnimationChange);
-    widget.secondaryAnimation.addListener(handleSecondaryAnimationChange);
-  }
-
-  @override
-  void dispose() {
-    widget.animation.removeListener(handleAnimationChange);
-    widget.secondaryAnimation.removeListener(handleSecondaryAnimationChange);
-
-    super.dispose();
-  }
-
-  void handleAnimationChange() {
-    setState(() => onTop = true);
-  }
-
-  void handleSecondaryAnimationChange() {
-    setState(() => onTop = false);
-  }
-
-  bool get reversed => widget.secondaryAnimation.status == AnimationStatus.reverse;
-
-  Widget onTopBuilder() {
-    return widget.child;
-  }
-
-  Widget onBottomBuilder() {
-    Animatable<double> fadeInTransition = CurveTween(
-      curve: reversed ? emphasizedDecelerate : emphasizedAccelerate,
-    ).chain(CurveTween(curve: const Interval(0.3, 1.0)));
-
-    return FadeTransition(
-      opacity: fadeInTransition.animate(ReverseAnimation(widget.secondaryAnimation)),
-      child: widget.child,
-    );
-  }
+  bool get secondary => exiting || entering;
 
   @override
   Widget build(BuildContext context) {
-    return onTop ? onTopBuilder() : onBottomBuilder();
+    Animatable<Offset> slideSecondaryTransition = Tween<Offset>(begin: Offset.zero, end: const Offset(-200, 0.0))
+        .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate));
+
+    Animatable<double> fadeSecondaryTransition = Tween<double>(begin: 1.0, end: 0.0)
+        .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate))
+        .chain(CurveTween(curve: const Interval(0, 0.5)));
+
+    return Stack(
+      children: [
+        const LightOnboardingBackground(),
+        FadeTransition(
+          opacity: fadeSecondaryTransition.animate(secondaryAnimation),
+          child: AnimatedBuilder(
+            animation: animation,
+            builder: (context, child) {
+              return Transform.translate(
+                offset: slideSecondaryTransition.evaluate(secondaryAnimation),
+                child: child,
+              );
+            },
+            child: child,
+          ),
+        ),
+      ],
+    );
   }
 }

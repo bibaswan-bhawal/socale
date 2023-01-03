@@ -6,15 +6,15 @@ class SlideTransitionPage extends Page {
   final Widget child;
   final SharedAxisTransitionType transitionType;
 
-  SlideTransitionPage({super.key, required this.child, required this.transitionType}) {
-    print('build new slide page route');
-  }
+  const SlideTransitionPage({super.key, required this.child, required this.transitionType});
 
   @override
   Route createRoute(BuildContext context) {
     return PageRouteBuilder(
       settings: this,
       pageBuilder: (context, animation, secondaryAnimation) => child,
+      transitionDuration: const Duration(milliseconds: 500),
+      reverseTransitionDuration: const Duration(milliseconds: 500),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return ChildSlideTransition(
           animation: animation,

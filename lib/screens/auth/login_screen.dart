@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
@@ -28,7 +27,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   GlobalKey<FormFieldState> passwordFieldState = GlobalKey<FormFieldState>();
 
   bool formError = false;
-  String errorMessage = "";
+  String errorMessage = '';
 
   String? email;
   String? password;
@@ -46,14 +45,12 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
       if (form.validate()) {
         setState(() => formError = false);
-        setState(() => errorMessage = "");
+        setState(() => errorMessage = '');
 
         form.save();
 
         final result = await AuthService.signInUser(email!, password!);
         setState(() => isLoading = false);
-
-        print(result);
 
         switch (result) {
           case AuthResult.success:
@@ -69,7 +66,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           case AuthResult.notAuthorized:
             setState(() {
               formError = true;
-              errorMessage = "Incorrect password";
+              errorMessage = 'Incorrect password';
             });
 
             break;
@@ -92,17 +89,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (emailField.errorText != null && passwordField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Enter a valid email and password";
+        errorMessage = 'Enter a valid email and password';
       });
     } else if (emailField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Enter a valid email";
+        errorMessage = 'Enter a valid email';
       });
     } else if (passwordField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Enter a valid password";
+        errorMessage = 'Enter a valid password';
       });
     }
   }
@@ -113,9 +110,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          const LightOnboardingBackground(),
           KeyboardSafeArea(
             child: Center(
               child: Column(
@@ -123,7 +120,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: size.height * 0.08),
                     child: Hero(
-                      tag: "auth_logo",
+                      tag: 'auth_logo',
                       child: SvgPicture.asset(
                         'assets/logo/color_logo.svg',
                         width: 150,
@@ -131,9 +128,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 30),
+                    padding: const EdgeInsets.only(top: 30),
                     child: Text(
-                      "Welcome Back",
+                      'Welcome Back',
                       style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
@@ -141,14 +138,14 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   Text(
-                    "Login to start matching",
+                    'Login to start matching',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.black.withOpacity(0.5),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
+                    padding: const EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
                     child: Form(
                       key: formKey,
                       child: GroupInputForm(
@@ -157,20 +154,20 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         children: [
                           GroupInputFormField(
                             key: emailFieldState,
-                            hintText: "Email Address",
+                            hintText: 'Email Address',
                             textInputType: TextInputType.emailAddress,
-                            autofillHints: [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), fit: BoxFit.contain),
+                            autofillHints: const [AutofillHints.email],
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                             textInputAction: TextInputAction.next,
                           ),
                           GroupInputFormField(
                             key: passwordFieldState,
-                            hintText: "Password",
+                            hintText: 'Password',
                             textInputType: TextInputType.visiblePassword,
-                            autofillHints: [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), fit: BoxFit.contain),
+                            autofillHints: const [AutofillHints.password],
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -191,9 +188,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         color: Colors.black,
                       ),
                       children: [
-                        TextSpan(text: "Don't have an account? "),
+                        const TextSpan(text: "Don't have an account? "),
                         TextSpan(
-                          text: "Register",
+                          text: 'Register',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             color: Colors.black.withOpacity(0.5),
@@ -204,24 +201,21 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 20, left: 36, right: 36),
-                    child: Hero(
-                      tag: "login_button",
-                      child: GradientButton(
-                        isLoading: isLoading,
-                        linearGradient: ColorValues.orangeButtonGradient,
-                        buttonContent: "Sign In",
-                        onClickEvent: onClickLogin,
-                      ),
+                    padding: const EdgeInsets.only(top: 20, left: 36, right: 36),
+                    child: GradientButton(
+                      isLoading: isLoading,
+                      linearGradient: ColorValues.orangeButtonGradient,
+                      buttonContent: 'Sign In',
+                      onClickEvent: onClickLogin,
                     ),
                   ),
                   GestureDetector(
                     onTap: () => ref.read(authStateProvider.notifier).resetPassword(true),
                     behavior: HitTestBehavior.translucent,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: 30, top: 30),
+                      padding: const EdgeInsets.only(bottom: 30, top: 30),
                       child: Text(
-                        "Forgot Password?",
+                        'Forgot Password?',
                         style: TextStyle(
                           decoration: TextDecoration.underline,
                           fontWeight: FontWeight.w500,
