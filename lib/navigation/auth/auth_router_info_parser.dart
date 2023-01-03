@@ -1,9 +1,10 @@
 import 'package:flutter/cupertino.dart';
+import 'package:socale/models/auth_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
-import 'package:socale/providers/state_notifiers/auth_state.dart';
 import 'package:socale/types/auth/auth_action.dart';
 
 class AuthRouteInformationParser {
+  // new route path requested update state
   static AuthRoutePath? parseRouteInformation(RouteInformation routeInformation) {
     final uri = Uri.parse(routeInformation.location!);
 
@@ -27,19 +28,20 @@ class AuthRouteInformationParser {
     return null;
   }
 
+  // new state update route path
   static RouteInformation restoreRouteInformation(AuthRoutePath configuration) {
     AuthState state = configuration.appState;
 
-    if (state.notVerified) return RouteInformation(location: '/verify');
-    if (state.resetPassword) return RouteInformation(location: '/reset-password');
+    if (state.notVerified) return const RouteInformation(location: '/verify');
+    if (state.resetPassword) return const RouteInformation(location: '/reset-password');
 
     switch (state.authAction) {
       case AuthAction.signIn:
-        return RouteInformation(location: '/login');
+        return const RouteInformation(location: '/login');
       case AuthAction.signUp:
-        return RouteInformation(location: '/register');
+        return const RouteInformation(location: '/register');
       default:
-        return RouteInformation(location: '/get-started');
+        return const RouteInformation(location: '/get-started');
     }
   }
 }

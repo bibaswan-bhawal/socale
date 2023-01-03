@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/navigation/auth/auth_router_delegate.dart';
+import 'package:socale/providers/navigation_providers.dart';
 
 class AuthRouterScreen extends ConsumerStatefulWidget {
   const AuthRouterScreen({Key? key}) : super(key: key);
@@ -10,7 +10,7 @@ class AuthRouterScreen extends ConsumerStatefulWidget {
 }
 
 class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
-  late ChildBackButtonDispatcher? _backButtonDispatcher;
+  ChildBackButtonDispatcher? _backButtonDispatcher;
 
   @override
   void didChangeDependencies() {
@@ -22,8 +22,10 @@ class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
   Widget build(BuildContext context) {
     _backButtonDispatcher?.takePriority();
 
+    print('AuthRouterScreen build');
+
     return Router(
-      routerDelegate: AuthRouterDelegate(ref),
+      routerDelegate: ref.read(authRouterDelegateProvider),
       backButtonDispatcher: _backButtonDispatcher,
     );
   }

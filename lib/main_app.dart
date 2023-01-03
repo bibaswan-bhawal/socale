@@ -1,38 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/navigation/main/main_router_delegate.dart';
 import 'package:socale/navigation/main/main_router_info_parser.dart';
-import 'package:socale/providers/providers.dart';
+import 'package:socale/providers/navigation_providers.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/themes.dart';
-import 'package:socale/services/amplify_backend_service.dart';
 
 class MainApp extends ConsumerStatefulWidget {
-  const MainApp({Key? key}) : super(key: key);
+  const MainApp({super.key});
 
   @override
   ConsumerState<MainApp> createState() => _MainAppState();
 }
 
-class _MainAppState extends ConsumerState<MainApp> with WidgetsBindingObserver {
+class _MainAppState extends ConsumerState<MainApp> {
+  final MainRouteInformationParser _mainRouteInformationParser = MainRouteInformationParser();
+
   @override
   void initState() {
     super.initState();
-
-    AmplifyBackendService.configureAmplify(ref);
-    ref.read(localDatabaseServiceProvider).initLocalDatabase();
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.read(amplifyBackendServiceProvider).initAmplify();
+    ref.read(localDatabaseServiceProvider).initLocalDatabase();
+
     return GestureDetector(
-      onTap: () =>
-          WidgetsBinding.instance.focusManager.primaryFocus?.unfocus(), // dismiss keyboard on tap
+      onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: MaterialApp.router(
         theme: Themes.materialAppThemeData,
         debugShowCheckedModeBanner: false,
         title: 'Socale',
-        routerDelegate: MainRouterDelegate(ref),
-        routeInformationParser: MainRouteInformationParser(),
+        routerDelegate: ref.read(mainRouterDelegateProvider),
+        routeInformationParser: _mainRouteInformationParser,
       ),
     );
   }

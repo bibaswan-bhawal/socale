@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:rive/rive.dart';
 import 'package:socale/resources/colors.dart';
@@ -92,7 +91,7 @@ class _GroupInputFieldState extends State<GroupInputField> {
       height: 20,
       child: InkResponse(
         onTap: () {
-          _trigger?.fire();
+          //_trigger?.fire();
           setState(() => shouldObscure = !shouldObscure);
         },
         splashFactory: InkRipple.splashFactory,

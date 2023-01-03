@@ -1,10 +1,10 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 
-class LoginMaterialPage extends Page {
+class LoginPage extends Page {
   final Widget child;
 
-  LoginMaterialPage({LocalKey? key, required this.child}) : super(key: key);
+  const LoginPage({super.key, required this.child});
 
   @override
   Route createRoute(BuildContext context) {
@@ -14,7 +14,7 @@ class LoginMaterialPage extends Page {
         return SharedAxisTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
-          transitionType: SharedAxisTransitionType.vertical,
+          transitionType: SharedAxisTransitionType.horizontal,
           child: child,
         );
       },

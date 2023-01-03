@@ -1,5 +1,5 @@
+import 'package:socale/models/auth_state.dart';
 import 'package:socale/navigation/main/main_route_path.dart';
-import 'package:socale/providers/state_notifiers/auth_state.dart';
 import 'package:socale/types/auth/auth_action.dart';
 
 class AuthRoutePath extends AppRoutePath {

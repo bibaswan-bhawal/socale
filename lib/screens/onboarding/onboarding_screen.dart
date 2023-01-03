@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
-import 'package:socale/providers/providers.dart';
+import 'package:socale/providers/state_providers.dart';
 import 'package:socale/screens/onboarding/basic_info_page.dart';
 import 'package:socale/services/auth_service.dart';
 

@@ -1,17 +1,26 @@
 import 'package:flutter/cupertino.dart';
+import 'package:socale/models/app_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
 import 'package:socale/navigation/auth/auth_router_info_parser.dart';
 import 'package:socale/navigation/main/main_route_path.dart';
-import 'package:socale/providers/state_notifiers/app_state.dart';
 
 class MainRouteInformationParser extends RouteInformationParser<AppRoutePath> {
+  // new route path provided update state
   @override
   Future<AppRoutePath> parseRouteInformation(RouteInformation routeInformation) async {
+    if (routeInformation.location == null) return MainRoutePath.splashScreen();
+    final uri = Uri.parse(routeInformation.location!);
+
+    if (uri.pathSegments.isEmpty) {
+      return MainRoutePath.splashScreen();
+    }
+
     final authRoutePath = AuthRouteInformationParser.parseRouteInformation(routeInformation);
     if (authRoutePath == null) return MainRoutePath.splashScreen();
     return authRoutePath;
   }
 
+  // new state provided update route path
   @override
   RouteInformation? restoreRouteInformation(AppRoutePath configuration) {
     if (configuration is AuthRoutePath) {
@@ -21,11 +30,11 @@ class MainRouteInformationParser extends RouteInformationParser<AppRoutePath> {
     if (configuration is MainRoutePath) {
       AppState state = configuration.appState;
 
-      if (state.isInitialized() && state.isLoggedIn) {
-        return RouteInformation(location: '/app');
+      if (state.isInitialized && state.isLoggedIn) {
+        return const RouteInformation(location: '/app');
       }
     }
 
-    return null;
+    return const RouteInformation(location: '/');
   }
 }

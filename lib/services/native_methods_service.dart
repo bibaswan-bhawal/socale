@@ -10,10 +10,10 @@ Future<void> getNotificationsFromIosCoreData() async {
     notifications = await platform.invokeMethod('getNotifications');
     await deleteNotificationsInIosCoreData();
   } on PlatformException catch (e) {
-    throw ("Failed to get notifications: '${e.message}'.");
+    throw ('Failed to get notifications: ${e.message}');
   }
 
-  if (kDebugMode) print("Got list of notification data from IOS: $notifications");
+  if (kDebugMode) print('Got list of notification data from IOS: $notifications');
 }
 
 Future<void> deleteNotificationsInIosCoreData() async {
@@ -22,8 +22,8 @@ Future<void> deleteNotificationsInIosCoreData() async {
   try {
     isSuccess = await platform.invokeMethod('deleteNotifications');
   } on PlatformException catch (e) {
-    throw ("Failed to get delete notifications: '${e.message}'.");
+    throw ('Failed to get delete notifications: ${e.message}');
   }
 
-  if (kDebugMode) print("deleted notification storage: $isSuccess");
+  if (kDebugMode) print('deleted notification storage: $isSuccess');
 }

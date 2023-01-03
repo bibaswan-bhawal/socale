@@ -25,7 +25,7 @@ class LightOnboardingBackground extends StatelessWidget {
               height: size.height,
             ),
           ),
-        ),
+        )
       ],
     );
   }

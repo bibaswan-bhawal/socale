@@ -90,14 +90,14 @@ class NotificationService {
     await requestPermissions();
 
     deviceToken = await FirebaseMessaging.instance.getToken();
-    print(deviceToken);
+    if (kDebugMode) print(deviceToken);
 
     FirebaseMessaging.onMessage.listen(onMessageReceived);
     FirebaseMessaging.onMessageOpenedApp.listen(onMessageReceived);
   }
 
   void onMessageReceived(RemoteMessage message) {
-    if (kDebugMode) print("message received in foreground: ${message.data}");
+    if (kDebugMode) print('message received in foreground: ${message.data}');
 
     showFlutterNotification(message, permissionAuthStatus);
 
@@ -109,7 +109,7 @@ class NotificationService {
   Future<void> requestPermissions() async {
     notificationSettings = await fcmMessaging.requestPermission(alert: true, badge: true, sound: true);
     permissionAuthStatus = notificationSettings.authorizationStatus;
-    if (kDebugMode) print("Notification permission status: $permissionAuthStatus");
+    if (kDebugMode) print('Notification permission status: $permissionAuthStatus');
   }
 
   static void onMessageOpenedApp(RemoteMessage message) {

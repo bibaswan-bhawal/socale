@@ -2,14 +2,20 @@ import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/amplifyconfiguration.dart';
-import 'package:socale/providers/providers.dart';
+import 'package:socale/providers/state_providers.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/types/auth/auth_result.dart';
-import 'package:socale/utils/debug_print_statements.dart';
 
 class AmplifyBackendService {
-  static Future<void> configureAmplify(ref) async {
-    DateTime startTime = DateTime.now();
+  ProviderRef ref;
+
+  AmplifyBackendService(this.ref);
+
+  Future<void> initAmplify() async {
+    if (Amplify.isConfigured) {
+      attemptAutoLogin();
+      return;
+    }
 
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
 
@@ -17,14 +23,15 @@ class AmplifyBackendService {
 
     try {
       await Amplify.configure(amplifyconfig);
-      printRunTime(startTime, "Amplify initialisation");
-      attemptAutoLogin(ref);
+      attemptAutoLogin();
+    } on AmplifyAlreadyConfiguredException {
+      attemptAutoLogin();
     } catch (e) {
-      safePrint(e);
+      throw (Exception('Could not configure Amplify: $e'));
     }
   }
 
-  static Future<void> attemptAutoLogin(ref) async {
+  Future<void> attemptAutoLogin() async {
     final authResult = await AuthService.autoLoginUser();
 
     switch (authResult) {
@@ -35,8 +42,7 @@ class AmplifyBackendService {
         ref.read(appStateProvider.notifier).signOut();
         break;
       default:
-        print("Unknown error");
-        break;
+        throw (Exception('Could not auto login user'));
     }
 
     ref.read(appStateProvider.notifier).amplifyConfigured();

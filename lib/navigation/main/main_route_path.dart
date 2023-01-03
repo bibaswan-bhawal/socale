@@ -1,4 +1,4 @@
-import 'package:socale/providers/state_notifiers/app_state.dart';
+import 'package:socale/models/app_state.dart';
 
 class MainRoutePath extends AppRoutePath {
   AppState appState;

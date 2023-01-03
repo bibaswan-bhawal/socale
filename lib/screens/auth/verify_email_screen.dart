@@ -4,18 +4,17 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
-import 'package:socale/navigation/main/main_route_path.dart';
-import 'package:socale/providers/providers.dart';
+import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/types/auth/auth_action.dart';
 import 'package:socale/types/auth/auth_result.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
-  final String email;
-  final String password;
+  final String email = "";
+  final String password = "";
 
-  const VerifyEmailScreen({Key? key, required this.email, required this.password}) : super(key: key);
+  const VerifyEmailScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<VerifyEmailScreen> createState() => _VerifyEmailScreenState();

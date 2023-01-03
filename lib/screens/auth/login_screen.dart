@@ -8,7 +8,7 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
-import 'package:socale/providers/providers.dart';
+import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/types/auth/auth_action.dart';
@@ -16,14 +16,7 @@ import 'package:socale/types/auth/auth_result.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  final Function updateEmail;
-  final Function updatePassword;
-
-  const LoginScreen({
-    Key? key,
-    required this.updateEmail,
-    required this.updatePassword,
-  }) : super(key: key);
+  const LoginScreen({Key? key}) : super(key: key);
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -67,8 +60,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ref.read(appStateProvider.notifier).login();
             break;
           case AuthResult.unverified:
-            widget.updateEmail(email);
-            widget.updatePassword(password);
             ref.read(authStateProvider.notifier).verifyEmail(true);
             break;
           case AuthResult.genericError:
