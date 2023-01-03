@@ -1,4 +1,3 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/auth_state.dart';
@@ -35,12 +34,12 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
     return Navigator(
       key: navigatorKey,
       pages: [
-        FadeOutPage(child: const GetStartedScreen()),
+        const FadeOutPage(child: GetStartedScreen()),
         if (authState.authAction == AuthAction.signIn) ...[
-          SlideTransitionPage(child: const LoginScreen(), transitionType: SharedAxisTransitionType.horizontal),
+          const SlideTransitionPage(child: LoginScreen()),
           if (authState.resetPassword) const MaterialPage(child: ForgotPasswordScreen()),
         ],
-        if (authState.authAction == AuthAction.signUp) const MaterialPage(child: RegisterScreen()),
+        if (authState.authAction == AuthAction.signUp) const SlideTransitionPage(child: RegisterScreen()),
         if (authState.notVerified) const MaterialPage(child: VerifyEmailScreen()),
       ],
       onPopPage: (route, result) {

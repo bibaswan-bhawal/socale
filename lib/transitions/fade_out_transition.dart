@@ -21,7 +21,7 @@ class FadeOutTransition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    Animatable<Offset> slideSecondaryTransition = Tween<Offset>(begin: Offset.zero, end: const Offset(-200, 0.0))
+    Animatable<Offset> slideSecondaryTransition = Tween<Offset>(begin: Offset.zero, end: const Offset(-300, 0.0))
         .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate));
 
     Animatable<double> fadeSecondaryTransition = Tween<double>(begin: 1.0, end: 0.0)

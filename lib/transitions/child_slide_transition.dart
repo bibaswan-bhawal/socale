@@ -2,13 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:socale/transitions/curves.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 
-enum SlideDirection {
-  leftToRight,
-  rightToLeft,
-  topToBottom,
-  bottomToTop,
-}
-
 class ChildSlideTransition extends StatelessWidget {
   final Animation<double> animation;
   final Animation<double> secondaryAnimation;
@@ -29,7 +22,7 @@ class ChildSlideTransition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // entering
-    Animatable<Offset> slideInTransition = Tween<Offset>(begin: const Offset(200, 0.0), end: Offset.zero)
+    Animatable<Offset> slideInTransition = Tween<Offset>(begin: const Offset(300, 0.0), end: Offset.zero)
         .chain(CurveTween(curve: pushing ? emphasizedDecelerate : emphasizedAccelerate.flipped));
 
     // entering

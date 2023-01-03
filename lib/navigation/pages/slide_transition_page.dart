@@ -1,12 +1,10 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:socale/transitions/child_slide_transition.dart';
 
 class SlideTransitionPage extends Page {
   final Widget child;
-  final SharedAxisTransitionType transitionType;
 
-  const SlideTransitionPage({super.key, required this.child, required this.transitionType});
+  const SlideTransitionPage({super.key, required this.child});
 
   @override
   Route createRoute(BuildContext context) {
