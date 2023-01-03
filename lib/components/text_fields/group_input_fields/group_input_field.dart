@@ -22,17 +22,17 @@ class GroupInputField extends StatefulWidget {
   final Widget? suffixIcon;
 
   const GroupInputField({
-    Key? key,
+    super.key,
     required this.hintText,
     this.isObscured = false,
-    this.initialValue = "",
+    this.initialValue = '',
     this.textInputType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
     this.autofillHints = const [],
     required this.onChanged,
     this.prefixIcon,
     this.suffixIcon,
-  }) : super(key: key);
+  });
 
   @override
   State<GroupInputField> createState() => _GroupInputFieldState();
@@ -91,7 +91,7 @@ class _GroupInputFieldState extends State<GroupInputField> {
       height: 20,
       child: InkResponse(
         onTap: () {
-          //_trigger?.fire();
+          _trigger?.fire();
           setState(() => shouldObscure = !shouldObscure);
         },
         splashFactory: InkRipple.splashFactory,
