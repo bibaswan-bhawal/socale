@@ -40,7 +40,7 @@ class _GetStartedTransition extends ConsumerWidget {
   @override
   Widget build(BuildContext context, WidgetRef ref) {
     return SlideHorizontalTransition(
-      animation: animation,
+      animation: secondaryAnimation,
       secondary: true,
       fadeMidpoint: 0.4,
       child: child,

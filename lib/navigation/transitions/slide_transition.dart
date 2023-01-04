@@ -38,7 +38,7 @@ class SlideHorizontalTransition extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DualTransitionBuilder(
-      animation: animation,
+      animation: secondary ? ReverseAnimation(animation) : animation,
       child: child,
       forwardBuilder: (context, animation, child) {
         return FadeTransition(
