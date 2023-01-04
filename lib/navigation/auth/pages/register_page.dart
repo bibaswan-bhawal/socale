@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socale/navigation/transitions/login_transition.dart';
 import 'package:socale/navigation/transitions/register_transition.dart';
 
 class RegisterPage extends Page {
@@ -10,8 +11,8 @@ class RegisterPage extends Page {
   Route createRoute(BuildContext context) {
     return PageRouteBuilder(
       settings: this,
-      transitionDuration: const Duration(milliseconds: 400),
-      reverseTransitionDuration: const Duration(milliseconds: 200),
+      transitionDuration: const Duration(milliseconds: 1000),
+      reverseTransitionDuration: const Duration(milliseconds: 1000),
       pageBuilder: (context, animation, secondaryAnimation) => child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return RegisterTransition(

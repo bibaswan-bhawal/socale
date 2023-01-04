@@ -28,13 +28,49 @@ class LoginTransition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
+    return DualTransitionBuilder(
+      animation: animation,
+      forwardBuilder: (context, animation, child) {
+        return _PushSlideTransition(
+          animation: animation,
+          child: child,
+        );
+      },
+      reverseBuilder: (context, animation, child) {
+        return _PopSlideTransition(
+          animation: animation,
+          child: child,
+        );
+      },
+      child: child,
+    );
+  }
+}
+
+class _PopSlideTransition extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget? child;
+
+  const _PopSlideTransition({required this.animation, this.child});
+
+  static final Animatable<double> _fadeOutTransition = _FlippedCurveTween(
+    curve: emphasizedAccelerate,
+  ).chain(CurveTween(curve: const Interval(0.0, 0.5)));
+
+  static final Animatable<Offset> _slideOutTransition = Tween<Offset>(
+    begin: Offset.zero,
+    end: const Offset(30.0, 0.0),
+  ).chain(CurveTween(curve: emphasized));
+
+  @override
+  Widget build(BuildContext context) {
     return FadeTransition(
-      opacity: getFadeTransition(ref),
+      opacity: _fadeOutTransition.animate(animation),
       child: AnimatedBuilder(
         animation: animation,
         builder: (context, child) {
           return Transform.translate(
-            offset: getSlideTransition(ref),
+            offset: _slideOutTransition.evaluate(animation),
             child: child,
           );
         },
@@ -42,41 +78,44 @@ class LoginTransition extends ConsumerWidget {
       ),
     );
   }
+}
 
-  Animation<double> getFadeTransition(ref) {
-    // pushing
-    Animatable<double> fadeInTransition = Tween<double>(begin: 0.0, end: 1.0)
-        .chain(CurveTween(curve: pushing ? emphasizedDecelerate : emphasizedAccelerate.flipped))
-        .chain(CurveTween(curve: const Interval(0.5, 1.0)));
+class _PushSlideTransition extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget? child;
 
-    // exiting
-    Animatable<double> fadeOutTransition = Tween<double>(begin: 1.0, end: 0.0)
-        .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate))
-        .chain(CurveTween(curve: const Interval(0.0, 0.6)));
+  const _PushSlideTransition({required this.animation, this.child});
 
-    if (primary) {
-      return fadeInTransition.animate(animation);
-    } else {
-      return fadeOutTransition.animate(secondaryAnimation);
-    }
+  static final Animatable<double> _fadeInTransition = CurveTween(
+    curve: emphasizedDecelerate,
+  ).chain(CurveTween(curve: const Interval(0.5, 1.0)));
+
+  static final Animatable<Offset> _slideInTransition = Tween<Offset>(
+    begin: const Offset(30.0, 0.0),
+    end: Offset.zero,
+  ).chain(CurveTween(curve: emphasized));
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeInTransition.animate(animation),
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: _slideInTransition.evaluate(animation),
+            child: child,
+          );
+        },
+        child: child,
+      ),
+    );
   }
+}
 
-  Offset getSlideTransition(ref) {
-    bool pushingOnRegister = ref.read(authStateProvider).previousAuthAction == AuthAction.signUp;
+class _FlippedCurveTween extends CurveTween {
+  _FlippedCurveTween({required super.curve});
 
-    // pushing
-    Animatable<Offset> slideInTransition = Tween<Offset>(begin: const Offset(300.0, 0.0), end: Offset.zero)
-        .chain(CurveTween(curve: pushing ? emphasizedDecelerate : emphasizedAccelerate.flipped))
-        .chain(CurveTween(curve: const Interval(0.05, 1.0)));
-
-    if (primary) {
-      if (pushingOnRegister) {
-        return Offset.zero;
-      } else {
-        return slideInTransition.evaluate(animation);
-      }
-    } else {
-      return Offset.zero;
-    }
-  }
+  @override
+  double transform(double t) => 1.0 - super.transform(t);
 }

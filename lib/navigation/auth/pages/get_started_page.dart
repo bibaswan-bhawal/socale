@@ -11,7 +11,7 @@ class GetStartedPage extends Page {
     return PageRouteBuilder(
       settings: this,
       transitionDuration: const Duration(milliseconds: 400),
-      reverseTransitionDuration: const Duration(milliseconds: 200),
+      reverseTransitionDuration: const Duration(milliseconds: 400),
       pageBuilder: (context, animation, secondaryAnimation) => child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return GetStartedTransition(

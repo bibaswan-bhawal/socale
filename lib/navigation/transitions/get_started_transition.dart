@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/navigation/transitions/curves.dart';
 
 class GetStartedTransition extends ConsumerWidget {
@@ -15,35 +14,45 @@ class GetStartedTransition extends ConsumerWidget {
     required this.child,
   });
 
-  bool get exiting => secondaryAnimation.status == AnimationStatus.forward;
-  bool get entering => secondaryAnimation.status == AnimationStatus.reverse;
-
-  bool get pushing => animation.status == AnimationStatus.forward;
-  bool get popping => animation.status == AnimationStatus.reverse;
-
-  bool get secondary => exiting || entering;
-  bool get primary => pushing || popping;
-
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    Animatable<Offset> slideSecondaryTransition = Tween<Offset>(begin: Offset.zero, end: const Offset(-300, 0.0))
-        .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate));
+    return DualTransitionBuilder(
+      animation: ReverseAnimation(secondaryAnimation),
+      forwardBuilder: (context, animation, child) {
+        return _EnterSlideTransition(animation: animation, child: child);
+      },
+      reverseBuilder: (context, animation, child) {
+        return _ExitSlideTransition(animation: animation, child: child);
+      },
+      child: child,
+    );
+  }
+}
 
-    Animatable<double> fadeOutTransition = Tween<double>(begin: 1.0, end: 0.0)
-        .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate))
-        .chain(CurveTween(curve: const Interval(0, 0.5)));
+class _ExitSlideTransition extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget? child;
 
-    Animatable<double> fadeInTransition = Tween<double>(begin: 0.0, end: 1.0)
-        .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate))
-        .chain(CurveTween(curve: const Interval(0.5, 1)));
+  const _ExitSlideTransition({required this.animation, this.child});
 
+  static final Animatable<double> _fadeOutTransition = _FlippedCurveTween(
+    curve: emphasizedAccelerate,
+  ).chain(CurveTween(curve: const Interval(0.0, 0.5)));
+
+  static final Animatable<Offset> _slideOutTransition = Tween<Offset>(
+    begin: Offset.zero,
+    end: const Offset(-30.0, 0.0),
+  ).chain(CurveTween(curve: emphasized));
+
+  @override
+  Widget build(BuildContext context) {
     return FadeTransition(
-      opacity: primary ? fadeInTransition.animate(animation) : fadeOutTransition.animate(secondaryAnimation),
+      opacity: _fadeOutTransition.animate(animation),
       child: AnimatedBuilder(
-        animation: secondaryAnimation,
+        animation: animation,
         builder: (context, child) {
           return Transform.translate(
-            offset: primary ? const Offset(0.0, 0.0) : slideSecondaryTransition.evaluate(secondaryAnimation),
+            offset: _slideOutTransition.evaluate(animation),
             child: child,
           );
         },
@@ -51,4 +60,47 @@ class GetStartedTransition extends ConsumerWidget {
       ),
     );
   }
+}
+
+class _EnterSlideTransition extends StatelessWidget {
+  final Animation<double> animation;
+  final Widget? child;
+
+  const _EnterSlideTransition({required this.animation, this.child});
+
+  static final Animatable<double> _fadeInTransition = CurveTween(
+    curve: emphasizedDecelerate,
+  ).chain(CurveTween(curve: const Interval(0.5, 1.0)));
+
+  static final Animatable<Offset> _slideInTransition = Tween<Offset>(
+    begin: const Offset(-30.0, 0.0),
+    end: Offset.zero,
+  ).chain(CurveTween(curve: emphasized));
+
+  @override
+  Widget build(BuildContext context) {
+    return FadeTransition(
+      opacity: _fadeInTransition.animate(animation),
+      child: AnimatedBuilder(
+        animation: animation,
+        builder: (context, child) {
+          return Transform.translate(
+            offset: _slideInTransition.evaluate(animation),
+            child: child,
+          );
+        },
+        child: child,
+      ),
+    );
+  }
+}
+
+class _FlippedCurveTween extends CurveTween {
+  /// Creates a vertically flipped [CurveTween].
+  _FlippedCurveTween({
+    required Curve curve,
+  }) : super(curve: curve);
+
+  @override
+  double transform(double t) => 1.0 - super.transform(t);
 }

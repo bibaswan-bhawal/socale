@@ -1,3 +1,4 @@
+import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/navigation/transitions/curves.dart';
@@ -28,55 +29,12 @@ class RegisterTransition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    return FadeTransition(
-      opacity: getFadeTransition(ref),
-      child: AnimatedBuilder(
-        animation: animation,
-        builder: (context, child) {
-          return Transform.translate(
-            offset: getSlideTransition(ref),
-            child: child,
-          );
-        },
-        child: child,
-      ),
+    return SharedAxisTransition(
+      fillColor: Colors.transparent,
+      animation: animation,
+      secondaryAnimation: secondaryAnimation,
+      transitionType: SharedAxisTransitionType.horizontal,
+      child: child,
     );
-  }
-
-  Animation<double> getFadeTransition(ref) {
-    // pushing
-    Animatable<double> fadeInTransition = Tween<double>(begin: 0.0, end: 1.0)
-        .chain(CurveTween(curve: pushing ? emphasizedDecelerate : emphasizedAccelerate.flipped))
-        .chain(CurveTween(curve: const Interval(0.5, 1.0)));
-
-    // exiting
-    Animatable<double> fadeOutTransition = Tween<double>(begin: 1.0, end: 0.0)
-        .chain(CurveTween(curve: entering ? emphasizedDecelerate.flipped : emphasizedAccelerate))
-        .chain(CurveTween(curve: const Interval(0.0, 0.6)));
-
-    if (primary) {
-      return fadeInTransition.animate(animation);
-    } else {
-      return fadeOutTransition.animate(secondaryAnimation);
-    }
-  }
-
-  Offset getSlideTransition(ref) {
-    bool pushingOnLogin = ref.read(authStateProvider).previousAuthAction == AuthAction.signIn;
-
-    // pushing
-    Animatable<Offset> slideInTransition = Tween<Offset>(begin: const Offset(300.0, 0.0), end: Offset.zero)
-        .chain(CurveTween(curve: pushing ? emphasizedDecelerate : emphasizedAccelerate.flipped))
-        .chain(CurveTween(curve: const Interval(0.05, 1.0)));
-
-    if (primary) {
-      if (pushingOnLogin) {
-        return Offset.zero;
-      } else {
-        return slideInTransition.evaluate(animation);
-      }
-    } else {
-      return Offset.zero;
-    }
   }
 }
