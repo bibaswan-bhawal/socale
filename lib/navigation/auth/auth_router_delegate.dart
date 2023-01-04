@@ -29,7 +29,6 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
 
   @override
   Widget build(BuildContext context) {
-    print(authState);
     return Stack(
       children: [
         const LightOnboardingBackground(),
