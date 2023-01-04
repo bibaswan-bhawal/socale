@@ -5,13 +5,13 @@ class AuthState {
   final bool _resetPassword;
   final bool _notVerified;
 
-  final AuthAction? _previousAuthAction;
+  final AuthAction _previousAuthAction;
 
   AuthState({
     authAction = AuthAction.noAction,
     resetPassword = false,
     notVerified = false,
-    previousAuthAction,
+    previousAuthAction = AuthAction.noAction,
   })  : _authAction = authAction,
         _resetPassword = resetPassword,
         _notVerified = notVerified,
@@ -42,8 +42,9 @@ class AuthState {
           runtimeType == other.runtimeType &&
           _authAction == other._authAction &&
           _resetPassword == other._resetPassword &&
-          _notVerified == other._notVerified;
+          _notVerified == other._notVerified &&
+          _previousAuthAction == other._previousAuthAction;
 
   @override
-  int get hashCode => Object.hash(super.hashCode, _authAction, _notVerified, _resetPassword);
+  int get hashCode => Object.hash(super.hashCode, _authAction, _notVerified, _resetPassword, _previousAuthAction);
 }

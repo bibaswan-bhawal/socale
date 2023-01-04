@@ -182,8 +182,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
+                      style: GoogleFonts.roboto(
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         letterSpacing: -0.3,
                         color: Colors.black,
@@ -192,10 +192,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const TextSpan(text: "Don't have an account? "),
                         TextSpan(
                           text: 'Register',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Colors.black.withOpacity(0.5),
-                          ),
+                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
                           recognizer: TapGestureRecognizer()..onTap = () => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signUp),
                         ),
                       ],

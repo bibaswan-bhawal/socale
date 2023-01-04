@@ -263,8 +263,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: GoogleFonts.poppins(
-                        fontSize: 13,
+                      style: GoogleFonts.roboto(
+                        fontSize: 14,
                         fontWeight: FontWeight.w500,
                         letterSpacing: -0.3,
                         color: Colors.black,
@@ -273,10 +273,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         const TextSpan(text: 'Already have an account? '),
                         TextSpan(
                           text: 'Sign In',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Colors.black.withOpacity(0.5),
-                          ),
+                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
                           recognizer: TapGestureRecognizer()..onTap = () => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signIn),
                         ),
                       ],

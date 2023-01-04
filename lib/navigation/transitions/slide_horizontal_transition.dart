@@ -13,18 +13,13 @@ class SlideHorizontalTransition extends StatelessWidget {
     required this.animation,
     this.secondary = false,
     this.slideAmount = 30,
-    this.fadeMidpoint = 0.5,
+    this.fadeMidpoint = 0.3,
     this.child,
   });
 
   Animatable<double> get _fadeOutTransition => FlippedCurveTween(
         curve: emphasizedAccelerate,
       ).chain(CurveTween(curve: Interval(0.0, fadeMidpoint)));
-
-  Animatable<Offset> get _slideOutTransition => Tween<Offset>(
-        begin: Offset.zero,
-        end: Offset(secondary ? -slideAmount : slideAmount, 0.0),
-      ).chain(CurveTween(curve: emphasized));
 
   Animatable<double> get _fadeInTransition => CurveTween(
         curve: emphasizedDecelerate,
@@ -33,6 +28,11 @@ class SlideHorizontalTransition extends StatelessWidget {
   Animatable<Offset> get _slideInTransition => Tween<Offset>(
         begin: Offset(secondary ? -slideAmount : slideAmount, 0.0),
         end: Offset.zero,
+      ).chain(CurveTween(curve: emphasized));
+
+  Animatable<Offset> get _slideOutTransition => Tween<Offset>(
+        begin: Offset.zero,
+        end: Offset(secondary ? -slideAmount : slideAmount, 0.0),
       ).chain(CurveTween(curve: emphasized));
 
   @override
