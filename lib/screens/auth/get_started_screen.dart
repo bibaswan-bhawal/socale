@@ -3,12 +3,11 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/outlined_button.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_step.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class GetStartedScreen extends ConsumerStatefulWidget {
@@ -22,8 +21,8 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
   late CurvedAnimation animation;
   late AnimationController animationController;
 
-  void goToLogin() => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signIn);
-  void goToRegister() => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signUp);
+  void goToLogin() => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.login, AuthStep.getStarted);
+  void goToRegister() => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.register, AuthStep.getStarted);
 
   @override
   void initState() {

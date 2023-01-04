@@ -29,7 +29,7 @@ class OutlineButton extends StatelessWidget {
                     borderRadius: BorderRadius.circular(15),
                     border: Border.all(color: Colors.black, width: 2),
                   ),
-                  child: Center(
+                  child: const Center(
                     child: SizedBox(
                       width: 20,
                       height: 20,
@@ -44,10 +44,10 @@ class OutlineButton extends StatelessWidget {
                   onTap: onClickEvent,
                   splashFactory: InkRipple.splashFactory,
                   borderRadius: BorderRadius.circular(15),
-                  splashColor: Color(0xFF000000).withOpacity(0.15),
-                  highlightColor: Color(0xFF000000).withOpacity(0.15),
-                  focusColor: Color(0xFF000000).withOpacity(0.10),
-                  hoverColor: Color(0xFF000000).withOpacity(0.10),
+                  splashColor: const Color(0xFF000000).withOpacity(0.15),
+                  highlightColor: const Color(0xFF000000).withOpacity(0.15),
+                  focusColor: const Color(0xFF000000).withOpacity(0.10),
+                  hoverColor: const Color(0xFF000000).withOpacity(0.10),
                   child: Container(
                     height: 48,
                     width: constraints.maxWidth,

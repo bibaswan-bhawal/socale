@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
@@ -11,8 +10,8 @@ import 'package:socale/components/utils/keyboard_safe_area.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
-import 'package:socale/types/auth/auth_action.dart';
 import 'package:socale/types/auth/auth_result.dart';
+import 'package:socale/types/auth/auth_step.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -58,7 +57,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ref.read(appStateProvider.notifier).login();
             break;
           case AuthResult.unverified:
-            ref.read(authStateProvider.notifier).verifyEmail(true);
+            ref.read(authStateProvider.notifier).setAuthStep(AuthStep.verifyEmail, AuthStep.login);
             break;
           case AuthResult.genericError:
             const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
@@ -193,7 +192,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         TextSpan(
                           text: 'Register',
                           style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
-                          recognizer: TapGestureRecognizer()..onTap = () => ref.read(authStateProvider.notifier).setAuthAction(AuthAction.signUp),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.register, AuthStep.login),
                         ),
                       ],
                     ),
@@ -208,7 +208,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => ref.read(authStateProvider.notifier).resetPassword(true),
+                    onTap: () => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.forgotPassword, AuthStep.login),
                     behavior: HitTestBehavior.translucent,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 30, top: 30),

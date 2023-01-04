@@ -43,7 +43,6 @@ class _GroupInputFieldState extends State<GroupInputField> {
   bool shouldObscure = false;
 
   Artboard? _board;
-  StateMachineController? _controller;
   SMITrigger? _trigger;
 
   @override
@@ -59,7 +58,6 @@ class _GroupInputFieldState extends State<GroupInputField> {
       if (controller != null) {
         board.addController(controller);
         _trigger = controller.findInput<bool>('pressed') as SMITrigger;
-        _controller = controller;
       }
 
       setState(() => _board = board);
@@ -106,11 +104,11 @@ class _GroupInputFieldState extends State<GroupInputField> {
     return LayoutBuilder(builder: (context, constraints) {
       return Container(
         width: constraints.maxWidth,
-        padding: EdgeInsets.symmetric(vertical: 10),
+        padding: const EdgeInsets.symmetric(vertical: 10),
         child: Row(
           children: [
             Padding(
-              padding: EdgeInsets.only(right: 14),
+              padding: const EdgeInsets.only(right: 14),
               child: widget.prefixIcon,
             ),
             Expanded(
@@ -119,7 +117,7 @@ class _GroupInputFieldState extends State<GroupInputField> {
                 onChanged: widget.onChanged,
                 style: GoogleFonts.roboto(fontSize: 14, letterSpacing: -0.3),
                 cursorColor: ColorValues.socaleOrange,
-                cursorRadius: Radius.circular(1),
+                cursorRadius: const Radius.circular(1),
                 keyboardType: widget.textInputType,
                 textInputAction: widget.textInputAction,
                 autofillHints: widget.autofillHints,
@@ -132,7 +130,7 @@ class _GroupInputFieldState extends State<GroupInputField> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(left: 14),
+              padding: const EdgeInsets.only(left: 14),
               child: suffixIconBuilder(),
             ),
           ],

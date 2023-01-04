@@ -1,50 +1,28 @@
-import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_step.dart';
 
 class AuthState {
-  final AuthAction _authAction;
-  final bool _resetPassword;
-  final bool _notVerified;
-
-  final AuthAction _previousAuthAction;
+  final AuthStep _step;
+  final AuthStep? _previousStep;
 
   AuthState({
-    authAction = AuthAction.noAction,
-    resetPassword = false,
-    notVerified = false,
-    previousAuthAction = AuthAction.noAction,
-  })  : _authAction = authAction,
-        _resetPassword = resetPassword,
-        _notVerified = notVerified,
-        _previousAuthAction = previousAuthAction;
+    step = AuthStep.getStarted,
+    previousStep,
+  })  : _step = step,
+        _previousStep = previousStep;
 
-  get authAction => _authAction;
-  get resetPassword => _resetPassword && _authAction == AuthAction.signIn;
-  get notVerified => _notVerified;
-  get previousAuthAction => _previousAuthAction;
+  get step => _step;
+  get previousStep => _previousStep;
 
-  AuthState updateState({AuthAction? authAction, bool? resetPassword, bool? notVerified}) {
-    return AuthState(
-      authAction: authAction ?? this.authAction,
-      resetPassword: resetPassword ?? this.resetPassword,
-      notVerified: notVerified ?? this.notVerified,
-      previousAuthAction: authAction != null ? this.authAction : previousAuthAction,
-    );
-  }
+  AuthState updateState({required AuthStep newStep, AuthStep? previousStep}) => AuthState(step: newStep, previousStep: previousStep ?? _step);
 
   @override
-  String toString() =>
-      'AuthState(authAction: $authAction, resetPassword: $resetPassword, notVerified: $notVerified, previousAuthAction: $previousAuthAction)';
+  String toString() => 'AuthState(step: $_step, previousStep: $_previousStep)';
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AuthState &&
-          runtimeType == other.runtimeType &&
-          _authAction == other._authAction &&
-          _resetPassword == other._resetPassword &&
-          _notVerified == other._notVerified &&
-          _previousAuthAction == other._previousAuthAction;
+      other is AuthState && runtimeType == other.runtimeType && _step == other._step && _previousStep == other._previousStep;
 
   @override
-  int get hashCode => Object.hash(super.hashCode, _authAction, _notVerified, _resetPassword, _previousAuthAction);
+  int get hashCode => Object.hash(super.hashCode, _step, _previousStep);
 }

@@ -7,12 +7,12 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
-import 'package:socale/types/auth/auth_action.dart';
 import 'package:socale/types/auth/auth_result.dart';
+import 'package:socale/types/auth/auth_step.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
-  final String email = "";
-  final String password = "";
+  final String email = '';
+  final String password = '';
 
   const VerifyEmailScreen({Key? key}) : super(key: key);
 
@@ -26,10 +26,10 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   void resendCode() async {
     final result = await AuthService.resendVerifyLink(widget.email);
     if (result) {
-      const snackBar = SnackBar(content: Text("A new link as been sent to your email", textAlign: TextAlign.center));
+      const snackBar = SnackBar(content: Text('A new link as been sent to your email', textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      const snackBar = SnackBar(content: Text("There was an error, try again later", textAlign: TextAlign.center));
+      const snackBar = SnackBar(content: Text('There was an error, try again later', textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -46,7 +46,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           ref.read(appStateProvider.notifier).login();
           break;
         case AuthResult.unverified:
-          const snackBar = SnackBar(content: Text("Your email is not verified yet."));
+          const snackBar = SnackBar(content: Text('Your email is not verified yet.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.genericError:
@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         default:
-          ref.read(authStateProvider.notifier).setAuthAction(AuthAction.noAction);
+          ref.read(authStateProvider.notifier).setAuthStep(AuthStep.getStarted, AuthStep.verifyEmail);
           break;
       }
     }
@@ -84,7 +84,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Confirm your ",
+                        'Confirm your ',
                         style: GoogleFonts.poppins(
                           color: Colors.black,
                           fontSize: size.width * 0.058,
@@ -92,13 +92,13 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                         ),
                       ),
                       ShaderMask(
-                        shaderCallback: (bounds) => LinearGradient(
+                        shaderCallback: (bounds) => const LinearGradient(
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [ColorValues.socaleDarkOrange, ColorValues.socaleOrange],
                         ).createShader(bounds),
                         child: Text(
-                          "email",
+                          'email',
                           style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                         ),
                       ),
@@ -110,7 +110,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   child: Column(
                     children: [
                       Text(
-                        "We have sent an email to",
+                        'We have sent an email to',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.roboto(
                           fontSize: (size.width * 0.04),
@@ -127,7 +127,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                         ),
                       ),
                       Text(
-                        "with a link to confirm your email.",
+                        'with a link to confirm your email.',
                         textAlign: TextAlign.center,
                         style: GoogleFonts.roboto(
                           fontSize: (size.width * 0.04),
@@ -138,12 +138,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 15, top: 20),
+                  padding: const EdgeInsets.only(bottom: 15, top: 20),
                   child: GestureDetector(
                     onTap: resendCode,
                     behavior: HitTestBehavior.translucent,
-                    child: Text(
-                      "Resend link",
+                    child: const Text(
+                      'Resend link',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontWeight: FontWeight.w500,
@@ -156,21 +156,21 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 GradientButton(
                   isLoading: isLoading,
                   linearGradient: ColorValues.orangeButtonGradient,
-                  buttonContent: "Continue",
+                  buttonContent: 'Continue',
                   onClickEvent: confirmEmail,
                 ),
                 Padding(
-                  padding: EdgeInsets.only(bottom: 20, top: 30),
+                  padding: const EdgeInsets.only(bottom: 20, top: 30),
                   child: GestureDetector(
                     onTap: () => Navigator.pop(context),
                     behavior: HitTestBehavior.translucent,
                     child: Text(
-                      "Not the right email?",
+                      'Not the right email?',
                       style: TextStyle(
                         decoration: TextDecoration.underline,
                         fontWeight: FontWeight.w500,
                         fontSize: 12,
-                        color: Color(0xFF4D4D4D).withOpacity(0.8),
+                        color: const Color(0xFF4D4D4D).withOpacity(0.8),
                       ),
                     ),
                   ),

@@ -27,7 +27,7 @@ class GroupInputFormField extends FormField<String> {
     FormFieldSetter<String>? onSaved,
     FormFieldValidator<String>? validator,
     this.onError,
-    String initialValue = "",
+    String initialValue = '',
   }) : super(
           key: key,
           initialValue: initialValue,

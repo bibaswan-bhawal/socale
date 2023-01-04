@@ -22,7 +22,7 @@ class _ContainerChipSelectorState extends State<ContainerChipSelector> {
         borderRadius: BorderRadius.circular(15),
         border: Border.all(color: Colors.transparent, width: 2),
         gradient: ColorValues.groupInputBackgroundGradient,
-        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 2, offset: Offset(1, 1))],
+        boxShadow: [BoxShadow(color: Colors.black.withOpacity(0.25), blurRadius: 2, offset: const Offset(1, 1))],
       ),
       child: Center(
         child: Text(widget.emptyMessage),

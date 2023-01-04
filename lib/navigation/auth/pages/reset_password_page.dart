@@ -1,15 +1,12 @@
-import 'package:animations/animations.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:socale/navigation/transitions/slide_vertical_transition.dart';
-import 'package:socale/providers/state_providers.dart';
-import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/screens/auth/forgot_password_screen.dart';
 
 class ResetPasswordPage extends Page {
-  final Widget child;
+  final Widget child = const ForgotPasswordScreen();
 
-  const ResetPasswordPage({super.key, super.name = 'forgotPasswordPage', required this.child});
+  const ResetPasswordPage({super.key});
 
   @override
   Route createRoute(BuildContext context) {

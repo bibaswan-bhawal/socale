@@ -6,13 +6,9 @@ import 'package:socale/navigation/auth/auth_route_path.dart';
 import 'package:socale/navigation/auth/pages/register_page.dart';
 import 'package:socale/navigation/auth/pages/reset_password_page.dart';
 import 'package:socale/providers/state_providers.dart';
-import 'package:socale/screens/auth/forgot_password_screen.dart';
-import 'package:socale/screens/auth/get_started_screen.dart';
-import 'package:socale/screens/auth/login_screen.dart';
-import 'package:socale/screens/auth/register_screen.dart';
-import 'package:socale/types/auth/auth_action.dart';
 import 'package:socale/navigation/auth/pages/get_started_page.dart';
 import 'package:socale/navigation/auth/pages/login_page.dart';
+import 'package:socale/types/auth/auth_step.dart';
 
 class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
   @override
@@ -33,6 +29,7 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
 
   @override
   Widget build(BuildContext context) {
+    print(authState);
     return Stack(
       children: [
         const LightOnboardingBackground(),
@@ -40,19 +37,27 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
           key: navigatorKey,
           pages: [
             const GetStartedPage(),
-            if (authState.authAction == AuthAction.signIn) ...[
+            if (authState.step == AuthStep.login) const LoginPage(),
+            if (authState.step == AuthStep.forgotPassword) ...[
               const LoginPage(),
-              if (authState.resetPassword) const ResetPasswordPage(child: ForgotPasswordScreen())
+              const ResetPasswordPage(),
             ],
-            if (authState.authAction == AuthAction.signUp) const RegisterPage(),
+            if (authState.step == AuthStep.register) const RegisterPage(),
           ],
           onPopPage: (route, result) {
-            if (authState.notVerified) {
-              ref.read(authStateProvider.notifier).verifyEmail(false);
-            } else if (authState.resetPassword) {
-              ref.read(authStateProvider.notifier).resetPassword(false);
-            } else {
-              ref.read(authStateProvider.notifier).setAuthAction(AuthAction.noAction);
+            switch (authState.step) {
+              case AuthStep.forgotPassword:
+                ref.read(authStateProvider.notifier).setAuthStep(AuthStep.login, AuthStep.forgotPassword);
+                break;
+              case AuthStep.verifyEmail:
+                ref.read(authStateProvider.notifier).setAuthStep(ref.read(authStateProvider).previousStep, AuthStep.verifyEmail);
+                break;
+              case AuthStep.register:
+                ref.read(authStateProvider.notifier).setAuthStep(AuthStep.getStarted, AuthStep.register);
+                break;
+              case AuthStep.login:
+                ref.read(authStateProvider.notifier).setAuthStep(AuthStep.getStarted, AuthStep.login);
+                break;
             }
 
             return route.didPop(result);
@@ -64,27 +69,26 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
 
   // Update route path
   AuthRoutePath getNewRoutePath(AuthState state) {
-    if (state.notVerified) return AuthRoutePath.verifyEmail(state.authAction);
-    if (state.resetPassword) return AuthRoutePath.forgotPassword();
-
-    switch (state.authAction) {
-      case AuthAction.noAction:
+    switch (state.step) {
+      case AuthStep.getStarted:
         return AuthRoutePath.getStarted();
-      case AuthAction.signIn:
+      case AuthStep.login:
         return AuthRoutePath.signIn();
-      case AuthAction.signUp:
+      case AuthStep.forgotPassword:
+        return AuthRoutePath.forgotPassword();
+      case AuthStep.register:
         return AuthRoutePath.signUp();
+      case AuthStep.verifyEmail:
+        return AuthRoutePath.verifyEmail(state.previousStep);
+      default:
+        return AuthRoutePath.getStarted();
     }
-
-    return AuthRoutePath.getStarted();
   }
 
   // new route path requested
   void newRouteRequested(AuthRoutePath configuration) {
     AuthState state = configuration.appState;
-    ref.read(authStateProvider.notifier).setAuthAction(state.authAction);
-    ref.read(authStateProvider.notifier).resetPassword(state.resetPassword);
-    ref.read(authStateProvider.notifier).verifyEmail(false);
+    ref.read(authStateProvider.notifier).setAuthStep(state.step, state.previousStep);
   }
 
   @override

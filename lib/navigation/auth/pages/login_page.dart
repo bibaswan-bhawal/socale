@@ -5,7 +5,7 @@ import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
 import 'package:socale/navigation/transitions/slide_vertical_transition.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/screens/auth/login_screen.dart';
-import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_step.dart';
 
 class LoginPage extends Page {
   final Widget child = const LoginScreen();
@@ -41,12 +41,10 @@ class _Transition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AuthAction previousAuthAction = ref.read(authStateProvider).previousAuthAction;
-    AuthAction newAuthAction = ref.read(authStateProvider).authAction;
+    AuthStep previousStep = ref.read(authStateProvider).previousStep;
+    AuthStep step = ref.read(authStateProvider).step;
 
-    bool isForgotPassword = ref.read(authStateProvider).resetPassword;
-
-    if (newAuthAction == AuthAction.signUp) {
+    if (step == AuthStep.register && previousStep == AuthStep.login) {
       return FadeSwitchTransition(
         animation: secondaryAnimation,
         secondary: true,
@@ -54,16 +52,25 @@ class _Transition extends ConsumerWidget {
       );
     }
 
-    if (previousAuthAction == AuthAction.signUp) {
+    if (step == AuthStep.login && previousStep == AuthStep.register) {
       return FadeSwitchTransition(
         animation: animation,
         child: child,
       );
     }
 
-    if (isForgotPassword) {
+    if (step == AuthStep.forgotPassword && previousStep == AuthStep.login) {
       return SlideVerticalTransition(
         animation: secondaryAnimation,
+        secondary: true,
+        child: child,
+      );
+    }
+
+    if (step == AuthStep.login && previousStep == AuthStep.forgotPassword) {
+      return SlideVerticalTransition(
+        animation: secondaryAnimation,
+        secondary: true,
         child: child,
       );
     }

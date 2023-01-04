@@ -11,7 +11,7 @@ class GroupInputForm extends StatefulWidget {
     Key? key,
     this.children = const [],
     this.isError = false,
-    this.errorMessage = "",
+    this.errorMessage = '',
   }) : super(key: key);
 
   @override
@@ -24,7 +24,7 @@ class GroupedInputFromState extends State<GroupInputForm> {
     return Column(
       children: [
         AnimatedContainer(
-          duration: Duration(milliseconds: 300),
+          duration: const Duration(milliseconds: 300),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
             border: Border.all(
@@ -36,7 +36,7 @@ class GroupedInputFromState extends State<GroupInputForm> {
               BoxShadow(
                 color: Colors.black.withOpacity(0.25),
                 blurRadius: 2,
-                offset: Offset(1, 1),
+                offset: const Offset(1, 1),
               ),
             ],
           ),
@@ -44,12 +44,12 @@ class GroupedInputFromState extends State<GroupInputForm> {
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(15),
             child: ListView.separated(
-              physics: NeverScrollableScrollPhysics(),
-              padding: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
+              physics: const NeverScrollableScrollPhysics(),
+              padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
               shrinkWrap: true,
               itemBuilder: (context, index) => widget.children[index],
               separatorBuilder: (context, index) {
-                return Divider(height: 1.25, thickness: 1.25, color: Color(0x1A000000));
+                return const Divider(height: 1.25, thickness: 1.25, color: Color(0x1A000000));
               },
               itemCount: widget.children.length,
             ),
@@ -61,7 +61,7 @@ class GroupedInputFromState extends State<GroupInputForm> {
             alignment: Alignment.centerLeft,
             child: AnimatedOpacity(
               opacity: widget.isError ? 1 : 0,
-              duration: Duration(milliseconds: 300),
+              duration: const Duration(milliseconds: 300),
               child: Text(
                 widget.errorMessage,
                 textAlign: TextAlign.start,

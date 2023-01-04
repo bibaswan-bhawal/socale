@@ -26,8 +26,8 @@ class GradientButton extends StatelessWidget {
             borderRadius: BorderRadius.circular(15),
             boxShadow: [
               BoxShadow(
-                color: Color(0xFF000000).withOpacity(0.25),
-                offset: Offset(1, 1),
+                color: const Color(0xFF000000).withOpacity(0.25),
+                offset: const Offset(1, 1),
                 blurRadius: 4,
               ),
             ],
@@ -39,7 +39,7 @@ class GradientButton extends StatelessWidget {
                 ? SizedBox(
                     height: 48,
                     width: constraints.maxWidth,
-                    child: Center(
+                    child: const Center(
                       child: SizedBox(
                         width: 20,
                         height: 20,
@@ -54,10 +54,10 @@ class GradientButton extends StatelessWidget {
                     onTap: onClickEvent,
                     splashFactory: InkRipple.splashFactory,
                     borderRadius: BorderRadius.circular(15),
-                    splashColor: Color(0xFFFFFFFF).withOpacity(0.30),
-                    highlightColor: Color(0xFFFFFFFF).withOpacity(0.30),
-                    focusColor: Color(0xFF000000).withOpacity(0.10),
-                    hoverColor: Color(0xFFFFFFFF).withOpacity(0.15),
+                    splashColor: const Color(0xFFFFFFFF).withOpacity(0.30),
+                    highlightColor: const Color(0xFFFFFFFF).withOpacity(0.30),
+                    focusColor: const Color(0xFF000000).withOpacity(0.10),
+                    hoverColor: const Color(0xFFFFFFFF).withOpacity(0.15),
                     child: SizedBox(
                       height: 48,
                       width: constraints.maxWidth,

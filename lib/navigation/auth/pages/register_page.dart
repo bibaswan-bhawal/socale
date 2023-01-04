@@ -4,7 +4,7 @@ import 'package:socale/navigation/transitions/fade_switch_transition.dart';
 import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/screens/auth/register_screen.dart';
-import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/types/auth/auth_step.dart';
 
 class RegisterPage extends Page {
   final Widget child = const RegisterScreen();
@@ -39,10 +39,10 @@ class _Transition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AuthAction previousAuthAction = ref.read(authStateProvider).previousAuthAction;
-    AuthAction newAuthAction = ref.read(authStateProvider).authAction;
+    AuthStep previousStep = ref.read(authStateProvider).previousStep;
+    AuthStep step = ref.read(authStateProvider).step;
 
-    if (newAuthAction == AuthAction.signIn) {
+    if (step == AuthStep.login && previousStep == AuthStep.register) {
       return FadeSwitchTransition(
         animation: secondaryAnimation,
         secondary: true,
@@ -50,7 +50,7 @@ class _Transition extends ConsumerWidget {
       );
     }
 
-    if (previousAuthAction == AuthAction.signIn) {
+    if (step == AuthStep.register && previousStep == AuthStep.login) {
       return FadeSwitchTransition(
         animation: animation,
         child: child,
