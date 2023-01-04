@@ -32,7 +32,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   bool formError = false;
   bool isLoading = false;
 
-  String errorMessage = "";
+  String errorMessage = '';
 
   String? email;
   String? password;
@@ -48,7 +48,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
       setState(() => isLoading = true);
 
       setState(() => formError = false);
-      setState(() => errorMessage = "");
+      setState(() => errorMessage = '');
       form.save();
 
       if (password != confirmPassword) {
@@ -78,7 +78,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         case AuthResult.notAuthorized:
           setState(() {
             formError = true;
-            errorMessage = "Incorrect password";
+            errorMessage = 'Incorrect password';
           });
 
           break;
@@ -101,18 +101,18 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (emailField.errorText != null && passwordField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Enter a valid email and password";
+        errorMessage = 'Enter a valid email and password';
       });
     }
     if (emailField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Enter a valid email";
+        errorMessage = 'Enter a valid email';
       });
     } else if (passwordField.errorText != null) {
       setState(() {
         formError = true;
-        errorMessage = "Password must be at least 8 characters";
+        errorMessage = 'Password must be at least 8 characters';
       });
     } else if (confirmPasswordField.errorText != null) {
       setState(() {
@@ -128,9 +128,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          LightOnboardingBackground(),
           KeyboardSafeArea(
             child: Center(
               child: Column(
@@ -138,7 +138,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   Padding(
                     padding: EdgeInsets.only(top: size.height * 0.08),
                     child: Hero(
-                      tag: "auth_logo",
+                      tag: 'auth_logo',
                       child: SvgPicture.asset(
                         'assets/logo/color_logo.svg',
                         width: 150,
@@ -146,9 +146,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 30),
+                    padding: const EdgeInsets.only(top: 30),
                     child: Text(
-                      "Hello There",
+                      'Hello There',
                       style: GoogleFonts.poppins(
                         fontSize: 24,
                         fontWeight: FontWeight.w600,
@@ -156,14 +156,14 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   Text(
-                    "Sign up to start matching",
+                    'Sign up to start matching',
                     style: GoogleFonts.poppins(
                       fontSize: 14,
                       color: Colors.black.withOpacity(0.5),
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 48, left: 30, right: 30),
+                    padding: const EdgeInsets.only(top: 48, left: 30, right: 30),
                     child: Form(
                       key: formState,
                       child: GroupInputForm(
@@ -172,32 +172,32 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         children: [
                           GroupInputFormField(
                             key: emailFieldState,
-                            hintText: "Email Address",
+                            hintText: 'Email Address',
                             textInputType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
-                            autofillHints: [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: const [AutofillHints.email],
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                           ),
                           GroupInputFormField(
                             key: passwordFieldState,
-                            hintText: "Password",
+                            hintText: 'Password',
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
-                            autofillHints: [AutofillHints.newPassword],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: const [AutofillHints.newPassword],
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
                           ),
                           GroupInputFormField(
                             key: confirmPasswordFieldState,
-                            hintText: "Confirm Password",
+                            hintText: 'Confirm Password',
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
-                            autofillHints: [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                            autofillHints: const [AutofillHints.password],
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: saveConfirmPassword,
                             validator: Validators.validatePassword,
@@ -209,7 +209,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                   Column(
                     children: [
                       Text(
-                        "By signing up you agree to the Socale",
+                        'By signing up you agree to the Socale',
                         style: GoogleFonts.poppins(
                           fontSize: 12,
                           fontWeight: FontWeight.w500,
@@ -228,8 +228,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                           ),
                           children: [
                             TextSpan(
-                              text: "Terms of service",
-                              style: TextStyle(
+                              text: 'Terms of service',
+                              style: const TextStyle(
                                 decoration: TextDecoration.underline,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -240,10 +240,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                                   );
                                 },
                             ),
-                            TextSpan(text: " & "),
+                            const TextSpan(text: ' & '),
                             TextSpan(
-                              text: "Privacy Policy",
-                              style: TextStyle(
+                              text: 'Privacy Policy',
+                              style: const TextStyle(
                                 decoration: TextDecoration.underline,
                               ),
                               recognizer: TapGestureRecognizer()
@@ -270,9 +270,9 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         color: Colors.black,
                       ),
                       children: [
-                        TextSpan(text: "Already have an account? "),
+                        const TextSpan(text: 'Already have an account? '),
                         TextSpan(
-                          text: "Sign In",
+                          text: 'Sign In',
                           style: TextStyle(
                             decoration: TextDecoration.underline,
                             color: Colors.black.withOpacity(0.5),
@@ -283,11 +283,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(top: 15, bottom: 20, left: 36, right: 36),
+                    padding: const EdgeInsets.only(top: 15, bottom: 20, left: 36, right: 36),
                     child: GradientButton(
                       isLoading: isLoading,
                       linearGradient: ColorValues.purpleButtonGradient,
-                      buttonContent: "Create an Account",
+                      buttonContent: 'Create an Account',
                       onClickEvent: onClickRegister,
                     ),
                   ),

@@ -25,8 +25,7 @@ class AppState {
   bool get isLoggedIn => isInitialized && _isLoggedIn;
 
   @override
-  String toString() =>
-      '\t\tAppState:\n\t\t\t\tamplifyInit: $_isAmplifyConfigured\n\t\t\t\tlocalDBInit: $_isLocalDBConfigured\n\t\t\t\tisLoggedIn: $_isLoggedIn';
+  String toString() => 'AppState(isAmplifyConfigured: $_isAmplifyConfigured, isLocalDBConfigured: $_isLocalDBConfigured, isLoggedIn: $_isLoggedIn)';
 
   @override
   bool operator ==(Object other) =>

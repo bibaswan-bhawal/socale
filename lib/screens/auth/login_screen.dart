@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';

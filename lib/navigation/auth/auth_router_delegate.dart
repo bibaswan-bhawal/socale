@@ -1,16 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/models/auth_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
-import 'package:socale/navigation/pages/fade_out_page.dart';
-import 'package:socale/navigation/pages/slide_transition_page.dart';
+import 'package:socale/navigation/auth/pages/register_page.dart';
+import 'package:socale/navigation/auth/pages/reset_password_page.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/screens/auth/forgot_password_screen.dart';
 import 'package:socale/screens/auth/get_started_screen.dart';
 import 'package:socale/screens/auth/login_screen.dart';
 import 'package:socale/screens/auth/register_screen.dart';
-import 'package:socale/screens/auth/verify_email_screen.dart';
 import 'package:socale/types/auth/auth_action.dart';
+import 'package:socale/navigation/auth/pages/get_started_page.dart';
+import 'package:socale/navigation/auth/pages/login_page.dart';
 
 class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
   @override
@@ -31,36 +33,32 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
 
   @override
   Widget build(BuildContext context) {
-    return Navigator(
-      key: navigatorKey,
-      pages: [
-        const FadeOutPage(child: GetStartedScreen()),
-        if (authState.authAction == AuthAction.signIn) ...[
-          const SlideTransitionPage(child: LoginScreen()),
-          if (authState.resetPassword) const MaterialPage(child: ForgotPasswordScreen()),
-        ],
-        if (authState.authAction == AuthAction.signUp) const SlideTransitionPage(child: RegisterScreen()),
-        if (authState.notVerified) const MaterialPage(child: VerifyEmailScreen()),
-      ],
-      onPopPage: (route, result) {
-        if (authState.notVerified) {
-          ref.read(authStateProvider.notifier).verifyEmail(false);
-          return route.didPop(result);
-        }
+    return Stack(
+      children: [
+        const LightOnboardingBackground(),
+        Navigator(
+          key: navigatorKey,
+          pages: [
+            const GetStartedPage(key: ValueKey('get_started_page'), child: GetStartedScreen()),
+            if (authState.authAction == AuthAction.signIn) ...[
+              const LoginPage(key: ValueKey('login_page'), child: LoginScreen()),
+              if (authState.resetPassword) const ResetPasswordPage(key: ValueKey('reset_password_page'), child: ForgotPasswordScreen()),
+            ],
+            if (authState.authAction == AuthAction.signUp) const RegisterPage(key: ValueKey('register_page'), child: RegisterScreen()),
+          ],
+          onPopPage: (route, result) {
+            if (authState.notVerified) {
+              ref.read(authStateProvider.notifier).verifyEmail(false);
+            } else if (authState.resetPassword) {
+              ref.read(authStateProvider.notifier).resetPassword(false);
+            } else {
+              ref.read(authStateProvider.notifier).setAuthAction(AuthAction.noAction);
+            }
 
-        if (authState.resetPassword) {
-          ref.read(authStateProvider.notifier).resetPassword(false);
-          return route.didPop(result);
-        }
-
-        switch (authState.authAction) {
-          case AuthAction.noAction:
-            return true;
-          default:
-            ref.read(authStateProvider.notifier).setAuthAction(AuthAction.noAction);
             return route.didPop(result);
-        }
-      },
+          },
+        ),
+      ],
     );
   }
 

@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:socale/transitions/child_slide_transition.dart';
+import 'package:socale/navigation/transitions/get_started_transition.dart';
 
-class SlideTransitionPage extends Page {
+class GetStartedPage extends Page {
   final Widget child;
 
-  const SlideTransitionPage({super.key, required this.child});
+  const GetStartedPage({super.key, super.name = 'getStartedPage', required this.child});
 
   @override
   Route createRoute(BuildContext context) {
     return PageRouteBuilder(
       settings: this,
+      transitionDuration: const Duration(milliseconds: 400),
+      reverseTransitionDuration: const Duration(milliseconds: 200),
       pageBuilder: (context, animation, secondaryAnimation) => child,
-      transitionDuration: const Duration(milliseconds: 300),
-      reverseTransitionDuration: const Duration(milliseconds: 300),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return ChildSlideTransition(
+        return GetStartedTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
           child: child,

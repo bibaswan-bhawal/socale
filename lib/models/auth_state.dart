@@ -5,28 +5,35 @@ class AuthState {
   final bool _resetPassword;
   final bool _notVerified;
 
+  final AuthAction? _previousAuthAction;
+
   AuthState({
     authAction = AuthAction.noAction,
     resetPassword = false,
     notVerified = false,
+    previousAuthAction,
   })  : _authAction = authAction,
         _resetPassword = resetPassword,
-        _notVerified = notVerified;
+        _notVerified = notVerified,
+        _previousAuthAction = previousAuthAction;
 
   get authAction => _authAction;
   get resetPassword => _resetPassword && _authAction == AuthAction.signIn;
   get notVerified => _notVerified;
+  get previousAuthAction => _previousAuthAction;
 
   AuthState updateState({AuthAction? authAction, bool? resetPassword, bool? notVerified}) {
     return AuthState(
       authAction: authAction ?? this.authAction,
       resetPassword: resetPassword ?? this.resetPassword,
       notVerified: notVerified ?? this.notVerified,
+      previousAuthAction: authAction != null ? this.authAction : previousAuthAction,
     );
   }
 
   @override
-  String toString() => '\t\tAuthState:\n\t\t\t\tauthAction: $_authAction\n\t\t\t\tresetPassword: $_resetPassword\n\t\t\t\tnotVerified: $_notVerified';
+  String toString() =>
+      'AuthState(authAction: $authAction, resetPassword: $resetPassword, notVerified: $notVerified, previousAuthAction: $previousAuthAction)';
 
   @override
   bool operator ==(Object other) =>

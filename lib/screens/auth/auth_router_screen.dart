@@ -22,8 +22,6 @@ class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
   Widget build(BuildContext context) {
     _backButtonDispatcher?.takePriority();
 
-    print('AuthRouterScreen build');
-
     return Router(
       routerDelegate: ref.read(authRouterDelegateProvider),
       backButtonDispatcher: _backButtonDispatcher,
