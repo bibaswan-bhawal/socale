@@ -37,7 +37,7 @@ class _ExitSlideTransition extends StatelessWidget {
 
   static final Animatable<double> _fadeOutTransition = _FlippedCurveTween(
     curve: emphasizedAccelerate,
-  ).chain(CurveTween(curve: const Interval(0.0, 0.5)));
+  ).chain(CurveTween(curve: const Interval(0.0, 0.4)));
 
   static final Animatable<Offset> _slideOutTransition = Tween<Offset>(
     begin: Offset.zero,
@@ -70,7 +70,7 @@ class _EnterSlideTransition extends StatelessWidget {
 
   static final Animatable<double> _fadeInTransition = CurveTween(
     curve: emphasizedDecelerate,
-  ).chain(CurveTween(curve: const Interval(0.5, 1.0)));
+  ).chain(CurveTween(curve: const Interval(0.4, 1.0)));
 
   static final Animatable<Offset> _slideInTransition = Tween<Offset>(
     begin: const Offset(-30.0, 0.0),
