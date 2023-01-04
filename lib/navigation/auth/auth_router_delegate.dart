@@ -39,12 +39,12 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
         Navigator(
           key: navigatorKey,
           pages: [
-            const GetStartedPage(key: ValueKey('get_started_page'), child: GetStartedScreen()),
+            const GetStartedPage(),
             if (authState.authAction == AuthAction.signIn) ...[
-              const LoginPage(key: ValueKey('login_page'), child: LoginScreen()),
-              if (authState.resetPassword) const ResetPasswordPage(key: ValueKey('reset_password_page'), child: ForgotPasswordScreen()),
+              const LoginPage(),
+              if (authState.resetPassword) const ResetPasswordPage(child: ForgotPasswordScreen())
             ],
-            if (authState.authAction == AuthAction.signUp) const RegisterPage(key: ValueKey('register_page'), child: LoginScreen()),
+            if (authState.authAction == AuthAction.signUp) const RegisterPage(),
           ],
           onPopPage: (route, result) {
             if (authState.notVerified) {

@@ -1,10 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/get_started_transition.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/navigation/transitions/slide_transition.dart';
+import 'package:socale/screens/auth/get_started_screen.dart';
 
 class GetStartedPage extends Page {
-  final Widget child;
+  final Widget child = const GetStartedScreen();
 
-  const GetStartedPage({super.key, super.name = 'getStartedPage', required this.child});
+  const GetStartedPage({super.key = const ValueKey('get_started_page')});
 
   @override
   Route createRoute(BuildContext context) {
@@ -14,12 +16,34 @@ class GetStartedPage extends Page {
       reverseTransitionDuration: const Duration(milliseconds: 350),
       pageBuilder: (context, animation, secondaryAnimation) => child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
-        return GetStartedTransition(
+        return _GetStartedTransition(
           animation: animation,
           secondaryAnimation: secondaryAnimation,
           child: child,
         );
       },
+    );
+  }
+}
+
+class _GetStartedTransition extends ConsumerWidget {
+  final Animation<double> animation;
+  final Animation<double> secondaryAnimation;
+  final Widget child;
+
+  const _GetStartedTransition({
+    required this.animation,
+    required this.secondaryAnimation,
+    required this.child,
+  });
+
+  @override
+  Widget build(BuildContext context, WidgetRef ref) {
+    return SlideHorizontalTransition(
+      animation: animation,
+      secondary: true,
+      fadeMidpoint: 0.4,
+      child: child,
     );
   }
 }
