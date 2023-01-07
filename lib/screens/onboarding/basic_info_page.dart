@@ -1,16 +1,19 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/selectors/container_chip_selector.dart';
+import 'package:socale/providers/state_providers.dart';
+import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/system_ui.dart';
 
-class BasicInfoPage extends StatefulWidget {
+class BasicInfoPage extends ConsumerStatefulWidget {
   const BasicInfoPage({Key? key}) : super(key: key);
 
   @override
-  State<BasicInfoPage> createState() => _BasicInfoPageState();
+  ConsumerState<BasicInfoPage> createState() => _BasicInfoPageState();
 }
 
-class _BasicInfoPageState extends State<BasicInfoPage> {
+class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
   @override
   void initState() {
     super.initState();
@@ -24,16 +27,28 @@ class _BasicInfoPageState extends State<BasicInfoPage> {
     return SafeArea(
       child: Column(
         children: [
-          Expanded(child: Container()),
+          Expanded(
+            child: Center(
+              child: ElevatedButton(
+                onPressed: () {
+                  AuthService.signOutUser();
+                  ref.read(appStateProvider.notifier).signOut();
+                },
+                child: const Text('Sign Out'),
+              ),
+            ),
+          ),
           Padding(
             padding: EdgeInsets.only(left: 36, right: 36, bottom: bottomPadding),
             child: OpenContainer(
-              closedShape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
+              closedShape:
+                  const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
               closedColor: Colors.transparent,
               closedElevation: 2,
               transitionType: ContainerTransitionType.fadeThrough,
-              openBuilder: (context, _) => _DetailsPage(message: 'hello'),
-              closedBuilder: (context, openContainer) => ContainerChipSelector(emptyMessage: 'Add a Major'),
+              openBuilder: (context, _) => const _DetailsPage(message: 'hello'),
+              closedBuilder: (context, openContainer) =>
+                  const ContainerChipSelector(emptyMessage: 'Add a Major'),
             ),
           ),
         ],

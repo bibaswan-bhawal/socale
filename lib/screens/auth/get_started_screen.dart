@@ -5,6 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/outlined_button.dart';
+import 'package:socale/components/utils/keyboard_safe_area.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/types/auth/auth_step.dart';
@@ -17,12 +18,15 @@ class GetStartedScreen extends ConsumerStatefulWidget {
   ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with SingleTickerProviderStateMixin {
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
+    with SingleTickerProviderStateMixin {
   late CurvedAnimation animation;
   late AnimationController animationController;
 
-  void goToLogin() => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.login, AuthStep.getStarted);
-  void goToRegister() => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.register, AuthStep.getStarted);
+  void goToLogin() =>
+      ref.read(authStateProvider.notifier).setAuthStep(AuthStep.login, AuthStep.getStarted);
+  void goToRegister() =>
+      ref.read(authStateProvider.notifier).setAuthStep(AuthStep.register, AuthStep.getStarted);
 
   @override
   void initState() {
@@ -50,7 +54,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
-      body: SafeArea(
+      body: KeyboardSafeArea(
         child: Center(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,

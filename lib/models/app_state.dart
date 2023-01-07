@@ -22,15 +22,19 @@ class AppState {
   }
 
   bool get isInitialized => _isAmplifyConfigured && _isLocalDBConfigured;
-  bool get isLoggedIn => isInitialized && _isLoggedIn;
+  bool get isLoggedIn => _isLoggedIn;
 
   @override
-  String toString() => 'AppState(isAmplifyConfigured: $_isAmplifyConfigured, isLocalDBConfigured: $_isLocalDBConfigured, isLoggedIn: $_isLoggedIn)';
+  String toString() {
+    return 'AppState(amplify: $_isAmplifyConfigured, local db: $_isLocalDBConfigured, logged in: $_isLoggedIn)';
+  }
 
   @override
   bool operator ==(Object other) =>
-      identical(this, other) || other is AppState && other.isInitialized == isInitialized && other.isLoggedIn == isLoggedIn;
+      identical(this, other) ||
+      other is AppState && other.isInitialized == isInitialized && other.isLoggedIn == isLoggedIn;
 
   @override
-  int get hashCode => Object.hash(super.hashCode, _isAmplifyConfigured, _isLocalDBConfigured, _isLoggedIn);
+  int get hashCode =>
+      Object.hash(super.hashCode, _isAmplifyConfigured, _isLocalDBConfigured, _isLoggedIn);
 }

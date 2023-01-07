@@ -71,7 +71,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           ref.read(authStateProvider.notifier).setAuthStep(AuthStep.verifyEmail, AuthStep.register);
           break;
         case AuthResult.genericError:
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          const snackBar =
+              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.notAuthorized:
@@ -82,7 +83,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
           break;
         case AuthResult.userNotFound:
-          const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+          const snackBar =
+              SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
       }
@@ -175,7 +177,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.emailAddress,
                             textInputAction: TextInputAction.next,
                             autofillHints: const [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: const Color(0xFF808080), width: 16),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                           ),
@@ -185,7 +188,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.next,
                             autofillHints: const [AutofillHints.newPassword],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: const Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -196,7 +200,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                             textInputType: TextInputType.visiblePassword,
                             textInputAction: TextInputAction.done,
                             autofillHints: const [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: const Color(0xFF808080), width: 16),
                             isObscured: true,
                             onSaved: saveConfirmPassword,
                             validator: Validators.validatePassword,
@@ -272,9 +277,13 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                         const TextSpan(text: 'Already have an account? '),
                         TextSpan(
                           text: 'Sign In',
-                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black.withOpacity(0.5)),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.login, AuthStep.register),
+                            ..onTap = () => ref
+                                .read(authStateProvider.notifier)
+                                .setAuthStep(AuthStep.login, AuthStep.register),
                         ),
                       ],
                     ),
@@ -292,12 +301,17 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            behavior: HitTestBehavior.translucent,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24, top: 60),
-              child: SvgPicture.asset('assets/icons/back.svg'),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, top: 60),
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: InkResponse(
+                radius: 20,
+                splashFactory: InkRipple.splashFactory,
+                child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                onTap: () => Navigator.maybePop(context),
+              ),
             ),
           ),
         ],

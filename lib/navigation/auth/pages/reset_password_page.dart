@@ -1,5 +1,5 @@
-import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/navigation/transitions/slide_vertical_transition.dart';
 import 'package:socale/screens/auth/forgot_password_screen.dart';
 

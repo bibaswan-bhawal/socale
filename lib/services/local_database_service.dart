@@ -1,6 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/state_providers.dart';
-import 'package:socale/utils/debug_print_statements.dart';
 
 class LocalDatabaseService {
   ProviderRef providerRef;
@@ -8,7 +7,7 @@ class LocalDatabaseService {
   LocalDatabaseService(this.providerRef);
 
   Future<void> initLocalDatabase() async {
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 3000), () {
       providerRef.read(appStateProvider.notifier).localDBConfigured();
     });
   }

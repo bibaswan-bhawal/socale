@@ -12,7 +12,7 @@ class AuthService {
       }
 
       return AuthResult.notAuthorized;
-    } on AuthException catch (e) {
+    } on AuthException catch (_) {
       return AuthResult.genericError;
     }
   }
@@ -43,7 +43,7 @@ class AuthService {
     try {
       final result = await Amplify.Auth.signIn(username: email, password: password);
 
-      if (result.nextStep!.signInStep == "CONFIRM_SIGN_UP") {
+      if (result.nextStep!.signInStep == 'CONFIRM_SIGN_UP') {
         return AuthResult.unverified;
       }
 
@@ -69,15 +69,15 @@ class AuthService {
   }
 
   static Future<void> confirmResetPassword(String email, String newPassword, String code) async {
-    await Amplify.Auth.confirmResetPassword(username: email, newPassword: newPassword, confirmationCode: code);
+    await Amplify.Auth.confirmResetPassword(
+        username: email, newPassword: newPassword, confirmationCode: code);
   }
 
   static Future<bool> signOutUser() async {
     try {
       await Amplify.Auth.signOut();
       return true;
-    } on AuthException catch (e) {
-      print(e.message);
+    } on AuthException catch (_) {
       return false;
     }
   }

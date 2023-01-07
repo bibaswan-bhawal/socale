@@ -5,5 +5,12 @@ import 'package:socale/types/auth/auth_step.dart';
 class AuthStateNotifier extends StateNotifier<AuthState> {
   AuthStateNotifier() : super(AuthState());
 
-  void setAuthStep(AuthStep newStep, AuthStep? previousStep) => state = state.updateState(newStep: newStep, previousStep: previousStep);
+  @override
+  void dispose() {
+    super.dispose();
+    print('Auth Provider Disposed');
+  }
+
+  void setAuthStep(AuthStep newStep, AuthStep? previousStep) =>
+      state = state.updateState(newStep: newStep, previousStep: previousStep);
 }

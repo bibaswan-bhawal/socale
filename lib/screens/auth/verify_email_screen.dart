@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
@@ -26,10 +25,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   void resendCode() async {
     final result = await AuthService.resendVerifyLink(widget.email);
     if (result) {
-      const snackBar = SnackBar(content: Text('A new link as been sent to your email', textAlign: TextAlign.center));
+      const snackBar = SnackBar(
+          content: Text('A new link as been sent to your email', textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     } else {
-      const snackBar = SnackBar(content: Text('There was an error, try again later', textAlign: TextAlign.center));
+      const snackBar = SnackBar(
+          content: Text('There was an error, try again later', textAlign: TextAlign.center));
       if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
     }
   }
@@ -50,11 +51,14 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.genericError:
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          const snackBar =
+              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         default:
-          ref.read(authStateProvider.notifier).setAuthStep(AuthStep.getStarted, AuthStep.verifyEmail);
+          ref
+              .read(authStateProvider.notifier)
+              .setAuthStep(AuthStep.getStarted, AuthStep.verifyEmail);
           break;
       }
     }
@@ -67,7 +71,6 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     return Scaffold(
       body: Stack(
         children: [
-          const LightOnboardingBackground(),
           SafeArea(
             child: Column(
               children: [
@@ -99,14 +102,18 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                         ).createShader(bounds),
                         child: Text(
                           'email',
-                          style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                          style: GoogleFonts.poppins(
+                              fontSize: size.width * 0.058,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white),
                         ),
                       ),
                     ],
                   ),
                 ),
                 Padding(
-                  padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                  padding: EdgeInsets.only(
+                      top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
                   child: Column(
                     children: [
                       Text(

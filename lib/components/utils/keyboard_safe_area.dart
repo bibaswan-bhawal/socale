@@ -24,10 +24,13 @@ class _KeyboardSafeAreaState extends State<KeyboardSafeArea> {
       firstTime = false;
     }
 
-    return Container(
-      margin: EdgeInsets.only(top: mediaQueryData.padding.top),
-      height: availableHeight,
-      child: widget.child,
+    return Material(
+      color: Colors.transparent,
+      child: Container(
+        margin: EdgeInsets.only(top: mediaQueryData.padding.top),
+        height: availableHeight,
+        child: widget.child,
+      ),
     );
   }
 }

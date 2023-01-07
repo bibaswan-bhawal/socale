@@ -4,7 +4,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
@@ -32,19 +31,22 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
   PageController pageController = PageController();
 
-  List<String> buttonText = ["Send Code", "Confirm Code", "Change Password", "Login"];
-  List<LinearGradient> buttonBackground = [ColorValues.blackButtonGradient, ColorValues.orangeButtonGradient];
+  List<String> buttonText = ['Send Code', 'Confirm Code', 'Change Password', 'Login'];
+  List<LinearGradient> buttonBackground = [
+    ColorValues.blackButtonGradient,
+    ColorValues.orangeButtonGradient
+  ];
 
   bool formEmailError = false;
-  String errorEmailMessage = "";
+  String errorEmailMessage = '';
 
   bool formPasswordError = false;
-  String errorPasswordMessage = "";
+  String errorPasswordMessage = '';
 
-  String email = "";
-  String password = "";
-  String confirmPassword = "";
-  String code = "";
+  String email = '';
+  String password = '';
+  String confirmPassword = '';
+  String code = '';
 
   int pageIndex = 0;
 
@@ -62,7 +64,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       pageIndex--;
     });
 
-    pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
     return false;
   }
@@ -79,16 +82,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       final emailForm = formEmailKey.currentState!;
       if (emailForm.validate()) {
         setState(() => formEmailError = false);
-        setState(() => errorEmailMessage = "");
+        setState(() => errorEmailMessage = '');
 
         emailForm.save();
         AuthService.sendResetPasswordCode(email);
         setState(() => pageIndex++);
-        pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+        pageController.animateToPage(pageIndex,
+            duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       } else {
         setState(() {
           formEmailError = true;
-          errorEmailMessage = "Enter a valid email";
+          errorEmailMessage = 'Enter a valid email';
         });
         return;
       }
@@ -111,14 +115,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       final passwordForm = formPasswordKey.currentState!;
       if (passwordForm.validate()) {
         setState(() => formPasswordError = false);
-        setState(() => errorPasswordMessage = "");
+        setState(() => errorPasswordMessage = '');
 
         passwordForm.save();
 
         if (password != confirmPassword) {
-          print(password);
-          print(confirmPassword);
-
           setState(() {
             formPasswordError = true;
             errorPasswordMessage = "Passwords don't match";
@@ -129,15 +130,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         try {
           await AuthService.confirmResetPassword(email, password, code);
-          print("changed password");
-        } on CodeMismatchException catch (e) {
-          print(e);
+        } on CodeMismatchException catch (_) {
           const snackBar = SnackBar(content: Text('Invalid one time code'));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
-        } catch (e) {
-          print(e);
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+        } catch (_) {
+          const snackBar =
+              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
         }
@@ -150,7 +149,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         if (passwordField.errorText != null) {
           setState(() {
             formPasswordError = true;
-            errorPasswordMessage = "Password must be at least 8 characters";
+            errorPasswordMessage = 'Password must be at least 8 characters';
           });
         } else if (confirmPasswordField.errorText != null) {
           setState(() {
@@ -163,7 +162,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
 
     setState(() => pageIndex++);
-    pageController.animateToPage(pageIndex, duration: Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -174,28 +174,31 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       onWillPop: onBack,
       child: Scaffold(
         resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.white,
+        backgroundColor: Colors.transparent,
         body: Stack(
           children: [
-            const LightOnboardingBackground(),
             KeyboardSafeArea(
               child: SingleChildScrollView(
-                physics: NeverScrollableScrollPhysics(),
+                physics: const NeverScrollableScrollPhysics(),
                 reverse: true,
                 child: SizedBox(
-                  height: size.height - MediaQuery.of(context).padding.top - MediaQuery.of(context).padding.bottom,
+                  height: size.height -
+                      MediaQuery.of(context).padding.top -
+                      MediaQuery.of(context).padding.bottom,
                   child: Padding(
                     padding: const EdgeInsets.only(top: 80),
                     child: Column(
                       children: [
-                        Expanded(child: Image.asset('assets/illustrations/forgot_password/cover_illustration.png')),
+                        Expanded(
+                            child: Image.asset(
+                                'assets/illustrations/forgot_password/cover_illustration.png')),
                         Container(
-                          margin: EdgeInsets.only(top: 40),
+                          margin: const EdgeInsets.only(top: 40),
                           height: 260,
                           width: size.width,
                           child: PageView(
                             controller: pageController,
-                            physics: NeverScrollableScrollPhysics(),
+                            physics: const NeverScrollableScrollPhysics(),
                             children: [
                               Column(
                                 children: [
@@ -204,7 +207,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     offset: const Offset(1, 1),
                                     sigma: 1,
                                     child: Text(
-                                      "Forgot Password?",
+                                      'Forgot Password?',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.bold,
@@ -213,11 +216,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                                    padding: EdgeInsets.only(
+                                        top: 10,
+                                        left: size.width * 0.10,
+                                        right: size.width * 0.10,
+                                        bottom: 20),
                                     child: Column(
                                       children: [
                                         Text(
-                                          "Enter your email to receive a confirmation",
+                                          'Enter your email to receive a confirmation',
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.roboto(
                                             fontSize: (size.width * 0.038),
@@ -225,7 +232,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           ),
                                         ),
                                         Text(
-                                          "code and reset your password.",
+                                          'code and reset your password.',
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.roboto(
                                             fontSize: (size.width * 0.038),
@@ -236,7 +243,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(left: 30, right: 30, top: 30),
+                                    padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
                                     child: Form(
                                       key: formEmailKey,
                                       child: GroupInputForm(
@@ -245,11 +252,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                         children: [
                                           GroupInputFormField(
                                             key: emailFieldState,
-                                            hintText: "Email Address",
+                                            hintText: 'Email Address',
                                             initialValue: email,
                                             textInputType: TextInputType.emailAddress,
-                                            autofillHints: [AutofillHints.email],
-                                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: Color(0xFF808080), width: 16),
+                                            autofillHints: const [AutofillHints.email],
+                                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                                color: const Color(0xFF808080), width: 16),
                                             onSaved: saveEmail,
                                             validator: Validators.validateEmail,
                                             textInputAction: TextInputAction.next,
@@ -267,7 +275,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     offset: const Offset(1, 1),
                                     sigma: 1,
                                     child: Text(
-                                      "Reset Code",
+                                      'Reset Code',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.bold,
@@ -276,11 +284,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                                    padding: EdgeInsets.only(
+                                        top: 10,
+                                        left: size.width * 0.10,
+                                        right: size.width * 0.10,
+                                        bottom: 20),
                                     child: Column(
                                       children: [
                                         Text(
-                                          "Enter the code that was sent to",
+                                          'Enter the code that was sent to',
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.roboto(
                                             fontSize: (size.width * 0.038),
@@ -300,7 +312,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 25, left: 50, right: 50),
+                                    padding: const EdgeInsets.only(top: 25, left: 50, right: 50),
                                     child: SizedBox(
                                       width: 300,
                                       child: Form(
@@ -311,7 +323,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           useHapticFeedback: true,
                                           pinTheme: Themes.optPinTheme,
                                           cursorColor: Colors.black,
-                                          hintCharacter: "0",
+                                          hintCharacter: '0',
                                           autovalidateMode: AutovalidateMode.disabled,
                                           keyboardType: TextInputType.number,
                                           autoFocus: true,
@@ -333,7 +345,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     offset: const Offset(1, 1),
                                     sigma: 1,
                                     child: Text(
-                                      "New Password",
+                                      'New Password',
                                       textAlign: TextAlign.center,
                                       style: GoogleFonts.poppins(
                                         fontWeight: FontWeight.bold,
@@ -342,11 +354,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                                    padding: EdgeInsets.only(
+                                        top: 10,
+                                        left: size.width * 0.10,
+                                        right: size.width * 0.10,
+                                        bottom: 20),
                                     child: Column(
                                       children: [
                                         Text(
-                                          "Change password for",
+                                          'Change password for',
                                           textAlign: TextAlign.center,
                                           style: GoogleFonts.roboto(
                                             fontSize: (size.width * 0.038),
@@ -366,7 +382,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                     ),
                                   ),
                                   Padding(
-                                    padding: EdgeInsets.only(left: 30, right: 30, top: 15),
+                                    padding: const EdgeInsets.only(left: 30, right: 30, top: 15),
                                     child: Form(
                                       key: formPasswordKey,
                                       child: GroupInputForm(
@@ -375,24 +391,26 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                         children: [
                                           GroupInputFormField(
                                             key: passwordFieldState,
-                                            hintText: "New Password",
+                                            hintText: 'New Password',
                                             initialValue: password,
                                             textInputType: TextInputType.visiblePassword,
                                             textInputAction: TextInputAction.next,
-                                            autofillHints: [AutofillHints.password],
-                                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                                            autofillHints: const [AutofillHints.password],
+                                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                                color: const Color(0xFF808080), width: 16),
                                             isObscured: true,
                                             onSaved: savePassword,
                                             validator: Validators.validatePassword,
                                           ),
                                           GroupInputFormField(
                                             key: confirmPasswordFieldState,
-                                            hintText: "Confirm Password",
+                                            hintText: 'Confirm Password',
                                             initialValue: confirmPassword,
                                             textInputType: TextInputType.visiblePassword,
                                             textInputAction: TextInputAction.done,
-                                            autofillHints: [AutofillHints.password],
-                                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: Color(0xFF808080), width: 16),
+                                            autofillHints: const [AutofillHints.password],
+                                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                                color: const Color(0xFF808080), width: 16),
                                             isObscured: true,
                                             onSaved: saveConfirmPassword,
                                             validator: Validators.validatePassword,
@@ -411,7 +429,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       offset: const Offset(1, 1),
                                       sigma: 1,
                                       child: Text(
-                                        "Successfully Changed!",
+                                        'Successfully Changed!',
                                         textAlign: TextAlign.center,
                                         style: GoogleFonts.poppins(
                                           fontWeight: FontWeight.bold,
@@ -420,11 +438,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                       ),
                                     ),
                                     Padding(
-                                      padding: EdgeInsets.only(top: 10, left: size.width * 0.10, right: size.width * 0.10, bottom: 20),
+                                      padding: EdgeInsets.only(
+                                          top: 10,
+                                          left: size.width * 0.10,
+                                          right: size.width * 0.10,
+                                          bottom: 20),
                                       child: Column(
                                         children: [
                                           Text(
-                                            "Your password for",
+                                            'Your password for',
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts.roboto(
                                               fontSize: (size.width * 0.038),
@@ -441,7 +463,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                             ),
                                           ),
                                           Text(
-                                            "has been changed successfully, you can",
+                                            'has been changed successfully, you can',
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts.roboto(
                                               fontSize: (size.width * 0.04),
@@ -449,7 +471,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                             ),
                                           ),
                                           Text(
-                                            "login with your new password now.",
+                                            'login with your new password now.',
                                             textAlign: TextAlign.center,
                                             style: GoogleFonts.roboto(
                                               fontSize: (size.width * 0.04),
@@ -466,7 +488,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).padding.bottom, left: 36, right: 36),
+                          padding: EdgeInsets.only(
+                              top: 10,
+                              bottom: 40 - MediaQuery.of(context).padding.bottom,
+                              left: 36,
+                              right: 36),
                           child: GradientButton(
                             linearGradient: buttonBackground[pageIndex == 3 ? 1 : 0],
                             buttonContent: buttonText[pageIndex],
@@ -479,17 +505,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                 ),
               ),
             ),
-            GestureDetector(
-              onTap: () async {
-                final result = await onBack();
-                if (result) {
-                  if (mounted) Navigator.pop(context);
-                }
-              },
-              behavior: HitTestBehavior.translucent,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 24, top: 60),
-                child: SvgPicture.asset('assets/icons/back.svg'),
+            Padding(
+              padding: const EdgeInsets.only(left: 30, top: 60),
+              child: SizedBox(
+                width: 24,
+                height: 24,
+                child: InkResponse(
+                  radius: 20,
+                  splashFactory: InkRipple.splashFactory,
+                  child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                  onTap: () => Navigator.maybePop(context),
+                ),
               ),
             ),
           ],

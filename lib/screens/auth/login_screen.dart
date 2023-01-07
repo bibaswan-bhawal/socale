@@ -60,7 +60,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ref.read(authStateProvider.notifier).setAuthStep(AuthStep.verifyEmail, AuthStep.login);
             break;
           case AuthResult.genericError:
-            const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+            const snackBar =
+                SnackBar(content: Text('Something went wrong try again in a few minutes.'));
             if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
           case AuthResult.notAuthorized:
@@ -71,7 +72,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             break;
           case AuthResult.userNotFound:
-            const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+            const snackBar =
+                SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
             if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
         }
@@ -157,7 +159,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             hintText: 'Email Address',
                             textInputType: TextInputType.emailAddress,
                             autofillHints: const [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
+                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
+                                color: const Color(0xFF808080), fit: BoxFit.contain),
                             onSaved: saveEmail,
                             validator: Validators.validateEmail,
                             textInputAction: TextInputAction.next,
@@ -167,7 +170,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                             hintText: 'Password',
                             textInputType: TextInputType.visiblePassword,
                             autofillHints: const [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
+                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
+                                color: const Color(0xFF808080), fit: BoxFit.contain),
                             isObscured: true,
                             onSaved: savePassword,
                             validator: Validators.validatePassword,
@@ -191,9 +195,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                         const TextSpan(text: "Don't have an account? "),
                         TextSpan(
                           text: 'Register',
-                          style: TextStyle(decoration: TextDecoration.underline, color: Colors.black.withOpacity(0.5)),
+                          style: TextStyle(
+                              decoration: TextDecoration.underline,
+                              color: Colors.black.withOpacity(0.5)),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.register, AuthStep.login),
+                            ..onTap = () => ref
+                                .read(authStateProvider.notifier)
+                                .setAuthStep(AuthStep.register, AuthStep.login),
                         ),
                       ],
                     ),
@@ -208,7 +216,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     ),
                   ),
                   GestureDetector(
-                    onTap: () => ref.read(authStateProvider.notifier).setAuthStep(AuthStep.forgotPassword, AuthStep.login),
+                    onTap: () => ref
+                        .read(authStateProvider.notifier)
+                        .setAuthStep(AuthStep.forgotPassword, AuthStep.login),
                     behavior: HitTestBehavior.translucent,
                     child: Padding(
                       padding: const EdgeInsets.only(bottom: 30, top: 30),
@@ -227,12 +237,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
             ),
           ),
-          GestureDetector(
-            onTap: () => Navigator.pop(context),
-            behavior: HitTestBehavior.translucent,
-            child: Padding(
-              padding: const EdgeInsets.only(left: 24, top: 60),
-              child: SvgPicture.asset('assets/icons/back.svg'),
+          Padding(
+            padding: const EdgeInsets.only(left: 30, top: 60),
+            child: SizedBox(
+              width: 24,
+              height: 24,
+              child: InkResponse(
+                radius: 20,
+                splashFactory: InkRipple.splashFactory,
+                child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                onTap: () => Navigator.maybePop(context),
+              ),
             ),
           ),
         ],

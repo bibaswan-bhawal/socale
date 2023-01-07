@@ -10,11 +10,12 @@ import 'package:socale/screens/auth/auth_router_screen.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 import 'package:socale/screens/screen_splash.dart';
 
-class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
+class MainRouterDelegate extends RouterDelegate<AppRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
-  ProviderRef ref;
+  AutoDisposeProviderRef ref;
 
   AppState appState = AppState();
   AuthState authState = AuthState();
@@ -24,12 +25,12 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifie
     authState = ref.read(authStateProvider);
 
     ref.listen(appStateProvider, updateAppState);
-    ref.listen(authStateProvider, updateAuthState);
   }
 
   // Update App State
   void updateAuthState(AuthState? oldState, AuthState newState) {
     if (authState == newState) return;
+    print('new auth state');
     authState = newState;
     notifyListeners();
   }
@@ -42,12 +43,18 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifie
 
   @override
   Widget build(BuildContext context) {
+    if (appState.isInitialized && !appState.isLoggedIn) {
+      ref.listen(authStateProvider, updateAuthState);
+    }
+
     return Navigator(
       key: navigatorKey,
       pages: [
         if (!appState.isInitialized) const MaterialPage(child: SplashScreen()),
-        if (appState.isInitialized && !appState.isLoggedIn) const MaterialPage(child: AuthRouterScreen()),
-        if (appState.isInitialized && appState.isLoggedIn) const MaterialPage(child: OnboardingScreen()),
+        if (appState.isInitialized) ...[
+          if (!appState.isLoggedIn) const MaterialPage(child: AuthRouterScreen()),
+          if (appState.isLoggedIn) const MaterialPage(child: OnboardingScreen()),
+        ]
       ],
       onPopPage: (route, result) {
         return route.didPop(result);
@@ -59,7 +66,9 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifie
   @override
   AppRoutePath get currentConfiguration {
     if (!appState.isInitialized) return MainRoutePath.splashScreen();
-    if (appState.isInitialized && !appState.isLoggedIn) return ref.read(authRouterDelegateProvider).getNewRoutePath(authState);
+    if (appState.isInitialized && !appState.isLoggedIn) {
+      return ref.read(authRouterDelegateProvider).getNewRoutePath(authState);
+    }
     if (appState.isInitialized && appState.isLoggedIn) return MainRoutePath.app();
     return MainRoutePath.splashScreen();
   }

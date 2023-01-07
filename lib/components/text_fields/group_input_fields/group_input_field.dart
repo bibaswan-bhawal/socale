@@ -39,8 +39,10 @@ class GroupInputField extends StatefulWidget {
 }
 
 class _GroupInputFieldState extends State<GroupInputField> {
-  late TextEditingController controller;
-  bool shouldObscure = false;
+  late TextEditingController _controller;
+  late FocusNode _focusNode;
+
+  bool _shouldObscure = false;
 
   Artboard? _board;
   SMITrigger? _trigger;
@@ -63,9 +65,10 @@ class _GroupInputFieldState extends State<GroupInputField> {
       setState(() => _board = board);
     });
 
-    controller = TextEditingController(text: widget.initialValue);
+    _controller = TextEditingController(text: widget.initialValue);
+    _focusNode = FocusNode();
 
-    if (widget.isObscured) shouldObscure = widget.isObscured;
+    if (widget.isObscured) _shouldObscure = widget.isObscured;
 
     WidgetsBinding.instance.addPostFrameCallback((_) {
       if (widget.initialValue.isNotEmpty) {
@@ -76,7 +79,8 @@ class _GroupInputFieldState extends State<GroupInputField> {
 
   @override
   void dispose() {
-    controller.dispose();
+    _controller.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 
@@ -88,13 +92,13 @@ class _GroupInputFieldState extends State<GroupInputField> {
       width: 20,
       height: 20,
       child: InkResponse(
+        radius: 10,
+        splashFactory: InkRipple.splashFactory,
+        child: _board != null ? Rive(artboard: _board!, fit: BoxFit.contain) : null,
         onTap: () {
           _trigger?.fire();
-          setState(() => shouldObscure = !shouldObscure);
+          setState(() => _shouldObscure = !_shouldObscure);
         },
-        splashFactory: InkRipple.splashFactory,
-        radius: 10,
-        child: _board != null ? Rive(artboard: _board!, fit: BoxFit.contain) : null,
       ),
     );
   }
@@ -102,38 +106,43 @@ class _GroupInputFieldState extends State<GroupInputField> {
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(builder: (context, constraints) {
-      return Container(
-        width: constraints.maxWidth,
-        padding: const EdgeInsets.symmetric(vertical: 10),
-        child: Row(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(right: 14),
-              child: widget.prefixIcon,
-            ),
-            Expanded(
-              child: TextField(
-                controller: controller,
-                onChanged: widget.onChanged,
-                style: GoogleFonts.roboto(fontSize: 14, letterSpacing: -0.3),
-                cursorColor: ColorValues.socaleOrange,
-                cursorRadius: const Radius.circular(1),
-                keyboardType: widget.textInputType,
-                textInputAction: widget.textInputAction,
-                autofillHints: widget.autofillHints,
-                obscureText: shouldObscure,
-                decoration: InputDecoration(
-                  isCollapsed: true,
-                  border: InputBorder.none,
-                  hintText: widget.hintText,
+      return GestureDetector(
+        behavior: HitTestBehavior.translucent,
+        onTap: () => _focusNode.requestFocus(),
+        child: Container(
+          width: constraints.maxWidth,
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          child: Row(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(right: 14),
+                child: widget.prefixIcon,
+              ),
+              Expanded(
+                child: TextField(
+                  focusNode: _focusNode,
+                  controller: _controller,
+                  onChanged: widget.onChanged,
+                  style: GoogleFonts.roboto(fontSize: 14, letterSpacing: -0.3),
+                  cursorColor: ColorValues.socaleOrange,
+                  cursorRadius: const Radius.circular(1),
+                  keyboardType: widget.textInputType,
+                  textInputAction: widget.textInputAction,
+                  autofillHints: widget.autofillHints,
+                  obscureText: _shouldObscure,
+                  decoration: InputDecoration(
+                    isCollapsed: true,
+                    border: InputBorder.none,
+                    hintText: widget.hintText,
+                  ),
                 ),
               ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 14),
-              child: suffixIconBuilder(),
-            ),
-          ],
+              Padding(
+                padding: const EdgeInsets.only(left: 14),
+                child: suffixIconBuilder(),
+              ),
+            ],
+          ),
         ),
       );
     });

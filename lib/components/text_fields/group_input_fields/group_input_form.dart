@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/resources/colors.dart';
 
-class GroupInputForm extends StatefulWidget {
+class GroupInputForm extends StatelessWidget {
   final List<Widget> children;
   final bool isError;
   final String errorMessage;
@@ -14,11 +14,20 @@ class GroupInputForm extends StatefulWidget {
     this.errorMessage = '',
   }) : super(key: key);
 
-  @override
-  State<GroupInputForm> createState() => GroupedInputFromState();
-}
+  List<Widget> buildInputList() {
+    List<Widget> inputs = [];
 
-class GroupedInputFromState extends State<GroupInputForm> {
+    for (var input in children) {
+      inputs.add(input);
+
+      if (input != children.last) {
+        inputs.add(const Divider(height: 1.25, thickness: 1.25, color: Color(0x1A000000)));
+      }
+    }
+
+    return inputs;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -27,10 +36,7 @@ class GroupedInputFromState extends State<GroupInputForm> {
           duration: const Duration(milliseconds: 300),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(
-              color: widget.isError ? Colors.red : Colors.transparent,
-              width: 2,
-            ),
+            border: Border.all(color: isError ? Colors.red : Colors.transparent, width: 2),
             gradient: ColorValues.groupInputBackgroundGradient,
             boxShadow: [
               BoxShadow(
@@ -43,15 +49,11 @@ class GroupedInputFromState extends State<GroupInputForm> {
           child: Material(
             color: Colors.transparent,
             borderRadius: BorderRadius.circular(15),
-            child: ListView.separated(
-              physics: const NeverScrollableScrollPhysics(),
+            child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-              shrinkWrap: true,
-              itemBuilder: (context, index) => widget.children[index],
-              separatorBuilder: (context, index) {
-                return const Divider(height: 1.25, thickness: 1.25, color: Color(0x1A000000));
-              },
-              itemCount: widget.children.length,
+              child: Column(
+                children: buildInputList(),
+              ),
             ),
           ),
         ),
@@ -60,10 +62,10 @@ class GroupedInputFromState extends State<GroupInputForm> {
           child: Align(
             alignment: Alignment.centerLeft,
             child: AnimatedOpacity(
-              opacity: widget.isError ? 1 : 0,
+              opacity: isError ? 1 : 0,
               duration: const Duration(milliseconds: 300),
               child: Text(
-                widget.errorMessage,
+                errorMessage,
                 textAlign: TextAlign.start,
                 style: GoogleFonts.roboto(color: Colors.red, fontSize: 12, letterSpacing: -0.3),
               ),

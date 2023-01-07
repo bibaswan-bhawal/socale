@@ -3,22 +3,24 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/models/auth_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
+import 'package:socale/navigation/auth/pages/get_started_page.dart';
+import 'package:socale/navigation/auth/pages/login_page.dart';
 import 'package:socale/navigation/auth/pages/register_page.dart';
 import 'package:socale/navigation/auth/pages/reset_password_page.dart';
 import 'package:socale/providers/state_providers.dart';
-import 'package:socale/navigation/auth/pages/get_started_page.dart';
-import 'package:socale/navigation/auth/pages/login_page.dart';
 import 'package:socale/types/auth/auth_step.dart';
 
-class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
+class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
+
   AuthState authState = AuthState();
-  ProviderRef ref;
+
+  AutoDisposeProviderRef ref;
 
   AuthRouterDelegate(this.ref) : navigatorKey = GlobalKey<NavigatorState>() {
     authState = ref.read(authStateProvider);
-    ref.listen(authStateProvider, updateAuthState);
   }
 
   void updateAuthState(AuthState? oldState, AuthState newState) {
@@ -29,6 +31,8 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(authStateProvider, updateAuthState);
+
     return Stack(
       children: [
         const LightOnboardingBackground(),
@@ -46,16 +50,24 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
           onPopPage: (route, result) {
             switch (authState.step) {
               case AuthStep.forgotPassword:
-                ref.read(authStateProvider.notifier).setAuthStep(AuthStep.login, AuthStep.forgotPassword);
+                ref
+                    .read(authStateProvider.notifier)
+                    .setAuthStep(AuthStep.login, AuthStep.forgotPassword);
                 break;
               case AuthStep.verifyEmail:
-                ref.read(authStateProvider.notifier).setAuthStep(ref.read(authStateProvider).previousStep, AuthStep.verifyEmail);
+                ref
+                    .read(authStateProvider.notifier)
+                    .setAuthStep(ref.read(authStateProvider).previousStep, AuthStep.verifyEmail);
                 break;
               case AuthStep.register:
-                ref.read(authStateProvider.notifier).setAuthStep(AuthStep.getStarted, AuthStep.register);
+                ref
+                    .read(authStateProvider.notifier)
+                    .setAuthStep(AuthStep.getStarted, AuthStep.register);
                 break;
               case AuthStep.login:
-                ref.read(authStateProvider.notifier).setAuthStep(AuthStep.getStarted, AuthStep.login);
+                ref
+                    .read(authStateProvider.notifier)
+                    .setAuthStep(AuthStep.getStarted, AuthStep.login);
                 break;
             }
 

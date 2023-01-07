@@ -32,17 +32,17 @@ class ColorValues {
     transform: GradientRotation((pi / 180) * -72),
   );
 
-  static final Gradient groupInputBackgroundGradient = (LinearGradient(
+  static final Gradient groupInputBackgroundGradient = (const LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.centerRight,
     colors: [
-      const Color(0x0DA18FEC),
-      const Color(0x0D80A9F9),
-      const Color(0x0DFF83F3),
-      const Color(0x0DE5CFA4),
-      const Color(0x0DEB7960),
+      Color(0x0DA18FEC),
+      Color(0x0D80A9F9),
+      Color(0x0DFF83F3),
+      Color(0x0DE5CFA4),
+      Color(0x0DEB7960),
     ],
-  ).lerpTo(LinearGradient(colors: [Colors.white, Colors.white]), 0.95))!;
+  ).lerpTo(const LinearGradient(colors: [Colors.white, Colors.white]), 0.95))!;
 
   static const LinearGradient orangeBackgroundGradient = LinearGradient(
     begin: Alignment.bottomLeft,

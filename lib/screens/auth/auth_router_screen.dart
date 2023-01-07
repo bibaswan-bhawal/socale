@@ -15,7 +15,8 @@ class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _backButtonDispatcher = Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
+    _backButtonDispatcher =
+        Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
   }
 
   @override
@@ -23,7 +24,7 @@ class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
     _backButtonDispatcher?.takePriority();
 
     return Router(
-      routerDelegate: ref.read(authRouterDelegateProvider),
+      routerDelegate: ref.watch(authRouterDelegateProvider),
       backButtonDispatcher: _backButtonDispatcher,
     );
   }
