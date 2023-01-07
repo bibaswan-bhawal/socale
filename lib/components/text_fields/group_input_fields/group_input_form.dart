@@ -47,7 +47,7 @@ class GroupInputForm extends StatelessWidget {
             ],
           ),
           child: Material(
-            color: Colors.transparent,
+            type: MaterialType.transparency,
             borderRadius: BorderRadius.circular(15),
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),

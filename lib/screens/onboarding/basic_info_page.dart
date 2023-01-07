@@ -1,7 +1,6 @@
-import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/components/selectors/container_chip_selector.dart';
+import 'package:socale/components/cards/chip_card.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/system_ui.dart';
@@ -38,19 +37,7 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
               ),
             ),
           ),
-          Padding(
-            padding: EdgeInsets.only(left: 36, right: 36, bottom: bottomPadding),
-            child: OpenContainer(
-              closedShape:
-                  const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(15))),
-              closedColor: Colors.transparent,
-              closedElevation: 2,
-              transitionType: ContainerTransitionType.fadeThrough,
-              openBuilder: (context, _) => const _DetailsPage(message: 'hello'),
-              closedBuilder: (context, openContainer) =>
-                  const ContainerChipSelector(emptyMessage: 'Add a Major'),
-            ),
-          ),
+          const ChipCard(emptyMessage: 'Add your Major'),
         ],
       ),
     );

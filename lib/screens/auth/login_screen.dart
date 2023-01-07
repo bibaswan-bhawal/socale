@@ -1,9 +1,10 @@
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
+import 'package:socale/components/buttons/text_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
@@ -37,6 +38,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   saveEmail(value) => email = value;
   savePassword(value) => password = value;
 
+  goToSignUp() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.register);
+  goToForgotPassword() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.forgotPassword);
+
   Future<void> onClickLogin() async {
     final form = formKey.currentState!;
 
@@ -57,11 +61,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             ref.read(appStateProvider.notifier).login();
             break;
           case AuthResult.unverified:
-            ref.read(authStateProvider.notifier).setAuthStep(AuthStep.verifyEmail, AuthStep.login);
+            ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.verifyEmail, email: email, password: password);
             break;
           case AuthResult.genericError:
-            const snackBar =
-                SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+            const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
             if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
           case AuthResult.notAuthorized:
@@ -72,8 +75,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
             break;
           case AuthResult.userNotFound:
-            const snackBar =
-                SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+            const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up", textAlign: TextAlign.center));
             if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
             break;
         }
@@ -113,144 +115,109 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          KeyboardSafeArea(
-            child: Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: size.height * 0.08),
-                    child: Hero(
-                      tag: 'auth_logo',
-                      child: SvgPicture.asset(
-                        'assets/logo/color_logo.svg',
-                        width: 150,
+      body: KeyboardSafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 30, top: 30),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: InkResponse(
+                      radius: 20,
+                      splashFactory: InkRipple.splashFactory,
+                      child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                      onTap: () => Navigator.maybePop(context),
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: size.height * 0.08 - 54),
+                child: SvgPicture.asset('assets/logo/color_logo.svg', width: 150),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: Text(
+                  'Welcome Back',
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+              Text(
+                'Login to start matching',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
+                child: Form(
+                  key: formKey,
+                  child: GroupInputForm(
+                    isError: formError,
+                    errorMessage: errorMessage,
+                    children: [
+                      GroupInputFormField(
+                        key: emailFieldState,
+                        hintText: 'Email Address',
+                        textInputType: TextInputType.emailAddress,
+                        autofillHints: const [AutofillHints.email],
+                        prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
+                        onSaved: saveEmail,
+                        validator: Validators.validateEmail,
+                        textInputAction: TextInputAction.next,
                       ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: Text(
-                      'Welcome Back',
-                      style: GoogleFonts.poppins(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
+                      GroupInputFormField(
+                        key: passwordFieldState,
+                        hintText: 'Password',
+                        textInputType: TextInputType.visiblePassword,
+                        autofillHints: const [AutofillHints.password],
+                        prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
+                        isObscured: true,
+                        onSaved: savePassword,
+                        validator: Validators.validatePassword,
+                        textInputAction: TextInputAction.done,
                       ),
-                    ),
+                    ],
                   ),
-                  Text(
-                    'Login to start matching',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Colors.black.withOpacity(0.5),
-                    ),
+                ),
+              ),
+              Expanded(child: Container()),
+              ActionGroup(
+                actions: [
+                  LinkButton(
+                    onPressed: goToSignUp,
+                    prefixText: "Don't have an account?",
+                    text: 'Register',
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
-                    child: Form(
-                      key: formKey,
-                      child: GroupInputForm(
-                        isError: formError,
-                        errorMessage: errorMessage,
-                        children: [
-                          GroupInputFormField(
-                            key: emailFieldState,
-                            hintText: 'Email Address',
-                            textInputType: TextInputType.emailAddress,
-                            autofillHints: const [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
-                                color: const Color(0xFF808080), fit: BoxFit.contain),
-                            onSaved: saveEmail,
-                            validator: Validators.validateEmail,
-                            textInputAction: TextInputAction.next,
-                          ),
-                          GroupInputFormField(
-                            key: passwordFieldState,
-                            hintText: 'Password',
-                            textInputType: TextInputType.visiblePassword,
-                            autofillHints: const [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: const Color(0xFF808080), fit: BoxFit.contain),
-                            isObscured: true,
-                            onSaved: savePassword,
-                            validator: Validators.validatePassword,
-                            textInputAction: TextInputAction.done,
-                          ),
-                        ],
-                      ),
-                    ),
+                  GradientButton(
+                    isLoading: isLoading,
+                    onPressed: onClickLogin,
+                    text: 'Sign In',
+                    linearGradient: ColorValues.orangeButtonGradient,
                   ),
-                  Expanded(child: Container()),
-                  RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: -0.3,
-                        color: Colors.black,
-                      ),
-                      children: [
-                        const TextSpan(text: "Don't have an account? "),
-                        TextSpan(
-                          text: 'Register',
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.black.withOpacity(0.5)),
-                          recognizer: TapGestureRecognizer()
-                            ..onTap = () => ref
-                                .read(authStateProvider.notifier)
-                                .setAuthStep(AuthStep.register, AuthStep.login),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 36, right: 36),
-                    child: GradientButton(
-                      isLoading: isLoading,
-                      linearGradient: ColorValues.orangeButtonGradient,
-                      buttonContent: 'Sign In',
-                      onClickEvent: onClickLogin,
-                    ),
-                  ),
-                  GestureDetector(
-                    onTap: () => ref
-                        .read(authStateProvider.notifier)
-                        .setAuthStep(AuthStep.forgotPassword, AuthStep.login),
-                    behavior: HitTestBehavior.translucent,
-                    child: Padding(
-                      padding: const EdgeInsets.only(bottom: 30, top: 30),
-                      child: Text(
-                        'Forgot Password?',
-                        style: TextStyle(
-                          decoration: TextDecoration.underline,
-                          fontWeight: FontWeight.w500,
-                          fontSize: 12,
-                          color: Colors.black.withOpacity(0.75),
-                        ),
-                      ),
+                  LinkButton(
+                    onPressed: goToForgotPassword,
+                    text: 'Forgot Password? ',
+                    textStyle: TextStyle(
+                      decoration: TextDecoration.underline,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 12,
+                      color: Colors.black.withOpacity(0.75),
                     ),
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 60),
-            child: SizedBox(
-              width: 24,
-              height: 24,
-              child: InkResponse(
-                radius: 20,
-                splashFactory: InkRipple.splashFactory,
-                child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
-                onTap: () => Navigator.maybePop(context),
-              ),
-            ),
-          ),
-        ],
+        ),
       ),
     );
   }

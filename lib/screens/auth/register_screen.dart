@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
+import 'package:socale/components/buttons/text_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
@@ -41,6 +43,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   savePassword(value) => password = value;
   saveConfirmPassword(value) => confirmPassword = value;
 
+  goToSignIn() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.login);
+
   Future<void> onClickRegister() async {
     final form = formState.currentState!;
     if (form.validate() && !isLoading) {
@@ -68,11 +72,15 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           ref.read(appStateProvider.notifier).login();
           break;
         case AuthResult.unverified:
-          ref.read(authStateProvider.notifier).setAuthStep(AuthStep.verifyEmail, AuthStep.register);
+          ref.read(authStateProvider.notifier).setAuthStep(
+                newStep: AuthStep.verifyEmail,
+                previousStep: AuthStep.login,
+                email: email,
+                password: password,
+              );
           break;
         case AuthResult.genericError:
-          const snackBar =
-              SnackBar(content: Text('Something went wrong try again in a few minutes.'));
+          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
         case AuthResult.notAuthorized:
@@ -83,8 +91,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
           break;
         case AuthResult.userNotFound:
-          const snackBar =
-              SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up"));
+          const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up", textAlign: TextAlign.center));
           if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
           break;
       }
@@ -130,191 +137,166 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
-      body: Stack(
-        children: [
-          KeyboardSafeArea(
-            child: Center(
-              child: Column(
-                children: [
-                  Padding(
-                    padding: EdgeInsets.only(top: size.height * 0.08),
-                    child: Hero(
-                      tag: 'auth_logo',
-                      child: SvgPicture.asset(
-                        'assets/logo/color_logo.svg',
-                        width: 150,
-                      ),
+      body: KeyboardSafeArea(
+        child: Center(
+          child: Column(
+            children: [
+              Align(
+                alignment: Alignment.centerLeft,
+                child: Padding(
+                  padding: const EdgeInsets.only(left: 30, top: 30),
+                  child: SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: InkResponse(
+                      radius: 20,
+                      splashFactory: InkRipple.splashFactory,
+                      child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                      onTap: () => Navigator.maybePop(context),
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 30),
-                    child: Text(
-                      'Hello There',
-                      style: GoogleFonts.poppins(
-                        fontSize: 24,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                ),
+              ),
+              Padding(
+                padding: EdgeInsets.only(top: size.height * 0.08 - 54),
+                child: SvgPicture.asset('assets/logo/color_logo.svg', width: 150),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 30),
+                child: Text(
+                  'Hello There',
+                  style: GoogleFonts.poppins(
+                    fontSize: 24,
+                    fontWeight: FontWeight.w600,
                   ),
-                  Text(
-                    'Sign up to start matching',
-                    style: GoogleFonts.poppins(
-                      fontSize: 14,
-                      color: Colors.black.withOpacity(0.5),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 48, left: 30, right: 30),
-                    child: Form(
-                      key: formState,
-                      child: GroupInputForm(
-                        isError: formError,
-                        errorMessage: errorMessage,
-                        children: [
-                          GroupInputFormField(
-                            key: emailFieldState,
-                            hintText: 'Email Address',
-                            textInputType: TextInputType.emailAddress,
-                            textInputAction: TextInputAction.next,
-                            autofillHints: const [AutofillHints.email],
-                            prefixIcon: SvgPicture.asset('assets/icons/email.svg',
-                                color: const Color(0xFF808080), width: 16),
-                            onSaved: saveEmail,
-                            validator: Validators.validateEmail,
-                          ),
-                          GroupInputFormField(
-                            key: passwordFieldState,
-                            hintText: 'Password',
-                            textInputType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.next,
-                            autofillHints: const [AutofillHints.newPassword],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: const Color(0xFF808080), width: 16),
-                            isObscured: true,
-                            onSaved: savePassword,
-                            validator: Validators.validatePassword,
-                          ),
-                          GroupInputFormField(
-                            key: confirmPasswordFieldState,
-                            hintText: 'Confirm Password',
-                            textInputType: TextInputType.visiblePassword,
-                            textInputAction: TextInputAction.done,
-                            autofillHints: const [AutofillHints.password],
-                            prefixIcon: SvgPicture.asset('assets/icons/lock.svg',
-                                color: const Color(0xFF808080), width: 16),
-                            isObscured: true,
-                            onSaved: saveConfirmPassword,
-                            validator: Validators.validatePassword,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  Column(
+                ),
+              ),
+              Text(
+                'Sign up to start matching',
+                style: GoogleFonts.poppins(
+                  fontSize: 14,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: 48, left: 30, right: 30),
+                child: Form(
+                  key: formState,
+                  child: GroupInputForm(
+                    isError: formError,
+                    errorMessage: errorMessage,
                     children: [
-                      Text(
-                        'By signing up you agree to the Socale',
-                        style: GoogleFonts.poppins(
-                          fontSize: 12,
-                          fontWeight: FontWeight.w500,
-                          letterSpacing: -0.3,
-                          color: Colors.black,
-                        ),
+                      GroupInputFormField(
+                        key: emailFieldState,
+                        hintText: 'Email Address',
+                        textInputType: TextInputType.emailAddress,
+                        textInputAction: TextInputAction.next,
+                        autofillHints: const [AutofillHints.email],
+                        prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), width: 16),
+                        onSaved: saveEmail,
+                        validator: Validators.validateEmail,
                       ),
-                      RichText(
-                        textAlign: TextAlign.center,
-                        text: TextSpan(
-                          style: GoogleFonts.poppins(
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500,
-                            letterSpacing: -0.3,
-                            color: Colors.black,
-                          ),
-                          children: [
-                            TextSpan(
-                              text: 'Terms of service',
-                              style: const TextStyle(
-                                decoration: TextDecoration.underline,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  await launchUrl(
-                                    Uri.parse('http://socale.co/tos'),
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                },
-                            ),
-                            const TextSpan(text: ' & '),
-                            TextSpan(
-                              text: 'Privacy Policy',
-                              style: const TextStyle(
-                                decoration: TextDecoration.underline,
-                              ),
-                              recognizer: TapGestureRecognizer()
-                                ..onTap = () async {
-                                  await launchUrl(
-                                    Uri.parse('http://socale.co/privacypolicy'),
-                                    mode: LaunchMode.externalApplication,
-                                  );
-                                },
-                            ),
-                          ],
-                        ),
+                      GroupInputFormField(
+                        key: passwordFieldState,
+                        hintText: 'Password',
+                        textInputType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.next,
+                        autofillHints: const [AutofillHints.newPassword],
+                        prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                        isObscured: true,
+                        onSaved: savePassword,
+                        validator: Validators.validatePassword,
+                      ),
+                      GroupInputFormField(
+                        key: confirmPasswordFieldState,
+                        hintText: 'Confirm Password',
+                        textInputType: TextInputType.visiblePassword,
+                        textInputAction: TextInputAction.done,
+                        autofillHints: const [AutofillHints.password],
+                        prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                        isObscured: true,
+                        onSaved: saveConfirmPassword,
+                        validator: Validators.validatePassword,
                       ),
                     ],
                   ),
-                  Expanded(child: Container()),
+                ),
+              ),
+              Column(
+                children: [
+                  Text(
+                    'By signing up you agree to the Socale',
+                    style: GoogleFonts.poppins(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                      letterSpacing: -0.3,
+                      color: Colors.black,
+                    ),
+                  ),
                   RichText(
                     textAlign: TextAlign.center,
                     text: TextSpan(
-                      style: GoogleFonts.roboto(
-                        fontSize: 14,
+                      style: GoogleFonts.poppins(
+                        fontSize: 12,
                         fontWeight: FontWeight.w500,
                         letterSpacing: -0.3,
                         color: Colors.black,
                       ),
                       children: [
-                        const TextSpan(text: 'Already have an account? '),
                         TextSpan(
-                          text: 'Sign In',
-                          style: TextStyle(
-                              decoration: TextDecoration.underline,
-                              color: Colors.black.withOpacity(0.5)),
+                          text: 'Terms of service',
+                          style: const TextStyle(
+                            decoration: TextDecoration.underline,
+                          ),
                           recognizer: TapGestureRecognizer()
-                            ..onTap = () => ref
-                                .read(authStateProvider.notifier)
-                                .setAuthStep(AuthStep.login, AuthStep.register),
+                            ..onTap = () async {
+                              await launchUrl(
+                                Uri.parse('http://socale.co/tos'),
+                                mode: LaunchMode.externalApplication,
+                              );
+                            },
+                        ),
+                        const TextSpan(text: ' & '),
+                        TextSpan(
+                          text: 'Privacy Policy',
+                          style: const TextStyle(
+                            decoration: TextDecoration.underline,
+                          ),
+                          recognizer: TapGestureRecognizer()
+                            ..onTap = () async {
+                              await launchUrl(
+                                Uri.parse('http://socale.co/privacypolicy'),
+                                mode: LaunchMode.externalApplication,
+                              );
+                            },
                         ),
                       ],
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.only(top: 15, bottom: 20, left: 36, right: 36),
-                    child: GradientButton(
-                      isLoading: isLoading,
-                      linearGradient: ColorValues.purpleButtonGradient,
-                      buttonContent: 'Create an Account',
-                      onClickEvent: onClickRegister,
-                    ),
-                  ),
                 ],
               ),
-            ),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(left: 30, top: 60),
-            child: SizedBox(
-              width: 24,
-              height: 24,
-              child: InkResponse(
-                radius: 20,
-                splashFactory: InkRipple.splashFactory,
-                child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
-                onTap: () => Navigator.maybePop(context),
+              Expanded(child: Container()),
+              Padding(
+                padding: EdgeInsets.only(bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+                child: ActionGroup(
+                  actions: [
+                    LinkButton(
+                      onPressed: goToSignIn,
+                      text: 'Sign In',
+                      prefixText: 'Already have an account?',
+                    ),
+                    GradientButton(
+                      isLoading: isLoading,
+                      onPressed: onClickRegister,
+                      text: 'Create an Account',
+                      linearGradient: ColorValues.purpleButtonGradient,
+                    ),
+                  ],
+                ),
               ),
-            ),
+            ],
           ),
-        ],
+        ),
       ),
     );
   }

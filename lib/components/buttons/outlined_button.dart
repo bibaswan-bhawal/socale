@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/buttons/button.dart';
 
-class OutlineButton extends StatelessWidget {
-  final String buttonContent;
+class OutlineButton extends Button {
   final bool isLoading;
 
-  final Function() onClickEvent;
-
   const OutlineButton({
-    Key? key,
-    required this.buttonContent,
-    required this.onClickEvent,
+    super.key,
+    required super.text,
+    required super.onPressed,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +39,7 @@ class OutlineButton extends StatelessWidget {
                   ),
                 )
               : InkWell(
-                  onTap: onClickEvent,
+                  onTap: super.onPressed,
                   splashFactory: InkRipple.splashFactory,
                   borderRadius: BorderRadius.circular(15),
                   splashColor: const Color(0xFF000000).withOpacity(0.15),
@@ -57,7 +55,7 @@ class OutlineButton extends StatelessWidget {
                     ),
                     child: Center(
                       child: Text(
-                        buttonContent,
+                        super.text,
                         style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

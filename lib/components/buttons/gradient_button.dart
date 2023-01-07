@@ -1,20 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/buttons/button.dart';
 
-class GradientButton extends StatelessWidget {
+class GradientButton extends Button {
   final LinearGradient linearGradient;
-  final String buttonContent;
   final bool isLoading;
 
-  final Function() onClickEvent;
-
   const GradientButton({
-    Key? key,
+    super.key,
+    required super.text,
+    required super.onPressed,
     required this.linearGradient,
-    required this.buttonContent,
-    required this.onClickEvent,
     this.isLoading = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,7 +31,7 @@ class GradientButton extends StatelessWidget {
             ],
           ),
           child: Material(
-            color: Colors.transparent,
+            type: MaterialType.transparency,
             borderRadius: BorderRadius.circular(15),
             child: isLoading
                 ? SizedBox(
@@ -51,7 +49,7 @@ class GradientButton extends StatelessWidget {
                     ),
                   )
                 : InkWell(
-                    onTap: onClickEvent,
+                    onTap: super.onPressed,
                     splashFactory: InkRipple.splashFactory,
                     borderRadius: BorderRadius.circular(15),
                     splashColor: const Color(0xFFFFFFFF).withOpacity(0.30),
@@ -63,7 +61,7 @@ class GradientButton extends StatelessWidget {
                       width: constraints.maxWidth,
                       child: Center(
                         child: Text(
-                          buttonContent,
+                          super.text,
                           style: GoogleFonts.roboto(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

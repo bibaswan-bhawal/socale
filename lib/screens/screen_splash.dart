@@ -25,6 +25,8 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     SizeConfig().init(context);
 
     return Scaffold(
+      resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.transparent,
       body: Container(
         width: size.width,
         height: size.height,

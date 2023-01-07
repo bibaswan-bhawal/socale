@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/outlined_button.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
@@ -18,15 +19,12 @@ class GetStartedScreen extends ConsumerStatefulWidget {
   ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
 }
 
-class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
-    with SingleTickerProviderStateMixin {
+class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with SingleTickerProviderStateMixin {
   late CurvedAnimation animation;
   late AnimationController animationController;
 
-  void goToLogin() =>
-      ref.read(authStateProvider.notifier).setAuthStep(AuthStep.login, AuthStep.getStarted);
-  void goToRegister() =>
-      ref.read(authStateProvider.notifier).setAuthStep(AuthStep.register, AuthStep.getStarted);
+  void goToLogin() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.login, previousStep: AuthStep.getStarted);
+  void goToRegister() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.register, previousStep: AuthStep.getStarted);
 
   @override
   void initState() {
@@ -94,49 +92,44 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
                 ),
               ),
               Padding(
-                padding: EdgeInsets.only(
-                  top: 5,
-                  left: size.width * 0.14,
-                  right: size.width * 0.14,
-                  bottom: 20,
-                ),
-                child: Column(
-                  children: [
-                    Text(
-                      'Boost your social and professional',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.roboto(
-                        fontSize: (size.width * 0.038),
-                        color: ColorValues.textSubtitle,
+                padding: const EdgeInsets.only(top: 5),
+                child: SizedBox(
+                  child: Column(
+                    children: [
+                      Text(
+                        'Boost your social and professional',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.roboto(
+                          fontSize: (size.width * 0.038),
+                          color: ColorValues.textSubtitle,
+                        ),
                       ),
-                    ),
-                    Text(
-                      'connections with the power of Socale.',
-                      textAlign: TextAlign.center,
-                      style: GoogleFonts.roboto(
-                        fontSize: (size.width * 0.038),
-                        color: ColorValues.textSubtitle,
+                      Text(
+                        'connections with the power of Socale.',
+                        textAlign: TextAlign.center,
+                        style: GoogleFonts.roboto(
+                          fontSize: (size.width * 0.038),
+                          color: ColorValues.textSubtitle,
+                        ),
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
-                child: Hero(
-                  tag: 'login_button',
-                  child: GradientButton(
-                    linearGradient: ColorValues.orangeButtonGradient,
-                    buttonContent: 'Sign In',
-                    onClickEvent: goToLogin,
+                    ],
                   ),
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 10, bottom: 20, left: 36, right: 36),
-                child: OutlineButton(
-                  buttonContent: 'Register',
-                  onClickEvent: goToRegister,
+                padding: EdgeInsets.only(top: 36, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+                child: ActionGroup(
+                  actions: [
+                    GradientButton(
+                      text: 'Sign In',
+                      onPressed: goToLogin,
+                      linearGradient: ColorValues.orangeButtonGradient,
+                    ),
+                    OutlineButton(
+                      text: 'Register',
+                      onPressed: goToRegister,
+                    ),
+                  ],
                 ),
               ),
             ],

@@ -39,7 +39,7 @@ class _Transition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AuthStep previousStep = ref.read(authStateProvider).previousStep;
+    AuthStep? previousStep = ref.read(authStateProvider).previousStep;
     AuthStep step = ref.read(authStateProvider).step;
 
     if (step == AuthStep.login && previousStep == AuthStep.register) {
@@ -59,7 +59,11 @@ class _Transition extends ConsumerWidget {
 
     return SlideHorizontalTransition(
       animation: animation,
-      child: child,
+      child: SlideHorizontalTransition(
+        animation: secondaryAnimation,
+        secondary: true,
+        child: child,
+      ),
     );
   }
 }

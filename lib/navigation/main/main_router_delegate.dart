@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/components/backgrounds/light_onboarding_background.dart';
 import 'package:socale/models/app_state.dart';
 import 'package:socale/models/auth_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
 import 'package:socale/navigation/main/main_route_path.dart';
+import 'package:socale/navigation/main/pages/auth_page.dart';
+import 'package:socale/navigation/main/pages/onboarding_page.dart';
+import 'package:socale/navigation/main/pages/splash_page.dart';
 import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/providers/state_providers.dart';
-import 'package:socale/screens/auth/auth_router_screen.dart';
-import 'package:socale/screens/onboarding/onboarding_screen.dart';
-import 'package:socale/screens/screen_splash.dart';
 
-class MainRouterDelegate extends RouterDelegate<AppRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
+class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -30,7 +30,6 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath>
   // Update App State
   void updateAuthState(AuthState? oldState, AuthState newState) {
     if (authState == newState) return;
-    print('new auth state');
     authState = newState;
     notifyListeners();
   }
@@ -38,27 +37,29 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath>
   void updateAppState(AppState? oldState, AppState newState) {
     if (appState == newState) return;
     appState = newState;
+    if (appState.isInitialized && !appState.isLoggedIn) ref.listen(authStateProvider, updateAuthState);
     notifyListeners();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (appState.isInitialized && !appState.isLoggedIn) {
-      ref.listen(authStateProvider, updateAuthState);
-    }
-
-    return Navigator(
-      key: navigatorKey,
-      pages: [
-        if (!appState.isInitialized) const MaterialPage(child: SplashScreen()),
-        if (appState.isInitialized) ...[
-          if (!appState.isLoggedIn) const MaterialPage(child: AuthRouterScreen()),
-          if (appState.isLoggedIn) const MaterialPage(child: OnboardingScreen()),
-        ]
+    return Stack(
+      children: [
+        const LightOnboardingBackground(),
+        Navigator(
+          key: navigatorKey,
+          pages: [
+            if (!appState.isInitialized) const SplashPage(),
+            if (appState.isInitialized) ...[
+              if (!appState.isLoggedIn) const AuthPage(),
+              if (appState.isLoggedIn) const OnboardingPage(),
+            ]
+          ],
+          onPopPage: (route, result) {
+            return route.didPop(result);
+          },
+        ),
       ],
-      onPopPage: (route, result) {
-        return route.didPop(result);
-      },
     );
   }
 

@@ -1,18 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/fade_switch_transition.dart';
-import 'package:socale/screens/screen_splash.dart';
+import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
+import 'package:socale/screens/auth/verify_email_screen.dart';
 
-class SplashPage extends Page {
-  final Widget child = const SplashScreen();
+class VerifyPage extends Page {
+  final Widget child = const VerifyEmailScreen();
 
-  const SplashPage({super.key = const ValueKey('splash_page')});
+  const VerifyPage({super.key = const ValueKey('register_page')});
 
   @override
   Route createRoute(BuildContext context) {
     return PageRouteBuilder(
       settings: this,
-      transitionDuration: const Duration(milliseconds: 400),
-      reverseTransitionDuration: const Duration(milliseconds: 400),
       pageBuilder: (context, animation, secondaryAnimation) => child,
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return _Transition(
@@ -38,13 +36,9 @@ class _Transition extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return FadeSwitchTransition(
+    return SlideHorizontalTransition(
       animation: animation,
-      child: FadeSwitchTransition(
-        animation: secondaryAnimation,
-        secondary: true,
-        child: child,
-      ),
+      child: child,
     );
   }
 }

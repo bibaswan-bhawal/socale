@@ -15,8 +15,14 @@ class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _backButtonDispatcher =
-        Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
+    _backButtonDispatcher = Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    print('AuthRouterScreen dispose');
   }
 
   @override
