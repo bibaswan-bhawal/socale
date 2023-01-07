@@ -25,23 +25,27 @@ class _ChipCardState extends State<ChipCard> {
           borderRadius: BorderRadius.circular(15),
           gradient: ColorValues.groupInputBackgroundGradient,
         ),
-        child: Stack(
-          children: [
-            Positioned(
-              right: 10,
-              top: 8,
-              child: InkResponse(
-                borderRadius: BorderRadius.circular(15),
-                onTap: () {},
-                child: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: SvgPicture.asset('assets/icons/add.svg', color: Colors.black),
+        child: Material(
+          type: MaterialType.transparency,
+          borderRadius: BorderRadius.circular(15),
+          clipBehavior: Clip.antiAlias,
+          child: Stack(
+            children: [
+              Positioned(
+                right: 10,
+                top: 8,
+                child: InkResponse(
+                  onTap: () {},
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: SvgPicture.asset('assets/icons/add.svg', color: Colors.black),
+                  ),
                 ),
               ),
-            ),
-            Center(child: Text(widget.emptyMessage)),
-          ],
+              Center(child: Text(widget.emptyMessage)),
+            ],
+          ),
         ),
       ),
     );
