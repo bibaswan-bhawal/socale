@@ -19,13 +19,6 @@ class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-
-    print('AuthRouterScreen dispose');
-  }
-
-  @override
   Widget build(BuildContext context) {
     _backButtonDispatcher?.takePriority();
 
