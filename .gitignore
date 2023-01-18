@@ -16,7 +16,8 @@
 .idea/
 
 .vscode/
-
+amplify/
+firebase_options.dart
 # The .vscode folder contains launch configuration and tasks you configure in
 # VS Code which you may wish to be included in version control, so this line
 # is commented out by default.
@@ -32,8 +33,6 @@
 .pub-cache/
 .pub/
 /build/
-
-pubspec.lock
 
 Symbolication related
 app.*.symbols
@@ -57,6 +56,9 @@ build/
 dist/
 node_modules/
 aws-exports.js
+awsconfiguration.json
+amplifyconfiguration.json
+amplifyconfiguration.dart
 amplify-build-config.json
 amplify-gradle-config.json
 amplifytools.xcconfig
