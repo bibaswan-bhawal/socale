@@ -5,6 +5,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/buttons/Action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/text_button.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
@@ -37,13 +38,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   }
 
   void resendCode() async {
-    final result = await AuthService.resendVerifyLink(_email);
-    if (result) {
-      const snackBar = SnackBar(content: Text('A new link as been sent to your email', textAlign: TextAlign.center));
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+    final sentSuccessfully = await AuthService.resendVerifyLink(_email);
+
+    if (sentSuccessfully) {
+      showSnackBar('A new link as been sent to your email');
     } else {
-      const snackBar = SnackBar(content: Text('There was an error, try again later', textAlign: TextAlign.center));
-      if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+      showSnackBar('There was an error sending you a code, try again later');
     }
   }
 
@@ -52,26 +52,44 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       setState(() => isLoading = true);
 
       final result = await AuthService.signInUser(_email, _password);
-      setState(() => isLoading = false);
-      print(result);
 
-      switch (result) {
-        case AuthResult.success:
-          ref.read(appStateProvider.notifier).login();
+      switch (result.$4) {
+        case AuthFlowResult.success:
+          loginSuccessful();
+          return;
+        case AuthFlowResult.unverified:
+          showSnackBar('Your email is not verified yet.');
           break;
-        case AuthResult.unverified:
-          const snackBar = SnackBar(content: Text('Your email is not verified yet.', textAlign: TextAlign.center));
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          break;
-        case AuthResult.genericError:
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        case AuthFlowResult.genericError:
+          showSnackBar('Something went wrong, try again ina few minutes.');
           break;
         default:
           ref.invalidate(authStateProvider);
           break;
       }
+
+      setState(() => isLoading = false);
     }
+  }
+
+  loginSuccessful() async {
+    final appState = ref.read(appStateProvider.notifier);
+    final currentUser = ref.read(currentUserProvider.notifier);
+
+    final tokens = await AuthService.getAuthTokens();
+
+    currentUser.setTokens(
+      idToken: tokens.$1,
+      accessToken: tokens.$2,
+      refreshToken: tokens.$3,
+    );
+
+    appState.login();
+  }
+
+  showSnackBar(String message) {
+    final snackBar = SnackBar(content: Text(message, textAlign: TextAlign.center));
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -112,7 +130,10 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                     ).createShader(bounds),
                     child: Text(
                       'email',
-                      style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                      style: GoogleFonts.poppins(
+                          fontSize: size.width * 0.058,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white),
                     ),
                   ),
                 ],

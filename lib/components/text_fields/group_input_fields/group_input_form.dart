@@ -4,14 +4,12 @@ import 'package:socale/resources/colors.dart';
 
 class GroupInputForm extends StatelessWidget {
   final List<Widget> children;
-  final bool isError;
-  final String errorMessage;
+  final String? errorMessage;
 
   const GroupInputForm({
     Key? key,
     this.children = const [],
-    this.isError = false,
-    this.errorMessage = '',
+    this.errorMessage,
   }) : super(key: key);
 
   List<Widget> buildInputList() {
@@ -36,7 +34,10 @@ class GroupInputForm extends StatelessWidget {
           duration: const Duration(milliseconds: 300),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(15),
-            border: Border.all(color: isError ? Colors.red : Colors.transparent, width: 2),
+            border: Border.all(
+              color: errorMessage != null ? Colors.red : Colors.transparent,
+              width: 2,
+            ),
             gradient: ColorValues.groupInputBackgroundGradient,
             boxShadow: [
               BoxShadow(
@@ -62,10 +63,10 @@ class GroupInputForm extends StatelessWidget {
           child: Align(
             alignment: Alignment.centerLeft,
             child: AnimatedOpacity(
-              opacity: isError ? 1 : 0,
+              opacity: errorMessage != null ? 1 : 0,
               duration: const Duration(milliseconds: 300),
               child: Text(
-                errorMessage,
+                errorMessage ?? '',
                 textAlign: TextAlign.start,
                 style: GoogleFonts.roboto(color: Colors.red, fontSize: 12, letterSpacing: -0.3),
               ),

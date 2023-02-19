@@ -8,6 +8,7 @@ import 'package:socale/components/buttons/text_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
@@ -23,89 +24,92 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  GlobalKey<FormFieldState> emailFieldState = GlobalKey<FormFieldState>();
-  GlobalKey<FormFieldState> passwordFieldState = GlobalKey<FormFieldState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
-  bool formError = false;
-  String errorMessage = '';
+  String? errorMessage;
+
+  bool isLoading = false;
 
   String? email;
   String? password;
 
-  bool isLoading = false;
+  saveEmail(String? value) => email = value;
 
-  saveEmail(value) => email = value;
-  savePassword(value) => password = value;
+  savePassword(String? value) => password = value;
 
-  goToSignUp() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.register);
-  goToForgotPassword() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.forgotPassword);
+  goTo(AuthStep step) {
+    final authState = ref.read(authStateProvider.notifier);
 
-  Future<void> onClickLogin() async {
+    switch (step) {
+      case AuthStep.verifyEmail:
+        authState.setAuthStep(newStep: step, email: email, password: password);
+        break;
+      default:
+        authState.setAuthStep(newStep: step);
+        break;
+    }
+  }
+
+  onClickLogin() async {
     final form = formKey.currentState!;
 
     if (!isLoading) {
       setState(() => isLoading = true);
 
       if (form.validate()) {
-        setState(() => formError = false);
-        setState(() => errorMessage = '');
+        setState(() => errorMessage = null);
 
         form.save();
 
         final result = await AuthService.signInUser(email!, password!);
-        setState(() => isLoading = false);
 
         switch (result) {
-          case AuthResult.success:
-            ref.read(appStateProvider.notifier).login();
+          case AuthFlowResult.success:
+            loginSuccessful();
+            return;
+          case AuthFlowResult.unverified:
+            goTo(AuthStep.verifyEmail); // Go to verify email screen
             break;
-          case AuthResult.unverified:
-            ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.verifyEmail, email: email, password: password);
+          case AuthFlowResult.genericError:
+            showSnackBar('Something went wrong try again in a few minutes.');
             break;
-          case AuthResult.genericError:
-            const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
-            if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          case AuthFlowResult.notAuthorized:
+            showFormError('Incorrect password');
             break;
-          case AuthResult.notAuthorized:
-            setState(() {
-              formError = true;
-              errorMessage = 'Incorrect password';
-            });
-
-            break;
-          case AuthResult.userNotFound:
-            const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up", textAlign: TextAlign.center));
-            if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+          case AuthFlowResult.userNotFound:
+            showSnackBar("Sorry, we couldn't find your account. Try signing up");
             break;
         }
       } else {
-        setState(() => isLoading = false);
-        showError();
+        showFormError('Enter a valid email and password');
       }
+
+      setState(() => isLoading = false);
     }
   }
 
-  void showError() {
-    final emailField = emailFieldState.currentState!;
-    final passwordField = passwordFieldState.currentState!;
+  loginSuccessful() async {
+    final appState = ref.read(appStateProvider.notifier);
+    final currentUser = ref.read(currentUserProvider.notifier);
 
-    if (emailField.errorText != null && passwordField.errorText != null) {
-      setState(() {
-        formError = true;
-        errorMessage = 'Enter a valid email and password';
-      });
-    } else if (emailField.errorText != null) {
-      setState(() {
-        formError = true;
-        errorMessage = 'Enter a valid email';
-      });
-    } else if (passwordField.errorText != null) {
-      setState(() {
-        formError = true;
-        errorMessage = 'Enter a valid password';
-      });
-    }
+    final tokens = await AuthService.getAuthTokens();
+
+    currentUser.setTokens(
+      idToken: tokens.$1,
+      accessToken: tokens.$2,
+      refreshToken: tokens.$3,
+    );
+
+    appState.login();
+  }
+
+  showSnackBar(String message) {
+    final snackBar = SnackBar(content: Text(message, textAlign: TextAlign.center));
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  showFormError(String message) {
+    setState(() => errorMessage = message);
   }
 
   @override
@@ -161,25 +165,36 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 child: Form(
                   key: formKey,
                   child: GroupInputForm(
-                    isError: formError,
                     errorMessage: errorMessage,
                     children: [
                       GroupInputFormField(
-                        key: emailFieldState,
                         hintText: 'Email Address',
                         textInputType: TextInputType.emailAddress,
                         autofillHints: const [AutofillHints.email],
-                        prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
+                        prefixIcon: SvgPicture.asset(
+                          'assets/icons/email.svg',
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF808080),
+                            BlendMode.srcIn,
+                          ),
+                          fit: BoxFit.contain,
+                        ),
                         onSaved: saveEmail,
                         validator: Validators.validateEmail,
                         textInputAction: TextInputAction.next,
                       ),
                       GroupInputFormField(
-                        key: passwordFieldState,
                         hintText: 'Password',
                         textInputType: TextInputType.visiblePassword,
                         autofillHints: const [AutofillHints.password],
-                        prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), fit: BoxFit.contain),
+                        prefixIcon: SvgPicture.asset(
+                          'assets/icons/lock.svg',
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF808080),
+                            BlendMode.srcIn,
+                          ),
+                          fit: BoxFit.contain,
+                        ),
                         isObscured: true,
                         onSaved: savePassword,
                         validator: Validators.validatePassword,
@@ -193,7 +208,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ActionGroup(
                 actions: [
                   LinkButton(
-                    onPressed: goToSignUp,
+                    onPressed: () => goTo(AuthStep.register),
                     prefixText: "Don't have an account?",
                     text: 'Register',
                   ),
@@ -204,7 +219,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     linearGradient: ColorValues.orangeButtonGradient,
                   ),
                   LinkButton(
-                    onPressed: goToForgotPassword,
+                    onPressed: () => goTo(AuthStep.forgotPassword),
                     text: 'Forgot Password? ',
                     textStyle: TextStyle(
                       decoration: TextDecoration.underline,

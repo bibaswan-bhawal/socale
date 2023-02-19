@@ -1,19 +1,24 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/models/auth_state.dart';
+import 'package:socale/models/state/auth_state.dart';
 import 'package:socale/types/auth/auth_step.dart';
 import 'package:socale/utils/validators.dart';
 
 class AuthStateNotifier extends StateNotifier<AuthState> {
   AuthStateNotifier() : super(AuthState());
 
-  void setAuthStep({required AuthStep newStep, AuthStep? previousStep, String? email, String? password}) {
+  void setAuthStep(
+      {required AuthStep newStep, AuthStep? previousStep, String? email, String? password}) {
     AuthState newState;
 
     if (newStep == AuthStep.verifyEmail) {
-      assert(email != null && password != null && Validators.validateEmail(email) == null && Validators.validatePassword(password) == null);
+      assert(email != null &&
+          password != null &&
+          Validators.validateEmail(email) == null &&
+          Validators.validatePassword(password) == null);
     }
 
-    newState = state.updateState(newStep: newStep, previousStep: previousStep, email: email, password: password);
+    newState = state.updateState(
+        newStep: newStep, previousStep: previousStep, email: email, password: password);
 
     if (newState == state) return;
     state = newState;

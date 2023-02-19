@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/backgrounds/light_onboarding_background.dart';
-import 'package:socale/models/app_state.dart';
-import 'package:socale/models/auth_state.dart';
+import 'package:socale/models/state/app_state.dart';
+import 'package:socale/models/state/auth_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
 import 'package:socale/navigation/main/main_route_path.dart';
 import 'package:socale/navigation/main/pages/auth_page.dart';
@@ -11,7 +11,8 @@ import 'package:socale/navigation/main/pages/splash_page.dart';
 import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 
-class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
+class MainRouterDelegate extends RouterDelegate<AppRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -37,7 +38,8 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifie
   void updateAppState(AppState? oldState, AppState newState) {
     if (appState == newState) return;
     appState = newState;
-    if (appState.isInitialized && !appState.isLoggedIn) ref.listen(authStateProvider, updateAuthState);
+    if (appState.isInitialized && !appState.isLoggedIn)
+      ref.listen(authStateProvider, updateAuthState);
     notifyListeners();
   }
 

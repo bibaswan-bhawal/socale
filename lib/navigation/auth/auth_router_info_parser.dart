@@ -1,5 +1,5 @@
 import 'package:flutter/cupertino.dart';
-import 'package:socale/models/auth_state.dart';
+import 'package:socale/models/state/auth_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
 import 'package:socale/types/auth/auth_step.dart';
 

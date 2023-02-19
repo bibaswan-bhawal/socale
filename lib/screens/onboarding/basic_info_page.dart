@@ -1,7 +1,17 @@
+import 'dart:io';
+
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:http/http.dart' as http;
+import 'package:socale/components/buttons/Action_group.dart';
+import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/cards/chip_card.dart';
+import 'package:socale/models/current_user.dart';
+import 'package:socale/options/majors/ucsd_majors.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
+import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/system_ui.dart';
 
@@ -19,9 +29,26 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
     SystemUI.setSystemUIDark();
   }
 
+  fetchData() async {
+    CurrentUser currentUser = ref.read(currentUserProvider);
+    final response = await http.get(Uri.parse('http://100.84.7.1:3000/post'),
+        headers: {HttpHeaders.authorizationHeader: 'Bearer ${currentUser.accessToken.raw}'});
+    if (response.statusCode == 401) {
+      if (kDebugMode) {
+        print('Not Authorized');
+      }
+    } else {
+      if (kDebugMode) {
+        print(response.body);
+      }
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final bottomPadding = 40 - MediaQuery.of(context).padding.bottom;
+    CurrentUser currentUser = ref.watch(currentUserProvider);
+
+    fetchData();
 
     return SafeArea(
       child: Column(
@@ -37,22 +64,28 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
               ),
             ),
           ),
-          const ChipCard(emptyMessage: 'Add your Major'),
+          const ChipCard(
+            emptyMessage: 'Add your Major',
+            height: 160,
+            horizontalPadding: 30,
+            options: ucsdMajors,
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+              top: 36,
+              bottom: 40 - MediaQuery.of(context).viewPadding.bottom,
+            ),
+            child: ActionGroup(
+              actions: [
+                GradientButton(
+                  text: 'Continue',
+                  onPressed: () {},
+                  linearGradient: ColorValues.orangeButtonGradient,
+                ),
+              ],
+            ),
+          ),
         ],
-      ),
-    );
-  }
-}
-
-class _DetailsPage extends StatelessWidget {
-  final String message;
-  const _DetailsPage({Key? key, required this.message}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Text(message),
       ),
     );
   }

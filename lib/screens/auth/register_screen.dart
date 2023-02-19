@@ -9,6 +9,7 @@ import 'package:socale/components/buttons/text_button.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
 import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
 import 'package:socale/components/utils/keyboard_safe_area.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/auth_service.dart';
@@ -26,108 +27,96 @@ class RegisterScreen extends ConsumerStatefulWidget {
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   GlobalKey<FormState> formState = GlobalKey<FormState>();
-  GlobalKey<FormFieldState> emailFieldState = GlobalKey<FormFieldState>();
-  GlobalKey<FormFieldState> passwordFieldState = GlobalKey<FormFieldState>();
-  GlobalKey<FormFieldState> confirmPasswordFieldState = GlobalKey<FormFieldState>();
 
-  bool formError = false;
   bool isLoading = false;
 
-  String errorMessage = '';
+  String? errorMessage;
 
   String? email;
   String? password;
   String? confirmPassword;
 
-  saveEmail(value) => email = value;
-  savePassword(value) => password = value;
-  saveConfirmPassword(value) => confirmPassword = value;
+  saveEmail(String? value) => email = value;
 
-  goToSignIn() => ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStep.login);
+  savePassword(String? value) => password = value;
+
+  saveConfirmPassword(String? value) => confirmPassword = value;
+
+  goTo(AuthStep step) {
+    final authState = ref.read(authStateProvider.notifier);
+
+    switch (step) {
+      case AuthStep.verifyEmail:
+        authState.setAuthStep(newStep: step, email: email, password: password);
+        break;
+      default:
+        authState.setAuthStep(newStep: step);
+        break;
+    }
+  }
 
   Future<void> onClickRegister() async {
     final form = formState.currentState!;
-    if (form.validate() && !isLoading) {
-      setState(() => isLoading = true);
+    setState(() => isLoading = true);
 
-      setState(() => formError = false);
-      setState(() => errorMessage = '');
+    if (form.validate() && !isLoading) {
+      setState(() => errorMessage = null);
+
       form.save();
 
       if (password != confirmPassword) {
-        setState(() {
-          formError = true;
-          errorMessage = "Passwords don't match";
-        });
-
-        setState(() => isLoading = false);
+        showFormError("Passwords don't match");
         return;
       }
 
       final result = await AuthService.signUpUser(email!, password!);
-      setState(() => isLoading = false);
 
       switch (result) {
-        case AuthResult.success:
-          ref.read(appStateProvider.notifier).login();
+        case AuthFlowResult.success:
+          loginSuccessful();
+          return;
+        case AuthFlowResult.unverified:
+          goTo(AuthStep.verifyEmail);
           break;
-        case AuthResult.unverified:
-          ref.read(authStateProvider.notifier).setAuthStep(
-                newStep: AuthStep.verifyEmail,
-                previousStep: AuthStep.login,
-                email: email,
-                password: password,
-              );
+        case AuthFlowResult.notAuthorized:
+          showFormError('Looks like you already have an account. Try signing in.');
           break;
-        case AuthResult.genericError:
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-          break;
-        case AuthResult.notAuthorized:
-          setState(() {
-            formError = true;
-            errorMessage = 'Incorrect password';
-          });
-
-          break;
-        case AuthResult.userNotFound:
-          const snackBar = SnackBar(content: Text("Sorry, we couldn't find your account. Try signing up", textAlign: TextAlign.center));
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        default:
+          showFormError('Something went wrong. Please try again.');
           break;
       }
     } else {
-      setState(() => isLoading = false);
-      showError();
+      showFormError('Enter a valid email and confirm passwords match');
     }
+
+    setState(() => isLoading = false);
   }
 
-  void showError() {
-    final emailField = emailFieldState.currentState!;
-    final passwordField = passwordFieldState.currentState!;
-    final confirmPasswordField = confirmPasswordFieldState.currentState!;
+  loginSuccessful() async {
+    final appState = ref.read(appStateProvider.notifier);
+    final currentUser = ref.read(currentUserProvider.notifier);
 
-    if (emailField.errorText != null && passwordField.errorText != null) {
-      setState(() {
-        formError = true;
-        errorMessage = 'Enter a valid email and password';
-      });
-    }
-    if (emailField.errorText != null) {
-      setState(() {
-        formError = true;
-        errorMessage = 'Enter a valid email';
-      });
-    } else if (passwordField.errorText != null) {
-      setState(() {
-        formError = true;
-        errorMessage = 'Password must be at least 8 characters';
-      });
-    } else if (confirmPasswordField.errorText != null) {
-      setState(() {
-        formError = true;
-        errorMessage = "Passwords don't match";
-      });
-    }
+    final tokens = await AuthService.getAuthTokens();
+
+    currentUser.setTokens(
+      idToken: tokens.$1,
+      accessToken: tokens.$2,
+      refreshToken: tokens.$3,
+    );
+
+    appState.login();
+  }
+
+  showSnackBar(String message) {
+    final snackBar = SnackBar(content: Text(message, textAlign: TextAlign.center));
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
+
+  showFormError(String message) {
+    setState(() {
+      errorMessage = message;
+      isLoading = false;
+    });
   }
 
   @override
@@ -183,37 +172,54 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: Form(
                   key: formState,
                   child: GroupInputForm(
-                    isError: formError,
                     errorMessage: errorMessage,
                     children: [
                       GroupInputFormField(
-                        key: emailFieldState,
                         hintText: 'Email Address',
                         textInputType: TextInputType.emailAddress,
                         textInputAction: TextInputAction.next,
                         autofillHints: const [AutofillHints.email],
-                        prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), width: 16),
+                        prefixIcon: SvgPicture.asset(
+                          'assets/icons/email.svg',
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF808080),
+                            BlendMode.srcIn,
+                          ),
+                          fit: BoxFit.contain,
+                        ),
                         onSaved: saveEmail,
                         validator: Validators.validateEmail,
                       ),
                       GroupInputFormField(
-                        key: passwordFieldState,
                         hintText: 'Password',
                         textInputType: TextInputType.visiblePassword,
                         textInputAction: TextInputAction.next,
                         autofillHints: const [AutofillHints.newPassword],
-                        prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                        prefixIcon: SvgPicture.asset(
+                          'assets/icons/lock.svg',
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF808080),
+                            BlendMode.srcIn,
+                          ),
+                          fit: BoxFit.contain,
+                        ),
                         isObscured: true,
                         onSaved: savePassword,
                         validator: Validators.validatePassword,
                       ),
                       GroupInputFormField(
-                        key: confirmPasswordFieldState,
                         hintText: 'Confirm Password',
                         textInputType: TextInputType.visiblePassword,
                         textInputAction: TextInputAction.done,
                         autofillHints: const [AutofillHints.password],
-                        prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                        prefixIcon: SvgPicture.asset(
+                          'assets/icons/lock.svg',
+                          colorFilter: const ColorFilter.mode(
+                            Color(0xFF808080),
+                            BlendMode.srcIn,
+                          ),
+                          fit: BoxFit.contain,
+                        ),
                         isObscured: true,
                         onSaved: saveConfirmPassword,
                         validator: Validators.validatePassword,
@@ -281,7 +287,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                 child: ActionGroup(
                   actions: [
                     LinkButton(
-                      onPressed: goToSignIn,
+                      onPressed: () => goTo(AuthStep.login),
                       text: 'Sign In',
                       prefixText: 'Already have an account?',
                     ),

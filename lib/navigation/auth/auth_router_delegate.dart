@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/models/auth_state.dart';
+import 'package:socale/models/state/auth_state.dart';
 import 'package:socale/navigation/auth/auth_route_path.dart';
 import 'package:socale/navigation/auth/pages/get_started_page.dart';
 import 'package:socale/navigation/auth/pages/login_page.dart';
@@ -10,7 +10,8 @@ import 'package:socale/navigation/auth/pages/verify_page.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/types/auth/auth_step.dart';
 
-class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
+class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -76,7 +77,9 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
   // new route path requested
   void newRouteRequested(AuthRoutePath configuration) {
     AuthState state = configuration.appState;
-    ref.read(authStateProvider.notifier).setAuthStep(newStep: state.step, previousStep: state.previousStep);
+    ref
+        .read(authStateProvider.notifier)
+        .setAuthStep(newStep: state.step, previousStep: state.previousStep);
   }
 
   @override

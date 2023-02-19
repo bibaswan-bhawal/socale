@@ -33,13 +33,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   PageController pageController = PageController();
 
   List<String> buttonText = ['Send Code', 'Confirm Code', 'Change Password', 'Login'];
-  List<LinearGradient> buttonBackground = [ColorValues.blackButtonGradient, ColorValues.orangeButtonGradient];
+  List<LinearGradient> buttonBackground = [
+    ColorValues.blackButtonGradient,
+    ColorValues.orangeButtonGradient
+  ];
 
-  bool formEmailError = false;
-  String errorEmailMessage = '';
+  String? errorEmailMessage;
 
-  bool formPasswordError = false;
-  String errorPasswordMessage = '';
+  String? errorPasswordMessage;
 
   String email = '';
   String password = '';
@@ -62,7 +63,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
       pageIndex--;
     });
 
-    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
     return false;
   }
@@ -78,18 +80,15 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (pageIndex == 0) {
       final emailForm = formEmailKey.currentState!;
       if (emailForm.validate()) {
-        setState(() => formEmailError = false);
-        setState(() => errorEmailMessage = '');
+        setState(() => errorEmailMessage = null);
 
         emailForm.save();
         AuthService.sendResetPasswordCode(email);
         setState(() => pageIndex++);
-        pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        pageController.animateToPage(pageIndex,
+            duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       } else {
-        setState(() {
-          formEmailError = true;
-          errorEmailMessage = 'Enter a valid email';
-        });
+        setState(() => errorEmailMessage = 'Enter a valid email');
         return;
       }
     }
@@ -110,16 +109,12 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     if (pageIndex == 2) {
       final passwordForm = formPasswordKey.currentState!;
       if (passwordForm.validate()) {
-        setState(() => formPasswordError = false);
-        setState(() => errorPasswordMessage = '');
+        setState(() => errorPasswordMessage = null);
 
         passwordForm.save();
 
         if (password != confirmPassword) {
-          setState(() {
-            formPasswordError = true;
-            errorPasswordMessage = "Passwords don't match";
-          });
+          setState(() => errorPasswordMessage = "Passwords don't match");
 
           return;
         }
@@ -127,11 +122,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         try {
           await AuthService.confirmResetPassword(email, password, code);
         } on CodeMismatchException catch (_) {
-          const snackBar = SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
+          const snackBar =
+              SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
         } catch (_) {
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
+          const snackBar = SnackBar(
+              content: Text('Something went wrong try again in a few minutes.',
+                  textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
         }
@@ -142,22 +140,17 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         final confirmPasswordField = confirmPasswordFieldState.currentState!;
 
         if (passwordField.errorText != null) {
-          setState(() {
-            formPasswordError = true;
-            errorPasswordMessage = 'Password must be at least 8 characters';
-          });
+          setState(() => errorPasswordMessage = 'Password must be at least 8 characters');
         } else if (confirmPasswordField.errorText != null) {
-          setState(() {
-            formPasswordError = true;
-            errorPasswordMessage = "Passwords don't match";
-          });
+          setState(() => errorPasswordMessage = "Passwords don't match");
         }
         return;
       }
     }
 
     setState(() => pageIndex++);
-    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -194,7 +187,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                           ),
                         ),
                       ),
-                      Expanded(child: Image.asset('assets/illustrations/forgot_password/cover_illustration.png')),
+                      Expanded(
+                          child: Image.asset(
+                              'assets/illustrations/forgot_password/cover_illustration.png')),
                       Container(
                         margin: const EdgeInsets.only(top: 40),
                         height: 260,
@@ -246,7 +241,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   child: Form(
                                     key: formEmailKey,
                                     child: GroupInputForm(
-                                      isError: formEmailError,
                                       errorMessage: errorEmailMessage,
                                       children: [
                                         GroupInputFormField(
@@ -255,7 +249,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           initialValue: email,
                                           textInputType: TextInputType.emailAddress,
                                           autofillHints: const [AutofillHints.email],
-                                          prefixIcon: SvgPicture.asset('assets/icons/email.svg', color: const Color(0xFF808080), width: 16),
+                                          prefixIcon: SvgPicture.asset(
+                                            'assets/icons/email.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0xFF808080),
+                                              BlendMode.srcIn,
+                                            ),
+                                            width: 16,
+                                          ),
                                           onSaved: saveEmail,
                                           validator: Validators.validateEmail,
                                           textInputAction: TextInputAction.next,
@@ -376,7 +377,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   child: Form(
                                     key: formPasswordKey,
                                     child: GroupInputForm(
-                                      isError: formPasswordError,
                                       errorMessage: errorPasswordMessage,
                                       children: [
                                         GroupInputFormField(
@@ -386,7 +386,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           textInputType: TextInputType.visiblePassword,
                                           textInputAction: TextInputAction.next,
                                           autofillHints: const [AutofillHints.password],
-                                          prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                                          prefixIcon: SvgPicture.asset(
+                                            'assets/icons/lock.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0xFF808080),
+                                              BlendMode.src,
+                                            ),
+                                            width: 16,
+                                          ),
                                           isObscured: true,
                                           onSaved: savePassword,
                                           validator: Validators.validatePassword,
@@ -398,7 +405,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                           textInputType: TextInputType.visiblePassword,
                                           textInputAction: TextInputAction.done,
                                           autofillHints: const [AutofillHints.password],
-                                          prefixIcon: SvgPicture.asset('assets/icons/lock.svg', color: const Color(0xFF808080), width: 16),
+                                          prefixIcon: SvgPicture.asset(
+                                            'assets/icons/lock.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0xFF808080),
+                                              BlendMode.src,
+                                            ),
+                                            width: 16,
+                                          ),
                                           isObscured: true,
                                           onSaved: saveConfirmPassword,
                                           validator: Validators.validatePassword,
@@ -472,7 +486,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                       ),
                       Padding(
-                        padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+                        padding: EdgeInsets.only(
+                            top: 10, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
                         child: ActionGroup(
                           actions: [
                             GradientButton(

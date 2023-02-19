@@ -18,7 +18,7 @@ class _MainAppState extends ConsumerState<MainApp> {
   void initState() {
     super.initState();
 
-    ref.read(amplifyBackendServiceProvider).initAmplify();
+    ref.read(amplifyBackendServiceProvider).initialize();
     ref.read(localDatabaseServiceProvider).initLocalDatabase();
   }
 

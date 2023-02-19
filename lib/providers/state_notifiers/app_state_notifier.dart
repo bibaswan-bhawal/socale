@@ -1,8 +1,10 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/models/app_state.dart';
+import 'package:socale/models/state/app_state.dart';
 
 class AppStateNotifier extends StateNotifier<AppState> {
-  AppStateNotifier() : super(AppState());
+  StateNotifierProviderRef ref;
+
+  AppStateNotifier(this.ref) : super(AppState());
 
   void amplifyConfigured() => state = state.updateState(isAmplifyConfigured: true);
   void localDBConfigured() => state = state.updateState(isLocalDBConfigured: true);

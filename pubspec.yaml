@@ -6,53 +6,53 @@ publish_to: "none"
 version: 0.2.2+6
 
 environment:
-  sdk: ">=2.18.6 <3.0.0"
+  sdk: '^3.0.0-239.0.dev'
 
 dependencies:
-  #Flutter libraries
+  #Flutter sdk
   flutter:
     sdk: flutter
 
-  rive: 0.10.0
+  http: ^0.13.5
+
+  rive: 0.10.1
 
   # Amplify libraries
-  amplify_flutter: 1.0.0-next.1+1
-  amplify_auth_cognito: 1.0.0-next.1
+  amplify_flutter: 1.0.0-next.5
+  amplify_auth_cognito: 1.0.0-next.5
 
   # Firebase libraries
-  firebase_core: 2.3.0
-  firebase_messaging: 14.1.2
+  firebase_core: ^2.5.0
+  firebase_messaging: ^14.2.2
 
   # Local notifications libraries
-  flutter_local_notifications: 12.0.3
+  flutter_local_notifications: 13.0.0
 
   # Riverpod libraries
-  flutter_riverpod: 2.1.1
+  flutter_riverpod: ^2.2.0
 
   # Local database libraries
-  isar: 3.0.2
-  isar_flutter_libs: 3.0.2
-  shared_preferences: 2.0.15
+  isar: 3.0.5
+  isar_flutter_libs: 3.0.5
+  shared_preferences: ^2.0.17
 
   # UI libraries
-  flutter_svg: 1.1.5
+  flutter_svg: ^2.0.1
   animations: 2.0.7
-  simple_shadow: 0.3.0
-  google_fonts: 3.0.1
+  simple_shadow: 0.3.1
+  google_fonts: ^4.0.3
 
   # Service libraries
-  url_launcher: 6.1.6
+  url_launcher: ^6.1.9
   pin_code_fields: 7.4.0
-
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  flutter_lints: 2.0.0
-  isar_generator: 3.0.2
-  build_runner: 2.1.11
-
+  flutter_lints: ^2.0.1
+  isar_generator: 3.0.5
+  build_runner: ^2.1.11
 
 flutter:
   uses-material-design: true
