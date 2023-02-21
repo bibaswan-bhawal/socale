@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socale/components/buttons/button.dart';
-import 'package:socale/components/buttons/text_button.dart';
+import 'package:socale/components/buttons/link_button.dart';
 
 class ActionGroup extends StatelessWidget {
   final List<Button> actions;

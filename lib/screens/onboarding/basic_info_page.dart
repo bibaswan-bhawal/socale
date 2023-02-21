@@ -30,9 +30,17 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
   }
 
   fetchData() async {
+    final startTime = DateTime.now();
+
     CurrentUser currentUser = ref.read(currentUserProvider);
-    final response = await http.get(Uri.parse('http://100.84.7.1:3000/post'),
-        headers: {HttpHeaders.authorizationHeader: 'Bearer ${currentUser.accessToken.raw}'});
+
+    final response = await http.get(
+      Uri.parse('http://192.168.1.91:3000/post'),
+      headers: {
+        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.idToken.raw}',
+      },
+    );
+
     if (response.statusCode == 401) {
       if (kDebugMode) {
         print('Not Authorized');
@@ -42,12 +50,14 @@ class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
         print(response.body);
       }
     }
+
+    final endTime = DateTime.now();
+
+    if (kDebugMode) print('Total fetch time: ${endTime.difference(startTime).inMilliseconds}');
   }
 
   @override
   Widget build(BuildContext context) {
-    CurrentUser currentUser = ref.watch(currentUserProvider);
-
     fetchData();
 
     return SafeArea(

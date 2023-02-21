@@ -36,15 +36,13 @@ class _ChipContainerTransform extends StatefulWidget {
 
   final List<String> options;
 
-  const _ChipContainerTransform(
-      {required this.height, required this.horizontalPadding, required this.options});
+  const _ChipContainerTransform({required this.height, required this.horizontalPadding, required this.options});
 
   @override
   State<_ChipContainerTransform> createState() => _ChipContainerTransformState();
 }
 
-class _ChipContainerTransformState extends State<_ChipContainerTransform>
-    with SingleTickerProviderStateMixin {
+class _ChipContainerTransformState extends State<_ChipContainerTransform> with SingleTickerProviderStateMixin {
   OverlayEntry? overlay;
 
   late AnimationController controller;
@@ -56,10 +54,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
   void initState() {
     super.initState();
 
-    controller = AnimationController(
-        duration: const Duration(milliseconds: 300),
-        reverseDuration: const Duration(milliseconds: 250),
-        vsync: this);
+    controller = AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 250), vsync: this);
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(() {
@@ -101,19 +96,13 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
     );
   }
 
-  Animatable<double> getVOffsetAnimation(verticalOffset) =>
-      Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
+  Animatable<double> getVOffsetAnimation(verticalOffset) => Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get paddingAnimation =>
-      Tween<double>(begin: widget.horizontalPadding, end: 00).chain(CurveTween(curve: emphasized));
+  Animatable<double> get paddingAnimation => Tween<double>(begin: widget.horizontalPadding, end: 00).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get heightAnimation =>
-      Tween(begin: widget.height, end: MediaQuery.of(context).size.height)
-          .chain(CurveTween(curve: emphasized));
+  Animatable<double> get heightAnimation => Tween(begin: widget.height, end: MediaQuery.of(context).size.height).chain(CurveTween(curve: emphasized));
 
-  Animatable<Color?> get colorAnimation =>
-      ColorTween(begin: Colors.white.withOpacity(0), end: Colors.white)
-          .chain(CurveTween(curve: emphasized));
+  Animatable<Color?> get colorAnimation => ColorTween(begin: Colors.white.withOpacity(0), end: Colors.white).chain(CurveTween(curve: emphasized));
 
   void createOverlay() {
     OverlayState overlayState = Overlay.of(context);
@@ -203,7 +192,13 @@ class _ChipContainer extends StatelessWidget {
                 child: SizedBox(
                   height: 24,
                   width: 24,
-                  child: SvgPicture.asset('assets/icons/add.svg', color: Colors.black),
+                  child: SvgPicture.asset(
+                    'assets/icons/add.svg',
+                    colorFilter: const ColorFilter.mode(
+                      Colors.black,
+                      BlendMode.srcIn,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -301,29 +296,29 @@ class _SelectionMenuState extends State<_SelectionMenu> {
               ],
             ),
           ),
-          Container(
-            width: double.infinity,
-            padding: const EdgeInsets.symmetric(horizontal: 20),
-            margin: const EdgeInsets.symmetric(vertical: 40),
-            child: Wrap(
-              spacing: 8,
-              children: const [
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-                Chip(label: Text('Bob')),
-              ],
-            ),
-          ),
+          // Container(
+          //   width: double.infinity,
+          //   padding: const EdgeInsets.symmetric(horizontal: 20),
+          //   margin: const EdgeInsets.symmetric(vertical: 40),
+          //   child: const Wrap(
+          //     spacing: 8,
+          //     children: [
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //       Chip(label: Text('Bob')),
+          //     ],
+          //   ),
+          // ),
           Expanded(
             child: ListView.separated(
               padding: const EdgeInsets.only(top: 8),

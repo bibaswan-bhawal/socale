@@ -15,7 +15,7 @@ dependencies:
 
   http: ^0.13.5
 
-  rive: 0.10.1
+  rive: ^0.10.2
 
   # Amplify libraries
   amplify_flutter: 1.0.0-next.5
@@ -59,11 +59,10 @@ flutter:
   assets:
     - assets/logo/
     - assets/icons/
-    - assets/illustrations/
     - assets/illustrations/get_started/
     - assets/illustrations/forgot_password/
     - assets/illustrations/verify_email/
-    - assets/animations/
+    - assets/illustrations/onboarding_intro/
     - assets/animations/icons/
     - assets/fonts/poppins/
     - assets/fonts/roboto/

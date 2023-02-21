@@ -6,6 +6,8 @@ class LinkButton extends Button {
   final String? prefixText;
   final TextStyle? prefixTextStyle;
   final TextStyle? textStyle;
+  final bool wrap;
+  final bool visualFeedback;
 
   const LinkButton({
     super.key,
@@ -14,6 +16,8 @@ class LinkButton extends Button {
     this.prefixTextStyle,
     this.textStyle,
     this.prefixText,
+    this.wrap = false,
+    this.visualFeedback = false,
   });
 
   @override
@@ -21,7 +25,7 @@ class LinkButton extends Button {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
-          width: constraints.maxWidth,
+          width: wrap ? null : constraints.maxWidth,
           height: 48,
           child: Center(
             child: Row(
@@ -38,7 +42,8 @@ class LinkButton extends Button {
                       ),
                 ),
                 InkResponse(
-                  radius: 0,
+                  radius: visualFeedback ? 24 : 0,
+                  splashFactory: InkRipple.splashFactory,
                   onTap: onPressed,
                   child: SizedBox(
                     height: 48,

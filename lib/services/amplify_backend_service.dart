@@ -1,7 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:socale/amplifyconfiguration.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
@@ -13,8 +12,7 @@ class AmplifyBackendService {
 
   AmplifyBackendService(this.ref);
 
-  Future<void> initialize() async {
-    if (await checkLocalSignedInState()) {
+  initialize() async {
       if (Amplify.isConfigured) {
         attemptAutoLogin();
         return;
@@ -26,16 +24,9 @@ class AmplifyBackendService {
       } catch (e) {
         rethrow;
       }
-    } else {
-      try {
-        configureAmplify();
-      } catch (e) {
-        rethrow;
-      }
-    }
   }
 
-  Future<void> configureAmplify() async {
+  configureAmplify() async {
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
     await Amplify.addPlugins([authPlugin]);
 
@@ -46,22 +37,8 @@ class AmplifyBackendService {
     }
   }
 
-  Future<bool> checkLocalSignedInState() async {
-    final prefs = await SharedPreferences.getInstance();
-
-    final firstLaunch = prefs.getBool('isSignedIn') ?? false;
-
-    if (!firstLaunch) {
-      ref.read(appStateProvider.notifier).signOut();
-      ref.read(appStateProvider.notifier).amplifyConfigured();
-    }
-
-    return firstLaunch;
-  }
-
-  Future<void> attemptAutoLogin() async {
+  attemptAutoLogin() async {
     final result = (await AuthService.autoLoginUser());
-
     switch (result) {
       case AuthFlowResult.success:
         successfulLogin();

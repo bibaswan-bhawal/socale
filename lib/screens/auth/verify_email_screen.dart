@@ -4,7 +4,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/buttons/Action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
-import 'package:socale/components/buttons/text_button.dart';
+import 'package:socale/components/buttons/link_button.dart';
+import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
@@ -96,113 +97,85 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.transparent,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Expanded(
-              child: Center(
-                child: Image.asset('assets/illustrations/verify_email/cover_illustration.png'),
-              ),
+    return ScreenScaffold(
+      body: Column(
+        children: [
+          Expanded(
+            child: Center(
+              child: Image.asset('assets/illustrations/verify_email/cover_illustration.png'),
             ),
-            SimpleShadow(
-              opacity: 0.1,
-              offset: const Offset(1, 1),
-              sigma: 1,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    'Confirm your ',
-                    style: GoogleFonts.poppins(
-                      color: Colors.black,
-                      fontSize: size.width * 0.058,
-                      fontWeight: FontWeight.bold,
-                    ),
-                  ),
-                  ShaderMask(
-                    shaderCallback: (bounds) => const LinearGradient(
-                      begin: Alignment.bottomCenter,
-                      end: Alignment.topCenter,
-                      colors: [ColorValues.socaleDarkOrange, ColorValues.socaleOrange],
-                    ).createShader(bounds),
-                    child: Text(
-                      'email',
-                      style: GoogleFonts.poppins(
-                          fontSize: size.width * 0.058,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 10),
-              child: Column(
-                children: [
-                  Text(
-                    'We have sent an email to',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.roboto(
-                      fontSize: (size.width * 0.04),
-                      color: ColorValues.textSubtitle,
-                    ),
-                  ),
-                  Text(
-                    _email,
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.roboto(
-                      fontSize: (size.width * 0.04),
-                      color: ColorValues.textSubtitle,
-                      fontWeight: FontWeight.w500,
-                    ),
-                  ),
-                  Text(
-                    'with a link to confirm your email.',
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.roboto(
-                      fontSize: (size.width * 0.04),
-                      color: ColorValues.textSubtitle,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            ActionGroup(
-              actions: [
-                LinkButton(
-                  onPressed: resendCode,
-                  text: 'Resend link',
-                  textStyle: GoogleFonts.roboto(
-                    fontSize: 12,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black.withOpacity(0.75),
+          ),
+          SimpleShadow(
+            opacity: 0.1,
+            offset: const Offset(1, 1),
+            sigma: 1,
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  'Confirm your ',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: size.width * 0.058,
+                    fontWeight: FontWeight.bold,
                   ),
                 ),
-                GradientButton(
-                  isLoading: isLoading,
-                  onPressed: confirmEmail,
-                  text: 'Continue',
-                  linearGradient: ColorValues.orangeButtonGradient,
-                ),
-                LinkButton(
-                  onPressed: () => Navigator.pop(context),
-                  text: 'Not the right Email?',
-                  textStyle: GoogleFonts.roboto(
-                    fontSize: 12,
-                    decoration: TextDecoration.underline,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.black.withOpacity(0.75),
+                ShaderMask(
+                  shaderCallback: (bounds) => const LinearGradient(
+                    begin: Alignment.bottomCenter,
+                    end: Alignment.topCenter,
+                    colors: [ColorValues.socaleDarkOrange, ColorValues.socaleOrange],
+                  ).createShader(bounds),
+                  child: Text(
+                    'email',
+                    style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ],
             ),
-          ],
-        ),
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10),
+            child: Text(
+              'We have sent an email to\n$_email\nwith a link to confirm your email.',
+              textAlign: TextAlign.center,
+              style: GoogleFonts.roboto(
+                fontSize: (size.width * 0.04),
+                color: ColorValues.textSubtitle,
+              ),
+            ),
+          ),
+          ActionGroup(
+            actions: [
+              LinkButton(
+                onPressed: resendCode,
+                text: 'Resend link',
+                textStyle: GoogleFonts.roboto(
+                  fontSize: 12,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black.withOpacity(0.75),
+                ),
+              ),
+              GradientButton(
+                isLoading: isLoading,
+                onPressed: confirmEmail,
+                text: 'Continue',
+                linearGradient: ColorValues.orangeButtonGradient,
+              ),
+              LinkButton(
+                onPressed: () => Navigator.pop(context),
+                text: 'Not the right Email?',
+                textStyle: GoogleFonts.roboto(
+                  fontSize: 12,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black.withOpacity(0.75),
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
     );
   }

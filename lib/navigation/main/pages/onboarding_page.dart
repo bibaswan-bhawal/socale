@@ -3,9 +3,9 @@ import 'package:socale/navigation/transitions/fade_switch_transition.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 
 class OnboardingPage extends Page {
-  final Widget child = const OnboardingScreen();
+  final Widget child = OnboardingScreen();
 
-  const OnboardingPage({super.key = const ValueKey('onboarding_page')});
+  OnboardingPage({super.key = const ValueKey('onboarding_page')});
 
   @override
   Route createRoute(BuildContext context) {

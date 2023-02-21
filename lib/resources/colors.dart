@@ -24,6 +24,17 @@ class ColorValues {
     transform: GradientRotation((pi / 180) * -72),
   );
 
+  static const LinearGradient orangeGradient = LinearGradient(
+    begin: Alignment.bottomLeft,
+    end: Alignment.topRight,
+    colors: [socaleDarkOrange, socaleOrange],
+    stops: [0.3, 0.7],
+  );
+
+  static const LinearGradient transparentGradient = LinearGradient(
+    colors: [Colors.transparent, Colors.transparent],
+  );
+
   static const LinearGradient purpleButtonGradient = LinearGradient(
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,

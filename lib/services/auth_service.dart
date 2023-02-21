@@ -31,7 +31,7 @@ class AuthService {
     try {
       final result = await Amplify.Auth.signIn(username: email, password: password);
 
-      if (result.nextStep.signInStep == 'CONFIRM_SIGN_UP') {
+      if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) {
         return AuthFlowResult.unverified;
       }
 
