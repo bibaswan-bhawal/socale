@@ -8,6 +8,7 @@ class TextInputFormField extends FormField<String> {
 
   final TextInputType textInputType;
   final TextInputAction textInputAction;
+  final TextCapitalization textCapitalization;
 
   final Iterable<String> autofillHints;
 
@@ -22,6 +23,7 @@ class TextInputFormField extends FormField<String> {
     this.isObscured = false,
     this.textInputType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
+    this.textCapitalization = TextCapitalization.none,
     this.autofillHints = const [],
     this.prefixIcon,
     this.suffixIcon,
@@ -41,6 +43,7 @@ class TextInputFormField extends FormField<String> {
               initialValue: initialValue,
               textInputType: textInputType,
               textInputAction: textInputAction,
+              textCapitalization: textCapitalization,
               prefixIcon: prefixIcon,
               autofillHints: autofillHints,
               onChanged: state.didChange,

@@ -13,6 +13,7 @@ class TextInputField extends StatefulWidget {
 
   final TextInputType textInputType;
   final TextInputAction textInputAction;
+  final TextCapitalization textCapitalization;
 
   final Iterable<String> autofillHints;
 
@@ -28,6 +29,7 @@ class TextInputField extends StatefulWidget {
     this.initialValue = '',
     this.textInputType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
+    this.textCapitalization = TextCapitalization.none,
     this.autofillHints = const [],
     required this.onChanged,
     this.prefixIcon,
@@ -128,6 +130,7 @@ class _TextInputFieldState extends State<TextInputField> {
                   cursorRadius: const Radius.circular(1),
                   keyboardType: widget.textInputType,
                   textInputAction: widget.textInputAction,
+                  textCapitalization: widget.textCapitalization,
                   autofillHints: widget.autofillHints,
                   obscureText: _shouldObscure,
                   decoration: InputDecoration(

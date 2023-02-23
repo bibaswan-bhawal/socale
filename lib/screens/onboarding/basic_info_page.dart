@@ -132,6 +132,8 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                 TextInputFormField(
                   hintText: 'First Name',
                   onSaved: saveFirstName,
+                  textInputAction: TextInputAction.next,
+                  textCapitalization: TextCapitalization.words,
                   initialValue: widget.onboardingUser.firstName ?? '',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -143,6 +145,8 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                 TextInputFormField(
                   hintText: 'Last Name',
                   onSaved: saveLastName,
+                  textInputAction: TextInputAction.done,
+                  textCapitalization: TextCapitalization.words,
                   initialValue: widget.onboardingUser.lastName ?? '',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -167,6 +171,7 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                   initialDate: widget.onboardingUser.dateOfBirth ?? DateTime(2000),
                   minimumDate: DateTime(1900),
                   maximumDate: DateTime.now(),
+                  onSaved: saveDateOfBirth,
                 ),
               ],
             ),
@@ -185,6 +190,8 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
                   initialDate: widget.onboardingUser.graduationDate ??
                       DateTime(DateTime.now().year, DateTime.june),
                   minimumDate: DateTime(1960),
+                  maximumDate: DateTime(2100, DateTime.june),
+                  onSaved: saveGraduationDate,
                 ),
               ],
             ),
