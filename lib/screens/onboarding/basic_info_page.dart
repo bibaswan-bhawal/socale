@@ -1,102 +1,196 @@
-import 'dart:io';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
-import 'package:socale/components/buttons/Action_group.dart';
-import 'package:socale/components/buttons/gradient_button.dart';
-import 'package:socale/components/cards/chip_card.dart';
-import 'package:socale/models/current_user.dart';
-import 'package:socale/options/majors/ucsd_majors.dart';
-import 'package:socale/providers/model_providers.dart';
-import 'package:socale/providers/state_providers.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:simple_shadow/simple_shadow.dart';
+import 'package:socale/components/text_fields/form_fields/date_input_form_field.dart';
+import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
+import 'package:socale/components/text_fields/input_fields/date_input_field.dart';
+import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/models/onboarding_user.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/services/auth_service.dart';
-import 'package:socale/utils/system_ui.dart';
 
 class BasicInfoPage extends ConsumerStatefulWidget {
-  const BasicInfoPage({Key? key}) : super(key: key);
+  final OnboardingUser onboardingUser;
+
+  const BasicInfoPage({super.key, required this.onboardingUser});
 
   @override
-  ConsumerState<BasicInfoPage> createState() => _BasicInfoPageState();
+  ConsumerState<BasicInfoPage> createState() => BasicInfoPageState();
 }
 
-class _BasicInfoPageState extends ConsumerState<BasicInfoPage> {
-  @override
-  void initState() {
-    super.initState();
-    SystemUI.setSystemUIDark();
-  }
+class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
+  GlobalKey<FormState> nameFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> dobFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> graduationDateFormKey = GlobalKey<FormState>();
 
-  fetchData() async {
-    final startTime = DateTime.now();
+  String? nameErrorMessage;
+  String? dateOfBirthErrorMessage;
+  String? graduationDateErrorMessage;
 
-    CurrentUser currentUser = ref.read(currentUserProvider);
+  String? firstName;
+  String? lastName;
 
-    final response = await http.get(
-      Uri.parse('http://192.168.1.91:3000/post'),
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${currentUser.idToken.raw}',
-      },
-    );
+  DateTime? dateOfBirth;
+  DateTime? graduationDate;
 
-    if (response.statusCode == 401) {
-      if (kDebugMode) {
-        print('Not Authorized');
-      }
+  saveFirstName(String? value) => firstName = value;
+
+  saveLastName(String? value) => lastName = value;
+
+  saveDateOfBirth(DateTime? value) => dateOfBirth = value;
+
+  saveGraduationDate(DateTime? value) => graduationDate = value;
+
+  bool validateForm() {
+    final nameForm = nameFormKey.currentState!;
+    final dobForm = dobFormKey.currentState!;
+    final graduationDateForm = graduationDateFormKey.currentState!;
+
+    if (nameForm.validate()) {
+      nameForm.save();
+      dobForm.save();
+      graduationDateForm.save();
+
+      widget.onboardingUser.firstName = firstName;
+      widget.onboardingUser.lastName = lastName;
+      widget.onboardingUser.dateOfBirth = dateOfBirth;
+      widget.onboardingUser.graduationDate = graduationDate;
+
+      return true;
     } else {
-      if (kDebugMode) {
-        print(response.body);
-      }
+      setState(() => nameErrorMessage = 'Please enter your first and last name.');
+      return false;
     }
-
-    final endTime = DateTime.now();
-
-    if (kDebugMode) print('Total fetch time: ${endTime.difference(startTime).inMilliseconds}');
   }
 
   @override
   Widget build(BuildContext context) {
-    fetchData();
+    final size = MediaQuery.of(context).size;
 
-    return SafeArea(
-      child: Column(
-        children: [
-          Expanded(
-            child: Center(
-              child: ElevatedButton(
-                onPressed: () {
-                  AuthService.signOutUser();
-                  ref.read(appStateProvider.notifier).signOut();
-                },
-                child: const Text('Sign Out'),
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.only(top: size.height * 0.08),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SimpleShadow(
+                opacity: 0.1,
+                offset: const Offset(1, 1),
+                sigma: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      'let\'s get to ',
+                      style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontSize: size.width * 0.058,
+                        fontWeight: FontWeight.bold,
+                      ),
+                    ),
+                    ShaderMask(
+                      shaderCallback: (bounds) => const LinearGradient(
+                        begin: Alignment.bottomCenter,
+                        end: Alignment.topCenter,
+                        colors: [ColorValues.socaleDarkOrange, ColorValues.socaleOrange],
+                      ).createShader(bounds),
+                      child: Text(
+                        'know',
+                        style: GoogleFonts.poppins(
+                            fontSize: size.width * 0.058,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
               ),
-            ),
+              SimpleShadow(
+                opacity: 0.1,
+                offset: const Offset(1, 1),
+                sigma: 1,
+                child: Text(
+                  'you better',
+                  style: GoogleFonts.poppins(
+                    color: Colors.black,
+                    fontSize: size.width * 0.058,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+              ),
+            ],
           ),
-          const ChipCard(
-            emptyMessage: 'Add your Major',
-            height: 160,
-            horizontalPadding: 30,
-            options: ucsdMajors,
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-              top: 36,
-              bottom: 40 - MediaQuery.of(context).viewPadding.bottom,
-            ),
-            child: ActionGroup(
-              actions: [
-                GradientButton(
-                  text: 'Continue',
-                  onPressed: () {},
-                  linearGradient: ColorValues.orangeButtonGradient,
+        ),
+        Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 36),
+          child: Form(
+            key: nameFormKey,
+            child: DefaultInputForm(
+              errorMessage: nameErrorMessage,
+              children: [
+                TextInputFormField(
+                  hintText: 'First Name',
+                  onSaved: saveFirstName,
+                  initialValue: widget.onboardingUser.firstName ?? '',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your first name';
+                    }
+                    return null;
+                  },
+                ),
+                TextInputFormField(
+                  hintText: 'Last Name',
+                  onSaved: saveLastName,
+                  initialValue: widget.onboardingUser.lastName ?? '',
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter your last name';
+                    }
+                    return null;
+                  },
                 ),
               ],
             ),
           ),
-        ],
-      ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 36, right: 36),
+          child: Form(
+            key: dobFormKey,
+            child: DefaultInputForm(
+              labelText: 'Date of Birth',
+              errorMessage: dateOfBirthErrorMessage,
+              children: [
+                DateInputFormField(
+                  initialDate: widget.onboardingUser.dateOfBirth ?? DateTime(2000),
+                  minimumDate: DateTime(1900),
+                  maximumDate: DateTime.now(),
+                ),
+              ],
+            ),
+          ),
+        ),
+        Padding(
+          padding: const EdgeInsets.only(left: 36, right: 36, top: 36),
+          child: Form(
+            key: graduationDateFormKey,
+            child: DefaultInputForm(
+              labelText: 'Graduation Date',
+              errorMessage: graduationDateErrorMessage,
+              children: [
+                DateInputFormField(
+                  dateMode: DatePickerDateMode.monthYear,
+                  initialDate: widget.onboardingUser.graduationDate ??
+                      DateTime(DateTime.now().year, DateTime.june),
+                  minimumDate: DateTime(1960),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

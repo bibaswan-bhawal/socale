@@ -6,8 +6,8 @@ import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
-import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
-import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
+import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
+import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/components/utils/screen_safe_area.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
@@ -33,7 +33,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   PageController pageController = PageController();
 
   List<String> buttonText = ['Send Code', 'Confirm Code', 'Change Password', 'Login'];
-  List<LinearGradient> buttonBackground = [ColorValues.blackButtonGradient, ColorValues.orangeButtonGradient];
+  List<LinearGradient> buttonBackground = [
+    ColorValues.blackButtonGradient,
+    ColorValues.orangeButtonGradient
+  ];
 
   String? errorEmailMessage;
   String? errorPasswordMessage;
@@ -48,8 +51,11 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   int pageIndex = 0;
 
   saveEmail(value) => email = value;
+
   savePassword(value) => password = value;
+
   saveConfirmPassword(value) => confirmPassword = value;
+
   saveCode(value) => code = value;
 
   Future<bool> onBack() async {
@@ -58,7 +64,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     setState(() => pageIndex--);
 
-    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
     return false;
   }
@@ -79,7 +86,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         emailForm.save();
         AuthService.sendResetPasswordCode(email);
         setState(() => pageIndex++);
-        pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        pageController.animateToPage(pageIndex,
+            duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       } else {
         setState(() => errorEmailMessage = 'Enter a valid email');
         return;
@@ -116,11 +124,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         try {
           await AuthService.confirmResetPassword(email, password, code);
         } on CodeMismatchException catch (_) {
-          const snackBar = SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
+          const snackBar =
+              SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
         } catch (_) {
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
+          const snackBar = SnackBar(
+              content: Text('Something went wrong try again in a few minutes.',
+                  textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
           return;
         }
@@ -142,7 +153,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
 
     setState(() => pageIndex++);
-    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -152,8 +164,6 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     return WillPopScope(
       onWillPop: onBack,
       child: Scaffold(
-        resizeToAvoidBottomInset: true,
-        backgroundColor: Colors.transparent,
         body: Stack(
           children: [
             SingleChildScrollView(
@@ -167,7 +177,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Padding(
-                          padding: const EdgeInsets.only(left: 30, top: 30),
+                          padding: EdgeInsets.only(
+                            left: 30,
+                            top: 50 + MediaQuery.of(context).viewPadding.top,
+                          ),
                           child: SizedBox(
                             width: 24,
                             height: 24,
@@ -181,7 +194,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                         ),
                       ),
                     ),
-                    Expanded(child: Image.asset('assets/illustrations/forgot_password/cover_illustration.png')),
+                    Expanded(
+                        child: Image.asset(
+                            'assets/illustrations/forgot_password/cover_illustration.png')),
                     Container(
                       margin: const EdgeInsets.only(top: 40),
                       height: pageIndex != 3 ? 260 : 150,
@@ -232,10 +247,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
                                 child: Form(
                                   key: formEmailKey,
-                                  child: GroupInputForm(
+                                  child: DefaultInputForm(
                                     errorMessage: errorEmailMessage,
                                     children: [
-                                      GroupInputFormField(
+                                      TextInputFormField(
                                         key: emailFieldState,
                                         hintText: 'Email Address',
                                         initialValue: email,
@@ -368,10 +383,10 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 padding: const EdgeInsets.only(left: 30, right: 30, top: 15),
                                 child: Form(
                                   key: formPasswordKey,
-                                  child: GroupInputForm(
+                                  child: DefaultInputForm(
                                     errorMessage: errorPasswordMessage,
                                     children: [
-                                      GroupInputFormField(
+                                      TextInputFormField(
                                         key: passwordFieldState,
                                         hintText: 'New Password',
                                         initialValue: password,
@@ -390,7 +405,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                         onSaved: savePassword,
                                         validator: Validators.validatePassword,
                                       ),
-                                      GroupInputFormField(
+                                      TextInputFormField(
                                         key: confirmPasswordFieldState,
                                         hintText: 'Confirm Password',
                                         initialValue: confirmPassword,
@@ -478,7 +493,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+                      padding: EdgeInsets.only(
+                          top: 10, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
                       child: ActionGroup(
                         actions: [
                           GradientButton(

@@ -7,6 +7,7 @@ class LinkButton extends Button {
   final TextStyle? prefixTextStyle;
   final TextStyle? textStyle;
   final bool wrap;
+  final double? width;
   final bool visualFeedback;
 
   const LinkButton({
@@ -14,6 +15,7 @@ class LinkButton extends Button {
     required super.text,
     required super.onPressed,
     this.prefixTextStyle,
+    this.width,
     this.textStyle,
     this.prefixText,
     this.wrap = false,
@@ -25,7 +27,7 @@ class LinkButton extends Button {
     return LayoutBuilder(
       builder: (context, constraints) {
         return SizedBox(
-          width: wrap ? null : constraints.maxWidth,
+          width: wrap ? width : constraints.maxWidth,
           height: 48,
           child: Center(
             child: Row(

@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/resources/colors.dart';
 
-class GroupInputForm extends StatelessWidget {
+class DefaultInputForm extends StatelessWidget {
   final List<Widget> children;
+  final String? labelText;
   final String? errorMessage;
 
-  const GroupInputForm({
+  const DefaultInputForm({
     Key? key,
+    this.labelText,
     this.children = const [],
     this.errorMessage,
   }) : super(key: key);
@@ -29,7 +31,20 @@ class GroupInputForm extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        if (labelText != null)
+          Padding(
+            padding: const EdgeInsets.only(bottom: 8, left: 5),
+            child: Text(
+              labelText!,
+              style: GoogleFonts.roboto(
+                fontSize: 12,
+                fontWeight: FontWeight.w600,
+                color: Colors.black.withOpacity(0.7),
+              ),
+            ),
+          ),
         AnimatedContainer(
           duration: const Duration(milliseconds: 300),
           decoration: BoxDecoration(
@@ -60,16 +75,13 @@ class GroupInputForm extends StatelessWidget {
         ),
         Padding(
           padding: const EdgeInsets.only(top: 8, left: 10),
-          child: Align(
-            alignment: Alignment.centerLeft,
-            child: AnimatedOpacity(
-              opacity: errorMessage != null ? 1 : 0,
-              duration: const Duration(milliseconds: 300),
-              child: Text(
-                errorMessage ?? '',
-                textAlign: TextAlign.start,
-                style: GoogleFonts.roboto(color: Colors.red, fontSize: 12, letterSpacing: -0.3),
-              ),
+          child: AnimatedOpacity(
+            opacity: errorMessage != null ? 1 : 0,
+            duration: const Duration(milliseconds: 300),
+            child: Text(
+              errorMessage ?? '',
+              textAlign: TextAlign.start,
+              style: GoogleFonts.roboto(color: Colors.red, fontSize: 12, letterSpacing: -0.3),
             ),
           ),
         )

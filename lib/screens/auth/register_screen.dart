@@ -6,8 +6,8 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/link_button.dart';
-import 'package:socale/components/text_fields/group_input_fields/group_input_form.dart';
-import 'package:socale/components/text_fields/group_input_fields/group_input_form_field.dart';
+import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
+import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
@@ -144,7 +144,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
             ),
             Padding(
-              padding: EdgeInsets.only(top: size.height * 0.08 - 54),
+              padding: EdgeInsets.only(top: size.height * 0.08 >= 54 ? size.height * 0.08 - 54 : 0),
               child: SvgPicture.asset('assets/logo/color_logo.svg', width: 150),
             ),
             Padding(
@@ -168,10 +168,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               padding: const EdgeInsets.only(top: 48, left: 30, right: 30),
               child: Form(
                 key: formState,
-                child: GroupInputForm(
+                child: DefaultInputForm(
                   errorMessage: errorMessage,
                   children: [
-                    GroupInputFormField(
+                    TextInputFormField(
                       hintText: 'Email Address',
                       textInputType: TextInputType.emailAddress,
                       textInputAction: TextInputAction.next,
@@ -187,7 +187,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       onSaved: saveEmail,
                       validator: Validators.validateEmail,
                     ),
-                    GroupInputFormField(
+                    TextInputFormField(
                       hintText: 'Password',
                       textInputType: TextInputType.visiblePassword,
                       textInputAction: TextInputAction.next,
@@ -204,7 +204,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                       onSaved: savePassword,
                       validator: Validators.validatePassword,
                     ),
-                    GroupInputFormField(
+                    TextInputFormField(
                       hintText: 'Confirm Password',
                       textInputType: TextInputType.visiblePassword,
                       textInputAction: TextInputAction.done,

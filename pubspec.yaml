@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.2.2+6
 
 environment:
-  sdk: '^3.0.0-239.0.dev'
+  sdk: '>=3.0.0-239.0.dev <4.0.0'
 
 dependencies:
   #Flutter sdk
@@ -45,6 +45,7 @@ dependencies:
   # Service libraries
   url_launcher: ^6.1.9
   pin_code_fields: 7.4.0
+  intl: ^0.17.0
 
 dev_dependencies:
   flutter_test:

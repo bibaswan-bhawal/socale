@@ -6,6 +6,7 @@ import 'package:socale/resources/colors.dart';
 
 class ChipCard extends StatelessWidget {
   final String emptyMessage;
+  final String searchHint;
 
   final double height;
   final double horizontalPadding;
@@ -18,6 +19,7 @@ class ChipCard extends StatelessWidget {
     required this.horizontalPadding,
     required this.emptyMessage,
     required this.options,
+    required this.searchHint,
   });
 
   @override
@@ -25,7 +27,9 @@ class ChipCard extends StatelessWidget {
     return _ChipContainerTransform(
       height: height,
       horizontalPadding: horizontalPadding,
+      placeholder: emptyMessage,
       options: options,
+      searchHint: searchHint,
     );
   }
 }
@@ -33,16 +37,24 @@ class ChipCard extends StatelessWidget {
 class _ChipContainerTransform extends StatefulWidget {
   final double height;
   final double horizontalPadding;
-
+  final String placeholder;
+  final String searchHint;
   final List<String> options;
 
-  const _ChipContainerTransform({required this.height, required this.horizontalPadding, required this.options});
+  const _ChipContainerTransform({
+    required this.height,
+    required this.horizontalPadding,
+    required this.options,
+    required this.placeholder,
+    required this.searchHint,
+  });
 
   @override
   State<_ChipContainerTransform> createState() => _ChipContainerTransformState();
 }
 
-class _ChipContainerTransformState extends State<_ChipContainerTransform> with SingleTickerProviderStateMixin {
+class _ChipContainerTransformState extends State<_ChipContainerTransform>
+    with SingleTickerProviderStateMixin {
   OverlayEntry? overlay;
 
   late AnimationController controller;
@@ -54,7 +66,11 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   void initState() {
     super.initState();
 
-    controller = AnimationController(duration: const Duration(milliseconds: 300), reverseDuration: const Duration(milliseconds: 250), vsync: this);
+    controller = AnimationController(
+      duration: const Duration(milliseconds: 300),
+      reverseDuration: const Duration(milliseconds: 250),
+      vsync: this,
+    );
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(() {
@@ -82,8 +98,8 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
       height: widget.height,
       child: _ChipContainer(
         onAdd: () => createOverlay(),
-        child: const _ChipContentPlaceHolder(
-          placeholderText: 'add your major',
+        child: _ChipContentPlaceHolder(
+          placeholderText: widget.placeholder,
         ),
       ),
     );
@@ -92,17 +108,24 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   Widget secondaryWidgetBuilder() {
     return _SelectionMenu(
       onPressed: () => removeOverlay(),
+      searchHint: widget.searchHint,
       options: widget.options,
     );
   }
 
-  Animatable<double> getVOffsetAnimation(verticalOffset) => Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
+  Animatable<double> getVOffsetAnimation(verticalOffset) =>
+      Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get paddingAnimation => Tween<double>(begin: widget.horizontalPadding, end: 00).chain(CurveTween(curve: emphasized));
+  Animatable<double> get paddingAnimation =>
+      Tween<double>(begin: widget.horizontalPadding, end: 00).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get heightAnimation => Tween(begin: widget.height, end: MediaQuery.of(context).size.height).chain(CurveTween(curve: emphasized));
+  Animatable<double> get heightAnimation =>
+      Tween(begin: widget.height, end: MediaQuery.of(context).size.height)
+          .chain(CurveTween(curve: emphasized));
 
-  Animatable<Color?> get colorAnimation => ColorTween(begin: Colors.white.withOpacity(0), end: Colors.white).chain(CurveTween(curve: emphasized));
+  Animatable<Color?> get colorAnimation =>
+      ColorTween(begin: Colors.white.withOpacity(0), end: Colors.white)
+          .chain(CurveTween(curve: emphasized));
 
   void createOverlay() {
     OverlayState overlayState = Overlay.of(context);
@@ -160,7 +183,9 @@ class _ChipContentPlaceHolder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(child: Text(placeholderText));
+    return Center(
+      child: Text(placeholderText),
+    );
   }
 }
 
@@ -168,7 +193,10 @@ class _ChipContainer extends StatelessWidget {
   final Widget child;
   final Function() onAdd;
 
-  const _ChipContainer({required this.child, required this.onAdd});
+  const _ChipContainer({
+    required this.child,
+    required this.onAdd,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -212,9 +240,14 @@ class _ChipContainer extends StatelessWidget {
 
 class _SelectionMenu extends StatefulWidget {
   final Function() onPressed;
+  final String searchHint;
   final List<String> options;
 
-  const _SelectionMenu({required this.onPressed, required this.options});
+  const _SelectionMenu({
+    required this.onPressed,
+    required this.options,
+    required this.searchHint,
+  });
 
   @override
   State<_SelectionMenu> createState() => _SelectionMenuState();
@@ -285,10 +318,10 @@ class _SelectionMenuState extends State<_SelectionMenu> {
                         searchText = value;
                         buildList();
                       },
-                      decoration: const InputDecoration(
+                      decoration: InputDecoration(
                         border: InputBorder.none,
-                        contentPadding: EdgeInsets.all(0),
-                        hintText: 'Search for Your Major',
+                        contentPadding: const EdgeInsets.all(0),
+                        hintText: widget.searchHint,
                       ),
                     ),
                   ),

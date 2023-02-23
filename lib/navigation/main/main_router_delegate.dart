@@ -11,7 +11,8 @@ import 'package:socale/navigation/main/pages/splash_page.dart';
 import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 
-class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
+class MainRouterDelegate extends RouterDelegate<AppRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AppRoutePath> {
   @override
   final GlobalKey<NavigatorState> navigatorKey;
 
@@ -54,7 +55,7 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifie
             if (!appState.isInitialized) const SplashPage(),
             if (appState.isInitialized) ...[
               if (!appState.isLoggedIn) const AuthPage(),
-              if (appState.isLoggedIn) OnboardingPage(),
+              if (appState.isLoggedIn) const OnboardingPage(),
             ]
           ],
           onPopPage: (route, result) {

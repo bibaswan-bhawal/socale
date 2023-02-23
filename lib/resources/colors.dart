@@ -16,6 +16,8 @@ class ColorValues {
 
   static const Color textSubtitle = Color(0xFF7A7A7A);
 
+  static const Color textHint = Color(0xFF808080);
+
   static const LinearGradient orangeButtonGradient = LinearGradient(
     begin: Alignment.bottomLeft,
     end: Alignment.topRight,

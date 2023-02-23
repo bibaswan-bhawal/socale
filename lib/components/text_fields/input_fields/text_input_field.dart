@@ -4,7 +4,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:rive/rive.dart';
 import 'package:socale/resources/colors.dart';
 
-class GroupInputField extends StatefulWidget {
+class TextInputField extends StatefulWidget {
   final String hintText;
 
   final bool isObscured;
@@ -21,7 +21,7 @@ class GroupInputField extends StatefulWidget {
   final Widget? prefixIcon;
   final Widget? suffixIcon;
 
-  const GroupInputField({
+  const TextInputField({
     super.key,
     required this.hintText,
     this.isObscured = false,
@@ -35,10 +35,10 @@ class GroupInputField extends StatefulWidget {
   });
 
   @override
-  State<GroupInputField> createState() => _GroupInputFieldState();
+  State<TextInputField> createState() => _TextInputFieldState();
 }
 
-class _GroupInputFieldState extends State<GroupInputField> {
+class _TextInputFieldState extends State<TextInputField> {
   late TextEditingController _controller;
   late FocusNode _focusNode;
 

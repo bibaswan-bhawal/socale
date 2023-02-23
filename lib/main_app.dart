@@ -28,6 +28,7 @@ class _MainAppState extends ConsumerState<MainApp> {
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
       child: MaterialApp.router(
         title: 'Socale',
+        theme: ThemeData(useMaterial3: true),
         debugShowCheckedModeBanner: false,
         routerDelegate: ref.watch(mainRouterDelegateProvider),
         routeInformationParser: _mainRouteInformationParser,

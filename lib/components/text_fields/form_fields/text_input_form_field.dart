@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:socale/components/text_fields/group_input_fields/group_input_field.dart';
+import 'package:socale/components/text_fields/input_fields/text_input_field.dart';
 
-class GroupInputFormField extends FormField<String> {
+class TextInputFormField extends FormField<String> {
   final String hintText;
 
   final bool isObscured;
@@ -15,7 +15,8 @@ class GroupInputFormField extends FormField<String> {
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
-  GroupInputFormField({
+
+  TextInputFormField({
     Key? key,
     required this.hintText,
     this.isObscured = false,
@@ -34,7 +35,7 @@ class GroupInputFormField extends FormField<String> {
           onSaved: onSaved,
           validator: validator,
           builder: (FormFieldState<String> state) {
-            return GroupInputField(
+            return TextInputField(
               hintText: hintText,
               isObscured: isObscured,
               initialValue: initialValue,
