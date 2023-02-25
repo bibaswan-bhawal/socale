@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/animations/fade_through_animation.dart';
 import 'package:socale/navigation/transitions/curves.dart';
 import 'package:socale/resources/colors.dart';
@@ -13,13 +14,19 @@ class ChipCard extends StatelessWidget {
 
   final List<String> options;
 
+  final List<String> initialOptions;
+
+  final Function(List<String>) onChanged;
+
   const ChipCard({
     super.key,
     required this.height,
     required this.horizontalPadding,
     required this.emptyMessage,
     required this.options,
+    required this.initialOptions,
     required this.searchHint,
+    required this.onChanged,
   });
 
   @override
@@ -29,7 +36,9 @@ class ChipCard extends StatelessWidget {
       horizontalPadding: horizontalPadding,
       placeholder: emptyMessage,
       options: options,
+      initialOptions: initialOptions,
       searchHint: searchHint,
+      onChanged: onChanged,
     );
   }
 }
@@ -40,13 +49,18 @@ class _ChipContainerTransform extends StatefulWidget {
   final String placeholder;
   final String searchHint;
   final List<String> options;
+  final List<String> initialOptions;
+
+  final Function(List<String>) onChanged;
 
   const _ChipContainerTransform({
     required this.height,
     required this.horizontalPadding,
     required this.options,
+    required this.initialOptions,
     required this.placeholder,
     required this.searchHint,
+    required this.onChanged,
   });
 
   @override
@@ -59,6 +73,13 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
 
   late AnimationController controller;
   late Animation<double> animation;
+
+  List<String> selectedOptions = [];
+
+  setOptions(List<String> options) {
+    setState(() => selectedOptions = options);
+    widget.onChanged(selectedOptions);
+  }
 
   bool showMain = true;
 
@@ -85,6 +106,8 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
           setState(() => showMain = false);
         }
       });
+
+    selectedOptions = widget.initialOptions;
   }
 
   @override
@@ -96,10 +119,46 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
   Widget mainWidgetBuilder() {
     return SizedBox(
       height: widget.height,
-      child: _ChipContainer(
-        onAdd: () => createOverlay(),
-        child: _ChipContentPlaceHolder(
-          placeholderText: widget.placeholder,
+      child: GestureDetector(
+        onTap: () => selectedOptions.isEmpty ? createOverlay() : null,
+        child: _ChipContainer(
+          onAdd: () => createOverlay(),
+          child: selectedOptions.isEmpty
+              ? _ChipContentPlaceHolder(
+                  placeholderText: widget.placeholder,
+                )
+              : Padding(
+                  padding: const EdgeInsets.only(left: 16, right: 36),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.only(top: 8, bottom: 8),
+                    scrollDirection: Axis.vertical,
+                    child: Wrap(
+                        direction: Axis.horizontal,
+                        spacing: 8,
+                        children: selectedOptions
+                            .map(
+                              (option) => Chip(
+                                visualDensity: VisualDensity.compact,
+                                padding: const EdgeInsets.all(4),
+                                label: Text(
+                                  option,
+                                  style: GoogleFonts.roboto(
+                                    fontSize: 12,
+                                  ),
+                                ),
+                                onDeleted: () {
+                                  selectedOptions.removeAt(
+                                    selectedOptions.indexOf(option),
+                                  );
+
+                                  setState(() {});
+                                  widget.onChanged(selectedOptions);
+                                },
+                              ),
+                            )
+                            .toList()),
+                  ),
+                ),
         ),
       ),
     );
@@ -110,6 +169,8 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
       onPressed: () => removeOverlay(),
       searchHint: widget.searchHint,
       options: widget.options,
+      selectedOptions: selectedOptions,
+      onChanged: setOptions,
     );
   }
 
@@ -240,13 +301,19 @@ class _ChipContainer extends StatelessWidget {
 
 class _SelectionMenu extends StatefulWidget {
   final Function() onPressed;
+  final List<String> selectedOptions;
+
   final String searchHint;
   final List<String> options;
+
+  final Function(List<String>) onChanged;
 
   const _SelectionMenu({
     required this.onPressed,
     required this.options,
     required this.searchHint,
+    required this.onChanged,
+    required this.selectedOptions,
   });
 
   @override
@@ -265,9 +332,12 @@ class _SelectionMenuState extends State<_SelectionMenu> {
   void initState() {
     super.initState();
 
+    selectedOptions = widget.selectedOptions;
     options = List<String>.from(widget.options);
     options.sort();
     filteredOptions = options;
+
+    filteredOptions.removeWhere((element) => selectedOptions.contains(element));
   }
 
   void buildList() {
@@ -291,84 +361,110 @@ class _SelectionMenuState extends State<_SelectionMenu> {
     buildList();
   }
 
+  List<Widget> _buildChipList() {
+    List<Widget> chips = [];
+
+    for (int i = 0; i < selectedOptions.length; i++) {
+      chips.add(
+        Chip(
+          visualDensity: VisualDensity.compact,
+          padding: const EdgeInsets.all(8),
+          label: Text(selectedOptions[i]),
+          deleteIcon: const Icon(Icons.close, size: 18),
+          onDeleted: () {
+            options.add(selectedOptions[i]);
+            selectedOptions.removeAt(i);
+            buildList();
+          },
+        ),
+      );
+    }
+
+    return chips;
+  }
+
+  Future<bool> onBack() async {
+    widget.onChanged(selectedOptions);
+    widget.onPressed();
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: Column(
-        children: [
-          Padding(
-            padding: EdgeInsets.only(left: 20, top: 10 + MediaQuery.of(context).padding.top),
-            child: Row(
-              children: [
-                SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: InkResponse(
-                    radius: 20,
-                    splashFactory: InkRipple.splashFactory,
-                    onTap: widget.onPressed,
-                    child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+    return WillPopScope(
+      onWillPop: onBack,
+      child: Material(
+        child: Column(
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                left: 20,
+                top: 10 + MediaQuery.of(context).padding.top,
+              ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    width: 24,
+                    height: 24,
+                    child: InkResponse(
+                      radius: 20,
+                      splashFactory: InkRipple.splashFactory,
+                      onTap: onBack,
+                      child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                    ),
                   ),
-                ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 20),
-                    child: TextField(
-                      onChanged: (value) {
-                        searchText = value;
-                        buildList();
-                      },
-                      decoration: InputDecoration(
-                        border: InputBorder.none,
-                        contentPadding: const EdgeInsets.all(0),
-                        hintText: widget.searchHint,
+                  Expanded(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: TextField(
+                        onChanged: (value) {
+                          searchText = value;
+                          buildList();
+                        },
+                        decoration: InputDecoration(
+                          border: InputBorder.none,
+                          contentPadding: const EdgeInsets.all(0),
+                          hintText: widget.searchHint,
+                        ),
                       ),
                     ),
                   ),
+                ],
+              ),
+            ),
+            if (selectedOptions.isNotEmpty)
+              Container(
+                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                width: double.infinity,
+                constraints: const BoxConstraints(maxHeight: 130),
+                child: SingleChildScrollView(
+                  scrollDirection: Axis.vertical,
+                  child: Wrap(
+                    direction: Axis.horizontal,
+                    spacing: 8,
+                    runSpacing: 4,
+                    children: _buildChipList(),
+                  ),
                 ),
-              ],
-            ),
-          ),
-          // Container(
-          //   width: double.infinity,
-          //   padding: const EdgeInsets.symmetric(horizontal: 20),
-          //   margin: const EdgeInsets.symmetric(vertical: 40),
-          //   child: const Wrap(
-          //     spacing: 8,
-          //     children: [
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //       Chip(label: Text('Bob')),
-          //     ],
-          //   ),
-          // ),
-          Expanded(
-            child: ListView.separated(
-              padding: const EdgeInsets.only(top: 8),
-              itemCount: filteredOptions.length,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  dense: true,
-                  onTap: () => onSelected(index),
-                  title: Text(filteredOptions[index]),
-                );
-              },
-              separatorBuilder: (BuildContext context, int index) {
-                return const Divider();
-              },
-            ),
-          )
-        ],
+              ),
+            Expanded(
+              child: ListView.separated(
+                padding: const EdgeInsets.only(top: 8),
+                itemCount: filteredOptions.length,
+                itemBuilder: (context, index) {
+                  return ListTile(
+                    dense: true,
+                    onTap: () => onSelected(index),
+                    title: Text(filteredOptions[index]),
+                  );
+                },
+                separatorBuilder: (BuildContext context, int index) {
+                  return const Divider(thickness: 0.4, height: 8);
+                },
+              ),
+            )
+          ],
+        ),
       ),
     );
   }

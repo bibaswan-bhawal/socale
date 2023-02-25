@@ -2,13 +2,19 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-import 'package:socale/components/cards/chip_card.dart';
+import 'package:socale/components/cards/chip_card_form_field.dart';
+import 'package:socale/models/onboarding_user.dart';
 import 'package:socale/navigation/transitions/curves.dart';
 import 'package:socale/options/majors/ucsd_majors.dart';
 import 'package:socale/resources/colors.dart';
 
 class AcademicInfoPage extends ConsumerStatefulWidget {
-  const AcademicInfoPage({super.key});
+  final OnboardingUser onboardingUser;
+
+  const AcademicInfoPage({
+    super.key,
+    required this.onboardingUser,
+  });
 
   @override
   ConsumerState<AcademicInfoPage> createState() => AcademicInfoPageState();
@@ -17,7 +23,17 @@ class AcademicInfoPage extends ConsumerStatefulWidget {
 class AcademicInfoPageState extends ConsumerState<AcademicInfoPage> {
   PageController pageController = PageController();
 
+  GlobalKey<FormState> majorFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> minorFormKey = GlobalKey<FormState>();
+
   late int currentPage;
+
+  List<String>? majors = [];
+  List<String>? minors = [];
+
+  saveMajors(List<String>? value) => majors = value;
+
+  saveMinors(List<String>? value) => minors = value;
 
   @override
   void initState() {
@@ -25,11 +41,27 @@ class AcademicInfoPageState extends ConsumerState<AcademicInfoPage> {
 
     currentPage = pageController.initialPage;
 
+    majors = widget.onboardingUser.majors ?? [];
+    minors = widget.onboardingUser.minors ?? [];
+
     pageController.addListener(() {
       if (currentPage != pageController.page!.round()) {
         setState(() => currentPage = pageController.page!.round());
       }
     });
+  }
+
+  bool validateMajor() {
+    final form = majorFormKey.currentState!;
+
+    if (form.validate()) {
+      form.save();
+
+      widget.onboardingUser.majors;
+      return true;
+    }
+
+    return false;
   }
 
   next() {
@@ -100,20 +132,30 @@ class AcademicInfoPageState extends ConsumerState<AcademicInfoPage> {
           child: PageView(
             controller: pageController,
             physics: const NeverScrollableScrollPhysics(),
-            children: const [
-              ChipCard(
-                emptyMessage: 'Add your major',
-                searchHint: 'Search for your major',
-                height: 160,
-                horizontalPadding: 30,
-                options: ucsdMajors,
+            children: [
+              Form(
+                key: majorFormKey,
+                child: ChipCardFormField(
+                  emptyMessage: 'Add your major',
+                  searchHint: 'Search for your major',
+                  height: 160,
+                  horizontalPadding: 30,
+                  options: ucsdMajors,
+                  initialValue: majors,
+                  onSaved: saveMajors,
+                ),
               ),
-              ChipCard(
-                emptyMessage: 'Add your minor',
-                searchHint: 'Search for your minor',
-                height: 160,
-                horizontalPadding: 30,
-                options: ucsdMajors,
+              Form(
+                key: minorFormKey,
+                child: ChipCardFormField(
+                  emptyMessage: 'Add your minor',
+                  searchHint: 'Search for your minor',
+                  height: 160,
+                  horizontalPadding: 30,
+                  options: ucsdMajors,
+                  initialValue: minors,
+                  onSaved: saveMinors,
+                ),
               ),
             ],
           ),

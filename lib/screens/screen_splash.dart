@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:socale/resources/colors.dart';
 import 'package:socale/utils/size_config.dart';
 import 'package:socale/utils/system_ui.dart';
 
@@ -27,18 +26,25 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
-      body: Container(
-        width: size.width,
-        height: size.height,
-        decoration: const BoxDecoration(
-          gradient: ColorValues.orangeBackgroundGradient,
-        ),
-        child: Center(
-          child: SvgPicture.asset(
-            'assets/logo/white_logo.svg',
-            width: size.width * 0.35,
+      body: Stack(
+        children: [
+          Positioned(
+            top: -1,
+            left: -1,
+            child: SvgPicture.asset(
+              'assets/background/launch_background.svg',
+              width: size.width,
+              height: size.height + 1,
+              fit: BoxFit.fill,
+            ),
           ),
-        ),
+          Center(
+            child: SvgPicture.asset(
+              'assets/logo/white_logo.svg',
+              width: size.width * 0.35,
+            ),
+          ),
+        ],
       ),
     );
   }

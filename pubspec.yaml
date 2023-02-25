@@ -47,6 +47,8 @@ dependencies:
   pin_code_fields: 7.4.0
   intl: ^0.17.0
 
+  flutter_native_splash: ^2.2.18
+
 dev_dependencies:
   flutter_test:
     sdk: flutter
@@ -64,6 +66,8 @@ flutter:
     - assets/illustrations/forgot_password/
     - assets/illustrations/verify_email/
     - assets/illustrations/onboarding_intro/
+    - assets/background/
     - assets/animations/icons/
     - assets/fonts/poppins/
     - assets/fonts/roboto/
+

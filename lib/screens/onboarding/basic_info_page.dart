@@ -178,7 +178,7 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 36, right: 36, top: 36),
+          padding: const EdgeInsets.only(left: 36, right: 36, top: 18),
           child: Form(
             key: graduationDateFormKey,
             child: DefaultInputForm(

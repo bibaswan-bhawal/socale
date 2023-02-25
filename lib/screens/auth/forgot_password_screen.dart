@@ -109,7 +109,9 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     if (pageIndex == 2) {
       setState(() => isLoading = true);
+
       final passwordForm = formPasswordKey.currentState!;
+
       if (passwordForm.validate()) {
         setState(() => errorPasswordMessage = null);
 
@@ -117,7 +119,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
         if (password != confirmPassword) {
           setState(() => errorPasswordMessage = "Passwords don't match");
-
+          setState(() => isLoading = false);
           return;
         }
 
@@ -127,12 +129,16 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
           const snackBar =
               SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          setState(() => isLoading = false);
           return;
         } catch (_) {
           const snackBar = SnackBar(
               content: Text('Something went wrong try again in a few minutes.',
                   textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          setState(() => isLoading = false);
           return;
         }
 
@@ -146,6 +152,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         } else if (confirmPasswordField.errorText != null) {
           setState(() => errorPasswordMessage = "Passwords don't match");
         }
+
+        setState(() => isLoading = false);
         return;
       }
 
@@ -171,41 +179,40 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
               reverse: true,
               child: ScreenSafeArea(
                 body: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Visibility(
-                      visible: pageIndex != 3,
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Padding(
-                          padding: EdgeInsets.only(
-                            left: 30,
-                            top: 50 + MediaQuery.of(context).viewPadding.top,
-                          ),
-                          child: SizedBox(
-                            width: 24,
-                            height: 24,
-                            child: InkResponse(
-                              radius: 20,
-                              splashFactory: InkRipple.splashFactory,
-                              child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
-                              onTap: () => Navigator.maybePop(context),
-                            ),
+                      visible: pageIndex != 10,
+                      child: Padding(
+                        padding: EdgeInsets.only(
+                          left: 30,
+                          top: 30 + MediaQuery.of(context).viewPadding.top,
+                        ),
+                        child: SizedBox(
+                          width: 24,
+                          height: 24,
+                          child: InkResponse(
+                            radius: 20,
+                            splashFactory: InkRipple.splashFactory,
+                            child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                            onTap: () => Navigator.maybePop(context),
                           ),
                         ),
                       ),
                     ),
                     Expanded(
+                      child: Center(
                         child: Image.asset(
-                            'assets/illustrations/forgot_password/cover_illustration.png')),
-                    Container(
-                      margin: const EdgeInsets.only(top: 40),
-                      height: pageIndex != 3 ? 260 : 150,
-                      width: size.width,
+                            'assets/illustrations/forgot_password/cover_illustration.png'),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 248,
                       child: PageView(
                         controller: pageController,
-                        physics: const NeverScrollableScrollPhysics(),
                         children: [
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SimpleShadow(
                                 opacity: 0.1,
@@ -223,6 +230,8 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                               Padding(
                                 padding: const EdgeInsets.only(top: 10, bottom: 20),
                                 child: Column(
+                                  mainAxisSize: MainAxisSize.max,
+                                  mainAxisAlignment: MainAxisAlignment.center,
                                   children: [
                                     Text(
                                       'Enter your email to receive a confirmation',
@@ -243,38 +252,41 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30, right: 30, top: 30),
-                                child: Form(
-                                  key: formEmailKey,
-                                  child: DefaultInputForm(
-                                    errorMessage: errorEmailMessage,
-                                    children: [
-                                      TextInputFormField(
-                                        key: emailFieldState,
-                                        hintText: 'Email Address',
-                                        initialValue: email,
-                                        textInputType: TextInputType.emailAddress,
-                                        autofillHints: const [AutofillHints.email],
-                                        prefixIcon: SvgPicture.asset(
-                                          'assets/icons/email.svg',
-                                          colorFilter: const ColorFilter.mode(
-                                            Color(0xFF808080),
-                                            BlendMode.srcIn,
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 36),
+                                  child: Form(
+                                    key: formEmailKey,
+                                    child: DefaultInputForm(
+                                      errorMessage: errorEmailMessage,
+                                      children: [
+                                        TextInputFormField(
+                                          key: emailFieldState,
+                                          hintText: 'Email Address',
+                                          initialValue: email,
+                                          textInputType: TextInputType.emailAddress,
+                                          autofillHints: const [AutofillHints.email],
+                                          prefixIcon: SvgPicture.asset(
+                                            'assets/icons/email.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0xFF808080),
+                                              BlendMode.srcIn,
+                                            ),
+                                            width: 16,
                                           ),
-                                          width: 16,
+                                          onSaved: saveEmail,
+                                          validator: Validators.validateEmail,
+                                          textInputAction: TextInputAction.next,
                                         ),
-                                        onSaved: saveEmail,
-                                        validator: Validators.validateEmail,
-                                        textInputAction: TextInputAction.next,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SimpleShadow(
                                 opacity: 0.1,
@@ -314,33 +326,31 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                 ),
                               ),
                               Padding(
-                                padding: const EdgeInsets.only(top: 25, left: 50, right: 50),
-                                child: SizedBox(
-                                  width: 300,
-                                  child: Form(
-                                    key: formPinCodeKey,
-                                    child: PinCodeTextField(
-                                      length: 6,
-                                      appContext: context,
-                                      useHapticFeedback: true,
-                                      pinTheme: Themes.optPinTheme,
-                                      cursorColor: Colors.black,
-                                      hintCharacter: '0',
-                                      autovalidateMode: AutovalidateMode.disabled,
-                                      keyboardType: TextInputType.number,
-                                      autoFocus: true,
-                                      autoDismissKeyboard: true,
-                                      errorTextSpace: 20,
-                                      onSaved: saveCode,
-                                      onChanged: (value) {},
-                                      validator: Validators.validateCode,
-                                    ),
+                                padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
+                                child: Form(
+                                  key: formPinCodeKey,
+                                  child: PinCodeTextField(
+                                    length: 6,
+                                    appContext: context,
+                                    useHapticFeedback: true,
+                                    pinTheme: Themes.optPinTheme,
+                                    cursorColor: Colors.black,
+                                    hintCharacter: '0',
+                                    autovalidateMode: AutovalidateMode.disabled,
+                                    keyboardType: TextInputType.number,
+                                    autoFocus: true,
+                                    autoDismissKeyboard: true,
+                                    errorTextSpace: 20,
+                                    onSaved: saveCode,
+                                    onChanged: (value) {},
+                                    validator: Validators.validateCode,
                                   ),
                                 ),
                               ),
                             ],
                           ),
                           Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               SimpleShadow(
                                 opacity: 0.1,
@@ -379,115 +389,109 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                                   ],
                                 ),
                               ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30, right: 30, top: 15),
-                                child: Form(
-                                  key: formPasswordKey,
-                                  child: DefaultInputForm(
-                                    errorMessage: errorPasswordMessage,
-                                    children: [
-                                      TextInputFormField(
-                                        key: passwordFieldState,
-                                        hintText: 'New Password',
-                                        initialValue: password,
-                                        textInputType: TextInputType.visiblePassword,
-                                        textInputAction: TextInputAction.next,
-                                        autofillHints: const [AutofillHints.password],
-                                        prefixIcon: SvgPicture.asset(
-                                          'assets/icons/lock.svg',
-                                          colorFilter: const ColorFilter.mode(
-                                            Color(0xFF808080),
-                                            BlendMode.srcIn,
+                              Center(
+                                child: Padding(
+                                  padding: const EdgeInsets.symmetric(horizontal: 36),
+                                  child: Form(
+                                    key: formPasswordKey,
+                                    child: DefaultInputForm(
+                                      errorMessage: errorPasswordMessage,
+                                      children: [
+                                        TextInputFormField(
+                                          key: passwordFieldState,
+                                          hintText: 'New Password',
+                                          initialValue: password,
+                                          textInputType: TextInputType.visiblePassword,
+                                          textInputAction: TextInputAction.next,
+                                          autofillHints: const [AutofillHints.password],
+                                          prefixIcon: SvgPicture.asset(
+                                            'assets/icons/lock.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0xFF808080),
+                                              BlendMode.srcIn,
+                                            ),
+                                            width: 16,
                                           ),
-                                          width: 16,
+                                          isObscured: true,
+                                          onSaved: savePassword,
+                                          validator: Validators.validatePassword,
                                         ),
-                                        isObscured: true,
-                                        onSaved: savePassword,
-                                        validator: Validators.validatePassword,
-                                      ),
-                                      TextInputFormField(
-                                        key: confirmPasswordFieldState,
-                                        hintText: 'Confirm Password',
-                                        initialValue: confirmPassword,
-                                        textInputType: TextInputType.visiblePassword,
-                                        textInputAction: TextInputAction.done,
-                                        autofillHints: const [AutofillHints.password],
-                                        prefixIcon: SvgPicture.asset(
-                                          'assets/icons/lock.svg',
-                                          colorFilter: const ColorFilter.mode(
-                                            Color(0xFF808080),
-                                            BlendMode.srcIn,
+                                        TextInputFormField(
+                                          key: confirmPasswordFieldState,
+                                          hintText: 'Confirm Password',
+                                          initialValue: confirmPassword,
+                                          textInputType: TextInputType.visiblePassword,
+                                          textInputAction: TextInputAction.done,
+                                          autofillHints: const [AutofillHints.password],
+                                          prefixIcon: SvgPicture.asset(
+                                            'assets/icons/lock.svg',
+                                            colorFilter: const ColorFilter.mode(
+                                              Color(0xFF808080),
+                                              BlendMode.srcIn,
+                                            ),
+                                            width: 16,
                                           ),
-                                          width: 16,
+                                          isObscured: true,
+                                          onSaved: saveConfirmPassword,
+                                          validator: Validators.validatePassword,
                                         ),
-                                        isObscured: true,
-                                        onSaved: saveConfirmPassword,
-                                        validator: Validators.validatePassword,
-                                      ),
-                                    ],
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
                             ],
                           ),
-                          Center(
-                            child: Column(
-                              children: [
-                                SimpleShadow(
-                                  opacity: 0.1,
-                                  offset: const Offset(1, 1),
-                                  sigma: 1,
-                                  child: Text(
-                                    'Successfully Changed!',
-                                    textAlign: TextAlign.center,
-                                    style: GoogleFonts.poppins(
-                                      fontWeight: FontWeight.bold,
-                                      fontSize: (size.width * 0.058),
+                          Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SimpleShadow(
+                                opacity: 0.1,
+                                offset: const Offset(1, 1),
+                                sigma: 1,
+                                child: Text(
+                                  'Successfully Changed',
+                                  textAlign: TextAlign.center,
+                                  style: GoogleFonts.poppins(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: (size.width * 0.058),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(top: 10, bottom: 20),
+                                child: Column(
+                                  children: [
+                                    Text(
+                                      'Your password for',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: (size.width * 0.038),
+                                        color: ColorValues.textSubtitle,
+                                      ),
                                     ),
-                                  ),
+                                    Text(
+                                      email,
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: (size.width * 0.038),
+                                        color: ColorValues.textSubtitle,
+                                        fontWeight: FontWeight.w500,
+                                      ),
+                                    ),
+                                    Text(
+                                      'has been changed successfully, you can\n'
+                                      'login with your new password now.',
+                                      textAlign: TextAlign.center,
+                                      style: GoogleFonts.roboto(
+                                        fontSize: (size.width * 0.038),
+                                        color: ColorValues.textSubtitle,
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.only(top: 10, bottom: 20),
-                                  child: Column(
-                                    children: [
-                                      Text(
-                                        'Your password for',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.roboto(
-                                          fontSize: (size.width * 0.038),
-                                          color: ColorValues.textSubtitle,
-                                        ),
-                                      ),
-                                      Text(
-                                        email,
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.roboto(
-                                          fontSize: (size.width * 0.038),
-                                          color: ColorValues.textSubtitle,
-                                          fontWeight: FontWeight.w500,
-                                        ),
-                                      ),
-                                      Text(
-                                        'has been changed successfully, you can',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.roboto(
-                                          fontSize: (size.width * 0.04),
-                                          color: ColorValues.textSubtitle,
-                                        ),
-                                      ),
-                                      Text(
-                                        'login with your new password now.',
-                                        textAlign: TextAlign.center,
-                                        style: GoogleFonts.roboto(
-                                          fontSize: (size.width * 0.04),
-                                          color: ColorValues.textSubtitle,
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                              ],
-                            ),
+                              ),
+                            ],
                           ),
                         ],
                       ),

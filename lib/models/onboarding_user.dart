@@ -6,6 +6,7 @@ class OnboardingUser {
   DateTime? graduationDate;
 
   List<String>? majors;
+  List<String>? minors;
 
   OnboardingUser();
 }

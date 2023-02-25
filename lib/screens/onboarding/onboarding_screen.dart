@@ -70,7 +70,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         key: basicInfoPageKey,
         onboardingUser: onboardingUser,
       ),
-      AcademicInfoPage(key: academicInfoPageKey),
+      AcademicInfoPage(
+        key: academicInfoPageKey,
+        onboardingUser: onboardingUser,
+      ),
     ];
 
     SystemUI.setSystemUIDark();
@@ -80,9 +83,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         : null);
   }
 
-  next() async {
+  next() {
     if (currentPage == 3) {
-      if (!basicInfoPageKey.currentState!.validateForm()) return;
+      if (!basicInfoPageKey.currentState!.validateForm()) {
+        return;
+      }
     }
 
     if (currentPage == 4) {
@@ -97,6 +102,10 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
         curve: emphasized,
       );
     }
+  }
+
+  changePage(int page) {
+    setState(() => currentPage = currentPage + page);
   }
 
   back() {
