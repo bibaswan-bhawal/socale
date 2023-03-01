@@ -63,8 +63,6 @@ class _AnimatedPageViewState extends State<AnimatedPageView> {
 
     Map<Object, PageViewHeroState> sourceHeroes = PageViewHero.allHeroesFor(sourceContext);
 
-    List<PageViewHeroState> marked = [];
-
     for (PageViewHeroState source in sourceHeroes.values) {
       source.saveOffset();
 
@@ -85,7 +83,7 @@ class _AnimatedPageViewState extends State<AnimatedPageView> {
 
       Map<Object, PageViewHeroState> targetHeroes = PageViewHero.allHeroesFor(targetContext);
 
-      bool found_tag = false;
+      bool foundTag = false;
 
       for (PageViewHeroState target in targetHeroes.values) {
         target.saveOffset();
@@ -93,12 +91,12 @@ class _AnimatedPageViewState extends State<AnimatedPageView> {
         if (target.widget.tag == source.widget.tag) {
           target.hide();
 
-          found_tag = true;
+          foundTag = true;
           break;
         }
       }
 
-      if (!found_tag) {
+      if (!foundTag) {
         source.show();
       }
     }

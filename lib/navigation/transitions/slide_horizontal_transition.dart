@@ -25,20 +25,29 @@ class SlideHorizontalTransition extends StatelessWidget {
       return _SlideHorizontalTransitionBase(
         animation: secondaryAnimation!,
         secondary: true,
+        fadeMidpoint: fadeMidpoint ?? 0.3,
+        slideAmount: slideAmount ?? 30,
         child: child,
       );
     }
     if (secondaryAnimation == null) {
       return _SlideHorizontalTransitionBase(
         animation: animation!,
+        fadeMidpoint: fadeMidpoint ?? 0.3,
+        slideAmount: slideAmount ?? 30,
         child: child,
       );
     }
+
     return _SlideHorizontalTransitionBase(
       animation: animation!,
+      fadeMidpoint: fadeMidpoint ?? 0.3,
+      slideAmount: slideAmount ?? 30,
       child: _SlideHorizontalTransitionBase(
         animation: secondaryAnimation!,
         secondary: true,
+        fadeMidpoint: fadeMidpoint ?? 0.3,
+        slideAmount: slideAmount ?? 30,
         child: child,
       ),
     );
@@ -55,8 +64,8 @@ class _SlideHorizontalTransitionBase extends StatelessWidget {
   const _SlideHorizontalTransitionBase({
     required this.animation,
     this.secondary = false,
-    this.slideAmount = 30,
-    this.fadeMidpoint = 0.3,
+    required this.slideAmount,
+    required this.fadeMidpoint,
     this.child,
   });
 
