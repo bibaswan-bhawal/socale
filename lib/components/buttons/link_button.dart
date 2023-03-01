@@ -44,8 +44,9 @@ class LinkButton extends Button {
                       ),
                 ),
                 InkResponse(
-                  radius: visualFeedback ? 24 : 0,
-                  splashFactory: InkRipple.splashFactory,
+                  radius: wrap ? (width! / 1.8) : 24,
+                  splashFactory: visualFeedback ? InkRipple.splashFactory : NoSplash.splashFactory,
+                  highlightColor: visualFeedback ? Colors.transparent : null,
                   onTap: onPressed,
                   child: SizedBox(
                     height: 48,

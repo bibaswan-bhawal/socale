@@ -1,19 +1,20 @@
 import 'package:flutter/material.dart';
-import 'package:socale/components/paginators/paginator.dart';
 import 'package:socale/resources/colors.dart';
 
-class PagePaginator extends Paginator {
+class PageIndicator extends StatelessWidget {
   final int totalPages;
+  final int selectedPage;
 
-  const PagePaginator({super.key, required super.selectedPage, required this.totalPages});
+  const PageIndicator({super.key, required this.selectedPage, required this.totalPages});
 
   List<Widget> createDots() {
+    final selectedPage = this.selectedPage.clamp(0, totalPages - 1);
+
     List<Widget> dots = [];
 
     for (int i = 0; i < totalPages; i++) {
       dots.add(
-        AnimatedContainer(
-          duration: const Duration(milliseconds: 100),
+        Container(
           margin: const EdgeInsets.symmetric(horizontal: 8),
           height: 12,
           width: 12,

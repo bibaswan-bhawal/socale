@@ -3,13 +3,13 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/resources/colors.dart';
 
-class IntroPage extends StatelessWidget {
+class OnboardingIntroScreen extends StatelessWidget {
   final String illustration;
   final String titleBlack;
   final String titleOrange;
   final String message;
 
-  const IntroPage({
+  const OnboardingIntroScreen({
     super.key,
     required this.illustration,
     required this.titleBlack,

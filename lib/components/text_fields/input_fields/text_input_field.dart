@@ -95,6 +95,7 @@ class _TextInputFieldState extends State<TextInputField> {
       height: 20,
       child: InkResponse(
         radius: 10,
+        canRequestFocus: false,
         splashFactory: InkRipple.splashFactory,
         child: _board != null ? Rive(artboard: _board!, fit: BoxFit.contain) : null,
         onTap: () {

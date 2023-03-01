@@ -88,8 +88,8 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
     super.initState();
 
     controller = AnimationController(
-      duration: const Duration(milliseconds: 300),
-      reverseDuration: const Duration(milliseconds: 250),
+      duration: const Duration(milliseconds: 500),
+      reverseDuration: const Duration(milliseconds: 400),
       vsync: this,
     );
 
@@ -119,6 +119,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
   Widget mainWidgetBuilder() {
     return SizedBox(
       height: widget.height,
+      width: double.infinity,
       child: GestureDetector(
         onTap: () => selectedOptions.isEmpty ? createOverlay() : null,
         child: _ChipContainer(
@@ -178,7 +179,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
       Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
 
   Animatable<double> get paddingAnimation =>
-      Tween<double>(begin: widget.horizontalPadding, end: 00).chain(CurveTween(curve: emphasized));
+      Tween<double>(begin: widget.horizontalPadding, end: 0).chain(CurveTween(curve: emphasized));
 
   Animatable<double> get heightAnimation =>
       Tween(begin: widget.height, end: MediaQuery.of(context).size.height)
@@ -228,10 +229,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
       maintainSize: true,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-        child: SizedBox(
-          height: widget.height,
-          child: mainWidgetBuilder(),
-        ),
+        child: mainWidgetBuilder(),
       ),
     );
   }

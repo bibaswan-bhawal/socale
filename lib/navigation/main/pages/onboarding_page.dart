@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:socale/navigation/transitions/fade_switch_transition.dart';
-import 'package:socale/screens/onboarding/onboarding_screen.dart';
+import 'package:socale/screens/onboarding/onboarding_router_screen.dart';
 
 class OnboardingPage extends Page {
-  final Widget child = const OnboardingScreen();
+  final Widget child = const OnboardingRouterScreen();
 
   const OnboardingPage({super.key = const ValueKey('onboarding_page')});
 

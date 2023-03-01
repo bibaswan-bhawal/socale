@@ -2,17 +2,34 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'package:socale/components/paginators/page_view_controller.dart';
 import 'package:socale/components/text_fields/form_fields/date_input_form_field.dart';
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_fields/date_input_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/models/onboarding_user.dart';
+import 'package:socale/navigation/transitions/curves.dart';
 import 'package:socale/resources/colors.dart';
 
 class BasicInfoPage extends ConsumerStatefulWidget {
   final OnboardingUser onboardingUser;
+  final PageController pageController;
 
-  const BasicInfoPage({super.key, required this.onboardingUser});
+  final int pageNumber;
+  final int totalPages;
+
+  final Function setOverlay;
+  final Function removeOverlay;
+
+  const BasicInfoPage({
+    super.key,
+    required this.onboardingUser,
+    required this.pageController,
+    required this.totalPages,
+    required this.pageNumber,
+    required this.setOverlay,
+    required this.removeOverlay,
+  });
 
   @override
   ConsumerState<BasicInfoPage> createState() => BasicInfoPageState();
@@ -32,6 +49,28 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
 
   DateTime? dateOfBirth;
   DateTime? graduationDate;
+
+  bool showNav = false;
+
+  bool overlayCreated = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.pageController.addListener(() {
+      if (widget.pageController.page == widget.pageNumber) {
+        widget.removeOverlay();
+        overlayCreated = false;
+        if (mounted) setState(() => showNav = true);
+      } else {
+        if (overlayCreated) return;
+        overlayCreated = true;
+        createOverlay();
+        if (mounted) setState(() => showNav = false);
+      }
+    });
+  }
 
   saveFirstName(String? value) => firstName = value;
 
@@ -61,6 +100,62 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
       setState(() => nameErrorMessage = 'Please enter your first and last name.');
       return false;
     }
+  }
+
+  next() {
+    if (validateForm()) {
+      setState(() => nameErrorMessage = null);
+      widget.pageController
+          .nextPage(duration: const Duration(milliseconds: 300), curve: emphasized);
+    }
+  }
+
+  back() {
+    widget.pageController
+        .previousPage(duration: const Duration(milliseconds: 300), curve: emphasized);
+  }
+
+  createOverlay() {
+    final size = MediaQuery.of(context).size;
+    final mediaQuery = MediaQuery.of(context);
+
+    final overlay = OverlayEntry(
+      builder: (context) => Positioned(
+        top: 0,
+        left: 0,
+        child: Material(
+          type: MaterialType.transparency,
+          child: SizedBox(
+            height: size.height,
+            width: size.width,
+            child: Padding(
+              padding: EdgeInsets.only(
+                top: mediaQuery.viewPadding.top,
+                bottom: mediaQuery.viewPadding.bottom,
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                children: [
+                  Expanded(
+                    child: Container(),
+                  ),
+                  PageViewController(
+                    currentPage: widget.pageController.page!.round(),
+                    pageCount: widget.totalPages,
+                    back: () {},
+                    next: () {},
+                    nextText: 'Next',
+                    backText: 'Back',
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
+
+    widget.setOverlay(overlay);
   }
 
   @override
@@ -197,6 +292,21 @@ class BasicInfoPageState extends ConsumerState<BasicInfoPage> {
             ),
           ),
         ),
+        Expanded(child: Container()),
+        Visibility(
+          visible: showNav,
+          maintainSize: true,
+          maintainAnimation: true,
+          maintainState: true,
+          child: PageViewController(
+            currentPage: widget.pageNumber,
+            pageCount: widget.totalPages,
+            back: back,
+            next: next,
+            nextText: 'Next',
+            backText: 'Back',
+          ),
+        )
       ],
     );
   }

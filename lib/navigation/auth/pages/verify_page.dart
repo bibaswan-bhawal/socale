@@ -5,7 +5,7 @@ import 'package:socale/screens/auth/verify_email_screen.dart';
 class VerifyPage extends Page {
   final Widget child = const VerifyEmailScreen();
 
-  const VerifyPage({super.key = const ValueKey('register_page')});
+  const VerifyPage({super.key = const ValueKey('verify_page')});
 
   @override
   Route createRoute(BuildContext context) {
@@ -40,6 +40,7 @@ class _Transition extends StatelessWidget {
   Widget build(BuildContext context) {
     return SlideHorizontalTransition(
       animation: animation,
+      secondaryAnimation: secondaryAnimation,
       child: child,
     );
   }

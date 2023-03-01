@@ -79,11 +79,8 @@ class _Transition extends ConsumerWidget {
 
     return SlideHorizontalTransition(
       animation: animation,
-      child: SlideHorizontalTransition(
-        animation: secondaryAnimation,
-        secondary: true,
-        child: child,
-      ),
+      secondaryAnimation: secondaryAnimation,
+      child: child,
     );
   }
 }

@@ -8,6 +8,7 @@ import 'package:socale/types/auth/auth_step.dart';
 
 class RegisterPage extends Page {
   final Widget child = const RegisterScreen();
+
   const RegisterPage({super.key = const ValueKey('register_page')});
 
   @override
@@ -61,11 +62,8 @@ class _Transition extends ConsumerWidget {
 
     return SlideHorizontalTransition(
       animation: animation,
-      child: SlideHorizontalTransition(
-        animation: secondaryAnimation,
-        secondary: true,
-        child: child,
-      ),
+      secondaryAnimation: secondaryAnimation,
+      child: child,
     );
   }
 }

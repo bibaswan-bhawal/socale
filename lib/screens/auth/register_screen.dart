@@ -57,9 +57,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   Future<void> onClickRegister() async {
     final form = formState.currentState!;
+    if (isLoading) return;
     setState(() => isLoading = true);
 
-    if (form.validate() && !isLoading) {
+    if (form.validate()) {
       setState(() => errorMessage = null);
 
       form.save();
@@ -165,7 +166,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(top: 48, left: 30, right: 30),
+              padding: const EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 10),
               child: Form(
                 key: formState,
                 child: DefaultInputForm(

@@ -2,14 +2,57 @@ import 'package:flutter/material.dart';
 import 'package:socale/navigation/transitions/curves.dart';
 
 class SlideHorizontalTransition extends StatelessWidget {
+  final Animation<double>? animation;
+  final Animation<double>? secondaryAnimation;
+
+  final double? fadeMidpoint;
+  final double? slideAmount;
+
+  final Widget? child;
+
+  const SlideHorizontalTransition({
+    super.key,
+    this.animation,
+    this.secondaryAnimation,
+    this.child,
+    this.fadeMidpoint,
+    this.slideAmount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (animation == null) {
+      return _SlideHorizontalTransitionBase(
+        animation: secondaryAnimation!,
+        secondary: true,
+        child: child,
+      );
+    }
+    if (secondaryAnimation == null) {
+      return _SlideHorizontalTransitionBase(
+        animation: animation!,
+        child: child,
+      );
+    }
+    return _SlideHorizontalTransitionBase(
+      animation: animation!,
+      child: _SlideHorizontalTransitionBase(
+        animation: secondaryAnimation!,
+        secondary: true,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _SlideHorizontalTransitionBase extends StatelessWidget {
   final Animation<double> animation;
   final bool secondary;
   final double fadeMidpoint;
   final double slideAmount;
   final Widget? child;
 
-  const SlideHorizontalTransition({
-    super.key,
+  const _SlideHorizontalTransitionBase({
     required this.animation,
     this.secondary = false,
     this.slideAmount = 30,

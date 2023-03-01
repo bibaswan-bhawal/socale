@@ -51,41 +51,40 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   onClickLogin() async {
+    if (isLoading) return;
+
     final form = formKey.currentState!;
+    setState(() => isLoading = true);
 
-    if (!isLoading) {
-      setState(() => isLoading = true);
+    if (form.validate()) {
+      setState(() => errorMessage = null);
 
-      if (form.validate()) {
-        setState(() => errorMessage = null);
+      form.save();
 
-        form.save();
+      final result = await AuthService.signInUser(email!, password!);
 
-        final result = await AuthService.signInUser(email!, password!);
-
-        switch (result) {
-          case AuthFlowResult.success:
-            loginSuccessful();
-            return;
-          case AuthFlowResult.unverified:
-            goTo(AuthStep.verifyEmail); // Go to verify email screen
-            break;
-          case AuthFlowResult.genericError:
-            showSnackBar('Something went wrong try again in a few minutes.');
-            break;
-          case AuthFlowResult.notAuthorized:
-            showFormError('Incorrect password');
-            break;
-          case AuthFlowResult.userNotFound:
-            showSnackBar("Sorry, we couldn't find your account. Try signing up");
-            break;
-        }
-      } else {
-        showFormError('Enter a valid email and password');
+      switch (result) {
+        case AuthFlowResult.success:
+          loginSuccessful();
+          return;
+        case AuthFlowResult.unverified:
+          goTo(AuthStep.verifyEmail); // Go to verify email screen
+          break;
+        case AuthFlowResult.genericError:
+          showSnackBar('Something went wrong try again in a few minutes.');
+          break;
+        case AuthFlowResult.notAuthorized:
+          showFormError('Incorrect password');
+          break;
+        case AuthFlowResult.userNotFound:
+          showSnackBar("We couldn't find your account, try signing up.");
+          break;
       }
-
-      setState(() => isLoading = false);
+    } else {
+      showFormError('Enter a valid email and password');
     }
+
+    setState(() => isLoading = false);
   }
 
   loginSuccessful() async {

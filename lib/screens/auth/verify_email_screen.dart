@@ -54,7 +54,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
       final result = await AuthService.signInUser(_email, _password);
 
-      switch (result.$4) {
+      switch (result) {
         case AuthFlowResult.success:
           loginSuccessful();
           return;
@@ -128,19 +128,22 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   ).createShader(bounds),
                   child: Text(
                     'email',
-                    style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: GoogleFonts.poppins(
+                        fontSize: size.width * 0.058,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
                   ),
                 ),
               ],
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 10),
+            padding: const EdgeInsets.only(top: 10, bottom: 20),
             child: Text(
               'We have sent an email to\n$_email\nwith a link to confirm your email.',
               textAlign: TextAlign.center,
               style: GoogleFonts.roboto(
-                fontSize: (size.width * 0.04),
+                fontSize: (size.width * 0.038),
                 color: ColorValues.textSubtitle,
               ),
             ),
