@@ -10,14 +10,13 @@ import 'package:socale/navigation/auth/pages/verify_page.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/types/auth/auth_step.dart';
 
-class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
-  @override
-  final GlobalKey<NavigatorState> navigatorKey;
+class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
+  AutoDisposeProviderRef ref;
 
   AuthState authState = AuthState();
 
-  AutoDisposeProviderRef ref;
+  @override
+  final GlobalKey<NavigatorState> navigatorKey;
 
   AuthRouterDelegate(this.ref) : navigatorKey = GlobalKey<NavigatorState>() {
     authState = ref.read(authStateProvider);
@@ -50,8 +49,9 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
         ],
       ],
       onPopPage: (route, result) {
+        if (!route.didPop(result)) return false;
         ref.read(authStateProvider.notifier).popState();
-        return route.didPop(result);
+        return true;
       },
     );
   }
@@ -77,9 +77,7 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
   // new route path requested
   void newRouteRequested(AuthRoutePath configuration) {
     AuthState state = configuration.appState;
-    ref
-        .read(authStateProvider.notifier)
-        .setAuthStep(newStep: state.step, previousStep: state.previousStep);
+    ref.read(authStateProvider.notifier).setAuthStep(newStep: state.step, previousStep: state.previousStep);
   }
 
   @override

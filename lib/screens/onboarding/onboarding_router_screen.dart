@@ -1,35 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:socale/components/paginators/page_view_controller.dart';
-import 'package:socale/components/utils/screen_scaffold.dart';
-import 'package:socale/screens/onboarding/onboarding_intro_screen.dart';
-import 'package:socale/screens/onboarding/onboarding_strings.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/providers/navigation_providers.dart';
+import 'package:socale/utils/system_ui.dart';
 
-class OnboardingRouterScreen extends StatelessWidget {
+class OnboardingRouterScreen extends ConsumerStatefulWidget {
   const OnboardingRouterScreen({super.key});
 
   @override
+  ConsumerState<OnboardingRouterScreen> createState() => _OnboardingRouterScreenState();
+}
+
+class _OnboardingRouterScreenState extends ConsumerState<OnboardingRouterScreen> {
+  ChildBackButtonDispatcher? _backButtonDispatcher;
+
+  @override
+  void initState() {
+    super.initState();
+    SystemUI.setSystemUIDark();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    _backButtonDispatcher = Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      body: Column(
-        children: [
-          const Expanded(
-            child: OnboardingIntroScreen(
-              illustration: 'assets/illustrations/onboarding_intro/cover_page_1.png',
-              titleBlack: OnboardingStrings.introPage1TitleBlack,
-              titleOrange: OnboardingStrings.introPage2TitleOrange,
-              message: OnboardingStrings.introPage1Message,
-            ),
-          ),
-          PageViewController(
-            currentPage: 0,
-            pageCount: 6,
-            back: () {},
-            next: () {},
-            nextText: 'Next',
-            backText: 'Sign Out',
-          ),
-        ],
-      ),
+    return Router(
+      routerDelegate: ref.watch(onboardingRouterDelegateProvider),
+      backButtonDispatcher: _backButtonDispatcher,
     );
   }
 }

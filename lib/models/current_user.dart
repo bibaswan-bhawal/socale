@@ -25,3 +25,5 @@ class CurrentUser extends User {
     return 'Id Token: ${_idToken?.raw}\nAccess Token: ${_accessToken?.raw}\nRefreshToken: $_refreshToken';
   }
 }
+
+CurrentUser currentUser = CurrentUser();

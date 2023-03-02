@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:socale/components/backgrounds/launch_background.dart';
 import 'package:socale/utils/size_config.dart';
 import 'package:socale/utils/system_ui.dart';
 
@@ -28,16 +29,7 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
       backgroundColor: Colors.transparent,
       body: Stack(
         children: [
-          Positioned(
-            top: -1,
-            left: -1,
-            child: SvgPicture.asset(
-              'assets/background/launch_background.svg',
-              width: size.width,
-              height: size.height + 1,
-              fit: BoxFit.fill,
-            ),
-          ),
+          const LaunchBackground(),
           Center(
             child: SvgPicture.asset(
               'assets/logo/white_logo.svg',
