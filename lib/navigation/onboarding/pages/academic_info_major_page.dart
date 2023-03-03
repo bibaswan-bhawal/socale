@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:socale/navigation/onboarding/pages/onboarding_page.dart';
 import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
-import 'package:socale/screens/onboarding/basic_info_screen.dart';
+import 'package:socale/screens/onboarding/academic_info_major.dart';
 
-class BasicInfoPage extends OnboardingPage {
-  const BasicInfoPage({super.key = const ValueKey('basic_info_page')});
+class AcademicInfoMajorPage extends OnboardingPage {
+  const AcademicInfoMajorPage({super.key = const ValueKey('academic_info_major_page')});
 
   @override
-  get child => const BasicInfoScreen();
+  get child => const AcademicInfoMajorScreen();
 
   @override
   Route createRoute(BuildContext context) {

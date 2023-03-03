@@ -1,3 +1,4 @@
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,6 +9,7 @@ import 'package:socale/components/buttons/link_button.dart';
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
+import 'package:socale/models/current_user.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
@@ -88,18 +90,18 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
   }
 
   loginSuccessful() async {
-    final appState = ref.read(appStateProvider.notifier);
-    final currentUser = ref.read(currentUserProvider.notifier);
+    final CurrentUser currentUser = ref.read(currentUserProvider);
 
-    final tokens = await AuthService.getAuthTokens();
+    final (JsonWebToken idToken, JsonWebToken accessToken, String refreshToken) =
+        await AuthService.getAuthTokens();
 
     currentUser.setTokens(
-      idToken: tokens.$1,
-      accessToken: tokens.$2,
-      refreshToken: tokens.$3,
+      idToken: idToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
     );
 
-    appState.login();
+    ref.read(appStateProvider.notifier).login();
   }
 
   showSnackBar(String message) {

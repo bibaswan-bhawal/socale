@@ -1,50 +1,61 @@
 import 'package:flutter/cupertino.dart';
 import 'package:socale/models/onboarding_user.dart';
 import 'package:socale/navigation/onboarding/onboarding_route_path.dart';
+import 'package:socale/navigation/onboarding/pages/academic_info_major_page.dart';
+import 'package:socale/navigation/onboarding/pages/academic_info_minor_page.dart';
 import 'package:socale/navigation/onboarding/pages/basic_info_page.dart';
 import 'package:socale/navigation/onboarding/pages/intro_page_one.dart';
 import 'package:socale/navigation/onboarding/pages/intro_page_three.dart';
 import 'package:socale/navigation/onboarding/pages/intro_page_two.dart';
+import 'package:socale/navigation/onboarding/pages/onboarding_page.dart';
+import 'package:socale/screens/onboarding/onboarding_screen.dart';
 
-class OnboardingRouterDelegate extends RouterDelegate<OnboardingRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<OnboardingRoutePath> {
+class OnboardingRouterDelegate extends RouterDelegate<OnboardingRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<OnboardingRoutePath> {
   @override
   GlobalKey<NavigatorState>? navigatorKey;
 
   final HeroController heroController = HeroController();
   final OnboardingUser onboardingUser = OnboardingUser();
 
-  late List<Page> pages;
+  late List<OnboardingPage> pages = [
+    const IntroPageOne(),
+    const IntroPageTwo(),
+    const IntroPageThree(),
+    const BasicInfoPage(),
+    const AcademicInfoMajorPage(),
+    const AcademicInfoMinorPage(),
+  ];
 
   int currentPage = 0;
 
-  OnboardingRouterDelegate() {
-    navigatorKey = GlobalKey<NavigatorState>();
+  OnboardingRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>();
 
-    pages = [
-      const IntroPageOne(),
-      const IntroPageTwo(),
-      const IntroPageThree(),
-      const BasicInfoPage(),
-    ];
-  }
+  void nextPage() async {
+    var screens = OnboardingScreen.allOnboardingScreens(navigatorKey!.currentContext!);
+    OnboardingScreenState currentState = screens.last;
 
-  void nextPage() {
-    if (onboardingUser.currentStep == pages.length - 1) return;
-    onboardingUser.nextStep();
+    if (!(await currentState.onNext())) return;
+
+    currentPage = (currentPage + 1).clamp(0, pages.length - 1);
     notifyListeners();
   }
 
-  void previousPage() {
-    if (onboardingUser.currentStep == 0) return;
-    onboardingUser.previousStep();
+  void previousPage() async {
+    var screens = OnboardingScreen.allOnboardingScreens(navigatorKey!.currentContext!);
+    OnboardingScreenState currentState = screens.last;
+
+    if (!(await currentState.onBack())) return;
+
+    currentPage = (currentPage - 1).clamp(0, pages.length - 1);
     notifyListeners();
   }
 
   List<Page> buildPageList() {
     List<Page> pagesToAdd = [];
 
-    for (int page = 0; page <= onboardingUser.currentStep; page++) {
-      pagesToAdd.add(pages[page]);
+    for (int i = 0; i <= currentPage; i++) {
+      pagesToAdd.add(pages[i]);
     }
 
     return pagesToAdd;

@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:socale/navigation/onboarding/pages/onboarding_page.dart';
 import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
 import 'package:socale/screens/onboarding/onboarding_intro_screen.dart';
 import 'package:socale/screens/onboarding/onboarding_strings.dart';
 
-class IntroPageTwo extends Page {
-  final Widget child = const OnboardingIntroScreen(
-    illustration: 'assets/illustrations/onboarding_intro/cover_page_2.png',
-    titleBlack: OnboardingStrings.introPage2TitleBlack,
-    titleOrange: OnboardingStrings.introPage2TitleOrange,
-    message: OnboardingStrings.introPage2Message,
-  );
-
+class IntroPageTwo extends OnboardingPage {
   const IntroPageTwo({super.key = const ValueKey('intro_page_two')});
+
+  @override
+  get child => const OnboardingIntroScreen(
+        illustration: 'assets/illustrations/onboarding_intro/cover_page_2.png',
+        titleBlack: OnboardingStrings.introPage2TitleBlack,
+        titleOrange: OnboardingStrings.introPage2TitleOrange,
+        message: OnboardingStrings.introPage2Message,
+      );
 
   @override
   Route createRoute(BuildContext context) {

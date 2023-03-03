@@ -95,7 +95,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(() {
-        Overlay.of(context).setState(() {});
+        Overlay.of(context, rootOverlay: true).setState(() {});
       })
       ..addStatusListener((status) {
         if (status == AnimationStatus.dismissed) {
@@ -190,7 +190,9 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
           .chain(CurveTween(curve: emphasized));
 
   void createOverlay() {
-    OverlayState overlayState = Overlay.of(context);
+    context.findAncestorWidgetOfExactType<Navigator>();
+
+    OverlayState overlayState = Overlay.of(context, rootOverlay: true);
     RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     Offset offset = renderBox!.localToGlobal(Offset.zero);
 

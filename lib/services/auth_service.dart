@@ -45,7 +45,7 @@ class AuthService {
     }
   }
 
-  static getAuthTokens() async {
+  static Future<(JsonWebToken, JsonWebToken, String)> getAuthTokens() async {
     CognitoAuthSession authSession = await Amplify.Auth.fetchAuthSession() as CognitoAuthSession;
     final authTokens = authSession.userPoolTokensResult.value;
 
