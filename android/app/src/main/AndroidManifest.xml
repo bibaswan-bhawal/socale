@@ -7,6 +7,9 @@
         android:name="android.permission.POST_NOTIFICATIONS"/>
     <uses-permission
         android:name="android.permission.VIBRATE"/>
+
+    <uses-feature android:name="android.hardware.screen.portrait"/>
+
     <application
         android:label="Socale"
         android:icon="@mipmap/ic_launcher"
