@@ -1,4 +1,8 @@
+import 'package:socale/models/college.dart';
+
 class OnboardingUser {
+  College? college;
+
   String? firstName;
   String? lastName;
 
@@ -8,17 +12,15 @@ class OnboardingUser {
   List<String>? majors;
   List<String>? minors;
 
-  int _currentStep = 0;
-
-  int get currentStep => _currentStep;
-
-  nextStep() {
-    _currentStep = currentStep + 1;
-  }
-
-  previousStep() {
-    _currentStep = currentStep - 1;
-  }
-
   OnboardingUser();
+
+  @override
+  String toString() {
+    return 'name: $firstName $lastName, '
+        'college $college, '
+        'dateOfBirth: ${dateOfBirth?.toLocal()}, '
+        'grad date: ${graduationDate?.toLocal()}, '
+        'Majors: $majors, '
+        'Minors: $minors';
+  }
 }

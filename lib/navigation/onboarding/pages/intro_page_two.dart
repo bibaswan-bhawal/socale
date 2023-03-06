@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:socale/navigation/onboarding/pages/onboarding_page.dart';
 import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
-import 'package:socale/screens/onboarding/onboarding_intro_screen.dart';
-import 'package:socale/screens/onboarding/onboarding_strings.dart';
+import 'package:socale/screens/onboarding/introduction/onboarding_intro_screen.dart';
+import 'package:socale/screens/onboarding/assets/onboarding_strings.dart';
 
 class IntroPageTwo extends OnboardingPage {
   const IntroPageTwo({super.key = const ValueKey('intro_page_two')});
 
   @override
   get child => const OnboardingIntroScreen(
-        illustration: 'assets/illustrations/onboarding_intro/cover_page_2.png',
+        illustration: 'assets/illustrations/illustration_4.png',
         titleBlack: OnboardingStrings.introPage2TitleBlack,
         titleOrange: OnboardingStrings.introPage2TitleOrange,
         message: OnboardingStrings.introPage2Message,

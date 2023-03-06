@@ -3,55 +3,59 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/cards/chip_card_form_field.dart';
 import 'package:socale/options/majors/ucsd_majors.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 
-class AcademicInfoMajorScreen extends OnboardingScreen {
-  const AcademicInfoMajorScreen({Key? key}) : super(key: key);
+class AcademicInfoMinorScreen extends OnboardingScreen {
+  const AcademicInfoMinorScreen({Key? key}) : super(key: key);
 
   @override
-  OnboardingScreenState createState() => _AcademicInfoMajorScreenState();
+  OnboardingScreenState createState() => _AcademicInfoMinorScreenState();
 }
 
-class _AcademicInfoMajorScreenState extends OnboardingScreenState {
-  GlobalKey<FormState> majorFormKey = GlobalKey<FormState>();
+class _AcademicInfoMinorScreenState extends OnboardingScreenState {
+  GlobalKey<FormState> minorFormKey = GlobalKey<FormState>();
 
-  List<String>? majors = [];
+  List<String>? minors = [];
 
-  saveMajors(List<String>? value) => majors = value;
+  saveMinors(List<String>? value) => minors = value;
 
   @override
   void initState() {
     super.initState();
 
-    final onboardingUser = ref.read(onboardingRouterDelegateProvider).onboardingUser;
-    majors = onboardingUser.majors ?? [];
+    final onboardingUser = ref.read(onboardingUserProvider);
+    minors = onboardingUser.minors ?? [];
   }
 
-  bool validateMajor() {
-    final form = majorFormKey.currentState!;
+  bool validateMinor() {
+    final form = minorFormKey.currentState!;
 
-    if (form.validate()) return saveMajor();
+    if (form.validate()) return saveMinor();
 
     return false;
   }
 
-  bool saveMajor() {
-    final form = majorFormKey.currentState!;
+  saveMinor() {
+    final form = minorFormKey.currentState!;
+
     form.save();
 
-    final onboardingUser = ref.read(onboardingRouterDelegateProvider).onboardingUser;
+    final onboardingUser = ref.read(onboardingUserProvider);
 
-    onboardingUser.majors = majors;
-    return true;
+    onboardingUser.minors = minors;
+
+    ref.read(onboardingUserProvider.notifier).dispose();
+    return false;
   }
 
   @override
-  Future<bool> onBack() async => saveMajor();
+  Future<bool> onBack() async => saveMinor();
 
   @override
-  Future<bool> onNext() async => validateMajor();
+  Future<bool> onNext() async => validateMinor();
 
   @override
   Widget build(BuildContext context) {
@@ -64,15 +68,15 @@ class _AcademicInfoMajorScreenState extends OnboardingScreenState {
           ),
         ),
         Form(
-          key: majorFormKey,
+          key: minorFormKey,
           child: ChipCardFormField(
-            emptyMessage: 'Add your major',
-            searchHint: 'Search for your major',
+            emptyMessage: 'Add your Minor',
+            searchHint: 'Search for your Minor',
             height: 160,
             horizontalPadding: 30,
             options: ucsdMajors,
-            initialValue: majors,
-            onSaved: saveMajors,
+            initialValue: minors,
+            onSaved: saveMinors,
           ),
         ),
       ],
@@ -119,10 +123,7 @@ class _Header extends StatelessWidget {
                   ).createShader(bounds),
                   child: Text(
                     'classmates',
-                    style: GoogleFonts.poppins(
-                        fontSize: size.width * 0.058,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                    style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ),
@@ -131,7 +132,7 @@ class _Header extends StatelessWidget {
         ),
         Expanded(
           child: Center(
-            child: Image.asset('assets/illustrations/onboarding_intro/cover_page_4.png'),
+            child: Image.asset('assets/illustrations/illustration_2.png'),
           ),
         ),
       ],

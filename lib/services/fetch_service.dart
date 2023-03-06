@@ -4,6 +4,4 @@ class FetchService {
   ProviderRef ref;
 
   FetchService(this.ref);
-
-
 }

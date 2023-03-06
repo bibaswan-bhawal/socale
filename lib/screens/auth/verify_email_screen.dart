@@ -104,7 +104,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         children: [
           Expanded(
             child: Center(
-              child: Image.asset('assets/illustrations/verify_email/cover_illustration.png'),
+              child: Image.asset('assets/illustrations/illustration_8.png'),
             ),
           ),
           SimpleShadow(

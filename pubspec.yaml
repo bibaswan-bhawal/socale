@@ -63,10 +63,7 @@ flutter:
   assets:
     - assets/logo/
     - assets/icons/
-    - assets/illustrations/get_started/
-    - assets/illustrations/forgot_password/
-    - assets/illustrations/verify_email/
-    - assets/illustrations/onboarding_intro/
+    - assets/illustrations/
     - assets/background/
     - assets/animations/icons/
     - assets/fonts/poppins/

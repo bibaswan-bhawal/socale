@@ -72,7 +72,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen>
               child: Transform.translate(
                 offset: Offset(0, ((size.height * 0.04) * (animation.value - 0.5))),
                 child: Center(
-                  child: Image.asset('assets/illustrations/get_started/cover_illustration.png'),
+                  child: Image.asset('assets/illustrations/illustration_1.png'),
                 ),
               ),
             ),

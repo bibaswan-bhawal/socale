@@ -10,13 +10,11 @@ import 'package:socale/navigation/onboarding/pages/intro_page_two.dart';
 import 'package:socale/navigation/onboarding/pages/onboarding_page.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
 
-class OnboardingRouterDelegate extends RouterDelegate<OnboardingRoutePath>
-    with ChangeNotifier, PopNavigatorRouterDelegateMixin<OnboardingRoutePath> {
+class OnboardingRouterDelegate extends RouterDelegate<OnboardingRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<OnboardingRoutePath> {
   @override
   GlobalKey<NavigatorState>? navigatorKey;
 
   final HeroController heroController = HeroController();
-  final OnboardingUser onboardingUser = OnboardingUser();
 
   late List<OnboardingPage> pages = [
     const IntroPageOne(),
@@ -51,6 +49,10 @@ class OnboardingRouterDelegate extends RouterDelegate<OnboardingRoutePath>
     notifyListeners();
   }
 
+  bool isLast() {
+    return currentPage == pages.length - 1;
+  }
+
   List<Page> buildPageList() {
     List<Page> pagesToAdd = [];
 
@@ -70,7 +72,7 @@ class OnboardingRouterDelegate extends RouterDelegate<OnboardingRoutePath>
       onPopPage: (route, result) {
         if (!route.didPop(result)) return false;
 
-        onboardingUser.previousStep();
+        previousPage();
 
         return true;
       },

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:socale/navigation/onboarding/pages/onboarding_page.dart';
 import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
-import 'package:socale/screens/onboarding/academic_info_minor.dart';
+import 'package:socale/screens/onboarding/academic_info/academic_info_minor.dart';
 
 class AcademicInfoMinorPage extends OnboardingPage {
   const AcademicInfoMinorPage({super.key = const ValueKey('academic_info_minor_page')});

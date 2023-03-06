@@ -5,6 +5,7 @@ import 'package:socale/components/text_fields/form_fields/date_input_form_field.
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_fields/date_input_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/onboarding/onboarding_screen.dart';
@@ -52,7 +53,7 @@ class _BasicInfoScreenState extends OnboardingScreenState {
     final dobForm = dobFormKey.currentState!;
     final graduationDateForm = graduationDateFormKey.currentState!;
 
-    final onboardingUser = ref.read(onboardingRouterDelegateProvider).onboardingUser;
+    final onboardingUser = ref.read(onboardingUserProvider);
 
     setState(() => nameErrorMessage = null);
 
@@ -77,8 +78,7 @@ class _BasicInfoScreenState extends OnboardingScreenState {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    final onboardingUser =
-        ref.watch(onboardingRouterDelegateProvider.select((delegate) => delegate.onboardingUser));
+    final onboardingUser = ref.watch(onboardingUserProvider);
 
     return Column(
       children: [
@@ -110,10 +110,7 @@ class _BasicInfoScreenState extends OnboardingScreenState {
                       ).createShader(bounds),
                       child: Text(
                         'know',
-                        style: GoogleFonts.poppins(
-                            fontSize: size.width * 0.058,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white),
+                        style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ],
@@ -199,8 +196,7 @@ class _BasicInfoScreenState extends OnboardingScreenState {
               children: [
                 DateInputFormField(
                   dateMode: DatePickerDateMode.monthYear,
-                  initialDate:
-                      onboardingUser.graduationDate ?? DateTime(DateTime.now().year, DateTime.june),
+                  initialDate: onboardingUser.graduationDate ?? DateTime(DateTime.now().year, DateTime.june),
                   minimumDate: DateTime(1960),
                   maximumDate: DateTime(2100, DateTime.june),
                   onSaved: saveGraduationDate,

@@ -33,10 +33,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
   PageController pageController = PageController();
 
   List<String> buttonText = ['Send Code', 'Confirm Code', 'Change Password', 'Login'];
-  List<LinearGradient> buttonBackground = [
-    ColorValues.blackButtonGradient,
-    ColorValues.orangeButtonGradient
-  ];
+  List<LinearGradient> buttonBackground = [ColorValues.blackButtonGradient, ColorValues.orangeButtonGradient];
 
   String? errorEmailMessage;
   String? errorPasswordMessage;
@@ -64,8 +61,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
 
     setState(() => pageIndex--);
 
-    pageController.animateToPage(pageIndex,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
 
     return false;
   }
@@ -86,8 +82,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         emailForm.save();
         AuthService.sendResetPasswordCode(email);
         setState(() => pageIndex++);
-        pageController.animateToPage(pageIndex,
-            duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       } else {
         setState(() => errorEmailMessage = 'Enter a valid email');
         return;
@@ -126,16 +121,13 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         try {
           await AuthService.confirmResetPassword(email, password, code);
         } on CodeMismatchException catch (_) {
-          const snackBar =
-              SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
+          const snackBar = SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
           setState(() => isLoading = false);
           return;
         } catch (_) {
-          const snackBar = SnackBar(
-              content: Text('Something went wrong try again in a few minutes.',
-                  textAlign: TextAlign.center));
+          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
           setState(() => isLoading = false);
@@ -161,8 +153,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
     }
 
     setState(() => pageIndex++);
-    pageController.animateToPage(pageIndex,
-        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -182,11 +173,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Visibility(
-                      visible: pageIndex != 10,
+                      visible: pageIndex != 3,
+                      maintainSize: true,
+                      maintainAnimation: true,
+                      maintainState: true,
                       child: Padding(
                         padding: EdgeInsets.only(
                           left: 30,
-                          top: 30 + MediaQuery.of(context).viewPadding.top,
+                          top: 50 + MediaQuery.of(context).viewPadding.top,
                         ),
                         child: SizedBox(
                           width: 24,
@@ -202,14 +196,14 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                     ),
                     Expanded(
                       child: Center(
-                        child: Image.asset(
-                            'assets/illustrations/forgot_password/cover_illustration.png'),
+                        child: Image.asset('assets/illustrations/illustration_7.png'),
                       ),
                     ),
                     SizedBox(
                       height: 248,
                       child: PageView(
                         controller: pageController,
+                        physics: const NeverScrollableScrollPhysics(),
                         children: [
                           Column(
                             mainAxisAlignment: MainAxisAlignment.center,
@@ -497,8 +491,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(
-                          top: 10, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+                      padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
                       child: ActionGroup(
                         actions: [
                           GradientButton(

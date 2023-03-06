@@ -14,18 +14,15 @@ class PageIndicator extends StatelessWidget {
 
     for (int i = 0; i < totalPages; i++) {
       dots.add(
-        Container(
+        AnimatedContainer(
           margin: const EdgeInsets.symmetric(horizontal: 8),
           height: 12,
           width: 12,
+          duration: const Duration(milliseconds: 200),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(6),
-            gradient: selectedPage == i
-                ? ColorValues.orangeButtonGradient
-                : ColorValues.transparentGradient,
-            border: selectedPage != i
-                ? Border.all(color: const Color(0xFF000000), width: 1.5)
-                : Border.all(color: const Color(0x00000000), width: 0),
+            gradient: selectedPage == i ? ColorValues.orangeButtonGradient : ColorValues.transparentGradient,
+            border: selectedPage != i ? Border.all(color: const Color(0xFF000000), width: 1.5) : Border.all(color: const Color(0x00000000), width: 0),
           ),
         ),
       );
