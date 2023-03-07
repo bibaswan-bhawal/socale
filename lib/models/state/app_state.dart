@@ -1,40 +1,81 @@
 class AppState {
-  final bool _isAmplifyConfigured;
-  final bool _isLocalDBConfigured;
+  final bool isAmplifyConfigured;
+  final bool isLocalDBConfigured;
 
-  final bool _isLoggedIn;
+  final bool attemptAutoLogin;
+  final bool attemptAutoOnboard;
+
+  final bool isLoggedIn;
+
+  final bool isOnboarded;
 
   AppState({
-    isAmplifyConfigured = false,
-    isLocalDBConfigured = false,
-    isLoggedIn = false,
-    bool? isInitialized,
-  })  : _isLocalDBConfigured = isInitialized ?? isLocalDBConfigured,
-        _isAmplifyConfigured = isInitialized ?? isAmplifyConfigured,
-        _isLoggedIn = isLoggedIn;
+    this.isAmplifyConfigured = false,
+    this.isLocalDBConfigured = false,
+    this.attemptAutoLogin = false,
+    this.attemptAutoOnboard = false,
+    this.isLoggedIn = false,
+    this.isOnboarded = false,
+  });
 
-  AppState updateState({bool? isAmplifyConfigured, bool? isLocalDBConfigured, bool? isLoggedIn}) {
-    return AppState(
-      isAmplifyConfigured: isAmplifyConfigured ?? _isAmplifyConfigured,
-      isLocalDBConfigured: isLocalDBConfigured ?? _isLocalDBConfigured,
-      isLoggedIn: isLoggedIn ?? this.isLoggedIn,
-    );
+  bool get isInitialized {
+    bool isInitialized = false;
+    if (isAmplifyConfigured && isLocalDBConfigured && attemptAutoLogin) isInitialized = true;
+
+    if (attemptAutoLogin && isLoggedIn) {
+      if (!attemptAutoOnboard) {
+        isInitialized = false;
+      }
+    }
+
+    return isInitialized;
   }
 
-  bool get isInitialized => _isAmplifyConfigured && _isLocalDBConfigured;
-  bool get isLoggedIn => _isLoggedIn;
+  AppState copyWith({
+    bool? isAmplifyConfigured,
+    bool? isLocalDBConfigured,
+    bool? attemptAutoLogin,
+    bool? attemptAutoOnboard,
+    bool? isLoggedIn,
+    bool? isOnboarded,
+  }) =>
+      AppState(
+        isAmplifyConfigured: isAmplifyConfigured ?? this.isAmplifyConfigured,
+        isLocalDBConfigured: isLocalDBConfigured ?? this.isLocalDBConfigured,
+        attemptAutoLogin: attemptAutoLogin ?? this.attemptAutoLogin,
+        attemptAutoOnboard: attemptAutoOnboard ?? this.attemptAutoOnboard,
+        isLoggedIn: isLoggedIn ?? this.isLoggedIn,
+        isOnboarded: isOnboarded ?? this.isOnboarded,
+      );
 
   @override
   String toString() {
-    return 'AppState(amplify: $_isAmplifyConfigured, local db: $_isLocalDBConfigured, logged in: $_isLoggedIn)';
+    return 'AppState{isAmplifyConfigured: $isAmplifyConfigured,'
+        ' isLocalDBConfigured: $isLocalDBConfigured,'
+        ' attemptAutoLogin: $attemptAutoLogin,'
+        ' attemptAutoOnboard: $attemptAutoOnboard,'
+        ' isLoggedIn: $isLoggedIn,'
+        ' isOnboarded: $isOnboarded}';
   }
 
   @override
   bool operator ==(Object other) =>
       identical(this, other) ||
-      other is AppState && other.isInitialized == isInitialized && other.isLoggedIn == isLoggedIn;
+      other is AppState &&
+          runtimeType == other.runtimeType &&
+          isAmplifyConfigured == other.isAmplifyConfigured &&
+          isLocalDBConfigured == other.isLocalDBConfigured &&
+          attemptAutoLogin == other.attemptAutoLogin &&
+          attemptAutoOnboard == other.attemptAutoOnboard &&
+          isLoggedIn == other.isLoggedIn &&
+          isOnboarded == other.isOnboarded;
 
   @override
   int get hashCode =>
-      Object.hash(super.hashCode, _isAmplifyConfigured, _isLocalDBConfigured, _isLoggedIn);
+      isAmplifyConfigured.hashCode ^
+      isLocalDBConfigured.hashCode ^
+      attemptAutoLogin.hashCode ^
+      attemptAutoOnboard.hashCode ^
+      isLoggedIn.hashCode ^
+      isOnboarded.hashCode;
 }

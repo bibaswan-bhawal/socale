@@ -10,7 +10,7 @@ class OutlineButton extends Button {
     required super.text,
     required super.onPressed,
     this.isLoading = false,
-  });
+  }) : assert(text != null);
 
   @override
   Widget build(BuildContext context) {
@@ -55,7 +55,7 @@ class OutlineButton extends Button {
                     ),
                     child: Center(
                       child: Text(
-                        super.text,
+                        super.text!,
                         style: GoogleFonts.roboto(
                           color: Colors.black,
                           fontWeight: FontWeight.bold,

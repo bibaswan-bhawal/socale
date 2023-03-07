@@ -12,7 +12,7 @@ class GradientButton extends Button {
     required super.onPressed,
     required this.linearGradient,
     this.isLoading = false,
-  });
+  }) : assert(text != null);
 
   @override
   Widget build(BuildContext context) {
@@ -61,7 +61,7 @@ class GradientButton extends Button {
                       width: constraints.maxWidth,
                       child: Center(
                         child: Text(
-                          super.text,
+                          super.text!,
                           style: GoogleFonts.roboto(
                             color: Colors.white,
                             fontWeight: FontWeight.bold,

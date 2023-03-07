@@ -1,5 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
@@ -9,19 +10,19 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/components/utils/screen_safe_area.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
-import 'package:socale/services/auth_service.dart';
 import 'package:socale/utils/validators.dart';
 
-class ForgotPasswordScreen extends StatefulWidget {
+class ForgotPasswordScreen extends ConsumerStatefulWidget {
   const ForgotPasswordScreen({Key? key}) : super(key: key);
 
   @override
-  State<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
+  ConsumerState<ForgotPasswordScreen> createState() => _ForgotPasswordScreenState();
 }
 
-class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
+class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   GlobalKey<FormState> formEmailKey = GlobalKey<FormState>();
   GlobalKey<FormState> formPinCodeKey = GlobalKey<FormState>();
   GlobalKey<FormState> formPasswordKey = GlobalKey<FormState>();
@@ -80,7 +81,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         setState(() => errorEmailMessage = null);
 
         emailForm.save();
-        AuthService.sendResetPasswordCode(email);
+        ref.read(authServiceProvider).sendResetPasswordCode(email);
         setState(() => pageIndex++);
         pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
       } else {
@@ -119,7 +120,7 @@ class _ForgotPasswordScreenState extends State<ForgotPasswordScreen> {
         }
 
         try {
-          await AuthService.confirmResetPassword(email, password, code);
+          await ref.read(authServiceProvider).confirmResetPassword(email, password, code);
         } on CodeMismatchException catch (_) {
           const snackBar = SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);

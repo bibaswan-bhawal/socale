@@ -1,26 +1,93 @@
+import 'package:flutter/material.dart';
 import 'package:socale/models/college.dart';
 
+@immutable
 class OnboardingUser {
-  College? college;
+  final College? college;
 
-  String? firstName;
-  String? lastName;
+  final String? email;
+  final String? collegeEmail;
 
-  DateTime? dateOfBirth;
-  DateTime? graduationDate;
+  final String? firstName;
+  final String? lastName;
 
-  List<String>? majors;
-  List<String>? minors;
+  final DateTime? dateOfBirth;
+  final DateTime? graduationDate;
 
-  OnboardingUser();
+  final List<String>? majors;
+  final List<String>? minors;
+
+  const OnboardingUser({
+    this.college,
+    this.email,
+    this.collegeEmail,
+    this.firstName,
+    this.lastName,
+    this.dateOfBirth,
+    this.graduationDate,
+    this.majors,
+    this.minors,
+  });
+
+  copyWith({
+    String? email,
+    College? college,
+    String? collegeEmail,
+    String? firstName,
+    String? lastName,
+    DateTime? dateOfBirth,
+    DateTime? graduationDate,
+    List<String>? majors,
+    List<String>? minors,
+  }) {
+    return OnboardingUser(
+      college: college ?? this.college,
+      email: email ?? this.email,
+      collegeEmail: collegeEmail ?? this.collegeEmail,
+      firstName: firstName ?? this.firstName,
+      lastName: lastName ?? this.lastName,
+      dateOfBirth: dateOfBirth ?? this.dateOfBirth,
+      graduationDate: graduationDate ?? this.graduationDate,
+      majors: majors ?? this.majors,
+      minors: minors ?? this.minors,
+    );
+  }
 
   @override
   String toString() {
-    return 'name: $firstName $lastName, '
-        'college $college, '
-        'dateOfBirth: ${dateOfBirth?.toLocal()}, '
-        'grad date: ${graduationDate?.toLocal()}, '
-        'Majors: $majors, '
+    return 'name: $firstName $lastName\n'
+        'college $college\n'
+        'college Email: $collegeEmail\n'
+        'dateOfBirth: ${dateOfBirth?.toLocal()}\n'
+        'grad date: ${graduationDate?.toLocal()}\n'
+        'Majors: $majors\n'
         'Minors: $minors';
   }
+
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is OnboardingUser &&
+          runtimeType == other.runtimeType &&
+          college == other.college &&
+          email == other.email &&
+          collegeEmail == other.collegeEmail &&
+          firstName == other.firstName &&
+          lastName == other.lastName &&
+          dateOfBirth == other.dateOfBirth &&
+          graduationDate == other.graduationDate &&
+          majors == other.majors &&
+          minors == other.minors;
+
+  @override
+  int get hashCode =>
+      college.hashCode ^
+      email.hashCode ^
+      collegeEmail.hashCode ^
+      firstName.hashCode ^
+      lastName.hashCode ^
+      dateOfBirth.hashCode ^
+      graduationDate.hashCode ^
+      majors.hashCode ^
+      minors.hashCode;
 }

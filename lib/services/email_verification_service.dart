@@ -8,33 +8,32 @@ import 'package:socale/models/college.dart';
 import 'package:socale/providers/model_providers.dart';
 
 class EmailVerificationService {
-  AutoDisposeProviderRef ref;
+  final AutoDisposeProviderRef ref;
 
-  KeepAliveLink? disposeLink;
+  late KeepAliveLink disposeLink;
+  late String apiHost;
 
   int? otp;
   String? email;
 
   EmailVerificationService(this.ref) {
     disposeLink = ref.keepAlive();
+    apiHost = const String.fromEnvironment('BACKEND_URL');
   }
 
   Future<bool> sendCode(String email) async {
-    otp = Random().nextInt(1000000 - 10000) + 100000;
+    otp = Random().nextInt(1000000 - 100000) + 100000; // generate 6 digit random code
     this.email = email;
 
     JsonWebToken idToken = ref.read(currentUserProvider).idToken;
-
     final response = await http.get(
-      Uri.parse('${const String.fromEnvironment("BACKEND_URL")}/send_college_verification_email'),
+      Uri.parse('$apiHost/api/send_college_verify_email'),
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
         'email': email,
         'code': otp.toString(),
       },
     );
-
-    print(response.statusCode);
 
     if (response.statusCode == 200) return true;
     return false;
@@ -49,7 +48,7 @@ class EmailVerificationService {
     JsonWebToken idToken = ref.read(currentUserProvider).idToken;
 
     final response = await http.get(
-      Uri.parse('${const String.fromEnvironment("BACKEND_URL")}/get_college_name'),
+      Uri.parse('$apiHost/api/verify_college_email'),
       headers: {
         HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
         'email': email,
@@ -68,6 +67,6 @@ class EmailVerificationService {
   }
 
   dispose() {
-    disposeLink?.close();
+    disposeLink.close();
   }
 }

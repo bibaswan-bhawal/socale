@@ -1,0 +1,7 @@
+export 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/academic_info_pages/academic_info_major_page.dart';
+export 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/academic_info_pages/academic_info_minor_page.dart';
+export 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/basic_info_pages/basic_info_page.dart';
+export 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/intro_pages/intro_page_one.dart';
+export 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/intro_pages/intro_page_three.dart';
+export 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/intro_pages/intro_page_two.dart';
+export 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/onboarding_page_interface.dart';

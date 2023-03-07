@@ -3,17 +3,14 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/navigation/transitions/curves.dart';
-import 'package:socale/providers/state_providers.dart';
+import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/onboarding/verify_college/verify_college_code_page.dart';
 import 'package:socale/screens/onboarding/verify_college/verify_college_email_page.dart';
-import 'package:socale/services/auth_service.dart';
-import 'package:socale/services/email_verification_service.dart';
 
 class VerifyCollegeScreen extends ConsumerStatefulWidget {
-  final Function() onComplete;
-
-  const VerifyCollegeScreen({super.key, required this.onComplete});
+  const VerifyCollegeScreen({super.key});
 
   @override
   ConsumerState<VerifyCollegeScreen> createState() => _VerifyCollegeScreenState();
@@ -26,33 +23,24 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
 
   int currentPage = 0;
 
+  saveEmail(String? email) => setState(() => this.email = email);
+
   next() {
+    // user verified as student
     if (pageController.page == 1) {
-      widget.onComplete();
+      ref.read(onboardingUserProvider.notifier).setCollegeEmail(collegeEmail: email!);
     }
 
+    // go to code page
     pageController.nextPage(duration: const Duration(milliseconds: 500), curve: emphasized);
-    setState(() {
-      currentPage = (currentPage + 1).clamp(0, 1);
-    });
+    setState(() => currentPage = (currentPage + 1).clamp(0, 1));
   }
 
   back() {
-    if (currentPage == 0) {
-      AuthService.signOutUser();
-      ref.read(appStateProvider.notifier).signOut();
-      return;
-    }
+    if (currentPage == 0) return ref.read(authServiceProvider).signOutUser();
 
     pageController.previousPage(duration: const Duration(milliseconds: 500), curve: emphasized);
-
-    setState(() {
-      currentPage = (currentPage - 1).clamp(0, 1);
-    });
-  }
-
-  saveEmail(String? email) {
-    setState(() => this.email = email);
+    setState(() => currentPage = (currentPage - 1).clamp(0, 1));
   }
 
   @override

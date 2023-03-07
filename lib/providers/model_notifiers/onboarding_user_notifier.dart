@@ -6,15 +6,29 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
 
   AutoDisposeStateNotifierProviderRef ref;
 
-  OnboardingUserNotifier(this.ref) : super(OnboardingUser()) {
+  OnboardingUserNotifier(this.ref) : super(const OnboardingUser()) {
     disposeLink = ref.keepAlive();
   }
 
-  setCollege({college}) => state.college = college;
+  setCollege({college}) => state = state.copyWith(college: college);
 
-  @override
-  dispose() {
-    super.dispose();
+  setEmail({email}) => state = state.copyWith(email: email);
+
+  setCollegeEmail({collegeEmail}) => state = state.copyWith(collegeEmail: collegeEmail);
+
+  setFirstName({firstName}) => state = state.copyWith(firstName: firstName);
+
+  setLastName({lastName}) => state = state.copyWith(lastName: lastName);
+
+  setDateOfBirth({dateOfBirth}) => state = state.copyWith(dateOfBirth: dateOfBirth);
+
+  setGraduationDate({graduationDate}) => state = state.copyWith(graduationDate: graduationDate);
+
+  setMajors({majors}) => state = state.copyWith(majors: majors);
+
+  setMinors({minors}) => state = state.copyWith(minors: minors);
+
+  disposeState() {
     disposeLink?.close();
   }
 }

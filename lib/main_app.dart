@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/navigation/main/main_router_info_parser.dart';
+import 'package:socale/navigation/main_navigation/main_router_info_parser.dart';
 import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 

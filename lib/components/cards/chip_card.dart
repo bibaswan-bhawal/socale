@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/animations/fade_through_animation.dart';
+import 'package:socale/components/buttons/icon_button.dart';
 import 'package:socale/navigation/transitions/curves.dart';
 import 'package:socale/resources/colors.dart';
 
@@ -67,8 +68,9 @@ class _ChipContainerTransform extends StatefulWidget {
   State<_ChipContainerTransform> createState() => _ChipContainerTransformState();
 }
 
-class _ChipContainerTransformState extends State<_ChipContainerTransform>
-    with SingleTickerProviderStateMixin {
+class _ChipContainerTransformState extends State<_ChipContainerTransform> with SingleTickerProviderStateMixin {
+  GlobalKey<_SelectionMenuState> menuKey = GlobalKey<_SelectionMenuState>();
+
   OverlayEntry? overlay;
 
   late AnimationController controller;
@@ -94,20 +96,24 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
     );
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
-      ..addListener(() {
-        Overlay.of(context, rootOverlay: true).setState(() {});
-      })
-      ..addStatusListener((status) {
-        if (status == AnimationStatus.dismissed) {
-          setState(() => showMain = true);
-          overlay?.remove();
-          overlay = null;
-        } else {
-          setState(() => showMain = false);
-        }
-      });
+      ..addListener(animationListener)
+      ..addStatusListener(animationStatusListener);
 
     selectedOptions = widget.initialOptions;
+  }
+
+  animationListener() {
+    Overlay.of(context, rootOverlay: true).setState(() {});
+  }
+
+  animationStatusListener(status) {
+    if (status == AnimationStatus.dismissed) {
+      if (mounted) setState(() => showMain = true);
+      overlay?.remove();
+      overlay = null;
+    } else {
+      if (mounted) setState(() => showMain = false);
+    }
   }
 
   @override
@@ -116,18 +122,16 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
     super.dispose();
   }
 
-  Widget mainWidgetBuilder() {
+  Widget mainWidgetBuilder(double height) {
     return SizedBox(
-      height: widget.height,
+      height: height,
       width: double.infinity,
       child: GestureDetector(
         onTap: () => selectedOptions.isEmpty ? createOverlay() : null,
         child: _ChipContainer(
           onAdd: () => createOverlay(),
           child: selectedOptions.isEmpty
-              ? _ChipContentPlaceHolder(
-                  placeholderText: widget.placeholder,
-                )
+              ? _ChipContentPlaceHolder(placeholderText: widget.placeholder)
               : Padding(
                   padding: const EdgeInsets.only(left: 16, right: 36),
                   child: SingleChildScrollView(
@@ -166,37 +170,33 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
   }
 
   Widget secondaryWidgetBuilder() {
-    return _SelectionMenu(
-      onPressed: () => removeOverlay(),
-      searchHint: widget.searchHint,
-      options: widget.options,
-      selectedOptions: selectedOptions,
-      onChanged: setOptions,
+    return SizedBox(
+      height: MediaQuery.of(context).size.height,
+      width: MediaQuery.of(context).size.width,
+      child: _SelectionMenu(
+        onPressed: () => removeOverlay(),
+        searchHint: widget.searchHint,
+        options: widget.options,
+        selectedOptions: selectedOptions,
+        onChanged: setOptions,
+      ),
     );
   }
 
-  Animatable<double> getVOffsetAnimation(verticalOffset) =>
-      Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
+  Animatable<double> getVOffsetAnimation(verticalOffset) => Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get paddingAnimation =>
-      Tween<double>(begin: widget.horizontalPadding, end: 0).chain(CurveTween(curve: emphasized));
+  Animatable<double> get paddingAnimation => Tween<double>(begin: widget.horizontalPadding, end: 0).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get heightAnimation =>
-      Tween(begin: widget.height, end: MediaQuery.of(context).size.height)
-          .chain(CurveTween(curve: emphasized));
+  Animatable<double> get heightAnimation => Tween(begin: widget.height, end: MediaQuery.of(context).size.height).chain(CurveTween(curve: emphasized));
 
-  Animatable<Color?> get colorAnimation =>
-      ColorTween(begin: Colors.white.withOpacity(0), end: Colors.white)
-          .chain(CurveTween(curve: emphasized));
+  Animatable<double> get borderRadius => Tween(begin: 15.0, end: 2.0).chain(CurveTween(curve: emphasized));
+
+  Animatable<Color?> get borderColor => ColorTween(begin: Colors.black, end: Colors.transparent).chain(CurveTween(curve: emphasized));
 
   void createOverlay() {
-    context.findAncestorWidgetOfExactType<Navigator>();
-
     OverlayState overlayState = Overlay.of(context, rootOverlay: true);
     RenderBox? renderBox = context.findRenderObject() as RenderBox?;
     Offset offset = renderBox!.localToGlobal(Offset.zero);
-
-    controller.forward();
 
     overlay = OverlayEntry(
       builder: (context) => Positioned(
@@ -204,11 +204,11 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
         right: paddingAnimation.evaluate(animation),
         top: getVOffsetAnimation(offset.dy).evaluate(animation),
         child: Container(
-          color: colorAnimation.evaluate(animation),
-          height: heightAnimation.evaluate(animation),
+          color: Colors.white,
           child: FadeThroughAnimation(
             animation: animation,
-            first: mainWidgetBuilder(),
+            midPoint: 0.3,
+            first: mainWidgetBuilder(heightAnimation.evaluate(animation)),
             second: secondaryWidgetBuilder(),
           ),
         ),
@@ -216,22 +216,30 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
     );
 
     overlayState.insert(overlay!);
+    controller.forward();
   }
 
-  void removeOverlay() {
-    controller.reverse();
+  Future<void> removeOverlay() async {
+    await controller.reverse();
   }
 
   @override
   Widget build(BuildContext context) {
-    return Visibility(
-      visible: showMain,
-      maintainAnimation: true,
-      maintainState: true,
-      maintainSize: true,
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-        child: mainWidgetBuilder(),
+    return WillPopScope(
+      onWillPop: () async {
+        if (overlay == null) return true;
+        await removeOverlay();
+        return false;
+      },
+      child: Visibility(
+        visible: showMain,
+        maintainAnimation: true,
+        maintainState: true,
+        maintainSize: true,
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
+          child: mainWidgetBuilder(widget.height),
+        ),
       ),
     );
   }
@@ -368,9 +376,13 @@ class _SelectionMenuState extends State<_SelectionMenu> {
       chips.add(
         Chip(
           visualDensity: VisualDensity.compact,
-          padding: const EdgeInsets.all(8),
-          label: Text(selectedOptions[i]),
-          deleteIcon: const Icon(Icons.close, size: 18),
+          padding: const EdgeInsets.all(4),
+          label: Text(
+            selectedOptions[i],
+            style: GoogleFonts.roboto(
+              fontSize: 12,
+            ),
+          ),
           onDeleted: () {
             options.add(selectedOptions[i]);
             selectedOptions.removeAt(i);
@@ -383,35 +395,36 @@ class _SelectionMenuState extends State<_SelectionMenu> {
     return chips;
   }
 
-  Future<bool> onBack() async {
+  onBack() {
     widget.onChanged(selectedOptions);
     widget.onPressed();
-    return true;
+  }
+
+  onSave() {
+    widget.onChanged(selectedOptions);
+    widget.onPressed();
   }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: onBack,
-      child: Material(
+    return Material(
+      child: SizedBox(
+        height: MediaQuery.of(context).size.height,
+        width: MediaQuery.of(context).size.width,
         child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Padding(
               padding: EdgeInsets.only(
                 left: 20,
                 top: 10 + MediaQuery.of(context).padding.top,
+                right: 20,
               ),
               child: Row(
                 children: [
-                  SizedBox(
-                    width: 24,
-                    height: 24,
-                    child: InkResponse(
-                      radius: 20,
-                      splashFactory: InkRipple.splashFactory,
-                      onTap: onBack,
-                      child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
-                    ),
+                  RippleIconButton(
+                    icon: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.contain),
+                    onPressed: onBack,
                   ),
                   Expanded(
                     child: Padding(
@@ -429,13 +442,18 @@ class _SelectionMenuState extends State<_SelectionMenu> {
                       ),
                     ),
                   ),
+                  RippleIconButton(
+                    icon: SvgPicture.asset('assets/icons/check.svg', fit: BoxFit.contain),
+                    onPressed: onSave,
+                    size: const Size(28, 28),
+                  ),
                 ],
               ),
             ),
             if (selectedOptions.isNotEmpty)
               Container(
                 margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
-                width: double.infinity,
+                width: MediaQuery.of(context).size.width,
                 constraints: const BoxConstraints(maxHeight: 130),
                 child: SingleChildScrollView(
                   scrollDirection: Axis.vertical,
@@ -448,19 +466,25 @@ class _SelectionMenuState extends State<_SelectionMenu> {
                 ),
               ),
             Expanded(
-              child: ListView.separated(
-                padding: const EdgeInsets.only(top: 8),
-                itemCount: filteredOptions.length,
-                itemBuilder: (context, index) {
-                  return ListTile(
-                    dense: true,
-                    onTap: () => onSelected(index),
-                    title: Text(filteredOptions[index]),
-                  );
-                },
-                separatorBuilder: (BuildContext context, int index) {
-                  return const Divider(thickness: 0.4, height: 8);
-                },
+              child: ClipRect(
+                child: OverflowBox(
+                  maxWidth: MediaQuery.of(context).size.width,
+                  minWidth: MediaQuery.of(context).size.width,
+                  child: ListView.separated(
+                    padding: const EdgeInsets.only(top: 8),
+                    itemCount: filteredOptions.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        dense: true,
+                        onTap: () => onSelected(index),
+                        title: Text(filteredOptions[index]),
+                      );
+                    },
+                    separatorBuilder: (BuildContext context, int index) {
+                      return const Divider(thickness: 0.4, height: 8);
+                    },
+                  ),
+                ),
               ),
             )
           ],

@@ -1,10 +1,30 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/service_providers.dart';
+import 'package:socale/providers/state_providers.dart';
 import 'package:socale/types/auth/auth_result.dart';
 
 class AuthService {
-  static autoLoginUser() async {
+  ProviderRef ref;
+
+  AuthService(this.ref);
+
+  loginSuccessful(email) async {
+    final currentUser = ref.read(currentUserProvider.notifier);
+
+    final (JsonWebToken idToken, JsonWebToken accessToken, String refreshToken) =
+    await getAuthTokens();
+
+    currentUser.setEmail(email);
+    currentUser.setTokens(idToken: idToken, accessToken: accessToken, refreshToken: refreshToken);
+
+    await ref.read(onboardingServiceProvider).init(); // check if onboarded
+    ref.read(appStateProvider.notifier).setLoggedIn(); // logged in
+  }
+
+  autoLoginUser() async {
     try {
       final result = await Amplify.Auth.fetchAuthSession();
 
@@ -16,7 +36,7 @@ class AuthService {
     }
   }
 
-  static signUpUser(String email, String password) async {
+  signUpUser(String email, String password) async {
     try {
       await Amplify.Auth.signUp(username: email, password: password);
       return AuthFlowResult.unverified;
@@ -27,7 +47,7 @@ class AuthService {
     }
   }
 
-  static signInUser(String email, String password) async {
+  signInUser(String email, String password) async {
     try {
       final result = await Amplify.Auth.signIn(username: email, password: password);
 
@@ -45,7 +65,7 @@ class AuthService {
     }
   }
 
-  static Future<(JsonWebToken, JsonWebToken, String)> getAuthTokens() async {
+  Future<(JsonWebToken, JsonWebToken, String)> getAuthTokens() async {
     CognitoAuthSession authSession = await Amplify.Auth.fetchAuthSession() as CognitoAuthSession;
     final authTokens = authSession.userPoolTokensResult.value;
 
@@ -56,7 +76,7 @@ class AuthService {
     return (idToken, accessToken, refreshToken);
   }
 
-  static sendResetPasswordCode(String email) async {
+  sendResetPasswordCode(String email) async {
     try {
       final result = await Amplify.Auth.resetPassword(username: email);
       return result.isPasswordReset;
@@ -67,7 +87,7 @@ class AuthService {
     return false;
   }
 
-  static resendVerifyLink(String email) async {
+  resendVerifyLink(String email) async {
     try {
       await Amplify.Auth.resendSignUpCode(username: email);
       return true;
@@ -78,16 +98,15 @@ class AuthService {
     }
   }
 
-  static confirmResetPassword(String email, String newPassword, String code) async {
+  confirmResetPassword(String email, String newPassword, String code) async {
     await Amplify.Auth.confirmResetPassword(
         username: email, newPassword: newPassword, confirmationCode: code);
   }
 
-  static signOutUser() async {
+  signOutUser() async {
     try {
-      final prefs = await SharedPreferences.getInstance();
       await Amplify.Auth.signOut();
-      await prefs.setBool('isSignedIn', true);
+      ref.read(appStateProvider.notifier).setLoggedOut();
       return true;
     } on AuthException catch (_) {
       return false;

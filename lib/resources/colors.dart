@@ -55,7 +55,7 @@ class ColorValues {
       Color(0x0DE5CFA4),
       Color(0x0DEB7960),
     ],
-  ).lerpTo(const LinearGradient(colors: [Colors.white, Colors.white]), 0.95))!;
+  ).lerpTo(const LinearGradient(colors: [Colors.white, Colors.white]), 0.98))!;
 
   static const LinearGradient orangeBackgroundGradient = LinearGradient(
     begin: Alignment.bottomLeft,

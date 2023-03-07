@@ -1,4 +1,3 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -7,11 +6,9 @@ import 'package:socale/components/buttons/Action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/link_button.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
-import 'package:socale/models/current_user.dart';
-import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/services/auth_service.dart';
 import 'package:socale/types/auth/auth_result.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
@@ -41,7 +38,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   }
 
   void resendCode() async {
-    final sentSuccessfully = await AuthService.resendVerifyLink(_email);
+    final sentSuccessfully = await ref.read(authServiceProvider).resendVerifyLink(_email);
 
     if (sentSuccessfully) {
       showSnackBar('A new link as been sent to your email');
@@ -54,11 +51,11 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     if (!isLoading) {
       setState(() => isLoading = true);
 
-      final result = await AuthService.signInUser(_email, _password);
+      final result = await ref.read(authServiceProvider).signInUser(_email, _password);
 
       switch (result) {
         case AuthFlowResult.success:
-          loginSuccessful();
+          await ref.read(authServiceProvider).loginSuccessful(_email);
           return;
         case AuthFlowResult.unverified:
           showSnackBar('Your email is not verified yet.');
@@ -73,21 +70,6 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
       setState(() => isLoading = false);
     }
-  }
-
-  loginSuccessful() async {
-    final CurrentUser currentUser = ref.read(currentUserProvider);
-
-    final (JsonWebToken idToken, JsonWebToken accessToken, String refreshToken) =
-        await AuthService.getAuthTokens();
-
-    currentUser.setTokens(
-      idToken: idToken,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    );
-
-    ref.read(appStateProvider.notifier).login();
   }
 
   showSnackBar(String message) {
@@ -130,10 +112,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   ).createShader(bounds),
                   child: Text(
                     'email',
-                    style: GoogleFonts.poppins(
-                        fontSize: size.width * 0.058,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.white),
+                    style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ],

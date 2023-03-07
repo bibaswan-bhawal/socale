@@ -20,7 +20,7 @@ class LinkButton extends Button {
     this.prefixText,
     this.wrap = false,
     this.visualFeedback = false,
-  });
+  }) : assert(text != null);
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +52,7 @@ class LinkButton extends Button {
                     height: 48,
                     child: Center(
                       child: Text(
-                        text,
+                        text!,
                         style: textStyle ??
                             GoogleFonts.roboto(
                               fontSize: 14,

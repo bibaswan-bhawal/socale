@@ -1,4 +1,3 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -10,11 +9,9 @@ import 'package:socale/components/buttons/link_button.dart';
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
-import 'package:socale/models/current_user.dart';
-import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/services/auth_service.dart';
 import 'package:socale/types/auth/auth_result.dart';
 import 'package:socale/types/auth/auth_step.dart';
 import 'package:socale/utils/validators.dart';
@@ -72,11 +69,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
         return;
       }
 
-      final result = await AuthService.signUpUser(email!, password!);
+      final result = await ref.read(authServiceProvider).signUpUser(email!, password!);
 
       switch (result) {
         case AuthFlowResult.success:
-          loginSuccessful();
+          await ref.read(authServiceProvider).loginSuccessful(email);
           return;
         case AuthFlowResult.unverified:
           goTo(AuthStep.verifyEmail);
@@ -93,21 +90,6 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     }
 
     setState(() => isLoading = false);
-  }
-
-  loginSuccessful() async {
-    final CurrentUser currentUser = ref.read(currentUserProvider);
-
-    final (JsonWebToken idToken, JsonWebToken accessToken, String refreshToken) =
-        await AuthService.getAuthTokens();
-
-    currentUser.setTokens(
-      idToken: idToken,
-      accessToken: accessToken,
-      refreshToken: refreshToken,
-    );
-
-    ref.read(appStateProvider.notifier).login();
   }
 
   showSnackBar(String message) {
