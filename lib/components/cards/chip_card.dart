@@ -89,11 +89,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   void initState() {
     super.initState();
 
-    controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      reverseDuration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
+    controller = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 400), vsync: this);
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(animationListener)
@@ -452,16 +448,24 @@ class _SelectionMenuState extends State<_SelectionMenu> {
             ),
             if (selectedOptions.isNotEmpty)
               Container(
-                margin: const EdgeInsets.symmetric(vertical: 8, horizontal: 16),
                 width: MediaQuery.of(context).size.width,
                 constraints: const BoxConstraints(maxHeight: 130),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: _buildChipList(),
+                child: ClipRect(
+                  child: OverflowBox(
+                    minWidth: MediaQuery.of(context).size.width,
+                    maxWidth: MediaQuery.of(context).size.width,
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 16),
+                      child: SingleChildScrollView(
+                        scrollDirection: Axis.vertical,
+                        child: Wrap(
+                          direction: Axis.horizontal,
+                          spacing: 8,
+                          runSpacing: 4,
+                          children: _buildChipList(),
+                        ),
+                      ),
+                    ),
                   ),
                 ),
               ),

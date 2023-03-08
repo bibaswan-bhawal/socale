@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.2.2+6
 
 environment:
-  sdk: '>=3.0.0-239.0.dev <4.0.0'
+  sdk: '>=3.0.0-218.1.beta <4.0.0'
 
 dependencies:
   #Flutter sdk
@@ -18,12 +18,12 @@ dependencies:
   rive: ^0.10.2
 
   # Amplify libraries
-  amplify_flutter: ^1.0.0-next.5+1
-  amplify_auth_cognito: ^1.0.0-next.5+1
+  amplify_flutter: ^1.0.0-next.6
+  amplify_auth_cognito: ^1.0.0-next.6
 
   # Firebase libraries
-  firebase_core: ^2.7.0
-  firebase_messaging: ^14.2.5
+  firebase_core: ^2.7.1
+  firebase_messaging: ^14.2.6
 
   # Local notifications libraries
   flutter_local_notifications: ^13.0.0

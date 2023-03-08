@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:math';
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:http/http.dart' as http;
 import 'package:socale/models/college.dart';
@@ -26,17 +27,25 @@ class EmailVerificationService {
     this.email = email;
 
     JsonWebToken idToken = ref.read(currentUserProvider).idToken;
-    final response = await http.get(
-      Uri.parse('$apiHost/api/send_college_verify_email'),
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
-        'email': email,
-        'code': otp.toString(),
-      },
-    );
+    if (!kDebugMode) {
+      final response = await http.get(
+        Uri.parse('$apiHost/api/send_college_verify_email'),
+        headers: {
+          HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
+          'email': email,
+          'code': otp.toString(),
+        },
+      );
 
-    if (response.statusCode == 200) return true;
-    return false;
+      if (response.statusCode == 200) return true;
+      return false;
+    } else {
+      if (kDebugMode) {
+        print('Email: $email, Code: $otp');
+      }
+
+      return true;
+    }
   }
 
   Future<bool> verifyCode(int code) async {
