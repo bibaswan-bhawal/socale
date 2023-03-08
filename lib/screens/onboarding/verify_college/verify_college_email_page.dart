@@ -52,7 +52,9 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
         final verifyValidCollegeEmail = await service.verifyCollegeEmailValid(email!);
 
         if (!verifyValidCollegeEmail) {
-          showSnackBar(message: "Looks like socale hasn't launched at your college", duration: const Duration(seconds: 2));
+          showSnackBar(
+              message: "Looks like socale hasn't launched at your college",
+              duration: const Duration(seconds: 2));
           setState(() => isLoading = false);
           return;
         }
@@ -142,7 +144,7 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(right: 36, left: 36, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+          padding: const EdgeInsets.only(right: 36, left: 36, bottom: 40),
           child: GradientButton(
             text: 'Send Code',
             isLoading: isLoading,

@@ -99,7 +99,10 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
                 ).createShader(bounds),
                 child: Text(
                   'student',
-                  style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: GoogleFonts.poppins(
+                      fontSize: size.width * 0.058,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white),
                 ),
               ),
             ],
@@ -154,7 +157,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
           ),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+          padding: const EdgeInsets.only(bottom: 40),
           child: ActionGroup(actions: [
             LinkButton(
               onPressed: sendCode,
