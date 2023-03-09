@@ -6,7 +6,7 @@ part of 'academic_info_minor.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchMinorsHash() => r'1cedab8da011e6ad079ebbd0a236aad9202ad19b';
+String _$fetchMinorsHash() => r'5cf9e9da0afa2f2d3a65abb498352a52d91eb1a4';
 
 /// See also [fetchMinors].
 @ProviderFor(fetchMinors)

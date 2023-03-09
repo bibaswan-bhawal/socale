@@ -6,7 +6,7 @@ part of 'academic_info_major.dart';
 // RiverpodGenerator
 // **************************************************************************
 
-String _$fetchMajorsHash() => r'4e692c7d617a540d6eebfa1a4c56a43d49272c48';
+String _$fetchMajorsHash() => r'fdaa35e68d1a6a5a0d70f2df166a188b7c712c0a';
 
 /// See also [fetchMajors].
 @ProviderFor(fetchMajors)

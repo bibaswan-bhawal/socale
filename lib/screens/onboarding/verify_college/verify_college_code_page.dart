@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -9,7 +10,7 @@ import 'package:socale/components/buttons/link_button.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
-import 'package:socale/services/email_verification_service.dart';
+import 'package:socale/services/email_verification_service/email_verification_service.dart';
 import 'package:socale/utils/validators.dart';
 
 class VerifyCollegeCodePage extends ConsumerStatefulWidget {
@@ -28,9 +29,12 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
 
   String? code;
 
+  bool isLoading = false;
+
   saveCode(String? value) => setState(() => code = value);
 
   validateForm() async {
+    setState(() => isLoading = true);
     final form = formKey.currentState!;
 
     if (form.validate()) {
@@ -41,18 +45,10 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
       final result = await service.verifyCode(int.parse(code!));
 
       if (result) {
-        final addedUser = await ref.read(onboardingServiceProvider).addUserToCollege();
-        if (addedUser) {
-          widget.next();
-        } else {
-          const snackBar = SnackBar(
-              content: Text('There was an error, try again.', textAlign: TextAlign.center));
-          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-        }
+        changeUserGroup();
       } else {
-        const snackBar =
-            SnackBar(content: Text('Incorrect Code, try again.', textAlign: TextAlign.center));
-        if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        setState(() => isLoading = false);
+        if (mounted) showSnackBar(message: 'Incorrect Code, try again.');
       }
     }
   }
@@ -61,21 +57,48 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
     EmailVerificationService service = ref.read(emailVerificationProvider);
     final response = await service.sendCode(widget.email!);
     if (response) {
-      showSnackBar('Sent a new code to ${widget.email}');
+      showSnackBar(message: 'Sent a new code to ${widget.email}');
     } else {
-      showSnackBar('There was problem sending your code.');
+      showSnackBar(message: 'There was problem sending your code.');
     }
   }
 
-  showSnackBar(String message) {
-    if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
-    if (mounted) ScaffoldMessenger.of(context).removeCurrentSnackBar();
+  changeUserGroup() async {
+    final onboardingService = ref.read(onboardingServiceProvider);
+
+    try {
+      final response = await onboardingService.addUserToCollege();
+
+      if (response) {
+        setState(() => isLoading = false);
+        widget.next();
+      } else {
+        throw Exception('There was an error, try again.');
+      }
+    } catch (e) {
+      if (kDebugMode) print(e);
+      setState(() => isLoading = false);
+      showSnackBar(message: 'There was an error, try again.');
+    }
+  }
+
+  void showSnackBar({required String message, Duration? duration}) {
+    ScaffoldMessenger.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.dismiss);
+    ScaffoldMessenger.of(context).clearSnackBars();
 
     final snackBar = SnackBar(
-      content: Text(message, textAlign: TextAlign.center),
-      duration: const Duration(seconds: 1),
+      content: Text(
+        message,
+        textAlign: TextAlign.center,
+        style: GoogleFonts.roboto(
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ),
+      ),
+      duration: duration ?? const Duration(seconds: 4),
     );
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+    ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -107,10 +130,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
                 ).createShader(bounds),
                 child: Text(
                   'student',
-                  style: GoogleFonts.poppins(
-                      fontSize: size.width * 0.058,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.white),
+                  style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],
@@ -173,6 +193,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
             ),
             GradientButton(
               text: 'Verify',
+              isLoading: isLoading,
               onPressed: validateForm,
               linearGradient: ColorValues.blackButtonGradient,
             ),

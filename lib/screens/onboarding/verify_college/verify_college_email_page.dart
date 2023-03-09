@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -8,7 +9,7 @@ import 'package:socale/components/text_fields/form_fields/text_input_form_field.
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/services/email_verification_service.dart';
+import 'package:socale/services/email_verification_service/email_verification_service.dart';
 import 'package:socale/utils/validators.dart';
 
 class VerifyCollegeEmailPage extends ConsumerStatefulWidget {
@@ -36,45 +37,74 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
     widget.saveEmail(value);
   }
 
-  validateForm() async {
-    setState(() {
-      isLoading = true;
-      errorMessage = null;
-    });
+  Future<bool> validateForm() async {
+    if (kDebugMode) print('verify_college_email_page.dart: form validating');
 
     final form = formKey.currentState!;
-
+    setState(() => errorMessage = null);
     if (form.validate()) {
+      if (kDebugMode) print('verify_college_email_page.dart: form valid');
+
       form.save();
 
-      EmailVerificationService service = ref.read(emailVerificationProvider);
-      try {
-        final verifyValidCollegeEmail = await service.verifyCollegeEmailValid(email!);
-
-        if (!verifyValidCollegeEmail) {
-          showSnackBar(
-              message: "Looks like socale hasn't launched at your college",
-              duration: const Duration(seconds: 2));
-          setState(() => isLoading = false);
-          return;
-        }
-
-        final response = await service.sendCode(email!);
-
-        if (response) {
-          setState(() => isLoading = false);
-          widget.next();
-        } else {
-          showSnackBar(message: 'There was problem sending your code.');
-        }
-      } catch (e) {
-        showSnackBar(message: 'There was problem sending your code.');
-      }
+      return true;
     } else {
       setState(() => errorMessage = 'Please enter a valid edu email');
+      return false;
+    }
+  }
+
+  Future<bool> verifyCollegeEmail() async {
+    if (kDebugMode) print('verify_college_email_page.dart: email validating');
+
+    EmailVerificationService service = ref.read(emailVerificationProvider);
+
+    try {
+      final response = await service.verifyCollegeEmailValid(email!);
+
+      if (response) {
+        if (kDebugMode) print('verify_college_email_page.dart: email valid');
+        return true;
+      }
+
+      throw Exception();
+    } catch (e) {
+      if (kDebugMode) print(e);
+      showSnackBar(message: 'There was problem sending your code.');
     }
 
+    return false;
+  }
+
+  Future<bool> sendCode() async {
+    if (kDebugMode) print('verify_college_email_page.dart: sending code');
+
+    EmailVerificationService service = ref.read(emailVerificationProvider);
+
+    try {
+      final response = await service.sendCode(email!);
+      if (response) return true;
+      throw Exception();
+    } catch (e) {
+      if (kDebugMode) print(e);
+      showSnackBar(message: 'There was problem sending your code.');
+    }
+
+    return false;
+  }
+
+  onSubmit() async {
+    FocusManager.instance.primaryFocus?.unfocus();
+    setState(() => isLoading = true);
+
+    if (kDebugMode) print('verify_college_email_page.dart: form submitted');
+
+    if (!(await validateForm())) return setState(() => isLoading = false); // validate form
+    if (!(await verifyCollegeEmail())) return setState(() => isLoading = false); // verify email is valid college email
+    if (!(await sendCode())) return setState(() => isLoading = false); // send code to email
+
     setState(() => isLoading = false);
+    widget.next();
   }
 
   showSnackBar({required String message, Duration? duration}) {
@@ -148,7 +178,7 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
           child: GradientButton(
             text: 'Send Code',
             isLoading: isLoading,
-            onPressed: validateForm,
+            onPressed: onSubmit,
             linearGradient: ColorValues.blackButtonGradient,
           ),
         ),
