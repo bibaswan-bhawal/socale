@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/navigation/transitions/curves.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/onboarding/verify_college/verify_college_code_page.dart';
 import 'package:socale/screens/onboarding/verify_college/verify_college_email_page.dart';
+import 'package:socale/transitions/curves.dart';
 
 class VerifyCollegeScreen extends ConsumerStatefulWidget {
   const VerifyCollegeScreen({super.key});
@@ -50,7 +50,9 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         reverse: true,
-        physics: MediaQuery.of(context).padding.bottom == 0 ? null : const NeverScrollableScrollPhysics(),
+        physics: MediaQuery.of(context).padding.bottom == 0
+            ? null
+            : const NeverScrollableScrollPhysics(),
         keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
         child: SizedBox(
           width: size.width,
@@ -60,7 +62,8 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 30, top: 24 + MediaQuery.of(context).viewPadding.top),
+                  padding:
+                      EdgeInsets.only(left: 30, top: 24 + MediaQuery.of(context).viewPadding.top),
                   child: SizedBox(
                     height: 24,
                     child: InkResponse(

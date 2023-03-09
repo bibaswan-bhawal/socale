@@ -1,11 +1,51 @@
+import 'dart:convert';
+import 'dart:io';
+
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:http/http.dart' as http;
+import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/cards/chip_card_form_field.dart';
-import 'package:socale/options/majors/ucsd_majors.dart';
+import 'package:socale/models/college/major.dart';
 import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
+
+part 'academic_info_major.g.dart';
+
+@riverpod
+Future<List<Major>> fetchMajors(FetchMajorsRef ref) async {
+  final disposeLink = ref.keepAlive();
+
+  Future.delayed(const Duration(minutes: 10), () {
+    disposeLink.close();
+  });
+
+  List<Major> majors = [];
+
+  final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
+  String college = idToken.groups.first;
+
+  final response = await http.get(Uri.parse('${const String.fromEnvironment('BACKEND_URL')}/api/get_majors'), headers: {
+    HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
+    'college': college,
+  });
+
+  if (response.statusCode == 200) {
+    final body = jsonDecode(response.body);
+
+    body.forEach((major) {
+      majors.add(Major.fromJson(major));
+    });
+  }
+
+  return majors;
+}
+
 
 class AcademicInfoMajorScreen extends BaseOnboardingScreen {
   const AcademicInfoMajorScreen({super.key});
@@ -17,16 +57,16 @@ class AcademicInfoMajorScreen extends BaseOnboardingScreen {
 class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
   GlobalKey<FormState> majorFormKey = GlobalKey<FormState>();
 
-  List<String>? majors = [];
+  List<Major>? selectedMajors = [];
 
-  saveMajors(List<String>? value) => majors = value;
+  saveMajors(List<dynamic>? value) => selectedMajors = value?.cast<Major>();
 
   @override
   void initState() {
     super.initState();
 
     final onboardingUser = ref.read(onboardingUserProvider);
-    majors = onboardingUser.majors ?? [];
+    selectedMajors = onboardingUser.majors ?? [];
   }
 
   bool validateMajor() {
@@ -43,7 +83,8 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
 
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 
-    onboardingUser.setMajors(majors: majors);
+
+    onboardingUser.setMajors(majors: selectedMajors);
     return true;
   }
 
@@ -55,6 +96,8 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
 
   @override
   Widget build(BuildContext context) {
+    final majors = ref.watch(fetchMajorsProvider);
+
     return Column(
       children: [
         const Expanded(
@@ -65,15 +108,34 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
         ),
         Form(
           key: majorFormKey,
-          child: ChipCardFormField(
-            emptyMessage: 'Add your major',
-            searchHint: 'Search for your major',
-            height: 160,
-            horizontalPadding: 30,
-            options: ucsdMajors,
-            initialValue: majors,
-            onSaved: saveMajors,
-          ),
+          child: majors.when(data: (majorsList) {
+            return ChipCardFormField(
+              emptyMessage: 'Add your major',
+              searchHint: 'Search for your major',
+              height: 160,
+              horizontalPadding: 30,
+              options: majorsList,
+              initialValue: selectedMajors,
+              onSaved: saveMajors,
+            );
+          }, error: (err, stack) {
+            if(kDebugMode) print(err);
+            return const SizedBox(
+              width: double.infinity,
+              height: 160,
+              child: Center(
+                child: Text('Error loading minor'),
+              ),
+            );
+          }, loading: () {
+            return const SizedBox(
+              width: double.infinity,
+              height: 160,
+              child: Center(
+                  child: CircularProgressIndicator()
+              ),
+            );
+          }),
         ),
       ],
     );
@@ -119,7 +181,7 @@ class _Header extends StatelessWidget {
                   ).createShader(bounds),
                   child: Text(
                     'classmates',
-                    style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white,),
                   ),
                 ),
               ),

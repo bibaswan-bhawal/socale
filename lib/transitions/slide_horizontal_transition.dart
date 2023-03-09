@@ -1,19 +1,71 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/curves.dart';
+import 'package:socale/transitions/curves.dart';
 
-class SlideVerticalTransition extends StatelessWidget {
+class SlideHorizontalTransition extends StatelessWidget {
+  final Animation<double>? animation;
+  final Animation<double>? secondaryAnimation;
+
+  final double? fadeMidpoint;
+  final double? slideAmount;
+
+  final Widget? child;
+
+  const SlideHorizontalTransition({
+    super.key,
+    this.animation,
+    this.secondaryAnimation,
+    this.child,
+    this.fadeMidpoint,
+    this.slideAmount,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    if (animation == null) {
+      return _SlideHorizontalTransitionBase(
+        animation: secondaryAnimation!,
+        secondary: true,
+        fadeMidpoint: fadeMidpoint ?? 0.3,
+        slideAmount: slideAmount ?? 30,
+        child: child,
+      );
+    }
+    if (secondaryAnimation == null) {
+      return _SlideHorizontalTransitionBase(
+        animation: animation!,
+        fadeMidpoint: fadeMidpoint ?? 0.3,
+        slideAmount: slideAmount ?? 30,
+        child: child,
+      );
+    }
+
+    return _SlideHorizontalTransitionBase(
+      animation: animation!,
+      fadeMidpoint: fadeMidpoint ?? 0.3,
+      slideAmount: slideAmount ?? 30,
+      child: _SlideHorizontalTransitionBase(
+        animation: secondaryAnimation!,
+        secondary: true,
+        fadeMidpoint: fadeMidpoint ?? 0.3,
+        slideAmount: slideAmount ?? 30,
+        child: child,
+      ),
+    );
+  }
+}
+
+class _SlideHorizontalTransitionBase extends StatelessWidget {
   final Animation<double> animation;
   final bool secondary;
   final double fadeMidpoint;
   final double slideAmount;
   final Widget? child;
 
-  const SlideVerticalTransition({
-    super.key,
+  const _SlideHorizontalTransitionBase({
     required this.animation,
     this.secondary = false,
-    this.slideAmount = 30,
-    this.fadeMidpoint = 0.3,
+    required this.slideAmount,
+    required this.fadeMidpoint,
     this.child,
   });
 
@@ -26,13 +78,13 @@ class SlideVerticalTransition extends StatelessWidget {
       ).chain(CurveTween(curve: Interval(fadeMidpoint, 1.0)));
 
   Animatable<Offset> get _slideInTransition => Tween<Offset>(
-        begin: Offset(0.0, secondary ? -slideAmount : slideAmount),
+        begin: Offset(secondary ? -slideAmount : slideAmount, 0.0),
         end: Offset.zero,
       ).chain(CurveTween(curve: emphasized));
 
   Animatable<Offset> get _slideOutTransition => Tween<Offset>(
         begin: Offset.zero,
-        end: Offset(0.0, secondary ? -slideAmount : slideAmount),
+        end: Offset(secondary ? -slideAmount : slideAmount, 0.0),
       ).chain(CurveTween(curve: emphasized));
 
   @override

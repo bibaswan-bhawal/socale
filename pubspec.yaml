@@ -30,6 +30,7 @@ dependencies:
 
   # Riverpod libraries
   flutter_riverpod: ^2.3.0
+  riverpod_annotation: ^2.0.0
 
   # Local database libraries
   isar: ^3.0.5
@@ -55,6 +56,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.1
+  riverpod_generator: ^2.0.0
   isar_generator: ^3.0.5
   build_runner: ^2.3.3
 

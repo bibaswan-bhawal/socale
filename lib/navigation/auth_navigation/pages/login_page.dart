@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/navigation/transitions/fade_switch_transition.dart';
-import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
-import 'package:socale/navigation/transitions/slide_vertical_transition.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/screens/auth/login_screen.dart';
+import 'package:socale/transitions/fade_switch_transition.dart';
+import 'package:socale/transitions/slide_horizontal_transition.dart';
+import 'package:socale/transitions/slide_vertical_transition.dart';
 import 'package:socale/types/auth/auth_step.dart';
 
 class LoginPage extends Page {

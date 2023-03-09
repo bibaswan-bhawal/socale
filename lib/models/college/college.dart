@@ -6,7 +6,11 @@ class College {
   const College({required this.id, required this.name, required this.emailExtension});
 
   factory College.fromJson(Map<String, dynamic> json) {
-    return College(id: json['id'], name: json['name'], emailExtension: json['email_extension']);
+    String id = json['id'].split(':').last;
+    String name = json['name'];
+    String emailExtension = json['email_extension'];
+
+    return College(id: id, name: name, emailExtension: emailExtension);
   }
 
   @override

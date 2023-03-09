@@ -1,8 +1,9 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/models/onboarding_user.dart';
+import 'package:socale/models/user/onboarding_user.dart';
 import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_router.dart';
 import 'package:socale/screens/onboarding/verify_college/verify_college_screen.dart';
 import 'package:socale/utils/system_ui.dart';
@@ -24,7 +25,14 @@ class _OnboardingRouterState extends ConsumerState<OnboardingRouter> {
     checkCollegeEmailExists();
   }
 
-  void checkCollegeEmailExists() => isEmailVerified = ref.read(onboardingUserProvider).collegeEmail != null;
+  void checkCollegeEmailExists() {
+    final collegeEmail = ref.read(onboardingUserProvider).collegeEmail;
+    isEmailVerified = collegeEmail != null;
+
+    if (isEmailVerified) {
+      ref.read(emailVerificationProvider).dispose();
+    }
+  }
 
   onboardingUserStateListener(OnboardingUser? oldState, OnboardingUser newState) {
     if (newState.collegeEmail != oldState?.collegeEmail) {
@@ -33,7 +41,8 @@ class _OnboardingRouterState extends ConsumerState<OnboardingRouter> {
     }
   }
 
-  Widget buildTransition(Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
+  Widget buildTransition(
+      Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
     return FadeThroughTransition(
       animation: animation,
       secondaryAnimation: secondaryAnimation,

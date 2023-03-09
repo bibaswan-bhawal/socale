@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/curves.dart';
+import 'package:socale/transitions/curves.dart';
 
 class FadeThroughAnimation extends StatelessWidget {
   final Animation<double> animation;
@@ -16,11 +16,13 @@ class FadeThroughAnimation extends StatelessWidget {
     this.midPoint = 0.3,
   });
 
-  Animatable<double> get firstVisAnimation =>
-      Tween<double>(begin: 1, end: 0).chain(CurveTween(curve: emphasizedAccelerate)).chain(CurveTween(curve: Interval(0, midPoint)));
+  Animatable<double> get firstVisAnimation => Tween<double>(begin: 1, end: 0)
+      .chain(CurveTween(curve: emphasizedAccelerate))
+      .chain(CurveTween(curve: Interval(0, midPoint)));
 
-  Animatable<double> get secondVisAnimation =>
-      Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: emphasizedDecelerate)).chain(CurveTween(curve: Interval(midPoint, 1)));
+  Animatable<double> get secondVisAnimation => Tween<double>(begin: 0, end: 1)
+      .chain(CurveTween(curve: emphasizedDecelerate))
+      .chain(CurveTween(curve: Interval(midPoint, 1)));
 
   @override
   Widget build(BuildContext context) {

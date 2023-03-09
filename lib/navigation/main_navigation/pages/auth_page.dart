@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/fade_switch_transition.dart';
-import 'package:socale/screens/auth/auth_router_screen.dart';
+import 'package:socale/screens/auth/auth_router.dart';
+import 'package:socale/transitions/fade_switch_transition.dart';
 
 class AuthPage extends Page {
-  final Widget child = const AuthRouterScreen();
+  final Widget child = const AuthRouter();
 
   const AuthPage({super.key = const ValueKey('auth_page')});
 

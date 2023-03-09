@@ -3,8 +3,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/animations/fade_through_animation.dart';
 import 'package:socale/components/buttons/icon_button.dart';
-import 'package:socale/navigation/transitions/curves.dart';
 import 'package:socale/resources/colors.dart';
+import 'package:socale/transitions/curves.dart';
 
 class ChipCard extends StatelessWidget {
   final String emptyMessage;
@@ -13,11 +13,11 @@ class ChipCard extends StatelessWidget {
   final double height;
   final double horizontalPadding;
 
-  final List<String> options;
+  final List? options;
 
-  final List<String> initialOptions;
+  final List initialOptions;
 
-  final Function(List<String>) onChanged;
+  final Function(List) onChanged;
 
   const ChipCard({
     super.key,
@@ -49,10 +49,10 @@ class _ChipContainerTransform extends StatefulWidget {
   final double horizontalPadding;
   final String placeholder;
   final String searchHint;
-  final List<String> options;
-  final List<String> initialOptions;
+  final List? options;
+  final List initialOptions;
 
-  final Function(List<String>) onChanged;
+  final Function(List) onChanged;
 
   const _ChipContainerTransform({
     required this.height,
@@ -68,7 +68,8 @@ class _ChipContainerTransform extends StatefulWidget {
   State<_ChipContainerTransform> createState() => _ChipContainerTransformState();
 }
 
-class _ChipContainerTransformState extends State<_ChipContainerTransform> with SingleTickerProviderStateMixin {
+class _ChipContainerTransformState extends State<_ChipContainerTransform>
+    with SingleTickerProviderStateMixin {
   GlobalKey<_SelectionMenuState> menuKey = GlobalKey<_SelectionMenuState>();
 
   OverlayEntry? overlay;
@@ -76,9 +77,9 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   late AnimationController controller;
   late Animation<double> animation;
 
-  List<String> selectedOptions = [];
+  List selectedOptions = [];
 
-  setOptions(List<String> options) {
+  setOptions(List options) {
     setState(() => selectedOptions = options);
     widget.onChanged(selectedOptions);
   }
@@ -89,7 +90,10 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   void initState() {
     super.initState();
 
-    controller = AnimationController(duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 400), vsync: this);
+    controller = AnimationController(
+        duration: const Duration(milliseconds: 500),
+        reverseDuration: const Duration(milliseconds: 400),
+        vsync: this);
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(animationListener)
@@ -142,7 +146,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
                                 visualDensity: VisualDensity.compact,
                                 padding: const EdgeInsets.all(4),
                                 label: Text(
-                                  option,
+                                  option.toString(),
                                   style: GoogleFonts.roboto(
                                     fontSize: 12,
                                   ),
@@ -179,15 +183,21 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
     );
   }
 
-  Animatable<double> getVOffsetAnimation(verticalOffset) => Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
+  Animatable<double> getVOffsetAnimation(verticalOffset) =>
+      Tween<double>(begin: verticalOffset, end: 0).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get paddingAnimation => Tween<double>(begin: widget.horizontalPadding, end: 0).chain(CurveTween(curve: emphasized));
+  Animatable<double> get paddingAnimation =>
+      Tween<double>(begin: widget.horizontalPadding, end: 0).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get heightAnimation => Tween(begin: widget.height, end: MediaQuery.of(context).size.height).chain(CurveTween(curve: emphasized));
+  Animatable<double> get heightAnimation =>
+      Tween(begin: widget.height, end: MediaQuery.of(context).size.height)
+          .chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get borderRadius => Tween(begin: 15.0, end: 2.0).chain(CurveTween(curve: emphasized));
+  Animatable<double> get borderRadius =>
+      Tween(begin: 15.0, end: 2.0).chain(CurveTween(curve: emphasized));
 
-  Animatable<Color?> get borderColor => ColorTween(begin: Colors.black, end: Colors.transparent).chain(CurveTween(curve: emphasized));
+  Animatable<Color?> get borderColor =>
+      ColorTween(begin: Colors.black, end: Colors.transparent).chain(CurveTween(curve: emphasized));
 
   void createOverlay() {
     OverlayState overlayState = Overlay.of(context, rootOverlay: true);
@@ -305,12 +315,12 @@ class _ChipContainer extends StatelessWidget {
 
 class _SelectionMenu extends StatefulWidget {
   final Function() onPressed;
-  final List<String> selectedOptions;
+  final List selectedOptions;
 
   final String searchHint;
-  final List<String> options;
+  final List? options;
 
-  final Function(List<String>) onChanged;
+  final Function(List) onChanged;
 
   const _SelectionMenu({
     required this.onPressed,
@@ -325,43 +335,44 @@ class _SelectionMenu extends StatefulWidget {
 }
 
 class _SelectionMenuState extends State<_SelectionMenu> {
-  late List<String> options;
-  late List<String> filteredOptions;
+  late List? options;
+  late List filteredOptions;
 
   String searchText = '';
 
-  List<String> selectedOptions = [];
+  List selectedOptions = [];
 
   @override
   void initState() {
     super.initState();
 
     selectedOptions = widget.selectedOptions;
-    options = List<String>.from(widget.options);
-    options.sort();
-    filteredOptions = options;
+    if (widget.options == null) return;
+    options = List.from(widget.options!);
+    options!.sort();
+    filteredOptions = options!;
 
     filteredOptions.removeWhere((element) => selectedOptions.contains(element));
   }
 
   void buildList() {
     if (searchText.isNotEmpty) {
-      List<String> sortedFilteredList = options.where((option) {
-        return option.toLowerCase().contains(searchText.toLowerCase());
+      List sortedFilteredList = options!.where((option) {
+        return option.toString().toLowerCase().contains(searchText.toLowerCase());
       }).toList();
 
       sortedFilteredList.sort();
 
       setState(() => filteredOptions = sortedFilteredList);
     } else {
-      options.sort();
-      setState(() => filteredOptions = options);
+      options!.sort();
+      setState(() => filteredOptions = options!);
     }
   }
 
   void onSelected(index) {
     selectedOptions.add(filteredOptions[index]);
-    options.removeWhere((element) => selectedOptions.contains(element));
+    options!.removeWhere((element) => selectedOptions.contains(element));
     buildList();
   }
 
@@ -374,13 +385,13 @@ class _SelectionMenuState extends State<_SelectionMenu> {
           visualDensity: VisualDensity.compact,
           padding: const EdgeInsets.all(4),
           label: Text(
-            selectedOptions[i],
+            selectedOptions[i].toString(),
             style: GoogleFonts.roboto(
               fontSize: 12,
             ),
           ),
           onDeleted: () {
-            options.add(selectedOptions[i]);
+            options!.add(selectedOptions[i]);
             selectedOptions.removeAt(i);
             buildList();
           },
@@ -462,26 +473,30 @@ class _SelectionMenuState extends State<_SelectionMenu> {
                 ),
               ),
             Expanded(
-              child: ClipRect(
-                child: OverflowBox(
-                  maxWidth: MediaQuery.of(context).size.width,
-                  minWidth: MediaQuery.of(context).size.width,
-                  child: ListView.separated(
-                    padding: const EdgeInsets.only(top: 8),
-                    itemCount: filteredOptions.length,
-                    itemBuilder: (context, index) {
-                      return ListTile(
-                        dense: true,
-                        onTap: () => onSelected(index),
-                        title: Text(filteredOptions[index]),
-                      );
-                    },
-                    separatorBuilder: (BuildContext context, int index) {
-                      return const Divider(thickness: 0.4, height: 8);
-                    },
-                  ),
-                ),
-              ),
+              child: widget.options == null
+                  ? const Center(
+                      child: CircularProgressIndicator(),
+                    )
+                  : ClipRect(
+                      child: OverflowBox(
+                        maxWidth: MediaQuery.of(context).size.width,
+                        minWidth: MediaQuery.of(context).size.width,
+                        child: ListView.separated(
+                          padding: const EdgeInsets.only(top: 8),
+                          itemCount: filteredOptions.length,
+                          itemBuilder: (context, index) {
+                            return ListTile(
+                              dense: true,
+                              onTap: () => onSelected(index),
+                              title: Text(filteredOptions[index].toString()),
+                            );
+                          },
+                          separatorBuilder: (BuildContext context, int index) {
+                            return const Divider(thickness: 0.4, height: 8);
+                          },
+                        ),
+                      ),
+                    ),
             )
           ],
         ),

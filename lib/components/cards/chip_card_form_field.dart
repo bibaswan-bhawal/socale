@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:socale/components/cards/chip_card.dart';
 
-class ChipCardFormField extends FormField<List<String>> {
+class ChipCardFormField extends FormField<List> {
   final String emptyMessage;
   final String searchHint;
   final double height;
   final double horizontalPadding;
-  final List<String> options;
+  final List? options;
 
   ChipCardFormField({
     Key? key,
@@ -14,16 +14,16 @@ class ChipCardFormField extends FormField<List<String>> {
     required this.searchHint,
     required this.height,
     required this.horizontalPadding,
-    required this.options,
-    List<String>? initialValue,
-    FormFieldSetter<List<String>>? onSaved,
-    FormFieldValidator<List<String>>? validator,
+    this.options,
+    List? initialValue,
+    FormFieldSetter<List>? onSaved,
+    FormFieldValidator<List>? validator,
   }) : super(
           key: key,
           initialValue: initialValue,
           onSaved: onSaved,
           validator: validator,
-          builder: (FormFieldState<List<String>> state) {
+          builder: (FormFieldState<List> state) {
             return ChipCard(
               height: height,
               horizontalPadding: horizontalPadding,

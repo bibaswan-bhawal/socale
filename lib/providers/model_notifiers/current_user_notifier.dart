@@ -1,6 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/models/current_user.dart';
+import 'package:socale/models/user/current_user.dart';
 
 class CurrentUserNotifier extends StateNotifier<CurrentUser> {
   AutoDisposeStateNotifierProviderRef ref;
@@ -17,7 +17,8 @@ class CurrentUserNotifier extends StateNotifier<CurrentUser> {
 
   setLastName(value) => state = state.copyWith(lastName: value);
 
-  setTokens({JsonWebToken? idToken, JsonWebToken? accessToken, String? refreshToken}) => state = state.copyWith(
+  setTokens({JsonWebToken? idToken, JsonWebToken? accessToken, String? refreshToken}) =>
+      state = state.copyWith(
         idToken: idToken,
         accessToken: accessToken,
         refreshToken: refreshToken,

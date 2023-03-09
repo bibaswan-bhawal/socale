@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:socale/components/backgrounds/launch_background.dart';
-import 'package:socale/utils/size_config.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class SplashScreen extends ConsumerStatefulWidget {
@@ -22,7 +21,6 @@ class _SplashScreenState extends ConsumerState<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-    SizeConfig().init(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,

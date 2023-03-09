@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/fade_switch_transition.dart';
 import 'package:socale/screens/screen_splash.dart';
+import 'package:socale/transitions/fade_switch_transition.dart';
 
 class SplashPage extends Page {
   final Widget child = const SplashScreen();

@@ -1,6 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/foundation.dart';
-import 'package:socale/models/user.dart';
+import 'package:socale/models/user/user.dart';
 
 @immutable
 class CurrentUser extends User {
@@ -63,5 +63,10 @@ class CurrentUser extends User {
 
   @override
   int get hashCode =>
-      super.email.hashCode ^ super.firstName.hashCode ^ super.lastName.hashCode ^ _idToken.hashCode ^ _accessToken.hashCode ^ _refreshToken.hashCode;
+      super.email.hashCode ^
+      super.firstName.hashCode ^
+      super.lastName.hashCode ^
+      _idToken.hashCode ^
+      _accessToken.hashCode ^
+      _refreshToken.hashCode;
 }

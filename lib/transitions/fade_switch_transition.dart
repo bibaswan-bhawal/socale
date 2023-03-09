@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/curves.dart';
+import 'package:socale/transitions/curves.dart';
 
 class FadeSwitchTransition extends StatelessWidget {
   final Animation<double> animation;

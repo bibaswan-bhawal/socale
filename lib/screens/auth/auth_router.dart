@@ -2,20 +2,21 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/navigation_providers.dart';
 
-class AuthRouterScreen extends ConsumerStatefulWidget {
-  const AuthRouterScreen({Key? key}) : super(key: key);
+class AuthRouter extends ConsumerStatefulWidget {
+  const AuthRouter({Key? key}) : super(key: key);
 
   @override
-  ConsumerState<AuthRouterScreen> createState() => _AuthRouterScreenState();
+  ConsumerState<AuthRouter> createState() => _AuthRouterState();
 }
 
-class _AuthRouterScreenState extends ConsumerState<AuthRouterScreen> {
+class _AuthRouterState extends ConsumerState<AuthRouter> {
   ChildBackButtonDispatcher? _backButtonDispatcher;
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _backButtonDispatcher = Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
+    _backButtonDispatcher =
+        Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
   }
 
   @override

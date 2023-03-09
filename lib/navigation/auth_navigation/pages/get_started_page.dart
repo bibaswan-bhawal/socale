@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
 import 'package:socale/screens/auth/get_started_screen.dart';
+import 'package:socale/transitions/slide_horizontal_transition.dart';
 
 class GetStartedPage extends Page {
   final Widget child = const GetStartedScreen();

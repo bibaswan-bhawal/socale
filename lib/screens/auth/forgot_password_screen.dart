@@ -34,7 +34,10 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
   PageController pageController = PageController();
 
   List<String> buttonText = ['Send Code', 'Confirm Code', 'Change Password', 'Login'];
-  List<LinearGradient> buttonBackground = [ColorValues.blackButtonGradient, ColorValues.orangeButtonGradient];
+  List<LinearGradient> buttonBackground = [
+    ColorValues.blackButtonGradient,
+    ColorValues.orangeButtonGradient
+  ];
 
   String? errorEmailMessage;
   String? errorPasswordMessage;
@@ -62,7 +65,11 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
 
     setState(() => pageIndex--);
 
-    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(
+      pageIndex,
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.easeInOut,
+    );
 
     return false;
   }
@@ -81,9 +88,21 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         setState(() => errorEmailMessage = null);
 
         emailForm.save();
-        ref.read(authServiceProvider).sendResetPasswordCode(email);
-        setState(() => pageIndex++);
-        pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+
+        try {
+          ref.read(authServiceProvider).sendResetPasswordCode(email);
+          setState(() => pageIndex++);
+          pageController.animateToPage(pageIndex,
+              duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        } catch (e) {
+          const snackBar = SnackBar(
+              content: Text('There was an error sending your code, try again.',
+                  textAlign: TextAlign.center));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+          setState(() => isLoading = false);
+          return;
+        }
       } else {
         setState(() => errorEmailMessage = 'Enter a valid email');
         return;
@@ -122,13 +141,16 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
         try {
           await ref.read(authServiceProvider).confirmResetPassword(email, password, code);
         } on CodeMismatchException catch (_) {
-          const snackBar = SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
+          const snackBar =
+              SnackBar(content: Text('Invalid one time code', textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
           setState(() => isLoading = false);
           return;
         } catch (_) {
-          const snackBar = SnackBar(content: Text('Something went wrong try again in a few minutes.', textAlign: TextAlign.center));
+          const snackBar = SnackBar(
+              content: Text('Something went wrong try again in a few minutes.',
+                  textAlign: TextAlign.center));
           ScaffoldMessenger.of(context).showSnackBar(snackBar);
 
           setState(() => isLoading = false);
@@ -154,7 +176,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
     }
 
     setState(() => pageIndex++);
-    pageController.animateToPage(pageIndex, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    pageController.animateToPage(pageIndex,
+        duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
   }
 
   @override
@@ -492,7 +515,8 @@ class _ForgotPasswordScreenState extends ConsumerState<ForgotPasswordScreen> {
                       ),
                     ),
                     Padding(
-                      padding: EdgeInsets.only(top: 10, bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
+                      padding: EdgeInsets.only(
+                          top: 10, bottom: 40 - MediaQuery.of(context).padding.bottom),
                       child: ActionGroup(
                         actions: [
                           GradientButton(

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:socale/navigation/transitions/slide_horizontal_transition.dart';
 import 'package:socale/screens/auth/verify_email_screen.dart';
+import 'package:socale/transitions/slide_horizontal_transition.dart';
 
 class VerifyPage extends Page {
   final Widget child = const VerifyEmailScreen();

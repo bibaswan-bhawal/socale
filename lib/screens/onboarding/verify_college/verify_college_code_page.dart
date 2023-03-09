@@ -41,9 +41,17 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
       final result = await service.verifyCode(int.parse(code!));
 
       if (result) {
-        widget.next();
+        final addedUser = await ref.read(onboardingServiceProvider).addUserToCollege();
+        if (addedUser) {
+          widget.next();
+        } else {
+          const snackBar = SnackBar(
+              content: Text('There was an error, try again.', textAlign: TextAlign.center));
+          if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+        }
       } else {
-        const snackBar = SnackBar(content: Text('Incorrect Code, try again.', textAlign: TextAlign.center));
+        const snackBar =
+            SnackBar(content: Text('Incorrect Code, try again.', textAlign: TextAlign.center));
         if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
       }
     }

@@ -14,11 +14,9 @@ class AuthService {
   loginSuccessful(email) async {
     final currentUser = ref.read(currentUserProvider.notifier);
 
-    final (JsonWebToken idToken, JsonWebToken accessToken, String refreshToken) =
     await getAuthTokens();
 
     currentUser.setEmail(email);
-    currentUser.setTokens(idToken: idToken, accessToken: accessToken, refreshToken: refreshToken);
 
     await ref.read(onboardingServiceProvider).init(); // check if onboarded
     ref.read(appStateProvider.notifier).setLoggedIn(); // logged in
@@ -65,26 +63,30 @@ class AuthService {
     }
   }
 
-  Future<(JsonWebToken, JsonWebToken, String)> getAuthTokens() async {
-    CognitoAuthSession authSession = await Amplify.Auth.fetchAuthSession() as CognitoAuthSession;
+  Future<(JsonWebToken, JsonWebToken, String)> getAuthTokens({bool forceRefresh = false}) async {
+    final options = forceRefresh? CognitoSessionOptions(forceRefresh: forceRefresh) : null;
+    CognitoAuthSession authSession = await Amplify.Auth.fetchAuthSession(options: options) as CognitoAuthSession;
+
     final authTokens = authSession.userPoolTokensResult.value;
 
     JsonWebToken idToken = authTokens.idToken;
     JsonWebToken accessToken = authTokens.accessToken;
     String refreshToken = authTokens.refreshToken;
 
+    ref.read(currentUserProvider.notifier).setTokens(
+      idToken: idToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    );
+
     return (idToken, accessToken, refreshToken);
   }
 
-  sendResetPasswordCode(String email) async {
-    try {
+  Future<void> sendResetPasswordCode(String email) async {
       final result = await Amplify.Auth.resetPassword(username: email);
-      return result.isPasswordReset;
-    } on AmplifyException catch (e) {
-      safePrint(e);
-    }
+      if(result.isPasswordReset) return;
 
-    return false;
+      throw Exception('Failed to send reset password code');
   }
 
   resendVerifyLink(String email) async {

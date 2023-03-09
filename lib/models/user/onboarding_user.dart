@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:socale/models/college.dart';
+import 'package:socale/models/college/college.dart';
+import 'package:socale/models/college/major.dart';
+import 'package:socale/models/college/minor.dart';
 
 @immutable
 class OnboardingUser {
@@ -14,8 +16,8 @@ class OnboardingUser {
   final DateTime? dateOfBirth;
   final DateTime? graduationDate;
 
-  final List<String>? majors;
-  final List<String>? minors;
+  final List<Major>? majors;
+  final List<Minor>? minors;
 
   const OnboardingUser({
     this.college,
@@ -37,8 +39,8 @@ class OnboardingUser {
     String? lastName,
     DateTime? dateOfBirth,
     DateTime? graduationDate,
-    List<String>? majors,
-    List<String>? minors,
+    List<Major>? majors,
+    List<Minor>? minors,
   }) {
     return OnboardingUser(
       college: college ?? this.college,
