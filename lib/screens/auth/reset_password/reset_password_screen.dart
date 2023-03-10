@@ -4,6 +4,7 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/icon_button.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_code_view.dart';
+import 'package:socale/screens/auth/reset_password/reset_password_complete_view.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_email_view.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_new_pass_view.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_view.dart';
@@ -66,6 +67,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
       ResetPasswordEmailView(saveEmail: saveEmail),
       ResetPasswordNewPassView(savePassword: savePassword, email: email),
       ResetPasswordCodeView(password: password, email: email),
+      ResetPasswordCompleteView(email: email)
     ];
   }
 

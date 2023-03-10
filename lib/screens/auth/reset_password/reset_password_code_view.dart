@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:socale/components/text/headline.dart';
-import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
-import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_view.dart';

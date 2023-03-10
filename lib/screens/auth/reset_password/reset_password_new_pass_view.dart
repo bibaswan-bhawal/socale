@@ -77,7 +77,7 @@ class _ResetPasswordNewPassViewState extends ResetPasswordViewState {
           child: Column(
             children: [
               Text(
-                'Change password for',
+                'Enter your new password for',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontSize: (size.width * 0.034),
