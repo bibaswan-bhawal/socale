@@ -40,6 +40,7 @@ class OnboardingService {
         }
       }
     }
+    print('Hello, World!');
 
     ref.read(appStateProvider.notifier).setAttemptAutoOnboard();
   }
