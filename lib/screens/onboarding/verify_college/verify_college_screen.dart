@@ -50,10 +50,7 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
     return Scaffold(
       body: SingleChildScrollView(
         reverse: true,
-        physics: MediaQuery.of(context).padding.bottom == 0
-            ? null
-            : const NeverScrollableScrollPhysics(),
-        keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+        physics: const NeverScrollableScrollPhysics(),
         child: SizedBox(
           width: size.width,
           height: size.height,
@@ -62,8 +59,7 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding:
-                      EdgeInsets.only(left: 30, top: 24 + MediaQuery.of(context).viewPadding.top),
+                  padding: EdgeInsets.only(left: 30, top: 24 + MediaQuery.of(context).viewPadding.top),
                   child: SizedBox(
                     height: 24,
                     child: InkResponse(

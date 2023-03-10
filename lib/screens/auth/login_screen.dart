@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -25,18 +26,17 @@ class LoginScreen extends ConsumerStatefulWidget {
 class _LoginScreenState extends ConsumerState<LoginScreen> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  String? email;
+  String? password;
   String? errorMessage;
 
   bool isLoading = false;
 
-  String? email;
-  String? password;
+  void saveEmail(String? value) => email = value;
 
-  saveEmail(String? value) => email = value;
+  void savePassword(String? value) => password = value;
 
-  savePassword(String? value) => password = value;
-
-  goTo(AuthStep step) {
+  void goTo(AuthStep step) {
     final authState = ref.read(authStateProvider.notifier);
 
     switch (step) {
@@ -49,50 +49,73 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     }
   }
 
-  onClickLogin() async {
-    if (isLoading) return;
-
+  bool validateForm() {
     final form = formKey.currentState!;
-    setState(() => isLoading = true);
 
     if (form.validate()) {
-      setState(() => errorMessage = null);
-
       form.save();
-
-      final result = await ref.read(authServiceProvider).signInUser(email!, password!);
-
-      switch (result) {
-        case AuthFlowResult.success:
-          await ref.read(authServiceProvider).loginSuccessful(email);
-          return;
-        case AuthFlowResult.unverified:
-          goTo(AuthStep.verifyEmail); // Go to verify email screen
-          break;
-        case AuthFlowResult.genericError:
-          showSnackBar('Something went wrong try again in a few minutes.');
-          break;
-        case AuthFlowResult.notAuthorized:
-          showFormError('Incorrect password');
-          break;
-        case AuthFlowResult.userNotFound:
-          showSnackBar("We couldn't find your account, try signing up.");
-          break;
-      }
-    } else {
-      showFormError('Enter a valid email and password');
+      return true;
     }
+
+    if (mounted) setState(() => errorMessage = 'Enter a valid email and password');
+    return false;
+  }
+
+  Future<bool> attemptLogin() async {
+    AuthFlowResult loginResult = await ref.read(authServiceProvider).signInUser(email!, password!);
+
+    switch (loginResult) {
+      case AuthFlowResult.success:
+        return true;
+      case AuthFlowResult.unverified:
+        goTo(AuthStep.verifyEmail);
+        break;
+      case AuthFlowResult.notAuthorized:
+        setState(() => errorMessage = 'Incorrect password');
+        break;
+      case AuthFlowResult.userNotFound:
+        showSnackBar(message: "We couldn't find your account, try signing up.");
+        break;
+      case AuthFlowResult.genericError:
+        showSnackBar(message: 'Something went wrong try again in a few minutes.');
+        break;
+    }
+
+    return false;
+  }
+
+  Future<bool> loginSuccessFlow() async {
+    try {
+      await ref.read(authServiceProvider).loginSuccessful(email);
+      return true;
+    } catch (e) {
+      if (kDebugMode) print(e);
+      ref.read(authServiceProvider).signOutUser();
+      showSnackBar(message: 'Something went wrong try again in a few minutes.');
+    }
+
+    return false;
+  }
+
+  Future<void> onSubmit() async {
+    setState(() => isLoading = true);
+
+    if (!validateForm() && mounted) return setState(() => isLoading = false);
+    if (!await attemptLogin() && mounted) return setState(() => isLoading = false);
+    if (!await loginSuccessFlow() && mounted) return setState(() => isLoading = false);
 
     setState(() => isLoading = false);
   }
 
-  showSnackBar(String message) {
-    final snackBar = SnackBar(content: Text(message, textAlign: TextAlign.center));
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  void showSnackBar({required String message, Duration? duration}) {
+    if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
+    if (mounted) ScaffoldMessenger.of(context).removeCurrentSnackBar();
 
-  showFormError(String message) {
-    setState(() => errorMessage = message);
+    final snackBar = SnackBar(
+      content: Text(message, textAlign: TextAlign.center),
+      duration: duration ?? const Duration(seconds: 1),
+    );
+    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -195,7 +218,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
               ),
               GradientButton(
                 isLoading: isLoading,
-                onPressed: onClickLogin,
+                onPressed: onSubmit,
                 text: 'Sign In',
                 linearGradient: ColorValues.orangeButtonGradient,
               ),

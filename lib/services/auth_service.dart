@@ -1,17 +1,19 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
+import 'package:socale/types/auth/auth_reset_password.dart';
 import 'package:socale/types/auth/auth_result.dart';
 
 class AuthService {
-  ProviderRef ref;
+  final ProviderRef ref;
 
-  AuthService(this.ref);
+  const AuthService(this.ref);
 
-  loginSuccessful(email) async {
+  Future<void> loginSuccessful(email) async {
     final currentUser = ref.read(currentUserProvider.notifier);
 
     await getAuthTokens();
@@ -22,49 +24,44 @@ class AuthService {
     ref.read(appStateProvider.notifier).setLoggedIn(); // logged in
   }
 
-  autoLoginUser() async {
+  Future<AuthFlowResult> autoLoginUser() async {
     try {
       final result = await Amplify.Auth.fetchAuthSession();
-
       if (result.isSignedIn) return AuthFlowResult.success;
 
       return AuthFlowResult.notAuthorized;
-    } on AuthException catch (_) {
+    } on AuthException {
       return AuthFlowResult.genericError;
     }
   }
 
-  signUpUser(String email, String password) async {
+  Future<AuthFlowResult> signUpUser(String email, String password) async {
     try {
       await Amplify.Auth.signUp(username: email, password: password);
       return AuthFlowResult.unverified;
     } on UsernameExistsException catch (_) {
       return await signInUser(email, password);
-    } on AuthException catch (_) {
+    } on AuthException {
       return AuthFlowResult.genericError;
     }
   }
 
-  signInUser(String email, String password) async {
+  Future<AuthFlowResult> signInUser(String email, String password) async {
     try {
       final result = await Amplify.Auth.signIn(username: email, password: password);
-
-      if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) {
-        return AuthFlowResult.unverified;
-      }
-
+      if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) return AuthFlowResult.unverified;
       return AuthFlowResult.success;
-    } on AuthNotAuthorizedException catch (_) {
+    } on AuthNotAuthorizedException {
       return AuthFlowResult.notAuthorized;
-    } on UserNotFoundException catch (_) {
+    } on UserNotFoundException {
       return AuthFlowResult.userNotFound;
-    } on AuthException catch (_) {
+    } on AuthException {
       return AuthFlowResult.genericError;
     }
   }
 
   Future<(JsonWebToken, JsonWebToken, String)> getAuthTokens({bool forceRefresh = false}) async {
-    final options = forceRefresh? CognitoSessionOptions(forceRefresh: forceRefresh) : null;
+    final options = forceRefresh ? CognitoSessionOptions(forceRefresh: forceRefresh) : null;
     CognitoAuthSession authSession = await Amplify.Auth.fetchAuthSession(options: options) as CognitoAuthSession;
 
     final authTokens = authSession.userPoolTokensResult.value;
@@ -82,27 +79,50 @@ class AuthService {
     return (idToken, accessToken, refreshToken);
   }
 
-  Future<void> sendResetPasswordCode(String email) async {
-      final result = await Amplify.Auth.resetPassword(username: email);
-      if(result.isPasswordReset) return;
-
-      throw Exception('Failed to send reset password code');
-  }
-
-  resendVerifyLink(String email) async {
+  Future<AuthResetPassword> sendResetPasswordCode(String email) async {
     try {
-      await Amplify.Auth.resendSignUpCode(username: email);
-      return true;
-    } on LimitExceededException catch (_) {
-      return false;
-    } catch (_) {
-      return false;
+      ResetPasswordResult result = await Amplify.Auth.resetPassword(username: email);
+      return AuthResetPassword.codeDeliverySuccessful;
+    } on LimitExceededException {
+      return AuthResetPassword.tooManyRequests;
+    } on TooManyRequestsException {
+      return AuthResetPassword.tooManyRequests;
+    } on CodeDeliveryFailureException {
+      return AuthResetPassword.codeDeliveryFailure;
+    } catch (e) {
+      if (kDebugMode) print(e);
+      return AuthResetPassword.unknownError;
     }
   }
 
-  confirmResetPassword(String email, String newPassword, String code) async {
-    await Amplify.Auth.confirmResetPassword(
-        username: email, newPassword: newPassword, confirmationCode: code);
+  Future<AuthResetPassword> confirmResetPassword(String email, String newPassword, String code) async {
+    try {
+      ResetPasswordResult result = await Amplify.Auth.confirmResetPassword(
+        username: email, newPassword: newPassword, confirmationCode: code,);
+      if (result.isPasswordReset) {
+        return AuthResetPassword.success;
+      } else {
+        return AuthResetPassword.unknownError;
+      }
+    } on CodeMismatchException {
+      return AuthResetPassword.codeMismatch;
+    } on ExpiredCodeException {
+      return AuthResetPassword.expiredCode;
+    } on TooManyRequestsException {
+      return AuthResetPassword.tooManyRequests;
+    } catch (e) {
+      if (kDebugMode) print(e);
+      return AuthResetPassword.unknownError;
+    }
+  }
+
+  Future<void> resendVerifyLink(String email) async {
+    try {
+      await Amplify.Auth.resendSignUpCode(username: email);
+      return;
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
   }
 
   signOutUser() async {

@@ -39,12 +39,11 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
   void resendCode() async {
     final sentSuccessfully = await ref.read(authServiceProvider).resendVerifyLink(_email);
-
-    if (sentSuccessfully) {
-      showSnackBar('A new link as been sent to your email');
-    } else {
-      showSnackBar('There was an error sending you a code, try again later');
-    }
+    // handle errors properly
+    showSnackBar('A new link as been sent to your email');
+    // } else {
+    //   showSnackBar('There was an error sending you a code, try again later');
+    // }
   }
 
   void confirmEmail() async {
@@ -112,7 +111,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   ).createShader(bounds),
                   child: Text(
                     'email',
-                    style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                    style: GoogleFonts.poppins(
+                        fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                   ),
                 ),
               ],

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/screens/auth/forgot_password_screen.dart';
+import 'package:socale/screens/auth/reset_password/reset_password_screen.dart';
 import 'package:socale/transitions/slide_vertical_transition.dart';
 
 class ResetPasswordPage extends Page {
-  final Widget child = const ForgotPasswordScreen();
+  final Widget child = const ResetPasswordScreen();
 
   const ResetPasswordPage({super.key});
 
