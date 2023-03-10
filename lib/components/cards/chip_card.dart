@@ -68,8 +68,7 @@ class _ChipContainerTransform extends StatefulWidget {
   State<_ChipContainerTransform> createState() => _ChipContainerTransformState();
 }
 
-class _ChipContainerTransformState extends State<_ChipContainerTransform>
-    with SingleTickerProviderStateMixin {
+class _ChipContainerTransformState extends State<_ChipContainerTransform> with SingleTickerProviderStateMixin {
   GlobalKey<_SelectionMenuState> menuKey = GlobalKey<_SelectionMenuState>();
 
   OverlayEntry? overlay;
@@ -91,9 +90,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
     super.initState();
 
     controller = AnimationController(
-        duration: const Duration(milliseconds: 500),
-        reverseDuration: const Duration(milliseconds: 400),
-        vsync: this);
+        duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 400), vsync: this);
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(animationListener)
@@ -190,11 +187,9 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform>
       Tween<double>(begin: widget.horizontalPadding, end: 0).chain(CurveTween(curve: emphasized));
 
   Animatable<double> get heightAnimation =>
-      Tween(begin: widget.height, end: MediaQuery.of(context).size.height)
-          .chain(CurveTween(curve: emphasized));
+      Tween(begin: widget.height, end: MediaQuery.of(context).size.height).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get borderRadius =>
-      Tween(begin: 15.0, end: 2.0).chain(CurveTween(curve: emphasized));
+  Animatable<double> get borderRadius => Tween(begin: 15.0, end: 2.0).chain(CurveTween(curve: emphasized));
 
   Animatable<Color?> get borderColor =>
       ColorTween(begin: Colors.black, end: Colors.transparent).chain(CurveTween(curve: emphasized));
@@ -414,91 +409,93 @@ class _SelectionMenuState extends State<_SelectionMenu> {
 
   @override
   Widget build(BuildContext context) {
-    return Material(
-      child: SizedBox(
-        height: MediaQuery.of(context).size.height,
-        width: MediaQuery.of(context).size.width,
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: EdgeInsets.only(
-                left: 20,
-                top: 10 + MediaQuery.of(context).padding.top,
-                right: 20,
-              ),
-              child: Row(
-                children: [
-                  RippleIconButton(
-                    icon: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.contain),
-                    onPressed: onBack,
-                  ),
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 20),
-                      child: TextField(
-                        onChanged: (value) {
-                          searchText = value;
-                          buildList();
-                        },
-                        decoration: InputDecoration(
-                          border: InputBorder.none,
-                          contentPadding: const EdgeInsets.all(0),
-                          hintText: widget.searchHint,
+    return BlockSemantics(
+      child: Material(
+        child: SizedBox(
+          height: MediaQuery.of(context).size.height,
+          width: MediaQuery.of(context).size.width,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Padding(
+                padding: EdgeInsets.only(
+                  left: 20,
+                  top: 10 + MediaQuery.of(context).padding.top,
+                  right: 20,
+                ),
+                child: Row(
+                  children: [
+                    RippleIconButton(
+                      icon: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.contain),
+                      onPressed: onBack,
+                    ),
+                    Expanded(
+                      child: Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
+                        child: TextField(
+                          onChanged: (value) {
+                            searchText = value;
+                            buildList();
+                          },
+                          decoration: InputDecoration(
+                            border: InputBorder.none,
+                            contentPadding: const EdgeInsets.all(0),
+                            hintText: widget.searchHint,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  RippleIconButton(
-                    icon: SvgPicture.asset('assets/icons/check.svg', fit: BoxFit.contain),
-                    onPressed: onSave,
-                    size: const Size(28, 28),
-                  ),
-                ],
-              ),
-            ),
-            if (selectedOptions.isNotEmpty)
-              Container(
-                margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                width: MediaQuery.of(context).size.width,
-                constraints: const BoxConstraints(maxHeight: 130),
-                child: SingleChildScrollView(
-                  scrollDirection: Axis.vertical,
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: _buildChipList(),
-                  ),
+                    RippleIconButton(
+                      icon: SvgPicture.asset('assets/icons/check.svg', fit: BoxFit.contain),
+                      onPressed: onSave,
+                      size: const Size(28, 28),
+                    ),
+                  ],
                 ),
               ),
-            Expanded(
-              child: widget.options == null
-                  ? const Center(
-                      child: CircularProgressIndicator(),
-                    )
-                  : ClipRect(
-                      child: OverflowBox(
-                        maxWidth: MediaQuery.of(context).size.width,
-                        minWidth: MediaQuery.of(context).size.width,
-                        child: ListView.separated(
-                          padding: const EdgeInsets.only(top: 8),
-                          itemCount: filteredOptions.length,
-                          itemBuilder: (context, index) {
-                            return ListTile(
-                              dense: true,
-                              onTap: () => onSelected(index),
-                              title: Text(filteredOptions[index].toString()),
-                            );
-                          },
-                          separatorBuilder: (BuildContext context, int index) {
-                            return const Divider(thickness: 0.4, height: 8);
-                          },
+              if (selectedOptions.isNotEmpty)
+                Container(
+                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  width: MediaQuery.of(context).size.width,
+                  constraints: const BoxConstraints(maxHeight: 130),
+                  child: SingleChildScrollView(
+                    scrollDirection: Axis.vertical,
+                    child: Wrap(
+                      direction: Axis.horizontal,
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: _buildChipList(),
+                    ),
+                  ),
+                ),
+              Expanded(
+                child: widget.options == null
+                    ? const Center(
+                        child: CircularProgressIndicator(),
+                      )
+                    : ClipRect(
+                        child: OverflowBox(
+                          maxWidth: MediaQuery.of(context).size.width,
+                          minWidth: MediaQuery.of(context).size.width,
+                          child: ListView.separated(
+                            padding: const EdgeInsets.only(top: 8),
+                            itemCount: filteredOptions.length,
+                            itemBuilder: (context, index) {
+                              return ListTile(
+                                dense: true,
+                                onTap: () => onSelected(index),
+                                title: Text(filteredOptions[index].toString()),
+                              );
+                            },
+                            separatorBuilder: (BuildContext context, int index) {
+                              return const Divider(thickness: 0.4, height: 8);
+                            },
+                          ),
                         ),
                       ),
-                    ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );

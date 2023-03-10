@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/navigation/main_navigation/main_router_info_parser.dart';
 import 'package:socale/providers/navigation_providers.dart';
@@ -17,9 +18,11 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   void initState() {
     super.initState();
-
+    SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
+     
     ref.read(amplifyBackendServiceProvider).initialize();
     ref.read(localDatabaseServiceProvider).initLocalDatabase();
+    FocusManager.instance.primaryFocus?.unfocus();
   }
 
   @override

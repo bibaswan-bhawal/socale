@@ -30,6 +30,7 @@ class SlideHorizontalTransition extends StatelessWidget {
         child: child,
       );
     }
+
     if (secondaryAnimation == null) {
       return _SlideHorizontalTransitionBase(
         animation: animation!,

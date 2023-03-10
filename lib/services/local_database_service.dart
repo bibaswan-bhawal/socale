@@ -7,7 +7,7 @@ class LocalDatabaseService {
   LocalDatabaseService(this.providerRef);
 
   Future<void> initLocalDatabase() async {
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       providerRef.read(appStateProvider.notifier).setLocalDBConfigured();
     });
   }
