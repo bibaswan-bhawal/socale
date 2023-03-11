@@ -10,6 +10,7 @@ import 'package:socale/components/text_fields/input_forms/default_input_form.dar
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/email_verification_service/email_verification_service.dart';
+import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 
 class VerifyCollegeEmailPage extends ConsumerStatefulWidget {
@@ -37,7 +38,7 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
     widget.saveEmail(value);
   }
 
-  Future<bool> validateForm() async {
+  bool validateForm() {
     if (kDebugMode) print('verify_college_email_page.dart: form validating');
 
     final form = formKey.currentState!;
@@ -70,7 +71,7 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
       throw Exception();
     } catch (e) {
       if (kDebugMode) print(e);
-      showSnackBar(message: 'There was problem sending your code.');
+      SystemUI.showSnackBar(context: context, message: 'There was problem sending your code.');
     }
 
     return false;
@@ -87,7 +88,7 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
       throw Exception();
     } catch (e) {
       if (kDebugMode) print(e);
-      showSnackBar(message: 'There was problem sending your code.');
+      SystemUI.showSnackBar(context: context, message: 'There was problem sending your code.');
     }
 
     return false;
@@ -95,32 +96,21 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
 
   onSubmit() async {
     FocusManager.instance.primaryFocus?.unfocus();
-    setState(() => isLoading = true);
+    if (mounted) setState(() => isLoading = true);
 
-    if (kDebugMode) print('verify_college_email_page.dart: form submitted');
+    if (!validateForm() && mounted) return setState(() => isLoading = false);
+    if (!(await verifyCollegeEmail()) && mounted) return setState(() => isLoading = false);
+    if (!(await sendCode()) && mounted) return setState(() => isLoading = false);
 
-    if (!(await validateForm())) return setState(() => isLoading = false); // validate form
-    if (!(await verifyCollegeEmail())) return setState(() => isLoading = false); // verify email is valid college email
-    if (!(await sendCode())) return setState(() => isLoading = false); // send code to email
-
-    setState(() => isLoading = false);
+    if (mounted) setState(() => isLoading = false);
     widget.next();
-  }
-
-  showSnackBar({required String message, Duration? duration}) {
-    if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
-    if (mounted) ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    final snackBar = SnackBar(
-      content: Text(message, textAlign: TextAlign.center),
-      duration: duration ?? const Duration(seconds: 1),
-    );
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final size = MediaQuery
+        .of(context)
+        .size;
 
     return Column(
       children: [
@@ -132,8 +122,8 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
           padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Text(
             'Socale is made for students to connect\n'
-            'with their college community. To find your\n'
-            'college enter your edu email.',
+                'with their college community. To find your\n'
+                'college enter your edu email.',
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: (size.width * 0.034),

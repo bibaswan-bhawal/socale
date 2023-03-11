@@ -1,17 +1,22 @@
+import 'dart:math';
+
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
 import 'package:socale/components/text/headline.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_view.dart';
+import 'package:socale/types/auth/auth_reset_password.dart';
+import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 
 class ResetPasswordCodeView extends ResetPasswordView {
   final String email;
-  final String password;
+  final Function(String) tempPassword;
 
-  const ResetPasswordCodeView({super.key, required this.password, required this.email});
+  const ResetPasswordCodeView({super.key, required this.tempPassword, required this.email});
 
   @override
   ResetPasswordViewState createState() => _ResetPasswordCodeViewState();
@@ -21,6 +26,8 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String? code;
+
+  String? tempPassword;
 
   void saveCode(String? value) => code = value;
 
@@ -35,6 +42,43 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
     }
   }
 
+  // Generate a random 12 character password
+  String generateTempPassword() {
+    final random = Random();
+    const chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789)(*&^%#@!';
+    return List.generate(12, (index) => chars[random.nextInt(chars.length)]).join();
+  }
+
+  Future<bool> attemptResetPassword() async {
+    final authService = ref.read(authServiceProvider);
+
+    tempPassword = generateTempPassword();
+
+    final result = await authService.confirmResetPassword(
+      email: (widget as ResetPasswordCodeView).email,
+      newPassword: tempPassword!,
+      code: code!,
+    );
+
+    switch (result) {
+      case AuthResetPasswordResult.success:
+        (widget as ResetPasswordCodeView).tempPassword(tempPassword!);
+        return true;
+      case AuthResetPasswordResult.codeMismatch:
+        if (mounted) SystemUI.showSnackBar(message: 'The code you entered is incorrect', context: context);
+        return false;
+      case AuthResetPasswordResult.expiredCode:
+        if (mounted) SystemUI.showSnackBar(message: 'The code you entered has expired', context: context);
+        return false;
+      case AuthResetPasswordResult.tooManyRequests:
+        if (mounted) SystemUI.showSnackBar(message: 'Too many requests, please try again later', context: context);
+        return false;
+      default:
+        if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, please try again later', context: context);
+        return false;
+    }
+  }
+
   @override
   Future<bool> onBack() async {
     return true;
@@ -42,11 +86,10 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
 
   @override
   Future<bool> onNext() async {
-    if (validateForm()) {
-      return true;
-    }
+    if (!validateForm()) return false;
+    if (!await attemptResetPassword()) return false;
 
-    return false;
+    return true;
   }
 
   @override
@@ -56,7 +99,7 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
     return Column(
       mainAxisSize: MainAxisSize.max,
       children: [
-        const Headline(text: 'One more thing...'),
+        const Headline(text: 'Just to confirm...'),
         Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Column(

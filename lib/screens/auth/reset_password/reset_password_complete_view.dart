@@ -16,11 +16,13 @@ class ResetPasswordCompleteView extends ResetPasswordView {
 class _ResetPasswordCompleteViewState extends ResetPasswordViewState {
   @override
   Future<bool> onBack() async {
+    Navigator.of(context).pop();
     return false;
   }
 
   @override
   Future<bool> onNext() async {
+    Navigator.of(context).pop();
     return false;
   }
 

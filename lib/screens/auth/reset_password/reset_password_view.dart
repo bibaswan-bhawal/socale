@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_screen.dart';
 
-abstract class ResetPasswordView extends StatefulWidget {
+abstract class ResetPasswordView extends ConsumerStatefulWidget {
   const ResetPasswordView({Key? key}) : super(key: key);
 
   static List<ResetPasswordViewState> allResetPasswordViews(BuildContext context) {
@@ -27,7 +28,7 @@ abstract class ResetPasswordView extends StatefulWidget {
   }
 }
 
-abstract class ResetPasswordViewState extends State<ResetPasswordView> {
+abstract class ResetPasswordViewState extends ConsumerState<ResetPasswordView> {
   Future<bool> onNext();
 
   Future<bool> onBack();

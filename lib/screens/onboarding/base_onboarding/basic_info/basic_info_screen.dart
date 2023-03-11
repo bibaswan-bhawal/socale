@@ -112,7 +112,8 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
                       ).createShader(bounds),
                       child: Text(
                         'know',
-                        style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                        style: GoogleFonts.poppins(
+                            fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                       ),
                     ),
                   ],
@@ -147,7 +148,6 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
                   onSaved: saveFirstName,
                   textInputAction: TextInputAction.next,
                   textCapitalization: TextCapitalization.words,
-                  textInputType: TextInputType.name,
                   initialValue: onboardingUser.firstName ?? '',
                   validator: (value) {
                     if (value == null || value.isEmpty) {
@@ -161,7 +161,6 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
                   onSaved: saveLastName,
                   textInputAction: TextInputAction.done,
                   textCapitalization: TextCapitalization.words,
-                  textInputType: TextInputType.name,
                   initialValue: onboardingUser.lastName ?? '',
                   validator: (value) {
                     if (value == null || value.isEmpty) {

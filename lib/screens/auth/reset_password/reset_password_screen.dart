@@ -19,26 +19,31 @@ class ResetPasswordScreen extends StatefulWidget {
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final PageController pageController = PageController();
 
-  final List<LinearGradient> buttonBackground = [ColorValues.blackButtonGradient, ColorValues.orangeButtonGradient];
+  final List<LinearGradient> buttonBackground = [
+    ColorValues.blackButtonGradient,
+    ColorValues.orangeButtonGradient,
+  ];
+
+  late String email;
+  late String tempPassword;
 
   int pageIndex = 0;
-
-  String email = '';
-  String password = '';
 
   bool isLoading = false;
 
   void saveEmail(String value) => email = value;
 
-  void savePassword(String value) => password = value;
+  void saveTempPassword(String value) => tempPassword = value;
 
   Future<bool> onWillPop() async {
     if (isLoading) return false;
     if (pageIndex == 0) return true;
-    return onBack();
+
+    await onBack();
+    return false;
   }
 
-  void onNext() async {
+  Future<void> onNext() async {
     setState(() => isLoading = true);
 
     final views = ResetPasswordView.allResetPasswordViews(context);
@@ -46,27 +51,33 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
     setState(() => isLoading = false);
 
-    if (result) {
-      if (pageIndex == buildPages().length - 1) return;
-      pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-      setState(() => pageIndex++);
-    }
+    if (!result) return;
+
+    FocusManager.instance.primaryFocus?.unfocus();
+
+    pageController.nextPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+    setState(() => pageIndex++);
   }
 
-  Future<bool> onBack() async {
-    if (isLoading) return false;
+  Future<void> onBack() async {
+    if (isLoading) return;
+
+    final views = ResetPasswordView.allResetPasswordViews(context);
+    final result = await views.last.onBack();
+
+    if (!result) return;
+
+    FocusManager.instance.primaryFocus?.unfocus();
 
     pageController.previousPage(duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
     setState(() => pageIndex--);
-
-    return false;
   }
 
   List<ResetPasswordView> buildPages() {
     return [
       ResetPasswordEmailView(saveEmail: saveEmail),
-      ResetPasswordNewPassView(savePassword: savePassword, email: email),
-      ResetPasswordCodeView(password: password, email: email),
+      ResetPasswordCodeView(tempPassword: saveTempPassword, email: email),
+      ResetPasswordNewPassView(tempPassword: tempPassword, email: email),
       ResetPasswordCompleteView(email: email)
     ];
   }
@@ -91,7 +102,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                   child: Padding(
                     padding: EdgeInsets.only(left: 30, top: 24 + MediaQuery.of(context).viewPadding.top),
                     child: RippleIconButton(
-                      onPressed: () => Navigator.of(context).pop(context),
+                      onPressed: () => Navigator.of(context).maybePop(context),
                       icon: SvgPicture.asset('assets/icons/back.svg'),
                     ),
                   ),
@@ -108,6 +119,7 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     padding: const EdgeInsets.only(top: 20),
                     child: PageView(
                       controller: pageController,
+                      physics: const NeverScrollableScrollPhysics(),
                       children: buildPages(),
                     ),
                   ),

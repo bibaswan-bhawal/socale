@@ -17,7 +17,7 @@ import 'package:socale/types/auth/auth_step.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+  const LoginScreen({super.key});
 
   @override
   ConsumerState<LoginScreen> createState() => _LoginScreenState();
@@ -78,6 +78,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         break;
       case AuthFlowResult.genericError:
         showSnackBar(message: 'Something went wrong try again in a few minutes.');
+        break;
+      default:
         break;
     }
 

@@ -1,4 +1,4 @@
-enum AuthResetPassword {
+enum AuthResetPasswordResult {
   codeDeliverySuccessful,
   codeDeliveryFailure,
   tooManyRequests,
@@ -6,4 +6,5 @@ enum AuthResetPassword {
   unknownError,
   codeMismatch,
   expiredCode,
+  userNotFound,
 }

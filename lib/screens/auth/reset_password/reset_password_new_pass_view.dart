@@ -1,18 +1,22 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/text/headline.dart';
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_view.dart';
+import 'package:socale/types/auth/auth_change_password.dart';
+import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 
 class ResetPasswordNewPassView extends ResetPasswordView {
   final String email;
-  final Function(String) savePassword;
+  final String tempPassword;
 
-  const ResetPasswordNewPassView({super.key, required this.savePassword, required this.email});
+  const ResetPasswordNewPassView({super.key, required this.tempPassword, required this.email});
 
   @override
   ResetPasswordViewState createState() => _ResetPasswordNewPassViewState();
@@ -49,6 +53,42 @@ class _ResetPasswordNewPassViewState extends ResetPasswordViewState {
     }
   }
 
+  Future<bool> attemptResetPassword() async {
+    final authService = ref.read(authServiceProvider);
+
+    final result = await authService.changePassword(
+      email: (widget as ResetPasswordNewPassView).email,
+      currentPassword: (widget as ResetPasswordNewPassView).tempPassword,
+      newPassword: password!,
+    );
+
+    switch (result) {
+      case AuthChangePasswordResult.success:
+        return true;
+      case AuthChangePasswordResult.invalidPassword:
+        if (kDebugMode) print('Password Change - Invalid password');
+      case AuthChangePasswordResult.userNotFound:
+        if (kDebugMode) print('Password Change - User not found');
+      case AuthChangePasswordResult.timeout:
+        if (kDebugMode) print('Password Change - Timeout');
+      case AuthChangePasswordResult.notAuthorized:
+        if (kDebugMode) print('Password Change - Not authorized');
+      case AuthChangePasswordResult.tooManyRequests:
+        if (kDebugMode) print('Password Change - Too many requests');
+      default:
+        break;
+    }
+
+    if (mounted) {
+      SystemUI.showSnackBar(
+        message: 'There was a problem changing your password,\ntry again later.',
+        context: context,
+      );
+    }
+
+    return false;
+  }
+
   @override
   Future<bool> onBack() async {
     return true;
@@ -56,12 +96,10 @@ class _ResetPasswordNewPassViewState extends ResetPasswordViewState {
 
   @override
   Future<bool> onNext() async {
-    if (validateForm()) {
-      (widget as ResetPasswordNewPassView).savePassword(password!);
-      return true;
-    }
+    if (!validateForm()) return false;
+    if (!await attemptResetPassword()) return false;
 
-    return false;
+    return true;
   }
 
   @override

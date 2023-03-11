@@ -36,4 +36,15 @@ class SystemUI {
       SystemChrome.setEnabledSystemUIMode(SystemUiMode.edgeToEdge);
     }
   }
+
+  static showSnackBar({required String message, required BuildContext context, Duration? duration}) {
+    if (context.mounted) ScaffoldMessenger.of(context).clearSnackBars();
+    if (context.mounted) ScaffoldMessenger.of(context).removeCurrentSnackBar();
+
+    final snackBar = SnackBar(
+      content: Text(message, textAlign: TextAlign.center),
+      duration: duration ?? const Duration(seconds: 4),
+    );
+    if (context.mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+  }
 }

@@ -9,13 +9,10 @@ import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 
 class OnboardingService {
-  ProviderRef ref;
+  final ProviderRef ref;
+  final String apiHost = const String.fromEnvironment('BACKEND_URL');
 
-  late String apiHost;
-
-  OnboardingService(this.ref) {
-    apiHost = const String.fromEnvironment('BACKEND_URL');
-  }
+  const OnboardingService(this.ref);
 
   Future<bool> attemptAutoOnboard() async {
     return false;

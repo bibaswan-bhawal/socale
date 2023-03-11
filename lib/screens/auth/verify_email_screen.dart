@@ -38,7 +38,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   }
 
   void resendCode() async {
-    final sentSuccessfully = await ref.read(authServiceProvider).resendVerifyLink(_email);
+    await ref.read(authServiceProvider).resendVerifyLink(_email);
     // handle errors properly
     showSnackBar('A new link as been sent to your email');
     // } else {
