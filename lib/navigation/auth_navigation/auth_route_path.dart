@@ -5,13 +5,13 @@ import 'package:socale/types/auth/auth_step.dart';
 class AuthRoutePath extends AppRoutePath {
   AuthState appState;
 
-  AuthRoutePath.getStarted() : appState = AuthState(step: AuthStep.getStarted, previousStep: null);
+  AuthRoutePath.getStarted() : appState = const AuthState(step: AuthStep.getStarted, previousStep: null);
 
-  AuthRoutePath.signUp() : appState = AuthState(step: AuthStep.register, previousStep: AuthStep.getStarted);
+  AuthRoutePath.signUp() : appState = const AuthState(step: AuthStep.register, previousStep: AuthStep.getStarted);
 
-  AuthRoutePath.signIn() : appState = AuthState(step: AuthStep.login, previousStep: AuthStep.getStarted);
+  AuthRoutePath.signIn() : appState = const AuthState(step: AuthStep.login, previousStep: AuthStep.getStarted);
 
   AuthRoutePath.verifyEmail(AuthStep previousStep) : appState = AuthState(step: AuthStep.verifyEmail, previousStep: previousStep);
 
-  AuthRoutePath.forgotPassword() : appState = AuthState(step: AuthStep.forgotPassword, previousStep: AuthStep.login);
+  AuthRoutePath.forgotPassword() : appState = const AuthState(step: AuthStep.forgotPassword, previousStep: AuthStep.login);
 }

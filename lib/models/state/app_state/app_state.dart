@@ -8,13 +8,22 @@ class AppState with _$AppState {
   const AppState._();
 
   const factory AppState({
-    @Default(false) bool isAmplifyConfigured,
-    @Default(false) bool isLocalDBConfigured,
-    @Default(false) bool attemptAutoOnboard,
-    @Default(false) bool isLoggedIn,
-    @Default(false) bool attemptAutoLogin,
-    @Default(false) bool isOnboarded,
+    required bool isAmplifyConfigured,
+    required bool isLocalDBConfigured,
+    required bool attemptAutoOnboard,
+    required bool isLoggedIn,
+    required bool attemptAutoLogin,
+    required bool isOnboarded,
   }) = _AppState;
+
+  factory AppState.initial() => const AppState(
+        isAmplifyConfigured: false,
+        isLocalDBConfigured: false,
+        attemptAutoOnboard: false,
+        isLoggedIn: false,
+        attemptAutoLogin: false,
+        isOnboarded: false,
+      );
 
   bool get isInitialized {
     bool isInitialized = false;

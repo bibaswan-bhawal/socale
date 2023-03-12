@@ -5,7 +5,7 @@ import 'package:socale/providers/model_providers.dart';
 class AppStateNotifier extends StateNotifier<AppState> {
   StateNotifierProviderRef ref;
 
-  AppStateNotifier(this.ref) : super(AppState());
+  AppStateNotifier(this.ref) : super(AppState.initial());
 
   void setAmplifyConfigured() => state = state.copyWith(isAmplifyConfigured: true);
 
