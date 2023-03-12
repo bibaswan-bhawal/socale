@@ -1,4 +1,4 @@
-import 'package:socale/models/state/auth_state.dart';
+import 'package:socale/models/state/auth_state/auth_state.dart';
 import 'package:socale/navigation/main_navigation/main_route_path.dart';
 import 'package:socale/types/auth/auth_step.dart';
 

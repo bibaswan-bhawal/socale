@@ -1,5 +1,5 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/models/user/onboarding_user.dart';
+import 'package:socale/models/user/onboarding_user/onboarding_user.dart';
 
 class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
   KeepAliveLink? disposeLink;

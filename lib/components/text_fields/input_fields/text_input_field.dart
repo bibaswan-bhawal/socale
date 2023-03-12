@@ -18,6 +18,7 @@ class TextInputField extends StatefulWidget {
   final Iterable<String> autofillHints;
 
   final Function(String) onChanged;
+  final Function(String)? onSubmitted;
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -27,6 +28,7 @@ class TextInputField extends StatefulWidget {
     required this.hintText,
     this.isObscured = false,
     this.initialValue = '',
+    this.onSubmitted,
     this.textInputType = TextInputType.text,
     this.textInputAction = TextInputAction.done,
     this.textCapitalization = TextCapitalization.none,
@@ -126,6 +128,7 @@ class _TextInputFieldState extends State<TextInputField> {
                   focusNode: _focusNode,
                   controller: _controller,
                   onChanged: widget.onChanged,
+                  onSubmitted: widget.onSubmitted,
                   style: GoogleFonts.roboto(fontSize: 14, letterSpacing: -0.3),
                   cursorColor: ColorValues.socaleOrange,
                   cursorRadius: const Radius.circular(1),

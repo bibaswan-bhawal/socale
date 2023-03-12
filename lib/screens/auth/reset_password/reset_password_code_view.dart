@@ -1,8 +1,10 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:pin_code_fields/pin_code_fields.dart';
+import 'package:socale/components/buttons/link_button.dart';
 import 'package:socale/components/text/headline.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
@@ -14,9 +16,18 @@ import 'package:socale/utils/validators.dart';
 
 class ResetPasswordCodeView extends ResetPasswordView {
   final String email;
-  final Function(String) tempPassword;
+  final Duration timerDuration;
 
-  const ResetPasswordCodeView({super.key, required this.tempPassword, required this.email});
+  final Function(String) tempPassword;
+  final Function() startTimer;
+
+  const ResetPasswordCodeView({
+    super.key,
+    required this.tempPassword,
+    required this.email,
+    required this.startTimer,
+    required this.timerDuration,
+  });
 
   @override
   ResetPasswordViewState createState() => _ResetPasswordCodeViewState();
@@ -26,7 +37,6 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   String? code;
-
   String? tempPassword;
 
   void saveCode(String? value) => code = value;
@@ -79,6 +89,38 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
     }
   }
 
+  bool shouldShowResendButton() {
+    final widget = this.widget as ResetPasswordCodeView;
+
+    if (!(widget.timerDuration.inSeconds < 150)) return true;
+
+    return false;
+  }
+
+  Future<void> attemptSendEmail() async {
+    final widget = this.widget as ResetPasswordCodeView;
+
+    final authService = ref.read(authServiceProvider);
+
+    AuthResetPasswordResult result = await authService.sendResetPasswordCode(widget.email);
+
+    switch (result) {
+      case AuthResetPasswordResult.codeDeliverySuccessful:
+        if (mounted) SystemUI.showSnackBar(message: 'New code sent to ${widget.email}', context: context);
+        widget.startTimer();
+        return;
+      case AuthResetPasswordResult.codeDeliveryFailure:
+        if (mounted) SystemUI.showSnackBar(message: 'There was problem sending your code, please try again', context: context);
+        return;
+      case AuthResetPasswordResult.tooManyRequests:
+        if (mounted) SystemUI.showSnackBar(message: 'Too many requests, please try again later', context: context);
+        return;
+      default:
+        if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, please try again later', context: context);
+        return;
+    }
+  }
+
   @override
   Future<bool> onBack() async {
     return true;
@@ -92,9 +134,16 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
     return true;
   }
 
+  String strDigits(int n) => n.toString().padLeft(2, '0');
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
+    final widget = this.widget as ResetPasswordCodeView;
+
+    final minutes = widget.timerDuration.inMinutes.remainder(60);
+    final seconds = strDigits(widget.timerDuration.inSeconds.remainder(60));
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -113,7 +162,7 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
                 ),
               ),
               Text(
-                (widget as ResetPasswordCodeView).email,
+                widget.email,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.bold,
@@ -156,6 +205,27 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
                 ),
               ),
             ),
+          ),
+        ),
+        RepaintBoundary(
+          child: SizedBox(
+            height: 48,
+            child: !shouldShowResendButton()
+                ? Center(
+                    child: Text(
+                      'Resend Code in $minutes:$seconds',
+                      style: GoogleFonts.roboto(
+                        fontSize: 14,
+                        fontWeight: FontWeight.w500,
+                        letterSpacing: -0.3,
+                        color: Colors.black.withOpacity(0.5),
+                      ),
+                    ),
+                  )
+                : LinkButton(
+                    text: 'Resend Code',
+                    onPressed: attemptSendEmail,
+                  ),
           ),
         ),
       ],

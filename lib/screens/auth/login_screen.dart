@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/assets/text_field_icons.dart';
 import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/link_button.dart';
@@ -14,6 +15,7 @@ import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/types/auth/auth_result.dart';
 import 'package:socale/types/auth/auth_step.dart';
+import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -74,10 +76,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         setState(() => errorMessage = 'Incorrect password');
         break;
       case AuthFlowResult.userNotFound:
-        showSnackBar(message: "We couldn't find your account, try signing up.");
+        if (mounted) SystemUI.showSnackBar(message: "We couldn't find your account, try signing up.", context: context);
         break;
       case AuthFlowResult.genericError:
-        showSnackBar(message: 'Something went wrong try again in a few minutes.');
+        if (mounted) SystemUI.showSnackBar(message: 'Something went wrong try again in a few minutes.', context: context);
         break;
       default:
         break;
@@ -93,7 +95,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     } catch (e) {
       if (kDebugMode) print(e);
       ref.read(authServiceProvider).signOutUser();
-      showSnackBar(message: 'Something went wrong try again in a few minutes.');
+      SystemUI.showSnackBar(message: 'Something went wrong try again in a few minutes.', context: context);
     }
 
     return false;
@@ -107,17 +109,6 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     if (!await loginSuccessFlow() && mounted) return setState(() => isLoading = false);
 
     setState(() => isLoading = false);
-  }
-
-  void showSnackBar({required String message, Duration? duration}) {
-    if (mounted) ScaffoldMessenger.of(context).clearSnackBars();
-    if (mounted) ScaffoldMessenger.of(context).removeCurrentSnackBar();
-
-    final snackBar = SnackBar(
-      content: Text(message, textAlign: TextAlign.center),
-      duration: duration ?? const Duration(seconds: 1),
-    );
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
   @override
@@ -177,14 +168,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     hintText: 'Email Address',
                     textInputType: TextInputType.emailAddress,
                     autofillHints: const [AutofillHints.email],
-                    prefixIcon: SvgPicture.asset(
-                      'assets/icons/email.svg',
-                      colorFilter: const ColorFilter.mode(
-                        Color(0xFF808080),
-                        BlendMode.srcIn,
-                      ),
-                      fit: BoxFit.contain,
-                    ),
+                    prefixIcon: AppAssets.textFieldIcon('assets/icons/email.svg'),
                     onSaved: saveEmail,
                     validator: Validators.validateEmail,
                     textInputAction: TextInputAction.next,
@@ -193,16 +177,10 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                     hintText: 'Password',
                     textInputType: TextInputType.visiblePassword,
                     autofillHints: const [AutofillHints.password],
-                    prefixIcon: SvgPicture.asset(
-                      'assets/icons/lock.svg',
-                      colorFilter: const ColorFilter.mode(
-                        Color(0xFF808080),
-                        BlendMode.srcIn,
-                      ),
-                      fit: BoxFit.contain,
-                    ),
+                    prefixIcon: AppAssets.textFieldIcon('assets/icons/lock.svg'),
                     isObscured: true,
                     onSaved: savePassword,
+                    onSubmitted: (_) => onSubmit(),
                     validator: Validators.validatePassword,
                     textInputAction: TextInputAction.done,
                   ),

@@ -39,21 +39,26 @@ class AmplifyBackendService {
   }
 
   Future<void> attemptAutoLogin() async {
-    final result = await ref.read(authServiceProvider).autoLoginUser();
+    try {
+      final result = await ref.read(authServiceProvider).autoLoginUser();
 
-    switch (result) {
-      case AuthFlowResult.success:
-        final userAttributes = await Amplify.Auth.fetchUserAttributes();
-        final userEmail =
-            (userAttributes.firstWhere((element) => element.userAttributeKey == CognitoUserAttributeKey.email)).value;
-        await ref.read(authServiceProvider).loginSuccessful(userEmail);
-        break;
-      case AuthFlowResult.notAuthorized:
-        ref.read(appStateProvider.notifier).setLoggedOut();
-        break;
-      default:
-        break;
+      switch (result) {
+        case AuthFlowResult.success:
+          final userAttributes = await Amplify.Auth.fetchUserAttributes();
+          final userEmail =
+              (userAttributes.firstWhere((element) => element.userAttributeKey == CognitoUserAttributeKey.email)).value;
+          await ref.read(authServiceProvider).loginSuccessful(userEmail);
+          break;
+        default:
+          ref.read(authServiceProvider).signOutUser();
+          break;
+      }
+    } on UserNotFoundException {
+      ref.read(authServiceProvider).signOutUser();
+    } catch (e) {
+      rethrow;
     }
+
     ref.read(appStateProvider.notifier).setAttemptAutoLogin();
   }
 }

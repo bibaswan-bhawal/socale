@@ -5,7 +5,8 @@ import 'package:socale/providers/state_providers.dart';
 import 'package:socale/types/auth/auth_step.dart';
 import 'package:socale/navigation/auth_navigation/pages/auth_pages.dart';
 
-class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
+class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
+    with ChangeNotifier, PopNavigatorRouterDelegateMixin<AuthRoutePath> {
   AutoDisposeChangeNotifierProviderRef ref;
 
   @override
@@ -34,16 +35,14 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath> with ChangeNotifi
         pages.add(const RegisterPage());
         break;
       case AuthStep.verifyEmail:
-        switch (authState.previousStep) {
-          case AuthStep.login:
-            pages.add(const LoginPage());
-            break;
-          case AuthStep.register:
-            pages.add(const RegisterPage());
-            break;
+        if (authState.previousStep == AuthStep.login) {
+          pages.add(const LoginPage());
+        } else if (authState.previousStep == AuthStep.register) {
+          pages.add(const RegisterPage());
         }
-
         pages.add(const VerifyPage());
+        break;
+      default:
         break;
     }
 

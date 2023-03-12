@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
@@ -18,18 +20,56 @@ class ResetPasswordScreen extends StatefulWidget {
 
 class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final PageController pageController = PageController();
+  final Duration timerDuration = const Duration(seconds: 150);
 
   final List<LinearGradient> buttonBackground = [
     ColorValues.blackButtonGradient,
     ColorValues.orangeButtonGradient,
   ];
 
-  late String email;
-  late String tempPassword;
+  String email = '';
+  String tempPassword = '';
+
+  late Duration timeLeft;
 
   int pageIndex = 0;
 
   bool isLoading = false;
+
+  Timer? countdownTimer;
+
+  @override
+  void initState() {
+    super.initState();
+    timeLeft = timerDuration;
+  }
+
+  void setCountDown() {
+    setState(() {
+      final seconds = timeLeft.inSeconds - 1;
+
+      if (seconds < 0) {
+        timeLeft = timerDuration;
+        countdownTimer!.cancel();
+      } else {
+        timeLeft = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void startTimer() {
+    countdownTimer?.cancel();
+    timeLeft = timerDuration;
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+    setCountDown();
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    countdownTimer?.cancel();
+    super.dispose();
+  }
 
   void saveEmail(String value) => email = value;
 
@@ -75,10 +115,25 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
 
   List<ResetPasswordView> buildPages() {
     return [
-      ResetPasswordEmailView(saveEmail: saveEmail),
-      ResetPasswordCodeView(tempPassword: saveTempPassword, email: email),
-      ResetPasswordNewPassView(tempPassword: tempPassword, email: email),
-      ResetPasswordCompleteView(email: email)
+      ResetPasswordEmailView(
+        email: email,
+        saveEmail: saveEmail,
+        timerDuration: timeLeft,
+        startTimer: startTimer,
+      ),
+      ResetPasswordCodeView(
+        email: email,
+        tempPassword: saveTempPassword,
+        timerDuration: timeLeft,
+        startTimer: startTimer,
+      ),
+      ResetPasswordNewPassView(
+        tempPassword: tempPassword,
+        email: email,
+      ),
+      ResetPasswordCompleteView(
+        email: email,
+      )
     ];
   }
 

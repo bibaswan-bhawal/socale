@@ -12,7 +12,7 @@ class TextInputFormField extends FormField<String> {
 
   final Iterable<String> autofillHints;
 
-  final Function(String)? onError;
+  final Function(String)? onSubmitted;
 
   final Widget? prefixIcon;
   final Widget? suffixIcon;
@@ -27,9 +27,9 @@ class TextInputFormField extends FormField<String> {
     this.autofillHints = const [],
     this.prefixIcon,
     this.suffixIcon,
+    this.onSubmitted,
     FormFieldSetter<String>? onSaved,
     FormFieldValidator<String>? validator,
-    this.onError,
     String initialValue = '',
   }) : super(
           key: key,
@@ -44,6 +44,7 @@ class TextInputFormField extends FormField<String> {
               textInputType: textInputType,
               textInputAction: textInputAction,
               textCapitalization: textCapitalization,
+              onSubmitted: onSubmitted,
               prefixIcon: prefixIcon,
               autofillHints: autofillHints,
               onChanged: state.didChange,

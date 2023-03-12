@@ -9,6 +9,7 @@ class LinkButton extends Button {
   final bool wrap;
   final double? width;
   final bool visualFeedback;
+  final bool isLoading;
 
   const LinkButton({
     super.key,
@@ -20,6 +21,7 @@ class LinkButton extends Button {
     this.prefixText,
     this.wrap = false,
     this.visualFeedback = false,
+    this.isLoading = false,
   }) : assert(text != null);
 
   @override
@@ -47,7 +49,7 @@ class LinkButton extends Button {
                   radius: wrap ? (width! / 1.8) : 24,
                   splashFactory: visualFeedback ? InkRipple.splashFactory : NoSplash.splashFactory,
                   highlightColor: visualFeedback ? Colors.transparent : null,
-                  onTap: onPressed,
+                  onTap: isLoading ? () {} : onPressed,
                   child: SizedBox(
                     height: 48,
                     child: Center(

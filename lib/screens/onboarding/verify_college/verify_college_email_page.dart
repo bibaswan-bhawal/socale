@@ -15,11 +15,20 @@ import 'package:socale/utils/validators.dart';
 
 class VerifyCollegeEmailPage extends ConsumerStatefulWidget {
   final String? email;
+  final Duration timerDuration;
 
   final Function() next;
+  final Function() startTimer;
   final Function(String?) saveEmail;
 
-  const VerifyCollegeEmailPage({super.key, required this.next, required this.saveEmail, this.email});
+  const VerifyCollegeEmailPage({
+    super.key,
+    this.email,
+    required this.next,
+    required this.saveEmail,
+    required this.timerDuration,
+    required this.startTimer,
+  });
 
   @override
   ConsumerState<VerifyCollegeEmailPage> createState() => _VerifyCollegeEmailPageState();
@@ -94,36 +103,40 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
     return false;
   }
 
+  bool shouldSendEmail() {
+    if (widget.email != email) return true;
+    if (!(widget.timerDuration.inSeconds < 150)) return true;
+
+    return false;
+  }
+
   onSubmit() async {
     FocusManager.instance.primaryFocus?.unfocus();
     if (mounted) setState(() => isLoading = true);
 
     if (!validateForm() && mounted) return setState(() => isLoading = false);
+    if (!shouldSendEmail() && mounted) return setState(() => isLoading = false);
     if (!(await verifyCollegeEmail()) && mounted) return setState(() => isLoading = false);
     if (!(await sendCode()) && mounted) return setState(() => isLoading = false);
 
+    widget.startTimer();
     if (mounted) setState(() => isLoading = false);
     widget.next();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery
-        .of(context)
-        .size;
+    final size = MediaQuery.of(context).size;
 
     return Column(
       children: [
-        const GradientHeadline(
-          headlinePlain: 'Find your',
-          headlineColored: 'college',
-        ),
+        const GradientHeadline(headlinePlain: 'Find your', headlineColored: 'college'),
         Padding(
           padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Text(
             'Socale is made for students to connect\n'
-                'with their college community. To find your\n'
-                'college enter your edu email.',
+            'with their college community. To find your\n'
+            'college enter your edu email.',
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: (size.width * 0.034),

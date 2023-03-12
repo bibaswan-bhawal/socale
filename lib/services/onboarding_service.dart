@@ -28,11 +28,11 @@ class OnboardingService {
 
       final currentUser = ref.read(currentUserProvider);
       final onboardingUser = ref.read(onboardingUserProvider.notifier);
-      onboardingUser.setEmail(email: currentUser.email);
+      onboardingUser.setEmail(email: currentUser.user.email);
 
       if (hasCollegeEmail) {
         final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
-        if(idToken.groups.isEmpty) {
+        if (idToken.groups.isEmpty) {
           await addUserToCollege();
         }
       }
@@ -42,7 +42,10 @@ class OnboardingService {
   }
 
   Future<bool> checkCollegeEmailExists() async {
-    final email = ref.read(currentUserProvider).email;
+    final email = ref
+        .read(currentUserProvider)
+        .user
+        .email;
     final service = ref.read(emailVerificationProvider);
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 

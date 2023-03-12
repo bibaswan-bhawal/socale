@@ -1,15 +1,19 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/buttons/Action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/link_button.dart';
+import 'package:socale/components/text/gradient_headline.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/types/auth/auth_result.dart';
+import 'package:socale/types/auth/auth_verify_email.dart';
+import 'package:socale/utils/system_ui.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
   const VerifyEmailScreen({Key? key}) : super(key: key);
@@ -22,12 +26,20 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
   late String _email;
   late String _password;
 
+  final Duration timerDuration = const Duration(seconds: 150);
+
+  Timer? countdownTimer;
+
   bool isLoading = false;
+  bool isSending = false;
+
+  late Duration timeLeft;
 
   @override
   void initState() {
     super.initState();
 
+    timeLeft = timerDuration;
     String? email = ref.read(authStateProvider).email;
     String? password = ref.read(authStateProvider).password;
 
@@ -35,18 +47,72 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       _email = email;
       _password = password;
     }
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      startTimer();
+    });
   }
 
-  void resendCode() async {
-    await ref.read(authServiceProvider).resendVerifyLink(_email);
-    // handle errors properly
-    showSnackBar('A new link as been sent to your email');
-    // } else {
-    //   showSnackBar('There was an error sending you a code, try again later');
-    // }
+  void setCountDown() {
+    setState(() {
+      final seconds = timeLeft.inSeconds - 1;
+
+      if (seconds < 0) {
+        timeLeft = timerDuration;
+        countdownTimer!.cancel();
+      } else {
+        timeLeft = Duration(seconds: seconds);
+      }
+    });
   }
 
-  void confirmEmail() async {
+  void startTimer() {
+    countdownTimer?.cancel();
+    timeLeft = timerDuration;
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+    setCountDown();
+    setState(() {});
+  }
+
+  bool shouldShowResendButton() {
+    if (!(timeLeft.inSeconds < 150)) return true;
+    return false;
+  }
+
+  @override
+  void dispose() {
+    countdownTimer?.cancel();
+    super.dispose();
+  }
+
+  Future<void> resendCode() async {
+    if (isSending) return;
+    setState(() => isSending = true);
+    startTimer();
+    final result = await ref.read(authServiceProvider).resendVerifyLink(_email);
+
+    setState(() => isSending = false);
+    switch (result) {
+      case AuthVerifyEmailResult.codeDeliverySuccessful:
+        if (mounted) SystemUI.showSnackBar(message: 'A new link as been sent to $_email', context: context);
+        break;
+      case AuthVerifyEmailResult.userAlreadyConfirmed:
+        confirmEmail();
+        break;
+      case AuthVerifyEmailResult.limitExceeded:
+        if (mounted) {
+          SystemUI.showSnackBar(message: 'Hold your horses there... You\'ve already requested a link.', context: context);
+        }
+        break;
+      case AuthVerifyEmailResult.codeDeliveryFailure:
+        if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, try again in a few minutes.', context: context);
+        break;
+      default:
+        break;
+    }
+  }
+
+  Future<void> confirmEmail() async {
     if (!isLoading) {
       setState(() => isLoading = true);
 
@@ -57,13 +123,15 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           await ref.read(authServiceProvider).loginSuccessful(_email);
           return;
         case AuthFlowResult.unverified:
-          showSnackBar('Your email is not verified yet.');
+          if (mounted) SystemUI.showSnackBar(message: 'Your email is not verified yet.', context: context);
           break;
         case AuthFlowResult.genericError:
-          showSnackBar('Something went wrong, try again ina few minutes.');
+          if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, try again ina few minutes.', context: context);
           break;
         default:
+          if (mounted) SystemUI.showSnackBar(message: 'Something bad happened...', context: context);
           ref.invalidate(authStateProvider);
+          ref.read(authStateProvider);
           break;
       }
 
@@ -71,13 +139,13 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     }
   }
 
-  showSnackBar(String message) {
-    final snackBar = SnackBar(content: Text(message, textAlign: TextAlign.center));
-    if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  String strDigits(int n) => n.toString().padLeft(2, '0');
 
   @override
   Widget build(BuildContext context) {
+    final minutes = timeLeft.inMinutes.remainder(60);
+    final seconds = strDigits(timeLeft.inSeconds.remainder(60));
+
     final size = MediaQuery.of(context).size;
 
     return ScreenScaffold(
@@ -88,59 +156,71 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
               child: Image.asset('assets/illustrations/illustration_8.png'),
             ),
           ),
-          SimpleShadow(
-            opacity: 0.1,
-            offset: const Offset(1, 1),
-            sigma: 1,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+          const GradientHeadline(
+            headlinePlain: 'Confirm your ',
+            headlineColored: 'email',
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 10, bottom: 20),
+            child: Column(
               children: [
                 Text(
-                  'Confirm your ',
-                  style: GoogleFonts.poppins(
-                    color: Colors.black,
-                    fontSize: size.width * 0.058,
-                    fontWeight: FontWeight.bold,
+                  'We have sent an email to',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                    fontSize: (size.width * 0.034),
+                    color: ColorValues.textSubtitle,
                   ),
                 ),
-                ShaderMask(
-                  shaderCallback: (bounds) => const LinearGradient(
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                    colors: [ColorValues.socaleDarkOrange, ColorValues.socaleOrange],
-                  ).createShader(bounds),
-                  child: Text(
-                    'email',
-                    style: GoogleFonts.poppins(
-                        fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                Text(
+                  _email,
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                    fontWeight: FontWeight.bold,
+                    fontSize: (size.width * 0.036),
+                    color: ColorValues.textSubtitle,
+                  ),
+                ),
+                Text(
+                  'with a link to confirm your email.',
+                  textAlign: TextAlign.center,
+                  style: GoogleFonts.roboto(
+                    fontSize: (size.width * 0.034),
+                    color: ColorValues.textSubtitle,
                   ),
                 ),
               ],
             ),
           ),
-          Padding(
-            padding: const EdgeInsets.only(top: 10, bottom: 20),
-            child: Text(
-              'We have sent an email to\n$_email\nwith a link to confirm your email.',
-              textAlign: TextAlign.center,
-              style: GoogleFonts.roboto(
-                fontSize: (size.width * 0.038),
-                color: ColorValues.textSubtitle,
-              ),
-            ),
-          ),
-          ActionGroup(
-            actions: [
-              LinkButton(
-                onPressed: resendCode,
-                text: 'Resend link',
-                textStyle: GoogleFonts.roboto(
-                  fontSize: 12,
-                  decoration: TextDecoration.underline,
-                  fontWeight: FontWeight.w500,
-                  color: Colors.black.withOpacity(0.75),
+          if (!shouldShowResendButton())
+            SizedBox(
+              height: 48,
+              child: Center(
+                child: Text(
+                  'Resend Code in $minutes:$seconds',
+                  style: GoogleFonts.roboto(
+                    fontSize: 14,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: -0.3,
+                    color: Colors.black.withOpacity(0.5),
+                  ),
                 ),
               ),
+            ),
+          ActionGroup(
+            actions: [
+              if (shouldShowResendButton())
+                LinkButton(
+                  onPressed: resendCode,
+                  text: 'Resend link',
+                  isLoading: isSending,
+                  textStyle: GoogleFonts.roboto(
+                    fontSize: 12,
+                    decoration: TextDecoration.underline,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black.withOpacity(0.75),
+                  ),
+                ),
               GradientButton(
                 isLoading: isLoading,
                 onPressed: confirmEmail,

@@ -13,8 +13,19 @@ import 'package:socale/utils/validators.dart';
 
 class ResetPasswordEmailView extends ResetPasswordView {
   final Function(String) saveEmail;
+  final Function() startTimer;
 
-  const ResetPasswordEmailView({super.key, required this.saveEmail});
+  final String? email;
+
+  final Duration timerDuration;
+
+  const ResetPasswordEmailView({
+    super.key,
+    this.email,
+    required this.saveEmail,
+    required this.startTimer,
+    required this.timerDuration,
+  });
 
   @override
   ResetPasswordViewState createState() => _ResetPasswordEmailViewState();
@@ -51,12 +62,7 @@ class _ResetPasswordEmailViewState extends ResetPasswordViewState {
       case AuthResetPasswordResult.codeDeliverySuccessful:
         return true;
       case AuthResetPasswordResult.codeDeliveryFailure:
-        if (mounted) {
-          SystemUI.showSnackBar(
-            message: 'There was problem sending your code, please try again',
-            context: context,
-          );
-        }
+        if (mounted) SystemUI.showSnackBar(message: 'There was problem sending your code, please try again', context: context);
         return false;
       case AuthResetPasswordResult.tooManyRequests:
         if (mounted) SystemUI.showSnackBar(message: 'Too many requests, please try again later', context: context);
@@ -75,21 +81,32 @@ class _ResetPasswordEmailViewState extends ResetPasswordViewState {
     return true;
   }
 
+  bool shouldSendEmail() {
+    final widget = this.widget as ResetPasswordEmailView;
+
+    if (widget.email != email) return true;
+    if (!(widget.timerDuration.inSeconds < 150)) return true;
+
+    return false;
+  }
+
   @override
   Future<bool> onNext() async {
+    final widget = this.widget as ResetPasswordEmailView;
+
     if (!validateForm()) return false;
+    if (!shouldSendEmail()) return true;
     if (!await attemptSendEmail()) return false;
 
-    (widget as ResetPasswordEmailView).saveEmail(email!);
+    widget.startTimer();
+    widget.saveEmail(email!);
 
     return true;
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery
-        .of(context)
-        .size;
+    final size = MediaQuery.of(context).size;
 
     return Column(
       mainAxisSize: MainAxisSize.max,
@@ -99,7 +116,7 @@ class _ResetPasswordEmailViewState extends ResetPasswordViewState {
           padding: const EdgeInsets.only(top: 10, bottom: 20),
           child: Text(
             'To reset your password enter the email you \n'
-                'used to sign up for Socale',
+            'used to sign up for Socale',
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: (size.width * 0.034),

@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
@@ -19,11 +21,50 @@ class VerifyCollegeScreen extends ConsumerStatefulWidget {
 class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
   final PageController pageController = PageController();
 
+  final Duration timerDuration = const Duration(seconds: 150);
+
   String? email;
+
+  Timer? countdownTimer;
 
   int currentPage = 0;
 
+  late Duration timeLeft;
+
+  @override
+  void initState() {
+    super.initState();
+    timeLeft = timerDuration;
+  }
+
   saveEmail(String? email) => setState(() => this.email = email);
+
+  void setCountDown() {
+    setState(() {
+      final seconds = timeLeft.inSeconds - 1;
+
+      if (seconds < 0) {
+        timeLeft = timerDuration;
+        countdownTimer!.cancel();
+      } else {
+        timeLeft = Duration(seconds: seconds);
+      }
+    });
+  }
+
+  void startTimer() {
+    countdownTimer?.cancel();
+    timeLeft = timerDuration;
+    countdownTimer = Timer.periodic(const Duration(seconds: 1), (_) => setCountDown());
+    setCountDown();
+    setState(() {});
+  }
+
+  @override
+  void dispose() {
+    countdownTimer?.cancel();
+    super.dispose();
+  }
 
   next() {
     // user verified as student
@@ -59,9 +100,9 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
               Align(
                 alignment: Alignment.centerLeft,
                 child: Padding(
-                  padding: EdgeInsets.only(left: 30, top: 24 + MediaQuery.of(context).viewPadding.top),
+                  padding: EdgeInsets.only(left: 25, top: 24 + MediaQuery.of(context).viewPadding.top),
                   child: SizedBox(
-                    height: 24,
+                    height: 28,
                     child: InkResponse(
                       radius: 20,
                       splashFactory: InkRipple.splashFactory,
@@ -77,7 +118,7 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
                                   color: ColorValues.socaleOrange,
                                 ),
                               )
-                            : SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
+                            : SvgPicture.asset('assets/icons/back.svg', width: 28, height: 28, fit: BoxFit.contain),
                       ),
                     ),
                   ),
@@ -98,11 +139,15 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
                     VerifyCollegeEmailPage(
                       email: email,
                       next: next,
+                      timerDuration: timeLeft,
                       saveEmail: saveEmail,
+                      startTimer: startTimer,
                     ),
                     VerifyCollegeCodePage(
                       next: next,
                       email: email,
+                      timerDuration: timeLeft,
+                      startTimer: startTimer,
                     ),
                   ],
                 ),

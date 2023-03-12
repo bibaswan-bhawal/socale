@@ -8,6 +8,7 @@ import 'package:socale/providers/state_providers.dart';
 import 'package:socale/types/auth/auth_change_password.dart';
 import 'package:socale/types/auth/auth_reset_password.dart';
 import 'package:socale/types/auth/auth_result.dart';
+import 'package:socale/types/auth/auth_verify_email.dart';
 
 class AuthService {
   final ProviderRef ref;
@@ -28,10 +29,14 @@ class AuthService {
   Future<AuthFlowResult> autoLoginUser() async {
     try {
       final result = await Amplify.Auth.fetchAuthSession();
+
       if (result.isSignedIn) return AuthFlowResult.success;
 
       return AuthFlowResult.notAuthorized;
     } on AuthException {
+      return AuthFlowResult.genericError;
+    } catch (e) {
+      if (kDebugMode) print(e);
       return AuthFlowResult.genericError;
     }
   }
@@ -43,6 +48,9 @@ class AuthService {
     } on UsernameExistsException catch (_) {
       return await signInUser(email, password);
     } on AuthException {
+      return AuthFlowResult.genericError;
+    } catch (e) {
+      if (kDebugMode) print(e);
       return AuthFlowResult.genericError;
     }
   }
@@ -170,21 +178,30 @@ class AuthService {
     return response;
   }
 
-  Future<void> resendVerifyLink(String email) async {
+  Future<AuthVerifyEmailResult> resendVerifyLink(String email) async {
     try {
       await Amplify.Auth.resendSignUpCode(username: email);
-      return;
+      return AuthVerifyEmailResult.codeDeliverySuccessful;
+    } on CodeDeliveryFailureException {
+      return AuthVerifyEmailResult.codeDeliveryFailure;
+    } on LimitExceededException {
+      return AuthVerifyEmailResult.limitExceeded;
+    } on TooManyRequestsException {
+      return AuthVerifyEmailResult.limitExceeded;
+    } on InvalidParameterException {
+      return AuthVerifyEmailResult.userAlreadyConfirmed;
     } catch (e) {
       if (kDebugMode) print(e);
+      return AuthVerifyEmailResult.unknownError;
     }
   }
 
-  signOutUser() async {
+  Future<bool> signOutUser() async {
     try {
       await Amplify.Auth.signOut();
       ref.read(appStateProvider.notifier).setLoggedOut();
       return true;
-    } on AuthException catch (_) {
+    } on AuthException {
       return false;
     }
   }

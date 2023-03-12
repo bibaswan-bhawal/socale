@@ -67,14 +67,19 @@ class _ResetPasswordNewPassViewState extends ResetPasswordViewState {
         return true;
       case AuthChangePasswordResult.invalidPassword:
         if (kDebugMode) print('Password Change - Invalid password');
+        break;
       case AuthChangePasswordResult.userNotFound:
         if (kDebugMode) print('Password Change - User not found');
+        break;
       case AuthChangePasswordResult.timeout:
         if (kDebugMode) print('Password Change - Timeout');
+        break;
       case AuthChangePasswordResult.notAuthorized:
         if (kDebugMode) print('Password Change - Not authorized');
+        break;
       case AuthChangePasswordResult.tooManyRequests:
         if (kDebugMode) print('Password Change - Too many requests');
+        break;
       default:
         break;
     }

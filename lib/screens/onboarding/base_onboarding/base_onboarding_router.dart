@@ -21,21 +21,26 @@ class _BaseOnboardingRouterState extends ConsumerState<BaseOnboardingRouter> {
   void initState() {
     super.initState();
 
-    // Start loading all options for the onboarding process
-
     fetchOnboardingOptions();
   }
 
-  fetchOnboardingOptions() async {
-    ref.read(fetchMinorsProvider);
-    ref.read(fetchMajorsProvider);
-  }
+  /*
+   * Initialize the onboarding repository with
+   * with data from the server. As soon as we have
+   * the user's college we can start downloading all
+   * the data.
+   *
+   * Some of it doesn't require the user's college
+   * so we can asyncronously download that data.
+   * while we wait for the user's college info to
+   * become available.
+   */
+  fetchOnboardingOptions() async {}
 
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _backButtonDispatcher =
-        Router.of(context).backButtonDispatcher!.createChildBackButtonDispatcher();
+    _backButtonDispatcher = Router.of(context).backButtonDispatcher!.createChildBackButtonDispatcher();
   }
 
   void next() {

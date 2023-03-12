@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:socale/models/college/college.dart';
-import 'package:socale/models/college/major.dart';
-import 'package:socale/models/college/minor.dart';
+import 'package:socale/models/major/major.dart';
+import 'package:socale/models/minor/minor.dart';
 
 @immutable
 class OnboardingUser {

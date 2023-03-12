@@ -1,7 +1,7 @@
 import 'package:animations/animations.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:socale/models/user/onboarding_user.dart';
+import 'package:socale/models/user/onboarding_user/onboarding_user.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_router.dart';
@@ -41,8 +41,7 @@ class _OnboardingRouterState extends ConsumerState<OnboardingRouter> {
     }
   }
 
-  Widget buildTransition(
-      Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
+  Widget buildTransition(Widget child, Animation<double> animation, Animation<double> secondaryAnimation) {
     return FadeThroughTransition(
       animation: animation,
       secondaryAnimation: secondaryAnimation,

@@ -11,14 +11,25 @@ import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
 import 'package:socale/services/email_verification_service/email_verification_service.dart';
+import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 
 class VerifyCollegeCodePage extends ConsumerStatefulWidget {
   final String? email;
 
+  final Duration timerDuration;
+
+  final Function startTimer;
+
   final Function() next;
 
-  const VerifyCollegeCodePage({super.key, required this.next, required this.email});
+  const VerifyCollegeCodePage({
+    super.key,
+    required this.next,
+    required this.email,
+    required this.timerDuration,
+    required this.startTimer,
+  });
 
   @override
   ConsumerState<VerifyCollegeCodePage> createState() => _VerifyCollegeCodePageState();
@@ -27,9 +38,15 @@ class VerifyCollegeCodePage extends ConsumerStatefulWidget {
 class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
+  bool isLoading = false;
+  bool isSending = false;
+
   String? code;
 
-  bool isLoading = false;
+  bool shouldShowResendButton() {
+    if (!(widget.timerDuration.inSeconds < 150)) return true;
+    return false;
+  }
 
   saveCode(String? value) => setState(() => code = value);
 
@@ -48,18 +65,19 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
         changeUserGroup();
       } else {
         setState(() => isLoading = false);
-        if (mounted) showSnackBar(message: 'Incorrect Code, try again.');
+        if (mounted) SystemUI.showSnackBar(message: 'Incorrect Code, try again.', context: context);
       }
     }
   }
 
-  sendCode() async {
+  resendCode() async {
     EmailVerificationService service = ref.read(emailVerificationProvider);
     final response = await service.sendCode(widget.email!);
     if (response) {
-      showSnackBar(message: 'Sent a new code to ${widget.email}');
+      widget.startTimer();
+      if (mounted) SystemUI.showSnackBar(message: 'Sent a new code to ${widget.email}', context: context);
     } else {
-      showSnackBar(message: 'There was problem sending your code.');
+      if (mounted) SystemUI.showSnackBar(message: 'There was problem sending your code', context: context);
     }
   }
 
@@ -78,31 +96,17 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
     } catch (e) {
       if (kDebugMode) print(e);
       setState(() => isLoading = false);
-      showSnackBar(message: 'There was an error, try again.');
+      SystemUI.showSnackBar(message: 'There was an error, try again.', context: context);
     }
   }
 
-  void showSnackBar({required String message, Duration? duration}) {
-    ScaffoldMessenger.of(context).removeCurrentSnackBar(reason: SnackBarClosedReason.dismiss);
-    ScaffoldMessenger.of(context).clearSnackBars();
-
-    final snackBar = SnackBar(
-      content: Text(
-        message,
-        textAlign: TextAlign.center,
-        style: GoogleFonts.roboto(
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ),
-      ),
-      duration: duration ?? const Duration(seconds: 4),
-    );
-
-    ScaffoldMessenger.of(context).showSnackBar(snackBar);
-  }
+  String strDigits(int n) => n.toString().padLeft(2, '0');
 
   @override
   Widget build(BuildContext context) {
+    final minutes = widget.timerDuration.inMinutes.remainder(60);
+    final seconds = strDigits(widget.timerDuration.inSeconds.remainder(60));
+
     final size = MediaQuery.of(context).size;
 
     return Column(
@@ -184,13 +188,36 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
             ),
           ),
         ),
+        if (!shouldShowResendButton())
+          SizedBox(
+            height: 48,
+            child: Center(
+              child: Text(
+                'Resend Code in $minutes:$seconds',
+                style: GoogleFonts.roboto(
+                  fontSize: 14,
+                  fontWeight: FontWeight.w500,
+                  letterSpacing: -0.3,
+                  color: Colors.black.withOpacity(0.5),
+                ),
+              ),
+            ),
+          ),
         Padding(
           padding: const EdgeInsets.only(bottom: 40),
           child: ActionGroup(actions: [
-            LinkButton(
-              onPressed: sendCode,
-              text: 'resend code',
-            ),
+            if (shouldShowResendButton())
+              LinkButton(
+                onPressed: resendCode,
+                text: 'Resend link',
+                isLoading: isSending,
+                textStyle: GoogleFonts.roboto(
+                  fontSize: 12,
+                  decoration: TextDecoration.underline,
+                  fontWeight: FontWeight.w500,
+                  color: Colors.black.withOpacity(0.75),
+                ),
+              ),
             GradientButton(
               text: 'Verify',
               isLoading: isLoading,
