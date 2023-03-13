@@ -7,10 +7,16 @@ import 'package:socale/resources/colors.dart';
 import 'package:socale/transitions/curves.dart';
 
 class ChipCard extends StatelessWidget {
+  // Message to show on card when no options are selected
   final String emptyMessage;
+
+  // Search bar hint text
   final String searchHint;
 
+  // height of card
   final double height;
+
+  // horizontal padding of card
   final double horizontalPadding;
 
   final List? options;
@@ -342,9 +348,11 @@ class _SelectionMenuState extends State<_SelectionMenu> {
     super.initState();
 
     selectedOptions = widget.selectedOptions;
-    if (widget.options == null) return;
+
+    if (widget.options == null || widget.options!.isEmpty) return; // no list provided hence loading state.
+
     options = List.from(widget.options!);
-    options!.sort();
+    options!.sort((a, b) => a.compareTo(b));
     filteredOptions = options!;
 
     filteredOptions.removeWhere((element) => selectedOptions.contains(element));
@@ -356,11 +364,11 @@ class _SelectionMenuState extends State<_SelectionMenu> {
         return option.toString().toLowerCase().contains(searchText.toLowerCase());
       }).toList();
 
-      sortedFilteredList.sort();
+      sortedFilteredList.sort((a, b) => a.compareTo(b));
 
       setState(() => filteredOptions = sortedFilteredList);
     } else {
-      options!.sort();
+      options!.sort((a, b) => a.compareTo(b));
       setState(() => filteredOptions = options!);
     }
   }
@@ -470,29 +478,37 @@ class _SelectionMenuState extends State<_SelectionMenu> {
                 ),
               Expanded(
                 child: widget.options == null
-                    ? const Center(
-                        child: CircularProgressIndicator(),
-                      )
-                    : ClipRect(
-                        child: OverflowBox(
-                          maxWidth: MediaQuery.of(context).size.width,
-                          minWidth: MediaQuery.of(context).size.width,
-                          child: ListView.separated(
-                            padding: const EdgeInsets.only(top: 8),
-                            itemCount: filteredOptions.length,
-                            itemBuilder: (context, index) {
-                              return ListTile(
-                                dense: true,
-                                onTap: () => onSelected(index),
-                                title: Text(filteredOptions[index].toString()),
-                              );
-                            },
-                            separatorBuilder: (BuildContext context, int index) {
-                              return const Divider(thickness: 0.4, height: 8);
-                            },
+                    ? const Center(child: CircularProgressIndicator())
+                    : widget.options!.isEmpty
+                        ? Center(
+                            child: Text(
+                              'There was a problem loading all the options',
+                              style: GoogleFonts.roboto(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w500,
+                              ),
+                            ),
+                          )
+                        : ClipRect(
+                            child: OverflowBox(
+                              maxWidth: MediaQuery.of(context).size.width,
+                              minWidth: MediaQuery.of(context).size.width,
+                              child: ListView.separated(
+                                padding: const EdgeInsets.only(top: 8),
+                                itemCount: filteredOptions.length,
+                                itemBuilder: (context, index) {
+                                  return ListTile(
+                                    dense: true,
+                                    onTap: () => onSelected(index),
+                                    title: Text(filteredOptions[index].toString()),
+                                  );
+                                },
+                                separatorBuilder: (BuildContext context, int index) {
+                                  return const Divider(thickness: 0.4, height: 8);
+                                },
+                              ),
+                            ),
                           ),
-                        ),
-                      ),
               )
             ],
           ),

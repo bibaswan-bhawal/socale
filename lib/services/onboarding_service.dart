@@ -42,10 +42,8 @@ class OnboardingService {
   }
 
   Future<bool> checkCollegeEmailExists() async {
-    final email = ref
-        .read(currentUserProvider)
-        .user
-        .email;
+    final email = ref.read(currentUserProvider).user.email;
+
     final service = ref.read(emailVerificationProvider);
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 

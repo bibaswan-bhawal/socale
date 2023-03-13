@@ -1,18 +1,10 @@
-import 'dart:convert';
-import 'dart:io';
-
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
-import 'package:http/http.dart' as http;
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/cards/chip_card_form_field.dart';
 import 'package:socale/models/major/major.dart';
 import 'package:socale/providers/model_providers.dart';
-import 'package:socale/providers/service_providers.dart';
-import 'package:socale/resources/colors.dart';
+import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 import 'package:socale/screens/onboarding/base_onboarding/academic_info/academic_info_header.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
@@ -24,7 +16,7 @@ class AcademicInfoMajorScreen extends BaseOnboardingScreen {
 }
 
 class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
-  GlobalKey<FormState> majorFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   List<Major>? selectedMajors = [];
 
@@ -39,7 +31,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
   }
 
   bool validateMajor() {
-    final form = majorFormKey.currentState!;
+    final form = formKey.currentState!;
 
     if (form.validate()) return saveMajor();
 
@@ -47,7 +39,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
   }
 
   bool saveMajor() {
-    final form = majorFormKey.currentState!;
+    final form = formKey.currentState!;
     form.save();
 
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
@@ -64,49 +56,43 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
+    final majorsProvider = ref.watch(fetchMajorsProvider);
+
+    return Column(
       children: [
-        Expanded(
+        const Expanded(
           child: Hero(
             tag: 'academic_info_header',
             child: AcademicInfoHeader(),
+          ),
+        ),
+        Form(
+          key: formKey,
+          child: ChipCardFormField(
+            emptyMessage: 'Add your major',
+            searchHint: 'Search for your major',
+            height: 160,
+            horizontalPadding: 30,
+            options: majorsProvider.when(
+              data: (majors) {
+                // Handle when data is received
+                return majors;
+              },
+              error: (err, stack) {
+                // Handle when error is received
+                if (kDebugMode) print(err);
+                return []; // empty list shows error message
+              },
+              loading: () {
+                // Handle when loading
+                return null; // null list shows loading indicator
+              },
+            ),
+            initialValue: selectedMajors,
+            onSaved: saveMajors,
           ),
         ),
       ],
     );
   }
 }
-
-// Form(
-//   key: majorFormKey,
-//   child: majors.when(
-//     data: (majorsList) {
-//       return ChipCardFormField(
-//         emptyMessage: 'Add your major',
-//         searchHint: 'Search for your major',
-//         height: 160,
-//         horizontalPadding: 30,
-//         options: majorsList,
-//         initialValue: selectedMajors,
-//         onSaved: saveMajors,
-//       );
-//     },
-//     error: (err, stack) {
-//       if (kDebugMode) print(err);
-//       return const SizedBox(
-//         width: double.infinity,
-//         height: 160,
-//         child: Center(
-//           child: Text('Error loading minor'),
-//         ),
-//       );
-//     },
-//     loading: () {
-//       return const SizedBox(
-//         width: double.infinity,
-//         height: 160,
-//         child: Center(child: CircularProgressIndicator()),
-//       );
-//     },
-//   ),
-// ),

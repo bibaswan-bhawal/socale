@@ -91,7 +91,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
         setState(() => isLoading = false);
         widget.next();
       } else {
-        throw Exception('There was an error, try again.');
+        throw Exception('unable to add user to group');
       }
     } catch (e) {
       if (kDebugMode) print(e);

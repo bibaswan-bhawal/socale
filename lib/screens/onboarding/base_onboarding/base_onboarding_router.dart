@@ -4,8 +4,6 @@ import 'package:socale/components/paginators/page_view_controller.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/providers/service_providers.dart';
-import 'package:socale/screens/onboarding/base_onboarding/academic_info/academic_info_major.dart';
-import 'package:socale/screens/onboarding/base_onboarding/academic_info/academic_info_minor.dart';
 
 class BaseOnboardingRouter extends ConsumerStatefulWidget {
   const BaseOnboardingRouter({super.key});
