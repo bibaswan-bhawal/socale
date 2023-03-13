@@ -44,10 +44,8 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
     switch (step) {
       case AuthStep.verifyEmail:
         authState.setAuthStep(newStep: step, email: email, password: password);
-        break;
       default:
         authState.setAuthStep(newStep: step);
-        break;
     }
   }
 
@@ -71,18 +69,13 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
         return true;
       case AuthFlowResult.unverified:
         goTo(AuthStep.verifyEmail);
-        break;
       case AuthFlowResult.notAuthorized:
         setState(() => errorMessage = 'Incorrect password');
-        break;
       case AuthFlowResult.userNotFound:
         if (mounted) SystemUI.showSnackBar(message: "We couldn't find your account, try signing up.", context: context);
-        break;
       case AuthFlowResult.genericError:
         if (mounted) SystemUI.showSnackBar(message: 'Something went wrong try again in a few minutes.', context: context);
-        break;
       default:
-        break;
     }
 
     return false;

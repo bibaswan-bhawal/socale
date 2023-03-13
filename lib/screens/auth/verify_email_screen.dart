@@ -95,20 +95,15 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
     switch (result) {
       case AuthVerifyEmailResult.codeDeliverySuccessful:
         if (mounted) SystemUI.showSnackBar(message: 'A new link as been sent to $_email', context: context);
-        break;
       case AuthVerifyEmailResult.userAlreadyConfirmed:
         confirmEmail();
-        break;
       case AuthVerifyEmailResult.limitExceeded:
         if (mounted) {
           SystemUI.showSnackBar(message: 'Hold your horses there... You\'ve already requested a link.', context: context);
         }
-        break;
       case AuthVerifyEmailResult.codeDeliveryFailure:
         if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, try again in a few minutes.', context: context);
-        break;
       default:
-        break;
     }
   }
 
@@ -124,15 +119,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
           return;
         case AuthFlowResult.unverified:
           if (mounted) SystemUI.showSnackBar(message: 'Your email is not verified yet.', context: context);
-          break;
         case AuthFlowResult.genericError:
           if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, try again ina few minutes.', context: context);
-          break;
         default:
           if (mounted) SystemUI.showSnackBar(message: 'Something bad happened...', context: context);
           ref.invalidate(authStateProvider);
           ref.read(authStateProvider);
-          break;
       }
 
       setState(() => isLoading = false);

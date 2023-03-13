@@ -47,10 +47,8 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     switch (step) {
       case AuthStep.verifyEmail:
         authState.setAuthStep(newStep: step, email: email, password: password);
-        break;
       default:
         authState.setAuthStep(newStep: step);
-        break;
     }
   }
 
@@ -77,13 +75,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
           return;
         case AuthFlowResult.unverified:
           goTo(AuthStep.verifyEmail);
-          break;
         case AuthFlowResult.notAuthorized:
           showFormError('Looks like you already have an account. Try signing in.');
-          break;
         default:
           showFormError('Something went wrong. Please try again.');
-          break;
       }
     } else {
       showFormError('Enter a valid email and confirm passwords match');

@@ -26,14 +26,11 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
     switch (authState.step) {
       case AuthStep.login:
         pages.add(const LoginPage());
-        break;
       case AuthStep.forgotPassword:
         pages.add(const LoginPage());
         pages.add(const ResetPasswordPage());
-        break;
       case AuthStep.register:
         pages.add(const RegisterPage());
-        break;
       case AuthStep.verifyEmail:
         if (authState.previousStep == AuthStep.login) {
           pages.add(const LoginPage());
@@ -41,9 +38,7 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
           pages.add(const RegisterPage());
         }
         pages.add(const VerifyPage());
-        break;
       default:
-        break;
     }
 
     return pages;
