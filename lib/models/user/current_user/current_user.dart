@@ -1,7 +1,7 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/foundation.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:socale/models/user/user/user.dart';
+import 'package:socale/models/college/college.dart';
 
 part 'current_user.freezed.dart';
 
@@ -12,7 +12,12 @@ class CurrentUser with _$CurrentUser {
   const CurrentUser._();
 
   const factory CurrentUser({
-    @Default(User(email: '')) User user,
+    String? id,
+    College? college,
+    String? email,
+    String? collegeEmail,
+    String? firstName,
+    String? lastName,
     @JsonWebTokenSerializer() JsonWebToken? idToken,
     @JsonWebTokenSerializer() JsonWebToken? accessToken,
     String? refreshToken,

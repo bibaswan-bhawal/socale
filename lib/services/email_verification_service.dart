@@ -1,37 +1,27 @@
 import 'dart:convert';
-import 'dart:io';
 import 'dart:math';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 
 class EmailVerificationService {
   final AutoDisposeProviderRef ref;
-
-  late KeepAliveLink disposeLink;
-  late String apiHost;
+  final KeepAliveLink disposeLink;
 
   int? otp;
   String? email;
 
-  EmailVerificationService(this.ref) {
-    disposeLink = ref.keepAlive();
-    apiHost = const String.fromEnvironment('BACKEND_URL');
-  }
+  EmailVerificationService(this.ref) : disposeLink = ref.keepAlive();
 
   Future<bool> sendCode(String email) async {
-    final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
-
     otp = Random().nextInt(1000000 - 100000) + 100000; // generate 6 digit random code
     this.email = email;
 
-    final response = await http.get(
-      Uri.parse('$apiHost/api/send_college_verify_email'),
+    final response = await ref.read(apiServiceProvider).sendRequest(
+      endpoint: 'send_college_verify_email',
       headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
         'email': email,
         'code': otp.toString(),
       },
@@ -41,25 +31,19 @@ class EmailVerificationService {
     return false;
   }
 
-  Future<bool> verifyCode(int code) async {
-    if (otp == code) return true;
-    return false;
-  }
+  bool verifyCode(int code) => otp == code;
 
   Future<bool> verifyCollegeEmailValid(String email) async {
-    final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
-
-    final response = await http.get(
-      Uri.parse('$apiHost/api/verify_college_email'),
-      headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
-        'email': email,
-      },
+    final response = await ref.read(apiServiceProvider).sendRequest(
+      endpoint: 'verify_college_email',
+      headers: {'email': email},
     );
 
     if (response.statusCode != 200) return false;
 
     List colleges = jsonDecode(response.body); // This should only ever return 1 item
+
+    // TODO: probably use pattern matching here for cleaner code
 
     if (colleges.isEmpty) return false;
 
@@ -70,7 +54,5 @@ class EmailVerificationService {
     return true;
   }
 
-  dispose() {
-    disposeLink.close();
-  }
+  dispose() => disposeLink.close();
 }

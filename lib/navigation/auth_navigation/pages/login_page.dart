@@ -5,7 +5,7 @@ import 'package:socale/screens/auth/login_screen.dart';
 import 'package:socale/transitions/fade_switch_transition.dart';
 import 'package:socale/transitions/slide_horizontal_transition.dart';
 import 'package:socale/transitions/slide_vertical_transition.dart';
-import 'package:socale/types/auth/auth_step.dart';
+import 'package:socale/types/auth/state/auth_step_state.dart';
 
 class LoginPage extends Page {
   final Widget child = const LoginScreen();
@@ -43,10 +43,10 @@ class _Transition extends ConsumerWidget {
 
   @override
   Widget build(BuildContext context, WidgetRef ref) {
-    AuthStep? previousStep = ref.read(authStateProvider).previousStep;
-    AuthStep step = ref.read(authStateProvider).step;
+    AuthStepState? previousStep = ref.read(authStateProvider).previousStep;
+    AuthStepState step = ref.read(authStateProvider).step;
 
-    if (step == AuthStep.register && previousStep == AuthStep.login) {
+    if (step == AuthStepState.register && previousStep == AuthStepState.login) {
       return FadeSwitchTransition(
         animation: secondaryAnimation,
         secondary: true,
@@ -54,14 +54,14 @@ class _Transition extends ConsumerWidget {
       );
     }
 
-    if (step == AuthStep.login && previousStep == AuthStep.register) {
+    if (step == AuthStepState.login && previousStep == AuthStepState.register) {
       return FadeSwitchTransition(
         animation: animation,
         child: child,
       );
     }
 
-    if (step == AuthStep.forgotPassword && previousStep == AuthStep.login) {
+    if (step == AuthStepState.forgotPassword && previousStep == AuthStepState.login) {
       return SlideVerticalTransition(
         animation: secondaryAnimation,
         secondary: true,
@@ -69,7 +69,7 @@ class _Transition extends ConsumerWidget {
       );
     }
 
-    if (step == AuthStep.login && previousStep == AuthStep.forgotPassword) {
+    if (step == AuthStepState.login && previousStep == AuthStepState.forgotPassword) {
       return SlideVerticalTransition(
         animation: secondaryAnimation,
         secondary: true,

@@ -13,8 +13,8 @@ import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/types/auth/auth_result.dart';
-import 'package:socale/types/auth/auth_step.dart';
+import 'package:socale/types/auth/results/auth_flow_result.dart';
+import 'package:socale/types/auth/state/auth_step_state.dart';
 import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 
@@ -38,11 +38,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   void savePassword(String? value) => password = value;
 
-  void goTo(AuthStep step) {
+  void goTo(AuthStepState step) {
     final authState = ref.read(authStateProvider.notifier);
 
     switch (step) {
-      case AuthStep.verifyEmail:
+      case AuthStepState.verifyEmail:
         authState.setAuthStep(newStep: step, email: email, password: password);
       default:
         authState.setAuthStep(newStep: step);
@@ -68,7 +68,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       case AuthFlowResult.success:
         return true;
       case AuthFlowResult.unverified:
-        goTo(AuthStep.verifyEmail);
+        goTo(AuthStepState.verifyEmail);
       case AuthFlowResult.notAuthorized:
         setState(() => errorMessage = 'Incorrect password');
       case AuthFlowResult.userNotFound:
@@ -83,7 +83,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<bool> loginSuccessFlow() async {
     try {
-      await ref.read(authServiceProvider).loginSuccessful(email);
+      await ref.read(authServiceProvider).loginSuccessful();
       return true;
     } catch (e) {
       if (kDebugMode) print(e);
@@ -185,7 +185,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
           ActionGroup(
             actions: [
               LinkButton(
-                onPressed: () => goTo(AuthStep.register),
+                onPressed: () => goTo(AuthStepState.register),
                 prefixText: "Don't have an account?",
                 text: 'Register',
               ),
@@ -196,7 +196,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 linearGradient: ColorValues.orangeButtonGradient,
               ),
               LinkButton(
-                onPressed: () => goTo(AuthStep.forgotPassword),
+                onPressed: () => goTo(AuthStepState.forgotPassword),
                 text: 'Forgot Password? ',
                 textStyle: TextStyle(
                   decoration: TextDecoration.underline,

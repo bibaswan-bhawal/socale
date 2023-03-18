@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/backgrounds/light_background.dart';
 import 'package:socale/navigation/main_navigation/main_route_path.dart';
+import 'package:socale/navigation/main_navigation/pages/intro_router_page.dart';
 import 'package:socale/navigation/main_navigation/pages/main_pages.dart';
 import 'package:socale/providers/state_providers.dart';
 
@@ -22,6 +23,11 @@ class MainRouterDelegate extends RouterDelegate<AppRoutePath> with ChangeNotifie
 
     if (appState.isInitialized) {
       if (!appState.isLoggedIn) {
+        if (appState.showIntro) {
+          pages.add(const IntroRouterPage());
+          return pages;
+        }
+
         pages.add(const AuthPage());
         return pages;
       }

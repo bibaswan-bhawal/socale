@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:socale/screens/auth/auth_router.dart';
+import 'package:socale/screens/intro/intro_router.dart';
 import 'package:socale/transitions/fade_switch_transition.dart';
 
-class AuthPage extends Page {
-  final Widget child = const AuthRouter();
-
-  const AuthPage({super.key = const ValueKey('auth_page')});
+class IntroRouterPage extends Page {
+  const IntroRouterPage({super.key = const ValueKey('intro_router_page')});
 
   @override
   Route createRoute(BuildContext context) {
@@ -13,7 +11,7 @@ class AuthPage extends Page {
       settings: this,
       transitionDuration: const Duration(milliseconds: 400),
       reverseTransitionDuration: const Duration(milliseconds: 400),
-      pageBuilder: (context, animation, secondaryAnimation) => child,
+      pageBuilder: (context, animation, secondaryAnimation) => const IntroRouter(),
       transitionsBuilder: (context, animation, secondaryAnimation, child) {
         return FadeSwitchTransition(
           animation: animation,

@@ -1,4 +1,0 @@
-enum AuthLoginAction {
-  noAction,
-  forgotPassword,
-}

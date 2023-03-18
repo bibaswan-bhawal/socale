@@ -11,8 +11,8 @@ import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/types/auth/auth_result.dart';
-import 'package:socale/types/auth/auth_verify_email.dart';
+import 'package:socale/types/auth/results/auth_flow_result.dart';
+import 'package:socale/types/auth/results/auth_verify_email_result.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
@@ -115,7 +115,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
       switch (result) {
         case AuthFlowResult.success:
-          await ref.read(authServiceProvider).loginSuccessful(_email);
+          await ref.read(authServiceProvider).loginSuccessful();
           return;
         case AuthFlowResult.unverified:
           if (mounted) SystemUI.showSnackBar(message: 'Your email is not verified yet.', context: context);

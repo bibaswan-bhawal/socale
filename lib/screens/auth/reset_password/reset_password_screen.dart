@@ -162,20 +162,21 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
                     ),
                   ),
                 ),
-                SizedBox(
-                  width: size.width,
-                  height: size.width,
-                  child: Center(
-                    child: Image.asset('assets/illustrations/illustration_7.png'),
-                  ),
+                Flexible(
+                  fit: FlexFit.tight,
+                  child: Image.asset('assets/illustrations/illustration_7.png', width: size.width, height: size.width),
                 ),
-                Expanded(
-                  child: Padding(
-                    padding: const EdgeInsets.only(top: 20),
-                    child: PageView(
-                      controller: pageController,
-                      physics: const NeverScrollableScrollPhysics(),
-                      children: buildPages(),
+                Flexible(
+                  fit: FlexFit.loose,
+                  child: ConstrainedBox(
+                    constraints: BoxConstraints.loose(Size(size.width, 300)),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 20),
+                      child: PageView(
+                        controller: pageController,
+                        // physics: const NeverScrollableScrollPhysics(),
+                        children: buildPages(),
+                      ),
                     ),
                   ),
                 ),

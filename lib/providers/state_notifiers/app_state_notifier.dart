@@ -15,6 +15,8 @@ class AppStateNotifier extends StateNotifier<AppState> {
 
   void setAttemptAutoOnboard() => state = state.copyWith(attemptAutoOnboard: true);
 
+  void showIntro(bool showIntro) => state = state.copyWith(showIntro: showIntro);
+
   void setLoggedIn() => state = state.copyWith(isLoggedIn: true);
 
   void setOnboarded() {

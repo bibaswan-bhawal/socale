@@ -80,7 +80,7 @@ class PageViewController extends StatelessWidget {
               textStyle: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                color: Colors.black,
+                color: currentPage == pageCount - 1 ? ColorValues.socaleOrange : Colors.black,
               ),
             ),
           ),

@@ -9,7 +9,7 @@ import 'package:socale/components/text_fields/form_fields/text_input_form_field.
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/services/email_verification_service/email_verification_service.dart';
+import 'package:socale/services/email_verification_service.dart';
 import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 

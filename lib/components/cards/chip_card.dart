@@ -6,52 +6,7 @@ import 'package:socale/components/buttons/icon_button.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/transitions/curves.dart';
 
-class ChipCard extends StatelessWidget {
-  // Message to show on card when no options are selected
-  final String emptyMessage;
-
-  // Search bar hint text
-  final String searchHint;
-
-  // height of card
-  final double height;
-
-  // horizontal padding of card
-  final double horizontalPadding;
-
-  final List? options;
-
-  final List initialOptions;
-
-  final Function(List) onChanged;
-
-  const ChipCard({
-    super.key,
-    required this.height,
-    required this.horizontalPadding,
-    required this.emptyMessage,
-    required this.options,
-    required this.initialOptions,
-    required this.searchHint,
-    required this.onChanged,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return _ChipContainerTransform(
-      height: height,
-      horizontalPadding: horizontalPadding,
-      placeholder: emptyMessage,
-      options: options,
-      initialOptions: initialOptions,
-      searchHint: searchHint,
-      onChanged: onChanged,
-    );
-  }
-}
-
-class _ChipContainerTransform extends StatefulWidget {
-  final double height;
+class ChipCard extends StatefulWidget {
   final double horizontalPadding;
   final String placeholder;
   final String searchHint;
@@ -60,8 +15,8 @@ class _ChipContainerTransform extends StatefulWidget {
 
   final Function(List) onChanged;
 
-  const _ChipContainerTransform({
-    required this.height,
+  const ChipCard({
+    super.key,
     required this.horizontalPadding,
     required this.options,
     required this.initialOptions,
@@ -71,11 +26,13 @@ class _ChipContainerTransform extends StatefulWidget {
   });
 
   @override
-  State<_ChipContainerTransform> createState() => _ChipContainerTransformState();
+  State<ChipCard> createState() => _ChipCardState();
 }
 
-class _ChipContainerTransformState extends State<_ChipContainerTransform> with SingleTickerProviderStateMixin {
+class _ChipCardState extends State<ChipCard> with SingleTickerProviderStateMixin {
   GlobalKey<_SelectionMenuState> menuKey = GlobalKey<_SelectionMenuState>();
+
+  late double widgetHeight;
 
   OverlayEntry? overlay;
 
@@ -95,14 +52,20 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   void initState() {
     super.initState();
 
+    initializeAnimationController();
+    selectedOptions = widget.initialOptions;
+  }
+
+  void initializeAnimationController() {
     controller = AnimationController(
-        duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 400), vsync: this);
+      duration: const Duration(milliseconds: 500),
+      reverseDuration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(animationListener)
       ..addStatusListener(animationStatusListener);
-
-    selectedOptions = widget.initialOptions;
   }
 
   animationListener() {
@@ -125,10 +88,38 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
     super.dispose();
   }
 
-  Widget mainWidgetBuilder(double height) {
+  List<Widget> chipListBuilder() {
+    List<Widget> chips = [];
+
+    for (dynamic option in selectedOptions) {
+      chips.add(
+        Chip(
+          visualDensity: VisualDensity.compact,
+          padding: const EdgeInsets.all(4),
+          label: Text(
+            option.toString(),
+            style: GoogleFonts.roboto(
+              fontSize: 12,
+            ),
+          ),
+          onDeleted: () {
+            selectedOptions.removeAt(
+              selectedOptions.indexOf(option),
+            );
+
+            setState(() {});
+            widget.onChanged(selectedOptions);
+          },
+        ),
+      );
+    }
+
+    return chips;
+  }
+
+  Widget mainWidgetBuilder({double? height}) {
     return SizedBox(
       height: height,
-      width: double.infinity,
       child: GestureDetector(
         onTap: () => selectedOptions.isEmpty ? createOverlay() : null,
         child: _ChipContainer(
@@ -141,30 +132,10 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
                     padding: const EdgeInsets.only(top: 8, bottom: 8),
                     scrollDirection: Axis.vertical,
                     child: Wrap(
-                        direction: Axis.horizontal,
-                        spacing: 8,
-                        children: selectedOptions
-                            .map(
-                              (option) => Chip(
-                                visualDensity: VisualDensity.compact,
-                                padding: const EdgeInsets.all(4),
-                                label: Text(
-                                  option.toString(),
-                                  style: GoogleFonts.roboto(
-                                    fontSize: 12,
-                                  ),
-                                ),
-                                onDeleted: () {
-                                  selectedOptions.removeAt(
-                                    selectedOptions.indexOf(option),
-                                  );
-
-                                  setState(() {});
-                                  widget.onChanged(selectedOptions);
-                                },
-                              ),
-                            )
-                            .toList()),
+                      direction: Axis.horizontal,
+                      spacing: 8,
+                      children: chipListBuilder(),
+                    ),
                   ),
                 ),
         ),
@@ -173,16 +144,12 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   }
 
   Widget secondaryWidgetBuilder() {
-    return SizedBox(
-      height: MediaQuery.of(context).size.height,
-      width: MediaQuery.of(context).size.width,
-      child: _SelectionMenu(
-        onPressed: () => removeOverlay(),
-        searchHint: widget.searchHint,
-        options: widget.options,
-        selectedOptions: selectedOptions,
-        onChanged: setOptions,
-      ),
+    return _SelectionMenu(
+      onPressed: () => removeOverlay(),
+      searchHint: widget.searchHint,
+      options: widget.options,
+      selectedOptions: selectedOptions,
+      onChanged: setOptions,
     );
   }
 
@@ -192,8 +159,13 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
   Animatable<double> get paddingAnimation =>
       Tween<double>(begin: widget.horizontalPadding, end: 0).chain(CurveTween(curve: emphasized));
 
-  Animatable<double> get heightAnimation =>
-      Tween(begin: widget.height, end: MediaQuery.of(context).size.height).chain(CurveTween(curve: emphasized));
+  Animatable<double> get heightAnimation {
+    RenderBox? renderBox = context.findRenderObject() as RenderBox?;
+
+    return Tween(begin: renderBox!.size.height, end: MediaQuery.of(context).size.height).chain(
+      CurveTween(curve: emphasized),
+    );
+  }
 
   Animatable<double> get borderRadius => Tween(begin: 15.0, end: 2.0).chain(CurveTween(curve: emphasized));
 
@@ -215,7 +187,7 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
           child: FadeThroughAnimation(
             animation: animation,
             midPoint: 0.3,
-            first: mainWidgetBuilder(heightAnimation.evaluate(animation)),
+            first: mainWidgetBuilder(height: heightAnimation.evaluate(animation)),
             second: secondaryWidgetBuilder(),
           ),
         ),
@@ -245,7 +217,12 @@ class _ChipContainerTransformState extends State<_ChipContainerTransform> with S
         maintainSize: true,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-          child: mainWidgetBuilder(widget.height),
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              if (constraints.maxHeight == double.infinity) return mainWidgetBuilder();
+              return mainWidgetBuilder(height: constraints.maxHeight);
+            },
+          ),
         ),
       ),
     );
@@ -269,14 +246,12 @@ class _ChipContainer extends StatelessWidget {
   final Widget child;
   final Function() onAdd;
 
-  const _ChipContainer({
-    required this.child,
-    required this.onAdd,
-  });
+  const _ChipContainer({required this.child, required this.onAdd});
 
   @override
   Widget build(BuildContext context) {
     return Container(
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         border: Border.all(color: Colors.black, width: 2),
         borderRadius: BorderRadius.circular(15),
@@ -288,9 +263,8 @@ class _ChipContainer extends StatelessWidget {
         clipBehavior: Clip.antiAlias,
         child: Stack(
           children: [
-            Positioned(
-              right: 10,
-              top: 8,
+            Align(
+              alignment: Alignment.topRight,
               child: InkResponse(
                 onTap: onAdd,
                 child: SizedBox(
@@ -463,7 +437,7 @@ class _SelectionMenuState extends State<_SelectionMenu> {
               ),
               if (selectedOptions.isNotEmpty)
                 Container(
-                  margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                  margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
                   width: MediaQuery.of(context).size.width,
                   constraints: const BoxConstraints(maxHeight: 130),
                   child: SingleChildScrollView(

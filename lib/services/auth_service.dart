@@ -5,21 +5,27 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
-import 'package:socale/types/auth/auth_change_password.dart';
-import 'package:socale/types/auth/auth_reset_password.dart';
-import 'package:socale/types/auth/auth_result.dart';
-import 'package:socale/types/auth/auth_verify_email.dart';
+import 'package:socale/types/auth/results/auth_change_password_result.dart';
+import 'package:socale/types/auth/results/auth_reset_password_result.dart';
+import 'package:socale/types/auth/results/auth_flow_result.dart';
+import 'package:socale/types/auth/results/auth_verify_email_result.dart';
 
 class AuthService {
   final ProviderRef ref;
 
   const AuthService(this.ref);
 
-  Future<void> loginSuccessful(email) async {
+  Future<void> loginSuccessful() async {
+    final userId = (await Amplify.Auth.getCurrentUser()).userId;
+    final email = (await Amplify.Auth.fetchUserAttributes())
+        .firstWhere((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
+        .value;
+
     final currentUser = ref.read(currentUserProvider.notifier);
 
     await getAuthTokens();
 
+    currentUser.setId(userId);
     currentUser.setEmail(email);
 
     await ref.read(onboardingServiceProvider).init(); // check if onboarded

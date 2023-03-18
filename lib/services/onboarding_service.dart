@@ -1,34 +1,31 @@
-import 'dart:io';
-
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
-import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:http/http.dart' as http;
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 
 class OnboardingService {
   final ProviderRef ref;
-  final String apiHost = const String.fromEnvironment('BACKEND_URL');
 
   const OnboardingService(this.ref);
 
   Future<bool> attemptAutoOnboard() async {
+    if (kDebugMode) print('Checking if user is already onboarded...');
     return false;
   }
 
   Future<void> init() async {
-    final isOnboarded = await attemptAutoOnboard();
+    if (kDebugMode) print('Initializing Onboarding Service...');
 
-    if (isOnboarded) {
+    if (await attemptAutoOnboard()) {
       ref.read(appStateProvider.notifier).setOnboarded();
     } else {
       bool hasCollegeEmail = await checkCollegeEmailExists();
 
       final currentUser = ref.read(currentUserProvider);
       final onboardingUser = ref.read(onboardingUserProvider.notifier);
-      onboardingUser.setEmail(email: currentUser.user.email);
+      onboardingUser.setEmail(email: currentUser.email!);
 
       if (hasCollegeEmail) {
         final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
@@ -42,15 +39,18 @@ class OnboardingService {
   }
 
   Future<bool> checkCollegeEmailExists() async {
-    final email = ref.read(currentUserProvider).user.email;
+    final id = ref.read(currentUserProvider).id!;
+    final email = ref.read(currentUserProvider).email!;
 
     final service = ref.read(emailVerificationProvider);
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 
-    final verifyValidCollegeEmail = await service.verifyCollegeEmailValid(email);
+    onboardingUser.setId(id: id);
+    onboardingUser.setEmail(email: email);
 
-    if (verifyValidCollegeEmail) {
+    if (await service.verifyCollegeEmailValid(email)) {
       onboardingUser.setCollegeEmail(collegeEmail: email);
+      onboardingUser.setIsCollegeEmailVerified(isCollegeEmailVerified: true);
       return true;
     }
 
@@ -58,16 +58,12 @@ class OnboardingService {
   }
 
   Future<bool> addUserToCollege() async {
-    final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
     final onboardingUser = ref.read(onboardingUserProvider);
 
-    final userId = (await Amplify.Auth.getCurrentUser()).userId;
-
-    final response = await http.get(
-      Uri.parse('$apiHost/api/add_user_to_college'),
+    final response = await ref.read(apiServiceProvider).sendRequest(
+      endpoint: 'add_user_to_college',
       headers: {
-        HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}',
-        'username': userId,
+        'username': onboardingUser.id!,
         'college': onboardingUser.college!.id,
       },
     );
@@ -76,5 +72,12 @@ class OnboardingService {
 
     if (response.statusCode == 200) return true;
     return false;
+  }
+
+  Future<void> onboardUser() async {
+    final onboardingUser = ref.read(onboardingUserProvider);
+    if (kDebugMode) print(onboardingUser);
+
+    ref.read(appStateProvider.notifier).setOnboarded();
   }
 }

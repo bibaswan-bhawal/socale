@@ -6,7 +6,40 @@ import 'package:socale/resources/colors.dart';
 class GradientHeadline extends StatelessWidget {
   final String headlinePlain;
   final String headlineColored;
-  const GradientHeadline({super.key, required this.headlinePlain, required this.headlineColored});
+  final bool newLine;
+
+  const GradientHeadline({
+    super.key,
+    required this.headlinePlain,
+    required this.headlineColored,
+    this.newLine = false,
+  });
+
+  List<Widget> buildList(Size size) => [
+        Text(
+          '$headlinePlain ',
+          style: GoogleFonts.poppins(
+            color: Colors.black,
+            fontSize: size.width * 0.054,
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            begin: Alignment.bottomCenter,
+            end: Alignment.topCenter,
+            colors: [ColorValues.socaleDarkOrange, ColorValues.socaleOrange],
+          ).createShader(bounds),
+          child: Text(
+            headlineColored,
+            style: GoogleFonts.poppins(
+              fontSize: size.width * 0.054,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ];
 
   @override
   Widget build(BuildContext context) {
@@ -16,34 +49,9 @@ class GradientHeadline extends StatelessWidget {
       opacity: 0.1,
       offset: const Offset(1, 1),
       sigma: 1,
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            '$headlinePlain ',
-            style: GoogleFonts.poppins(
-              color: Colors.black,
-              fontSize: size.width * 0.058,
-              fontWeight: FontWeight.bold,
-            ),
-          ),
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              begin: Alignment.bottomCenter,
-              end: Alignment.topCenter,
-              colors: [ColorValues.socaleDarkOrange, ColorValues.socaleOrange],
-            ).createShader(bounds),
-            child: Text(
-              headlineColored,
-              style: GoogleFonts.poppins(
-                fontSize: size.width * 0.058,
-                fontWeight: FontWeight.bold,
-                color: Colors.white,
-              ),
-            ),
-          ),
-        ],
-      ),
+      child: newLine
+          ? Column(mainAxisAlignment: MainAxisAlignment.center, children: buildList(size))
+          : Row(mainAxisAlignment: MainAxisAlignment.center, children: buildList(size)),
     );
   }
 }

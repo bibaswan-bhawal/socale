@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/navigation/auth_navigation/auth_route_path.dart';
 import 'package:socale/providers/state_providers.dart';
-import 'package:socale/types/auth/auth_step.dart';
+import 'package:socale/types/auth/state/auth_step_state.dart';
 import 'package:socale/navigation/auth_navigation/pages/auth_pages.dart';
 
 class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
@@ -24,17 +24,17 @@ class AuthRouterDelegate extends RouterDelegate<AuthRoutePath>
     pages.add(const GetStartedPage());
 
     switch (authState.step) {
-      case AuthStep.login:
+      case AuthStepState.login:
         pages.add(const LoginPage());
-      case AuthStep.forgotPassword:
+      case AuthStepState.forgotPassword:
         pages.add(const LoginPage());
         pages.add(const ResetPasswordPage());
-      case AuthStep.register:
+      case AuthStepState.register:
         pages.add(const RegisterPage());
-      case AuthStep.verifyEmail:
-        if (authState.previousStep == AuthStep.login) {
+      case AuthStepState.verifyEmail:
+        if (authState.previousStep == AuthStepState.login) {
           pages.add(const LoginPage());
-        } else if (authState.previousStep == AuthStep.register) {
+        } else if (authState.previousStep == AuthStepState.register) {
           pages.add(const RegisterPage());
         }
         pages.add(const VerifyPage());

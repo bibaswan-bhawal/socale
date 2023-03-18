@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/navigation_providers.dart';
+import 'package:socale/utils/system_ui.dart';
 
 class AuthRouter extends ConsumerStatefulWidget {
   const AuthRouter({Key? key}) : super(key: key);
@@ -13,10 +14,15 @@ class _AuthRouterState extends ConsumerState<AuthRouter> {
   ChildBackButtonDispatcher? _backButtonDispatcher;
 
   @override
+  void initState() {
+    super.initState();
+    SystemUI.setSystemUIDark();
+  }
+
+  @override
   void didChangeDependencies() {
     super.didChangeDependencies();
-    _backButtonDispatcher =
-        Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
+    _backButtonDispatcher = Router.of(context).backButtonDispatcher?.createChildBackButtonDispatcher();
   }
 
   @override

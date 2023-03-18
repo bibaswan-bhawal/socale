@@ -11,8 +11,9 @@ class AppState with _$AppState {
     required bool isAmplifyConfigured,
     required bool isLocalDBConfigured,
     required bool attemptAutoOnboard,
-    required bool isLoggedIn,
     required bool attemptAutoLogin,
+    required bool isLoggedIn,
+    required bool showIntro,
     required bool isOnboarded,
   }) = _AppState;
 
@@ -20,8 +21,9 @@ class AppState with _$AppState {
         isAmplifyConfigured: false,
         isLocalDBConfigured: false,
         attemptAutoOnboard: false,
-        isLoggedIn: false,
         attemptAutoLogin: false,
+        showIntro: true,
+        isLoggedIn: false,
         isOnboarded: false,
       );
 

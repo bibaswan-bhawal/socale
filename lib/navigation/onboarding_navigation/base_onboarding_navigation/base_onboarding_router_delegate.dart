@@ -10,12 +10,8 @@ class BaseOnboardingRouterDelegate extends RouterDelegate<BaseOnboardingRoutePat
   final HeroController heroController = HeroController();
 
   late List<BaseOnboardingPage> pages = [
-    const IntroPageOne(),
-    const IntroPageTwo(),
-    const IntroPageThree(),
     const BasicInfoPage(),
-    const AcademicInfoMajorPage(),
-    const AcademicInfoMinorPage(),
+    const AcademicInfoPage(),
   ];
 
   int currentPage = 0;

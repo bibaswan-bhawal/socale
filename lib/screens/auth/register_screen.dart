@@ -12,8 +12,8 @@ import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/types/auth/auth_result.dart';
-import 'package:socale/types/auth/auth_step.dart';
+import 'package:socale/types/auth/results/auth_flow_result.dart';
+import 'package:socale/types/auth/state/auth_step_state.dart';
 import 'package:socale/utils/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
 
@@ -41,11 +41,11 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
   saveConfirmPassword(String? value) => confirmPassword = value;
 
-  goTo(AuthStep step) {
+  goTo(AuthStepState step) {
     final authState = ref.read(authStateProvider.notifier);
 
     switch (step) {
-      case AuthStep.verifyEmail:
+      case AuthStepState.verifyEmail:
         authState.setAuthStep(newStep: step, email: email, password: password);
       default:
         authState.setAuthStep(newStep: step);
@@ -71,10 +71,10 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       switch (result) {
         case AuthFlowResult.success:
-          await ref.read(authServiceProvider).loginSuccessful(email);
+          await ref.read(authServiceProvider).loginSuccessful();
           return;
         case AuthFlowResult.unverified:
-          goTo(AuthStep.verifyEmail);
+          goTo(AuthStepState.verifyEmail);
         case AuthFlowResult.notAuthorized:
           showFormError('Looks like you already have an account. Try signing in.');
         default:
@@ -264,7 +264,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
               child: ActionGroup(
                 actions: [
                   LinkButton(
-                    onPressed: () => goTo(AuthStep.login),
+                    onPressed: () => goTo(AuthStepState.login),
                     text: 'Sign In',
                     prefixText: 'Already have an account?',
                   ),

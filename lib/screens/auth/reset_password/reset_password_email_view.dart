@@ -7,7 +7,7 @@ import 'package:socale/components/text_fields/input_forms/default_input_form.dar
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_view.dart';
-import 'package:socale/types/auth/auth_reset_password.dart';
+import 'package:socale/types/auth/results/auth_reset_password_result.dart';
 import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 

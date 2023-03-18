@@ -15,7 +15,7 @@ dependencies:
 
   http: ^0.13.5
 
-  rive: ^0.10.2
+  rive: ^0.10.3
 
   # Amplify libraries
   amplify_flutter: ^1.0.0-next.6
@@ -29,12 +29,10 @@ dependencies:
   flutter_local_notifications: ^13.0.0
 
   # Riverpod libraries
-  flutter_riverpod: ^2.3.1
-  riverpod_annotation: ^2.0.1
+  flutter_riverpod: ^2.3.2
+  riverpod_annotation: ^2.0.2
 
   # Local database libraries
-  isar: ^3.0.5
-  isar_flutter_libs: ^3.0.5
   shared_preferences: ^2.0.18
 
   # UI libraries
@@ -60,8 +58,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.1
-  riverpod_generator: ^2.1.3
-  isar_generator: ^3.0.5
+  riverpod_generator: ^2.1.4
   build_runner: ^2.3.3
   freezed: ^2.3.2
   json_serializable: ^6.6.1

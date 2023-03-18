@@ -43,12 +43,11 @@ class _BaseOnboardingRouterState extends ConsumerState<BaseOnboardingRouter> {
 
   void next() {
     final currentPage = ref.read(baseOnboardingRouterDelegateProvider).currentPage;
+    final maxPages = ref.read(baseOnboardingRouterDelegateProvider).pages.length;
 
-    switch (currentPage) {
-      default:
-        ref.read(baseOnboardingRouterDelegateProvider).nextPage();
-        break;
-    }
+    if (currentPage == maxPages - 1) return;
+
+    ref.read(baseOnboardingRouterDelegateProvider).nextPage();
   }
 
   void back() {

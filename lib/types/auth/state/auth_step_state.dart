@@ -1,4 +1,4 @@
-enum AuthStep {
+enum AuthStepState {
   getStarted,
   login,
   register,

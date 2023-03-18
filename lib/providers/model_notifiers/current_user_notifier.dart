@@ -11,11 +11,17 @@ class CurrentUserNotifier extends StateNotifier<CurrentUser> {
     disposeLink = ref.keepAlive();
   }
 
-  setEmail(value) => state = state.copyWith.user(email: value);
+  setId(value) => state = state.copyWith(id: value);
 
-  setFirstName(value) => state = state.copyWith.user(firstName: value);
+  setEmail(value) => state = state.copyWith(email: value);
 
-  setLastName(value) => state = state.copyWith.user(lastName: value);
+  setCollegeEmail(value) => state = state.copyWith(collegeEmail: value);
+
+  setCollege(value) => state = state.copyWith(college: value);
+
+  setFirstName(value) => state = state.copyWith(firstName: value);
+
+  setLastName(value) => state = state.copyWith(lastName: value);
 
   setTokens({JsonWebToken? idToken, JsonWebToken? accessToken, String? refreshToken}) => state = state.copyWith(
         idToken: idToken,

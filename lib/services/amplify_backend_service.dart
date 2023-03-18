@@ -3,7 +3,7 @@ import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
-import 'package:socale/types/auth/auth_result.dart';
+import 'package:socale/types/auth/results/auth_flow_result.dart';
 import 'package:socale/amplifyconfiguration.dart';
 
 class AmplifyBackendService {
@@ -44,10 +44,7 @@ class AmplifyBackendService {
 
       switch (result) {
         case AuthFlowResult.success:
-          final userAttributes = await Amplify.Auth.fetchUserAttributes();
-          final userEmail =
-              (userAttributes.firstWhere((element) => element.userAttributeKey == CognitoUserAttributeKey.email)).value;
-          await ref.read(authServiceProvider).loginSuccessful(userEmail);
+          await ref.read(authServiceProvider).loginSuccessful();
           break;
         default:
           ref.read(authServiceProvider).signOutUser();

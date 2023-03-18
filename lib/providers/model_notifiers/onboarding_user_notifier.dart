@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/user/onboarding_user/onboarding_user.dart';
 
@@ -8,7 +9,10 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
 
   OnboardingUserNotifier(this.ref) : super(const OnboardingUser()) {
     disposeLink = ref.keepAlive();
+    if (kDebugMode) print('Creating onboarding model');
   }
+
+  setId({id}) => state = state.copyWith(id: id);
 
   setCollege({college}) => state = state.copyWith(college: college);
 
@@ -28,7 +32,13 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
 
   setMinors({minors}) => state = state.copyWith(minors: minors);
 
-  disposeState() {
-    disposeLink?.close();
+  setIsCollegeEmailVerified({isCollegeEmailVerified}) => state = state.copyWith(isCollegeEmailVerified: isCollegeEmailVerified);
+
+  @override
+  dispose() {
+    super.dispose();
+    if (kDebugMode) print('Destroying onboarding model');
   }
+
+  disposeState() => disposeLink?.close();
 }

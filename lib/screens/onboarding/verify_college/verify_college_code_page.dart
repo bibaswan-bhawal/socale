@@ -10,7 +10,7 @@ import 'package:socale/components/buttons/link_button.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
-import 'package:socale/services/email_verification_service/email_verification_service.dart';
+import 'package:socale/services/email_verification_service.dart';
 import 'package:socale/utils/system_ui.dart';
 import 'package:socale/utils/validators.dart';
 
@@ -50,16 +50,14 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
 
   saveCode(String? value) => setState(() => code = value);
 
-  validateForm() async {
+  validateForm() {
     setState(() => isLoading = true);
     final form = formKey.currentState!;
 
     if (form.validate()) {
       form.save();
 
-      EmailVerificationService service = ref.read(emailVerificationProvider);
-
-      final result = await service.verifyCode(int.parse(code!));
+      final result = ref.read(emailVerificationProvider).verifyCode(int.parse(code!));
 
       if (result) {
         changeUserGroup();

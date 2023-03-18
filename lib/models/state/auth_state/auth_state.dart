@@ -1,4 +1,4 @@
-import 'package:socale/types/auth/auth_step.dart';
+import 'package:socale/types/auth/state/auth_step_state.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:flutter/foundation.dart';
 
@@ -7,11 +7,11 @@ part 'auth_state.freezed.dart';
 @freezed
 class AuthState with _$AuthState {
   const factory AuthState({
-    required AuthStep step,
-    AuthStep? previousStep,
+    required AuthStepState step,
+    AuthStepState? previousStep,
     String? email,
     String? password,
   }) = _AuthState;
 
-  factory AuthState.initial() => const AuthState(step: AuthStep.getStarted);
+  factory AuthState.initial() => const AuthState(step: AuthStepState.getStarted);
 }
