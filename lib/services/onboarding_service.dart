@@ -21,11 +21,15 @@ class OnboardingService {
     if (await attemptAutoOnboard()) {
       ref.read(appStateProvider.notifier).setOnboarded();
     } else {
+      final onboardingUser = ref.read(onboardingUserProvider.notifier);
+
+      final id = ref.read(currentUserProvider).id!;
+      final email = ref.read(currentUserProvider).email!;
+
       bool hasCollegeEmail = await checkCollegeEmailExists();
 
-      final currentUser = ref.read(currentUserProvider);
-      final onboardingUser = ref.read(onboardingUserProvider.notifier);
-      onboardingUser.setEmail(email: currentUser.email!);
+      onboardingUser.setId(id: id);
+      onboardingUser.setEmail(email: email);
 
       if (hasCollegeEmail) {
         final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
@@ -39,13 +43,11 @@ class OnboardingService {
   }
 
   Future<bool> checkCollegeEmailExists() async {
-    final id = ref.read(currentUserProvider).id!;
     final email = ref.read(currentUserProvider).email!;
 
     final service = ref.read(emailVerificationProvider);
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 
-    onboardingUser.setId(id: id);
     onboardingUser.setEmail(email: email);
 
     if (await service.verifyCollegeEmailValid(email)) {
