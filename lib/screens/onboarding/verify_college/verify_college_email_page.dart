@@ -7,6 +7,7 @@ import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/text/gradient_headline.dart';
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/services/email_verification_service.dart';
@@ -20,12 +21,14 @@ class VerifyCollegeEmailPage extends ConsumerStatefulWidget {
   final Function() next;
   final Function() startTimer;
   final Function(String?) saveEmail;
+  final Function(College?) saveCollege;
 
   const VerifyCollegeEmailPage({
     super.key,
     this.email,
     required this.next,
     required this.saveEmail,
+    required this.saveCollege,
     required this.timerDuration,
     required this.startTimer,
   });
@@ -48,13 +51,9 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
   }
 
   bool validateForm() {
-    if (kDebugMode) print('verify_college_email_page.dart: form validating');
-
     final form = formKey.currentState!;
     setState(() => errorMessage = null);
     if (form.validate()) {
-      if (kDebugMode) print('verify_college_email_page.dart: form valid');
-
       form.save();
 
       return true;
@@ -65,19 +64,18 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
   }
 
   Future<bool> verifyCollegeEmail() async {
-    if (kDebugMode) print('verify_college_email_page.dart: email validating');
-
-    EmailVerificationService service = ref.read(emailVerificationProvider);
+    final service = ref.read(onboardingServiceProvider);
 
     try {
-      final response = await service.verifyCollegeEmailValid(email!);
+      College? college = await service.getCollegeByEmail(email!);
 
-      if (response) {
-        if (kDebugMode) print('verify_college_email_page.dart: email valid');
+      if (college != null) {
+        widget.saveCollege(college);
         return true;
+      } else {
+        setState(() => errorMessage = 'Socale is not available at your college yet.');
+        return false;
       }
-
-      throw Exception();
     } catch (e) {
       if (kDebugMode) print(e);
       SystemUI.showSnackBar(context: context, message: 'There was problem sending your code.');
@@ -87,14 +85,12 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
   }
 
   Future<bool> sendCode() async {
-    if (kDebugMode) print('verify_college_email_page.dart: sending code');
-
     EmailVerificationService service = ref.read(emailVerificationProvider);
 
     try {
-      final response = await service.sendCode(email!);
-      if (response) return true;
-      throw Exception();
+      await service.sendCode(email!);
+      if (mounted) SystemUI.showSnackBar(context: context, message: 'A new code was sent to $email');
+      return true;
     } catch (e) {
       if (kDebugMode) print(e);
       SystemUI.showSnackBar(context: context, message: 'There was problem sending your code.');
@@ -112,16 +108,17 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
 
   onSubmit() async {
     FocusManager.instance.primaryFocus?.unfocus();
-    if (mounted) setState(() => isLoading = true);
+    setState(() => isLoading = true);
 
-    if (!validateForm() && mounted) return setState(() => isLoading = false);
-    if (!shouldSendEmail() && mounted) return setState(() => isLoading = false);
-    if (!(await verifyCollegeEmail()) && mounted) return setState(() => isLoading = false);
-    if (!(await sendCode()) && mounted) return setState(() => isLoading = false);
+    if (!validateForm() || !shouldSendEmail() || !(await verifyCollegeEmail()) || !(await sendCode())) {
+      return setState(() => isLoading = false);
+    }
 
-    widget.startTimer();
-    if (mounted) setState(() => isLoading = false);
-    widget.next();
+    if (mounted) {
+      widget.startTimer();
+      setState(() => isLoading = false);
+      widget.next();
+    }
   }
 
   @override

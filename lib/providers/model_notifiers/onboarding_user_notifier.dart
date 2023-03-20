@@ -1,5 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/models/college/college.dart';
+import 'package:socale/models/major/major.dart';
+import 'package:socale/models/minor/minor.dart';
 import 'package:socale/models/user/onboarding_user/onboarding_user.dart';
 
 class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
@@ -12,27 +15,28 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
     if (kDebugMode) print('Creating onboarding model');
   }
 
-  setId({id}) => state = state.copyWith(id: id);
+  setId(String? id) => state = state.copyWith(id: id);
 
-  setCollege({college}) => state = state.copyWith(college: college);
+  setCollege(College? college) => state = state.copyWith(college: college);
 
-  setEmail({email}) => state = state.copyWith(email: email);
+  setEmail(String? email) => state = state.copyWith(email: email);
 
-  setCollegeEmail({collegeEmail}) => state = state.copyWith(collegeEmail: collegeEmail);
+  setCollegeEmail(String? collegeEmail) => state = state.copyWith(collegeEmail: collegeEmail);
 
-  setFirstName({firstName}) => state = state.copyWith(firstName: firstName);
+  setFirstName(String? firstName) => state = state.copyWith(firstName: firstName);
 
-  setLastName({lastName}) => state = state.copyWith(lastName: lastName);
+  setLastName(String? lastName) => state = state.copyWith(lastName: lastName);
 
-  setDateOfBirth({dateOfBirth}) => state = state.copyWith(dateOfBirth: dateOfBirth);
+  setDateOfBirth(DateTime? dateOfBirth) => state = state.copyWith(dateOfBirth: dateOfBirth);
 
-  setGraduationDate({graduationDate}) => state = state.copyWith(graduationDate: graduationDate);
+  setGraduationDate(DateTime? graduationDate) => state = state.copyWith(graduationDate: graduationDate);
 
-  setMajors({majors}) => state = state.copyWith(majors: majors);
+  setMajors(List<Major>? majors) => state = state.copyWith(majors: majors);
 
-  setMinors({minors}) => state = state.copyWith(minors: minors);
+  setMinors(List<Minor>? minors) => state = state.copyWith(minors: minors);
 
-  setIsCollegeEmailVerified({isCollegeEmailVerified}) => state = state.copyWith(isCollegeEmailVerified: isCollegeEmailVerified);
+  setIsCollegeEmailVerified(bool isCollegeEmailVerified) =>
+      state = state.copyWith(isCollegeEmailVerified: isCollegeEmailVerified);
 
   @override
   dispose() {

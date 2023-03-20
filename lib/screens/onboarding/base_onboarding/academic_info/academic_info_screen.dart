@@ -67,7 +67,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
     final majorForm = majorFormKey.currentState;
     if (majorForm == null) return true;
     majorForm.save();
-    ref.read(onboardingUserProvider.notifier).setMajors(majors: selectedMajors);
+    ref.read(onboardingUserProvider.notifier).setMajors(selectedMajors);
     return true;
   }
 
@@ -75,7 +75,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
     final minorForm = minorFormKey.currentState;
     if (minorForm == null) return true;
     minorForm.save();
-    ref.read(onboardingUserProvider.notifier).setMinors(minors: selectedMinors);
+    ref.read(onboardingUserProvider.notifier).setMinors(selectedMinors);
     return true;
   }
 
@@ -93,7 +93,10 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
     return Column(
       children: [
         const Flexible(flex: 5, child: Hero(tag: 'academic_info_header', child: AcademicInfoHeader())),
-        SectionTabBar(controller: tabController, tabs: const [SectionTab(title: 'Majors'), SectionTab(title: 'Minors')]),
+        SectionTabBar(
+          controller: tabController,
+          tabs: const [SectionTab(title: 'Majors'), SectionTab(title: 'Minors')],
+        ),
         Flexible(
           flex: 2,
           child: TabBarView(

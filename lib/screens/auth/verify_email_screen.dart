@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -99,10 +100,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         confirmEmail();
       case AuthVerifyEmailResult.limitExceeded:
         if (mounted) {
-          SystemUI.showSnackBar(message: 'Hold your horses there... You\'ve already requested a link.', context: context);
+          SystemUI.showSnackBar(
+              message: 'Hold your horses there... You\'ve already requested a link.', context: context);
         }
       case AuthVerifyEmailResult.codeDeliveryFailure:
-        if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, try again in a few minutes.', context: context);
+        if (mounted)
+          SystemUI.showSnackBar(message: 'Something went wrong, try again in a few minutes.', context: context);
       default:
     }
   }
@@ -115,14 +118,23 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
 
       switch (result) {
         case AuthFlowResult.success:
-          await ref.read(authServiceProvider).loginSuccessful();
+          try {
+            await ref.read(authServiceProvider).loginSuccessful();
+          } catch (e) {
+            if (kDebugMode) print(e);
+            if (mounted) {
+              SystemUI.showSnackBar(message: 'Something went wrong, try again in a few minutes.', context: context);
+            }
+          }
           return;
         case AuthFlowResult.unverified:
           if (mounted) SystemUI.showSnackBar(message: 'Your email is not verified yet.', context: context);
         case AuthFlowResult.genericError:
-          if (mounted) SystemUI.showSnackBar(message: 'Something went wrong, try again ina few minutes.', context: context);
+          if (mounted) {
+            SystemUI.showSnackBar(message: 'Something went wrong, try again in a few minutes.', context: context);
+          }
         default:
-          if (mounted) SystemUI.showSnackBar(message: 'Something bad happened...', context: context);
+          if (mounted) SystemUI.showSnackBar(message: 'Something bad happened..., try again', context: context);
           ref.invalidate(authStateProvider);
           ref.read(authStateProvider);
       }

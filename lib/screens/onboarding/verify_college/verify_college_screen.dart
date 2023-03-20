@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
@@ -24,6 +25,7 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
   final Duration timerDuration = const Duration(seconds: 150);
 
   String? email;
+  College? college;
 
   Timer? countdownTimer;
 
@@ -38,6 +40,8 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
   }
 
   saveEmail(String? email) => setState(() => this.email = email);
+
+  saveCollege(College? college) => setState(() => this.college = college);
 
   void setCountDown() {
     setState(() {
@@ -69,7 +73,7 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
   next() {
     // user verified as student
     if (pageController.page == 1) {
-      ref.read(onboardingUserProvider.notifier).setCollegeEmail(collegeEmail: email!);
+      ref.read(onboardingUserProvider.notifier).setCollegeEmail(email!);
     }
 
     // go to code page
@@ -141,11 +145,13 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
                       next: next,
                       timerDuration: timeLeft,
                       saveEmail: saveEmail,
+                      saveCollege: saveCollege,
                       startTimer: startTimer,
                     ),
                     VerifyCollegeCodePage(
                       next: next,
                       email: email,
+                      college: college,
                       timerDuration: timeLeft,
                       startTimer: startTimer,
                     ),

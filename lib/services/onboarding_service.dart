@@ -1,6 +1,8 @@
-import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
+import 'dart:convert';
+
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
@@ -26,54 +28,56 @@ class OnboardingService {
       final id = ref.read(currentUserProvider).id!;
       final email = ref.read(currentUserProvider).email!;
 
-      bool hasCollegeEmail = await checkCollegeEmailExists();
+      onboardingUser.setId(id);
+      onboardingUser.setEmail(email);
 
-      onboardingUser.setId(id: id);
-      onboardingUser.setEmail(email: email);
+      College? userCollege = await getCollegeByEmail(email);
+      bool hasCollegeEmail = userCollege != null;
 
       if (hasCollegeEmail) {
-        final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
-        if (idToken.groups.isEmpty) {
-          await addUserToCollege();
-        }
+        setCollegeEmail(email, userCollege);
       }
     }
 
     ref.read(appStateProvider.notifier).setAttemptAutoOnboard();
   }
 
-  Future<bool> checkCollegeEmailExists() async {
-    final email = ref.read(currentUserProvider).email!;
-
-    final service = ref.read(emailVerificationProvider);
+  Future<void> setCollegeEmail(String email, College? college) async {
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 
-    onboardingUser.setEmail(email: email);
-
-    if (await service.verifyCollegeEmailValid(email)) {
-      onboardingUser.setCollegeEmail(collegeEmail: email);
-      onboardingUser.setIsCollegeEmailVerified(isCollegeEmailVerified: true);
-      return true;
-    }
-
-    return false;
+    onboardingUser.setCollegeEmail(email);
+    onboardingUser.setCollege(college);
+    await addUserToCollege();
+    onboardingUser.setIsCollegeEmailVerified(true);
   }
 
-  Future<bool> addUserToCollege() async {
+  Future<College?> getCollegeByEmail(String email) async {
+    final apiService = ref.read(apiServiceProvider);
+    final response = await apiService.sendGetRequest(endpoint: 'colleges/college/byEmail?email=$email');
+
+    if (response.statusCode != 200) {
+      throw Exception('Error: Server responded with status code: ${response.statusCode}');
+    }
+
+    if (response.body.isEmpty) {
+      return null;
+    }
+
+    return College.fromJson(jsonDecode(response.body));
+  }
+
+  Future<void> addUserToCollege() async {
     final onboardingUser = ref.read(onboardingUserProvider);
 
-    final response = await ref.read(apiServiceProvider).sendRequest(
-      endpoint: 'add_user_to_college',
-      headers: {
-        'username': onboardingUser.id!,
-        'college': onboardingUser.college!.id,
-      },
-    );
+    final response = await ref
+        .read(apiServiceProvider)
+        .sendPostRequest(endpoint: 'user/${onboardingUser.id!}/add/college/${onboardingUser.college!.id}');
 
     await ref.read(authServiceProvider).getAuthTokens(forceRefresh: true);
 
-    if (response.statusCode == 200) return true;
-    return false;
+    if (response.statusCode == 200) return;
+
+    throw Exception('Failed to add user to college');
   }
 
   Future<void> onboardUser() async {

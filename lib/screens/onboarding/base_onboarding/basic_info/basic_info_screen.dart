@@ -5,9 +5,9 @@ import 'package:socale/components/text_fields/form_fields/date_input_form_field.
 import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
 import 'package:socale/components/text_fields/input_fields/date_input_field.dart';
 import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/resources/colors.dart';
-import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
 class BasicInfoScreen extends BaseOnboardingScreen {
   const BasicInfoScreen({super.key});
@@ -63,10 +63,10 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
     dobForm.save();
     graduationDateForm.save();
 
-    onboardingUser.setFirstName(firstName: firstName);
-    onboardingUser.setLastName(lastName: lastName);
-    onboardingUser.setDateOfBirth(dateOfBirth: dateOfBirth);
-    onboardingUser.setGraduationDate(graduationDate: graduationDate);
+    onboardingUser.setFirstName(firstName);
+    onboardingUser.setLastName(lastName);
+    onboardingUser.setDateOfBirth(dateOfBirth);
+    onboardingUser.setGraduationDate(graduationDate);
 
     return true;
   }

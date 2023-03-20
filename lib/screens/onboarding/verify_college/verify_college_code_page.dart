@@ -7,6 +7,7 @@ import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/buttons/Action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/link_button.dart';
+import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/resources/themes.dart';
@@ -16,6 +17,7 @@ import 'package:socale/utils/validators.dart';
 
 class VerifyCollegeCodePage extends ConsumerStatefulWidget {
   final String? email;
+  final College? college;
 
   final Duration timerDuration;
 
@@ -27,6 +29,7 @@ class VerifyCollegeCodePage extends ConsumerStatefulWidget {
     super.key,
     required this.next,
     required this.email,
+    required this.college,
     required this.timerDuration,
     required this.startTimer,
   });
@@ -43,6 +46,19 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
 
   String? code;
 
+  resendCode() async {
+    EmailVerificationService service = ref.read(emailVerificationProvider);
+
+    try {
+      await service.sendCode(widget.email!);
+      widget.startTimer();
+      if (mounted) SystemUI.showSnackBar(message: 'A new code was sent to ${widget.email}', context: context);
+    } catch (e) {
+      if (kDebugMode) print(e);
+      SystemUI.showSnackBar(message: 'There was problem sending your code', context: context);
+    }
+  }
+
   bool shouldShowResendButton() {
     if (!(widget.timerDuration.inSeconds < 150)) return true;
     return false;
@@ -50,52 +66,38 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
 
   saveCode(String? value) => setState(() => code = value);
 
-  validateForm() {
-    setState(() => isLoading = true);
+  bool validateForm() {
     final form = formKey.currentState!;
 
     if (form.validate()) {
       form.save();
-
-      final result = ref.read(emailVerificationProvider).verifyCode(int.parse(code!));
-
-      if (result) {
-        changeUserGroup();
-      } else {
-        setState(() => isLoading = false);
-        if (mounted) SystemUI.showSnackBar(message: 'Incorrect Code, try again.', context: context);
-      }
-    }
-  }
-
-  resendCode() async {
-    EmailVerificationService service = ref.read(emailVerificationProvider);
-    final response = await service.sendCode(widget.email!);
-    if (response) {
-      widget.startTimer();
-      if (mounted) SystemUI.showSnackBar(message: 'Sent a new code to ${widget.email}', context: context);
+      return true;
     } else {
-      if (mounted) SystemUI.showSnackBar(message: 'There was problem sending your code', context: context);
+      if (mounted) SystemUI.showSnackBar(message: 'Invalid code', context: context);
+      return false;
     }
   }
 
-  changeUserGroup() async {
-    final onboardingService = ref.read(onboardingServiceProvider);
+  bool isCodeCorrect() {
+    final service = ref.read(emailVerificationProvider);
+    return service.verifyCode(int.tryParse(code ?? '') ?? -1);
+  }
+
+  onSubmit() async {
+    if (isLoading) return;
+    setState(() => isLoading = true);
+
+    if (mounted && !validateForm() || !isCodeCorrect()) return setState(() => isLoading = false);
 
     try {
-      final response = await onboardingService.addUserToCollege();
-
-      if (response) {
-        setState(() => isLoading = false);
-        widget.next();
-      } else {
-        throw Exception('unable to add user to group');
-      }
+      final onboardingService = ref.read(onboardingServiceProvider);
+      await onboardingService.setCollegeEmail(widget.email!, widget.college);
     } catch (e) {
       if (kDebugMode) print(e);
-      setState(() => isLoading = false);
-      SystemUI.showSnackBar(message: 'There was an error, try again.', context: context);
+      SystemUI.showSnackBar(message: 'There was problem verifying your code', context: context);
     }
+
+    if (mounted) setState(() => isLoading = false);
   }
 
   String strDigits(int n) => n.toString().padLeft(2, '0');
@@ -132,7 +134,8 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
                 ).createShader(bounds),
                 child: Text(
                   'student',
-                  style: GoogleFonts.poppins(fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                  style: GoogleFonts.poppins(
+                      fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
                 ),
               ),
             ],
@@ -151,7 +154,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
                 ),
               ),
               Text(
-                widget.email ?? '',
+                widget.email!,
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.bold,
@@ -207,7 +210,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
             if (shouldShowResendButton())
               LinkButton(
                 onPressed: resendCode,
-                text: 'Resend link',
+                text: 'Resend code',
                 isLoading: isSending,
                 textStyle: GoogleFonts.roboto(
                   fontSize: 12,
@@ -219,7 +222,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
             GradientButton(
               text: 'Verify',
               isLoading: isLoading,
-              onPressed: validateForm,
+              onPressed: onSubmit,
               linearGradient: ColorValues.blackButtonGradient,
             ),
           ]),
