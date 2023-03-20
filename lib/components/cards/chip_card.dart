@@ -58,10 +58,7 @@ class _ChipCardState extends State<ChipCard> with SingleTickerProviderStateMixin
 
   void initializeAnimationController() {
     controller = AnimationController(
-      duration: const Duration(milliseconds: 500),
-      reverseDuration: const Duration(milliseconds: 400),
-      vsync: this,
-    );
+        duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 400), vsync: this);
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(animationListener)

@@ -100,12 +100,12 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         confirmEmail();
       case AuthVerifyEmailResult.limitExceeded:
         if (mounted) {
-          SystemUI.showSnackBar(
-              message: 'Hold your horses there... You\'ve already requested a link.', context: context);
+          SystemUI.showSnackBar(message: 'Hold your horses there... You\'ve already requested a link.', context: context);
         }
       case AuthVerifyEmailResult.codeDeliveryFailure:
-        if (mounted)
+        if (mounted) {
           SystemUI.showSnackBar(message: 'Something went wrong, try again in a few minutes.', context: context);
+        }
       default:
     }
   }

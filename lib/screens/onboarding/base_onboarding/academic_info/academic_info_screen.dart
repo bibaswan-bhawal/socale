@@ -129,7 +129,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                   initialValue: selectedMinors,
                   onSaved: saveMinors,
                   options: minorProvider.when(
-                    data: (majors) => majors,
+                    data: (minors) => minors,
                     loading: () => null,
                     error: (err, stack) {
                       if (kDebugMode) print(err);
