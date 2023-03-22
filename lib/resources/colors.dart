@@ -15,6 +15,7 @@ class ColorValues {
   static const Color darkBlue = Color(0xFF0C42FF);
 
   static const Color textSubtitle = Color(0xFF7A7A7A);
+  static const Color textLightSubtitle = Color(0xFFA7A7A7);
 
   static const Color textHint = Color(0xFF808080);
 

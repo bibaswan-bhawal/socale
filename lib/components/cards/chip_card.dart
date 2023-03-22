@@ -464,19 +464,22 @@ class _SelectionMenuState extends State<_SelectionMenu> {
                             child: OverflowBox(
                               maxWidth: MediaQuery.of(context).size.width,
                               minWidth: MediaQuery.of(context).size.width,
-                              child: ListView.separated(
-                                padding: const EdgeInsets.only(top: 8),
-                                itemCount: filteredOptions.length,
-                                itemBuilder: (context, index) {
-                                  return ListTile(
-                                    dense: true,
-                                    onTap: () => onSelected(index),
-                                    title: Text(filteredOptions[index].toString()),
-                                  );
-                                },
-                                separatorBuilder: (BuildContext context, int index) {
-                                  return const Divider(thickness: 0.4, height: 8);
-                                },
+                              child: Padding(
+                                padding: EdgeInsets.only(bottom: MediaQuery.of(context).padding.bottom),
+                                child: ListView.separated(
+                                  padding: const EdgeInsets.only(top: 8),
+                                  itemCount: filteredOptions.length,
+                                  itemBuilder: (context, index) {
+                                    return ListTile(
+                                      dense: true,
+                                      onTap: () => onSelected(index),
+                                      title: Text(filteredOptions[index].toString()),
+                                    );
+                                  },
+                                  separatorBuilder: (BuildContext context, int index) {
+                                    return const Divider(thickness: 0.4, height: 8);
+                                  },
+                                ),
                               ),
                             ),
                           ),

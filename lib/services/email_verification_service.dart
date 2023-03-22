@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/service_providers.dart';
 
@@ -15,6 +16,8 @@ class EmailVerificationService {
   Future<void> sendCode(String email) async {
     code = Random().nextInt(1000000 - 100000) + 100000; // generate 6 digit random code
     this.email = email;
+
+    if (kDebugMode) return print('Sending code: $code to $email');
 
     final response = await ref.read(apiServiceProvider).sendPostRequest(
           endpoint: 'verify/student?email=$email&code=$code',

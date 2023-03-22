@@ -14,6 +14,7 @@ class College with _$College {
     @JsonKey(name: 'community_name') required String communityName,
     @JsonKey(name: 'short_name') required String shortName,
     @JsonKey(name: 'profile_url') String? profileUrl,
+    @JsonKey(name: 'fun_facts') List<String>? funFacts,
   }) = _College;
 
   factory College.fromJson(Map<String, dynamic> json) => _$CollegeFromJson(json);

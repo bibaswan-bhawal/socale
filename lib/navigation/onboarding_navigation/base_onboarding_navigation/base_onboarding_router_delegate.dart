@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/base_onboarding_pages.dart';
 import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/base_onboarding_route_path.dart';
+import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/intro_page.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
 class BaseOnboardingRouterDelegate extends RouterDelegate<BaseOnboardingRoutePath>
@@ -10,13 +11,15 @@ class BaseOnboardingRouterDelegate extends RouterDelegate<BaseOnboardingRoutePat
   final HeroController heroController = HeroController();
 
   late List<BaseOnboardingPage> pages = [
+    const OnboardingIntroPage(),
     const BasicInfoPage(),
     const AcademicInfoPage(),
   ];
 
   int currentPage = 0;
 
-  BaseOnboardingRouterDelegate() : navigatorKey = GlobalKey<NavigatorState>(debugLabel: 'onboarding navigator state key');
+  BaseOnboardingRouterDelegate()
+      : navigatorKey = GlobalKey<NavigatorState>(debugLabel: 'onboarding navigator state key');
 
   void nextPage() async {
     var screens = BaseOnboardingScreen.allOnboardingScreens(navigatorKey!.currentState!.context);
