@@ -6,12 +6,13 @@ import 'package:socale/models/minor/minor.dart';
 import 'package:socale/models/user/onboarding_user/onboarding_user.dart';
 
 class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
-  KeepAliveLink? disposeLink;
+  final KeepAliveLink? disposeLink;
 
-  AutoDisposeStateNotifierProviderRef ref;
+  final AutoDisposeStateNotifierProviderRef ref;
 
-  OnboardingUserNotifier(this.ref) : super(const OnboardingUser()) {
-    disposeLink = ref.keepAlive();
+  OnboardingUserNotifier(this.ref)
+      : disposeLink = ref.keepAlive(),
+        super(const OnboardingUser()) {
     if (kDebugMode) print('Creating onboarding model');
   }
 

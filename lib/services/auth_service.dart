@@ -77,7 +77,7 @@ class AuthService {
 
   Future<(JsonWebToken, JsonWebToken, String)> getAuthTokens({bool forceRefresh = false}) async {
     // should force refresh token or not
-    final options = forceRefresh ? CognitoSessionOptions(forceRefresh: forceRefresh) : null;
+    final options = forceRefresh ? FetchAuthSessionOptions(forceRefresh: forceRefresh) : null;
 
     CognitoAuthSession authSession = await Amplify.Auth.fetchAuthSession(options: options) as CognitoAuthSession;
 

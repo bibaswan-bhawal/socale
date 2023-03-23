@@ -53,7 +53,7 @@ android {
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
         multiDexEnabled true
-        versionNameSuffix 'wild-cat'
+        versionNameSuffix '-wild-cat-dev'
     }
 
     buildTypes {

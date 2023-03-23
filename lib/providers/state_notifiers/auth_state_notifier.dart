@@ -4,7 +4,12 @@ import 'package:socale/types/auth/state/auth_step_state.dart';
 import 'package:socale/utils/validators.dart';
 
 class AuthStateNotifier extends StateNotifier<AuthState> {
-  AuthStateNotifier() : super(AuthState.initial());
+  final AutoDisposeStateNotifierProviderRef<AuthStateNotifier, AuthState> ref;
+  final KeepAliveLink disposeLink;
+
+  AuthStateNotifier(this.ref)
+      : disposeLink = ref.keepAlive(),
+        super(AuthState.initial());
 
   void setAuthStep({required AuthStepState newStep, AuthStepState? previousStep, String? email, String? password}) {
     assert(newStep == AuthStepState.verifyEmail
@@ -33,4 +38,6 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
         state = state.copyWith(step: AuthStepState.getStarted);
     }
   }
+
+  disposeState() => disposeLink?.close();
 }

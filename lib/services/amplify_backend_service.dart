@@ -11,21 +11,6 @@ class AmplifyBackendService {
 
   const AmplifyBackendService(this.ref);
 
-  Future<void> initialize() async {
-    if (Amplify.isConfigured) {
-      ref.read(appStateProvider.notifier).setAmplifyConfigured();
-      attemptAutoLogin();
-      return;
-    }
-
-    try {
-      await configureAmplify();
-      attemptAutoLogin();
-    } catch (e) {
-      rethrow;
-    }
-  }
-
   Future<void> configureAmplify() async {
     AmplifyAuthCognito authPlugin = AmplifyAuthCognito();
     await Amplify.addPlugins([authPlugin]);

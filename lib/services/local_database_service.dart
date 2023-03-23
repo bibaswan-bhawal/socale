@@ -6,7 +6,7 @@ class LocalDatabaseService {
 
   const LocalDatabaseService(this.ref);
 
-  Future<void> initLocalDatabase() async {
+  Future<void> configureDb() async {
     await Future.delayed(const Duration(milliseconds: 500), () {
       ref.read(appStateProvider.notifier).setLocalDBConfigured();
     });

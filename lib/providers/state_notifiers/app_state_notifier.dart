@@ -1,11 +1,14 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/state/app_state/app_state.dart';
 import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/state_providers.dart';
 
 class AppStateNotifier extends StateNotifier<AppState> {
   StateNotifierProviderRef ref;
 
   AppStateNotifier(this.ref) : super(AppState.initial());
+
+  void setInitError(bool hasError) => state = state.copyWith(initError: hasError);
 
   void setAmplifyConfigured() => state = state.copyWith(isAmplifyConfigured: true);
 
@@ -17,7 +20,10 @@ class AppStateNotifier extends StateNotifier<AppState> {
 
   void showIntro(bool showIntro) => state = state.copyWith(showIntro: showIntro);
 
-  void setLoggedIn() => state = state.copyWith(isLoggedIn: true);
+  void setLoggedIn() {
+    ref.read(authStateProvider.notifier).disposeState();
+    state = state.copyWith(isLoggedIn: true);
+  }
 
   void setOnboarded() {
     ref.read(onboardingUserProvider.notifier).disposeState();

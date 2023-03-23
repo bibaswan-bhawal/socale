@@ -5,4 +5,5 @@ import 'package:socale/providers/state_notifiers/app_state_notifier.dart';
 import 'package:socale/providers/state_notifiers/auth_state_notifier.dart';
 
 final appStateProvider = StateNotifierProvider<AppStateNotifier, AppState>((ref) => AppStateNotifier(ref));
-final authStateProvider = StateNotifierProvider.autoDispose<AuthStateNotifier, AuthState>((ref) => AuthStateNotifier());
+final authStateProvider =
+    StateNotifierProvider.autoDispose<AuthStateNotifier, AuthState>((ref) => AuthStateNotifier(ref));

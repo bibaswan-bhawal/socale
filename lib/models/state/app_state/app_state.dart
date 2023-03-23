@@ -8,6 +8,7 @@ class AppState with _$AppState {
   const AppState._();
 
   const factory AppState({
+    required bool initError,
     required bool isAmplifyConfigured,
     required bool isLocalDBConfigured,
     required bool attemptAutoOnboard,
@@ -18,6 +19,7 @@ class AppState with _$AppState {
   }) = _AppState;
 
   factory AppState.initial() => const AppState(
+        initError: false,
         isAmplifyConfigured: false,
         isLocalDBConfigured: false,
         attemptAutoOnboard: false,
