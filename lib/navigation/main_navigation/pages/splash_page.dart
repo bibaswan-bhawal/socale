@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:socale/screens/screen_splash.dart';
+import 'package:socale/screens/initializations/splash_screen.dart';
 import 'package:socale/transitions/fade_switch_transition.dart';
 
 class SplashPage extends Page {
