@@ -91,7 +91,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
 
     try {
       final onboardingService = ref.read(onboardingServiceProvider);
-      await onboardingService.setCollegeEmail(widget.email!, widget.college);
+      await onboardingService.setCollegeEmail(widget.email!, widget.college, context);
     } catch (e) {
       if (kDebugMode) print(e);
       SystemUI.showSnackBar(message: 'There was problem verifying your code', context: context);

@@ -6,15 +6,12 @@ import 'package:socale/models/minor/minor.dart';
 import 'package:socale/models/user/onboarding_user/onboarding_user.dart';
 
 class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
-  final KeepAliveLink? disposeLink;
-
   final AutoDisposeStateNotifierProviderRef ref;
+  final KeepAliveLink disposeLink;
 
   OnboardingUserNotifier(this.ref)
       : disposeLink = ref.keepAlive(),
-        super(const OnboardingUser()) {
-    if (kDebugMode) print('Creating onboarding model');
-  }
+        super(const OnboardingUser());
 
   setId(String? id) => state = state.copyWith(id: id);
 
@@ -39,11 +36,5 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
   setIsCollegeEmailVerified(bool isCollegeEmailVerified) =>
       state = state.copyWith(isCollegeEmailVerified: isCollegeEmailVerified);
 
-  @override
-  dispose() {
-    super.dispose();
-    if (kDebugMode) print('Destroying onboarding model');
-  }
-
-  disposeState() => disposeLink?.close();
+  disposeState() => disposeLink.close();
 }

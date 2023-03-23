@@ -74,7 +74,9 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
       case AuthFlowResult.userNotFound:
         if (mounted) SystemUI.showSnackBar(message: "We couldn't find your account, try signing up.", context: context);
       case AuthFlowResult.genericError:
-        if (mounted) SystemUI.showSnackBar(message: 'Something went wrong try again in a few minutes.', context: context);
+        if (mounted) {
+          SystemUI.showSnackBar(message: 'Something went wrong try again in a few minutes.', context: context);
+        }
       default:
     }
 
@@ -83,7 +85,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<bool> loginSuccessFlow() async {
     try {
-      await ref.read(authServiceProvider).loginSuccessful();
+      await ref.read(authServiceProvider).loginSuccessful(context);
       return true;
     } catch (e) {
       if (kDebugMode) print(e);

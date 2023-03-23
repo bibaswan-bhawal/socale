@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/model_providers.dart';
@@ -17,7 +18,7 @@ class OnboardingService {
     return false;
   }
 
-  Future<void> init() async {
+  Future<void> init(BuildContext context) async {
     if (kDebugMode) print('Initializing Onboarding Service...');
 
     if (await attemptAutoOnboard()) {
@@ -35,18 +36,23 @@ class OnboardingService {
       bool hasCollegeEmail = userCollege != null;
 
       if (hasCollegeEmail) {
-        setCollegeEmail(email, userCollege);
+        if (context.mounted) await setCollegeEmail(email, userCollege, context);
       }
     }
 
     ref.read(appStateProvider.notifier).setAttemptAutoOnboard();
   }
 
-  Future<void> setCollegeEmail(String email, College? college) async {
+  Future<void> setCollegeEmail(String email, College? college, BuildContext context) async {
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 
     onboardingUser.setCollegeEmail(email);
     onboardingUser.setCollege(college);
+
+    if (ref.read(onboardingUserProvider).college!.profileImage != null) {
+      await precacheImage(ref.read(onboardingUserProvider).college!.profileImage!.image, context);
+    }
+
     await addUserToCollege();
     onboardingUser.setIsCollegeEmailVerified(true);
   }

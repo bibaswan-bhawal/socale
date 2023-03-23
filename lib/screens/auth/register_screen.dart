@@ -18,7 +18,7 @@ import 'package:socale/utils/validators.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class RegisterScreen extends ConsumerStatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   ConsumerState<RegisterScreen> createState() => _RegisterScreenState();
@@ -71,7 +71,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       switch (result) {
         case AuthFlowResult.success:
-          await ref.read(authServiceProvider).loginSuccessful();
+          if (mounted) await ref.read(authServiceProvider).loginSuccessful(context);
           return;
         case AuthFlowResult.unverified:
           goTo(AuthStepState.verifyEmail);

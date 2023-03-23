@@ -12,7 +12,7 @@ import 'package:socale/resources/colors.dart';
 import 'package:socale/types/auth/state/auth_step_state.dart';
 
 class GetStartedScreen extends ConsumerStatefulWidget {
-  const GetStartedScreen({Key? key}) : super(key: key);
+  const GetStartedScreen({super.key});
 
   @override
   ConsumerState<GetStartedScreen> createState() => _GetStartedScreenState();
@@ -22,11 +22,13 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
   late CurvedAnimation animation;
   late AnimationController animationController;
 
-  void goToLogin() =>
-      ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStepState.login, previousStep: AuthStepState.getStarted);
+  void goToLogin() => ref
+      .read(authStateProvider.notifier)
+      .setAuthStep(newStep: AuthStepState.login, previousStep: AuthStepState.getStarted);
 
-  void goToRegister() =>
-      ref.read(authStateProvider.notifier).setAuthStep(newStep: AuthStepState.register, previousStep: AuthStepState.getStarted);
+  void goToRegister() => ref
+      .read(authStateProvider.notifier)
+      .setAuthStep(newStep: AuthStepState.register, previousStep: AuthStepState.getStarted);
 
   @override
   void initState() {

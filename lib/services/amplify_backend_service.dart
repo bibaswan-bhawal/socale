@@ -1,5 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
@@ -23,13 +24,13 @@ class AmplifyBackendService {
     }
   }
 
-  Future<void> attemptAutoLogin() async {
+  Future<void> attemptAutoLogin(BuildContext context) async {
     try {
       final result = await ref.read(authServiceProvider).autoLoginUser();
 
       switch (result) {
         case AuthFlowResult.success:
-          await ref.read(authServiceProvider).loginSuccessful();
+          if (context.mounted) await ref.read(authServiceProvider).loginSuccessful(context);
           break;
         default:
           ref.read(authServiceProvider).signOutUser();

@@ -17,7 +17,7 @@ import 'package:socale/types/auth/results/auth_verify_email_result.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class VerifyEmailScreen extends ConsumerStatefulWidget {
-  const VerifyEmailScreen({Key? key}) : super(key: key);
+  const VerifyEmailScreen({super.key});
 
   @override
   ConsumerState<VerifyEmailScreen> createState() => _VerifyEmailScreenState();
@@ -100,7 +100,8 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
         confirmEmail();
       case AuthVerifyEmailResult.limitExceeded:
         if (mounted) {
-          SystemUI.showSnackBar(message: 'Hold your horses there... You\'ve already requested a link.', context: context);
+          SystemUI.showSnackBar(
+              message: 'Hold your horses there... You\'ve already requested a link.', context: context);
         }
       case AuthVerifyEmailResult.codeDeliveryFailure:
         if (mounted) {
@@ -119,7 +120,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       switch (result) {
         case AuthFlowResult.success:
           try {
-            await ref.read(authServiceProvider).loginSuccessful();
+            if (mounted) await ref.read(authServiceProvider).loginSuccessful(context);
           } catch (e) {
             if (kDebugMode) print(e);
             if (mounted) {

@@ -8,11 +8,11 @@ class DefaultInputForm extends StatelessWidget {
   final String? errorMessage;
 
   const DefaultInputForm({
-    Key? key,
+    super.key,
     this.labelText,
     this.children = const [],
     this.errorMessage,
-  }) : super(key: key);
+  });
 
   List<Widget> buildInputList() {
     List<Widget> inputs = [];

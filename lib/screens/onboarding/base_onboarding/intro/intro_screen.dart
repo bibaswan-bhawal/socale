@@ -16,14 +16,6 @@ class OnboardingIntroScreen extends BaseOnboardingScreen {
 }
 
 class _OnboardingIntroScreenState extends BaseOnboardingScreenState {
-  late String profileUrl;
-
-  @override
-  void initState() {
-    super.initState();
-    profileUrl = ref.read(onboardingUserProvider.select((value) => value.college!.profileUrl!));
-  }
-
   @override
   Future<bool> onNext() async {
     return true;
@@ -55,9 +47,9 @@ class _OnboardingIntroScreenState extends BaseOnboardingScreenState {
           flex: 4,
           child: Padding(
             padding: const EdgeInsets.symmetric(vertical: 44),
-            child: Image.network(
-              college.profileUrl!,
+            child: SizedBox(
               width: size.width * 0.8,
+              child: college.profileImage,
             ),
           ),
         ),

@@ -4,7 +4,7 @@ import 'package:socale/providers/navigation_providers.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class AuthRouter extends ConsumerStatefulWidget {
-  const AuthRouter({Key? key}) : super(key: key);
+  const AuthRouter({super.key});
 
   @override
   ConsumerState<AuthRouter> createState() => _AuthRouterState();

@@ -39,5 +39,5 @@ class AuthStateNotifier extends StateNotifier<AuthState> {
     }
   }
 
-  disposeState() => disposeLink?.close();
+  disposeState() => disposeLink.close();
 }

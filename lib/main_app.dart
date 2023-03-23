@@ -27,7 +27,7 @@ class _MainAppState extends ConsumerState<MainApp> {
   void didChangeDependencies() {
     super.didChangeDependencies();
 
-    ref.read(initServiceProvider).initialize();
+    ref.read(initServiceProvider).initialize(context);
   }
 
   @override

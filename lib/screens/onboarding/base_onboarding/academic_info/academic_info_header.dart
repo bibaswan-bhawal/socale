@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:socale/components/text/gradient_headline.dart';
 
 class AcademicInfoHeader extends StatelessWidget {
-  const AcademicInfoHeader({Key? key}) : super(key: key);
+  const AcademicInfoHeader({super.key});
 
   @override
   Widget build(BuildContext context) {

@@ -3,7 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_screen.dart';
 
 abstract class ResetPasswordView extends ConsumerStatefulWidget {
-  const ResetPasswordView({Key? key}) : super(key: key);
+  const ResetPasswordView({super.key});
 
   static List<ResetPasswordViewState> allResetPasswordViews(BuildContext context) {
     final result = <ResetPasswordViewState>[];
