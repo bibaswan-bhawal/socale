@@ -14,13 +14,10 @@ class OnboardingService {
   const OnboardingService(this.ref);
 
   Future<bool> attemptAutoOnboard() async {
-    if (kDebugMode) print('Checking if user is already onboarded...');
     return false;
   }
 
   Future<void> init(BuildContext context) async {
-    if (kDebugMode) print('Initializing Onboarding Service...');
-
     if (await attemptAutoOnboard()) {
       ref.read(appStateProvider.notifier).setOnboarded();
     } else {
@@ -50,7 +47,13 @@ class OnboardingService {
     onboardingUser.setCollege(college);
 
     if (ref.read(onboardingUserProvider).college!.profileImage != null) {
-      await precacheImage(ref.read(onboardingUserProvider).college!.profileImage!.image, context);
+      Future.wait([
+        precacheImage(ref.read(onboardingUserProvider).college!.profileImage!.image, context),
+        addUserToCollege(),
+      ]);
+
+      onboardingUser.setIsCollegeEmailVerified(true);
+      return;
     }
 
     await addUserToCollege();
@@ -62,8 +65,6 @@ class OnboardingService {
     final response = await apiService.sendGetRequest(endpoint: 'colleges/college/byEmail?email=$email');
 
     if (response.statusCode != 200) throw Exception('Error: Server responded with status code: ${response.statusCode}');
-    if (kDebugMode) print('Does College Exist: ${response.body.isNotEmpty}');
-    if (kDebugMode) print('College: ${response.body}');
 
     return response.body.isEmpty ? null : College.fromJson(jsonDecode(response.body));
   }
