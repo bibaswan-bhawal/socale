@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -18,11 +19,18 @@ class _MainAppState extends ConsumerState<MainApp> {
   @override
   void initState() {
     super.initState();
+
     SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
-     
-    ref.read(amplifyBackendServiceProvider).initialize();
-    ref.read(localDatabaseServiceProvider).initLocalDatabase();
     FocusManager.instance.primaryFocus?.unfocus();
+  }
+
+  void appInitialization() {
+    try {
+      ref.read(amplifyBackendServiceProvider).initialize();
+      ref.read(localDatabaseServiceProvider).initLocalDatabase();
+    } catch (e) {
+      if (kDebugMode) print(e);
+    }
   }
 
   @override

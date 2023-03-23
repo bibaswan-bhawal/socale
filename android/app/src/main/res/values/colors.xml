@@ -1,5 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="primary_orange">#FFFD6C00</color>
-    <color name="secondary_orange">#FFFFA133</color>
+    <color name="splash_background_dark">#FF1C1B1F</color>
 </resources>
