@@ -47,7 +47,7 @@ class OnboardingService {
     onboardingUser.setCollege(college);
 
     if (ref.read(onboardingUserProvider).college!.profileImage != null) {
-      Future.wait([
+      await Future.wait([
         precacheImage(ref.read(onboardingUserProvider).college!.profileImage!.image, context),
         addUserToCollege(),
       ]);
