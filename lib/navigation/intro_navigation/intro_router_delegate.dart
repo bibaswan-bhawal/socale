@@ -47,7 +47,9 @@ class IntroRouterDelegate extends RouterDelegate<IntroRoutePath>
       key: navigatorKey,
       pages: buildPages(),
       onPopPage: (route, result) {
-        return route.didPop(result);
+        if (!route.didPop(result)) return false;
+        previousPage();
+        return true;
       },
     );
   }
