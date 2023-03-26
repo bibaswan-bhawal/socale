@@ -33,28 +33,18 @@ class OnboardingService {
       bool hasCollegeEmail = userCollege != null;
 
       if (hasCollegeEmail) {
-        if (context.mounted) await setCollegeEmail(email, userCollege, context);
+        if (context.mounted) await setCollegeEmail(email, userCollege);
       }
     }
 
     ref.read(appStateProvider.notifier).setAttemptAutoOnboard();
   }
 
-  Future<void> setCollegeEmail(String email, College? college, BuildContext context) async {
+  Future<void> setCollegeEmail(String email, College? college) async {
     final onboardingUser = ref.read(onboardingUserProvider.notifier);
 
     onboardingUser.setCollegeEmail(email);
     onboardingUser.setCollege(college);
-
-    if (ref.read(onboardingUserProvider).college!.profileImage != null) {
-      await Future.wait([
-        precacheImage(ref.read(onboardingUserProvider).college!.profileImage!.image, context),
-        addUserToCollege(),
-      ]);
-
-      onboardingUser.setIsCollegeEmailVerified(true);
-      return;
-    }
 
     await addUserToCollege();
     onboardingUser.setIsCollegeEmailVerified(true);
@@ -64,7 +54,9 @@ class OnboardingService {
     final apiService = ref.read(apiServiceProvider);
     final response = await apiService.sendGetRequest(endpoint: 'colleges/college/byEmail?email=$email');
 
-    if (response.statusCode != 200) throw Exception('Error: Server responded with status code: ${response.statusCode}');
+    if (response.statusCode != 200) {
+      throw Exception('Error(getCollegeByEmail): Server responded with status code: ${response.statusCode}');
+    }
 
     return response.body.isEmpty ? null : College.fromJson(jsonDecode(response.body));
   }
@@ -74,18 +66,21 @@ class OnboardingService {
 
     final response = await ref
         .read(apiServiceProvider)
-        .sendPostRequest(endpoint: 'user/${onboardingUser.id!}/add/college/${onboardingUser.college!.id}');
+        .sendPostRequest(endpoint: 'user/${onboardingUser.id!}/addToCollege/${onboardingUser.college!.id}');
 
     await ref.read(authServiceProvider).getAuthTokens(forceRefresh: true);
 
-    if (response.statusCode == 200) return;
-
-    throw Exception('Failed to add user to college');
+    if (response.statusCode != 200) {
+      throw Exception('Error(addUserToCollege): Server responded with ${response.statusCode}.'
+          ' Failed to add user to college');
+    }
   }
 
   Future<void> onboardUser() async {
     final onboardingUser = ref.read(onboardingUserProvider);
     if (kDebugMode) print(onboardingUser);
+
+    await ref.read(apiServiceProvider).sendPostRequest(endpoint: 'user/onboard');
 
     ref.read(appStateProvider.notifier).setOnboarded();
   }
