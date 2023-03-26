@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/college/college.dart';
 import 'package:socale/models/major/major.dart';
@@ -31,6 +32,11 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
   setMajors(List<Major>? majors) => state = state.copyWith(majors: majors);
 
   setMinors(List<Minor>? minors) => state = state.copyWith(minors: minors);
+
+  setAnonymousUsername(String? anonymousUsername) => state = state.copyWith(anonymousUsername: anonymousUsername);
+
+  setAnonymousProfileImage(String? anonymousProfileImage) => state = state.copyWith(
+      anonymousProfileImage: anonymousProfileImage != null ? Image.network(anonymousProfileImage) : null);
 
   setIsCollegeEmailVerified(bool isCollegeEmailVerified) =>
       state = state.copyWith(isCollegeEmailVerified: isCollegeEmailVerified);

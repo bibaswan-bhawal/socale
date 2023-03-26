@@ -14,6 +14,7 @@ class BaseOnboardingRouterDelegate extends RouterDelegate<BaseOnboardingRoutePat
     const OnboardingIntroPage(),
     const BasicInfoPage(),
     const AcademicInfoPage(),
+    const AvatarSelectionPage(),
   ];
 
   int currentPage = 0;

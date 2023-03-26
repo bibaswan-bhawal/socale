@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:socale/models/college/college.dart';
 import 'package:socale/models/major/major.dart';
@@ -18,6 +19,8 @@ class OnboardingUser with _$OnboardingUser {
     String? lastName,
     College? college,
     String? collegeEmail,
+    String? anonymousUsername,
+    @_ProfileConverter() Image? anonymousProfileImage,
     DateTime? graduationDate,
     DateTime? dateOfBirth,
     List<Major>? majors,
@@ -26,4 +29,14 @@ class OnboardingUser with _$OnboardingUser {
   }) = _OnboardingUser;
 
   factory OnboardingUser.fromJson(Map<String, dynamic> json) => _$OnboardingUserFromJson(json);
+}
+
+class _ProfileConverter implements JsonConverter<Image, String> {
+  const _ProfileConverter();
+
+  @override
+  Image fromJson(String json) => Image.network(json);
+
+  @override
+  String toJson(Image object) => (object.image as NetworkImage).url;
 }

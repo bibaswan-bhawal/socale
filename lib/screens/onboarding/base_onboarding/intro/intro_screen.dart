@@ -67,7 +67,7 @@ class _OnboardingIntroScreenState extends BaseOnboardingScreenState {
           ),
         ),
         Text(
-          college.funFacts, // pick random fun fact
+          college.funFact, // pick random fun fact
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             fontSize: 12,

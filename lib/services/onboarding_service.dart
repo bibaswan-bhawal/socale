@@ -46,6 +46,11 @@ class OnboardingService {
     onboardingUser.setCollegeEmail(email);
     onboardingUser.setCollege(college);
 
+    final (String username, String avatar) = await generateProfile();
+
+    onboardingUser.setAnonymousUsername(username);
+    onboardingUser.setAnonymousProfileImage(avatar);
+
     await addUserToCollege();
     onboardingUser.setIsCollegeEmailVerified(true);
   }
@@ -54,8 +59,10 @@ class OnboardingService {
     final apiService = ref.read(apiServiceProvider);
     final response = await apiService.sendGetRequest(endpoint: 'colleges/college/byEmail?email=$email');
 
+    if (response.statusCode == 404) return null;
     if (response.statusCode != 200) {
-      throw Exception('Error(getCollegeByEmail): Server responded with status code: ${response.statusCode}');
+      throw Exception('Error(getCollegeByEmail): Server responded with ${response.statusCode}.'
+          ' Failed to get college by email');
     }
 
     return response.body.isEmpty ? null : College.fromJson(jsonDecode(response.body));
@@ -73,6 +80,27 @@ class OnboardingService {
     if (response.statusCode != 200) {
       throw Exception('Error(addUserToCollege): Server responded with ${response.statusCode}.'
           ' Failed to add user to college');
+    }
+  }
+
+  Future<(String, String)> generateProfile() async {
+    final onboardingUser = ref.read(onboardingUserProvider);
+
+    final response = await ref
+        .read(apiServiceProvider)
+        .sendGetRequest(endpoint: 'user/generateProfile?collegeId=${onboardingUser.college!.id}');
+
+    if (response.statusCode != 200) {
+      throw Exception('Error(generateProfile): Server responded with ${response.statusCode}.'
+          ' Failed to generate profile');
+    }
+
+    switch (jsonDecode(response.body)) {
+      case {'username': String username, 'avatar': String avatar}:
+        return (username, avatar);
+      default:
+        throw Exception('Error(generateProfile): Server responded with ${response.statusCode}.'
+            ' Failed to generate profile');
     }
   }
 
