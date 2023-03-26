@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/text/gradient_headline.dart';
@@ -69,7 +67,7 @@ class _OnboardingIntroScreenState extends BaseOnboardingScreenState {
           ),
         ),
         Text(
-          college.funFacts![Random().nextInt(college.funFacts!.length)], // pick random fun fact
+          college.funFacts, // pick random fun fact
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             fontSize: 12,
