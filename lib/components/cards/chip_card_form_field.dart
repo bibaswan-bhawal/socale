@@ -31,8 +31,8 @@ class ChipCardFormField<T extends Comparable> extends FormField<List<T>> {
               initialOptions: initialValue ?? [],
               searchHint: searchHint,
               onChanged: (value) {
-                changed?.call(value);
                 state.didChange(value);
+                changed?.call(value);
               },
               hasError: state.hasError,
               errorText: state.errorText,
