@@ -31,9 +31,11 @@ class PageViewController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final bottomViewPadding = MediaQuery.of(context).viewPadding.bottom;
+
     return Padding(
       padding: EdgeInsets.only(
-        bottom: 40 - MediaQuery.of(context).viewPadding.bottom,
+        bottom: bottomViewPadding == 0 ? 20 : 40 - bottomViewPadding,
         left: 30,
         right: 30,
         top: 24,
