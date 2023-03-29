@@ -20,7 +20,7 @@ class EmailVerificationService {
     if (kDebugMode) return print('Sending code: $code to $email');
 
     final response = await ref.read(apiServiceProvider).sendPostRequest(
-          endpoint: 'user/verify/student?email=$email&code=$code',
+          endpoint: 'user/send_college_verify_email?email=$email&code=$code',
         );
 
     if (response.statusCode == 200) return;

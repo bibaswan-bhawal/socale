@@ -20,13 +20,13 @@ class OnboardingUser with _$OnboardingUser {
     College? college,
     String? collegeEmail,
     String? anonymousUsername,
-    @_ProfileConverter() Image? anonymousProfileImage,
     DateTime? graduationDate,
     DateTime? dateOfBirth,
     List<Major>? majors,
     List<Minor>? minors,
-    @Default(false) bool isCollegeEmailVerified,
     @Default(5) int numRegenLeft,
+    @Default(false) bool isCollegeEmailVerified,
+    @_ProfileConverter() Image? anonymousProfileImage,
   }) = _OnboardingUser;
 
   factory OnboardingUser.fromJson(Map<String, dynamic> json) => _$OnboardingUserFromJson(json);
