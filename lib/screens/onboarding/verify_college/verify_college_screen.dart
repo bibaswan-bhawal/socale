@@ -128,14 +128,14 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: size.width,
-                height: size.width,
+              Flexible(
+                flex: 3,
                 child: Center(
                   child: Image.asset('assets/illustrations/illustration_6.png'),
                 ),
               ),
-              Expanded(
+              Flexible(
+                flex: 4,
                 child: PageView(
                   controller: pageController,
                   physics: const NeverScrollableScrollPhysics(),
