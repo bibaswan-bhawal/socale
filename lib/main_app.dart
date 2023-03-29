@@ -21,13 +21,8 @@ class _MainAppState extends ConsumerState<MainApp> {
 
     SystemChannels.textInput.invokeMethod('TextInput.hide'); // hide keyboard at start
     FocusManager.instance.primaryFocus?.unfocus();
-  }
 
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    ref.read(initServiceProvider).initialize(context);
+    ref.read(initServiceProvider).initialize();
   }
 
   @override

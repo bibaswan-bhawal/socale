@@ -6,14 +6,14 @@ import 'package:socale/components/buttons/icon_button.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/transitions/curves.dart';
 
-class ChipCard extends StatefulWidget {
+class ChipCard<T extends Comparable> extends StatefulWidget {
   final double horizontalPadding;
   final String placeholder;
   final String searchHint;
-  final List? options;
-  final List initialOptions;
+  final List<T>? options;
+  final List<T> initialOptions;
 
-  final Function(List) onChanged;
+  final Function(List<T>) onChanged;
 
   const ChipCard({
     super.key,
@@ -26,10 +26,10 @@ class ChipCard extends StatefulWidget {
   });
 
   @override
-  State<ChipCard> createState() => _ChipCardState();
+  State<ChipCard> createState() => _ChipCardState<T>();
 }
 
-class _ChipCardState extends State<ChipCard> with SingleTickerProviderStateMixin {
+class _ChipCardState<T extends Comparable> extends State<ChipCard> with SingleTickerProviderStateMixin {
   GlobalKey<_SelectionMenuState> menuKey = GlobalKey<_SelectionMenuState>();
 
   late double widgetHeight;
@@ -39,10 +39,10 @@ class _ChipCardState extends State<ChipCard> with SingleTickerProviderStateMixin
   late AnimationController controller;
   late Animation<double> animation;
 
-  List selectedOptions = [];
+  List<T> selectedOptions = [];
 
   setOptions(List options) {
-    setState(() => selectedOptions = options);
+    setState(() => selectedOptions = options as List<T>);
     widget.onChanged(selectedOptions);
   }
 
@@ -53,7 +53,7 @@ class _ChipCardState extends State<ChipCard> with SingleTickerProviderStateMixin
     super.initState();
 
     initializeAnimationController();
-    selectedOptions = widget.initialOptions;
+    selectedOptions = widget.initialOptions as List<T>;
   }
 
   void initializeAnimationController() {
@@ -141,10 +141,10 @@ class _ChipCardState extends State<ChipCard> with SingleTickerProviderStateMixin
   }
 
   Widget secondaryWidgetBuilder() {
-    return _SelectionMenu(
+    return _SelectionMenu<T>(
       onPressed: () => removeOverlay(),
       searchHint: widget.searchHint,
-      options: widget.options,
+      options: widget.options as List<T>?,
       selectedOptions: selectedOptions,
       onChanged: setOptions,
     );
@@ -285,12 +285,12 @@ class _ChipContainer extends StatelessWidget {
   }
 }
 
-class _SelectionMenu extends StatefulWidget {
+class _SelectionMenu<T extends Comparable> extends StatefulWidget {
   final Function() onPressed;
-  final List selectedOptions;
+  final List<T> selectedOptions;
 
   final String searchHint;
-  final List? options;
+  final List<T>? options;
 
   final Function(List) onChanged;
 
@@ -303,22 +303,22 @@ class _SelectionMenu extends StatefulWidget {
   });
 
   @override
-  State<_SelectionMenu> createState() => _SelectionMenuState();
+  State<_SelectionMenu> createState() => _SelectionMenuState<T>();
 }
 
-class _SelectionMenuState extends State<_SelectionMenu> {
-  late List? options;
-  late List filteredOptions;
+class _SelectionMenuState<T extends Comparable> extends State<_SelectionMenu> {
+  late List<T>? options;
+  late List<T> filteredOptions;
 
   String searchText = '';
 
-  List selectedOptions = [];
+  List<T> selectedOptions = [];
 
   @override
   void initState() {
     super.initState();
 
-    selectedOptions = widget.selectedOptions;
+    selectedOptions = widget.selectedOptions as List<T>;
 
     if (widget.options == null || widget.options!.isEmpty) return; // no list provided hence loading state.
 
@@ -337,7 +337,7 @@ class _SelectionMenuState extends State<_SelectionMenu> {
 
       sortedFilteredList.sort((a, b) => a.compareTo(b));
 
-      setState(() => filteredOptions = sortedFilteredList);
+      setState(() => filteredOptions = sortedFilteredList as List<T>);
     } else {
       options!.sort((a, b) => a.compareTo(b));
       setState(() => filteredOptions = options!);

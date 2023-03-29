@@ -10,7 +10,7 @@ class Themes {
     fieldHeight: 40,
     fieldWidth: 35,
     activeColor: Colors.black,
-    selectedColor: ColorValues.socaleDarkOrange,
+    selectedColor: ColorValues.primaryOrange,
     inactiveColor: Colors.black,
   );
 }

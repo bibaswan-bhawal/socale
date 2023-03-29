@@ -1,7 +1,6 @@
 import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:amplify_flutter/amplify_flutter.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
@@ -16,7 +15,7 @@ class AuthService {
 
   const AuthService(this.ref);
 
-  Future<void> loginSuccessful(BuildContext context) async {
+  Future<void> loginSuccessful() async {
     final userId = (await Amplify.Auth.getCurrentUser()).userId;
     final email = (await Amplify.Auth.fetchUserAttributes())
         .firstWhere((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
@@ -29,7 +28,7 @@ class AuthService {
     currentUser.setId(userId);
     currentUser.setEmail(email);
 
-    if (context.mounted) await ref.read(onboardingServiceProvider).init(context); // check if onboarded
+    await ref.read(onboardingServiceProvider).init(); // check if onboarded
     ref.read(appStateProvider.notifier).setLoggedIn(); // logged in
   }
 

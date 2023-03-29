@@ -5,7 +5,7 @@ part 'major.freezed.dart';
 part 'major.g.dart';
 
 @freezed
-class Major with _$Major {
+class Major with _$Major implements Comparable<Major> {
   const Major._();
 
   const factory Major({
@@ -18,6 +18,7 @@ class Major with _$Major {
   @override
   String toString() => name;
 
+  @override
   int compareTo(Major other) {
     return name.compareTo(other.name);
   }

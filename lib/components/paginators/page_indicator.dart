@@ -7,9 +7,23 @@ class PageIndicator extends StatelessWidget {
 
   const PageIndicator({super.key, required this.selectedPage, required this.totalPages});
 
-  List<Widget> createDots() {
+  BoxDecoration calculateDecoration(int index) {
     final selectedPage = this.selectedPage.clamp(0, totalPages - 1);
 
+    if (selectedPage == index) {
+      return BoxDecoration(
+        borderRadius: BorderRadius.circular(6),
+        gradient: ColorValues.orangeGradient,
+      );
+    }
+
+    return BoxDecoration(
+      borderRadius: BorderRadius.circular(6),
+      border: Border.all(color: const Color(0xFF000000), width: 1.5),
+    );
+  }
+
+  List<Widget> createDots() {
     List<Widget> dots = [];
 
     for (int i = 0; i < totalPages; i++) {
@@ -19,11 +33,7 @@ class PageIndicator extends StatelessWidget {
           height: 12,
           width: 12,
           duration: const Duration(milliseconds: 200),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(6),
-            gradient: selectedPage == i ? ColorValues.orangeButtonGradient : ColorValues.transparentGradient,
-            border: selectedPage != i ? Border.all(color: const Color(0xFF000000), width: 1.5) : Border.all(color: const Color(0x00000000), width: 0),
-          ),
+          decoration: calculateDecoration(i),
         ),
       );
     }

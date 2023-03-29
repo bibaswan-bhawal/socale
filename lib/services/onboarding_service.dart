@@ -1,7 +1,6 @@
 import 'dart:convert';
 
 import 'package:flutter/foundation.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/model_providers.dart';
@@ -17,7 +16,7 @@ class OnboardingService {
     return false;
   }
 
-  Future<void> init(BuildContext context) async {
+  Future<void> init() async {
     if (await attemptAutoOnboard()) {
       ref.read(appStateProvider.notifier).setOnboarded();
     } else {
@@ -33,7 +32,7 @@ class OnboardingService {
       bool hasCollegeEmail = userCollege != null;
 
       if (hasCollegeEmail) {
-        if (context.mounted) await setCollegeEmail(email, userCollege);
+        await setCollegeEmail(email, userCollege);
       }
     }
 

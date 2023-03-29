@@ -104,7 +104,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
             children: [
               Form(
                 key: majorFormKey,
-                child: ChipCardFormField(
+                child: ChipCardFormField<Major>(
                   placeholder: 'Add your majors',
                   searchHint: 'Search for your majors',
                   horizontalPadding: 30,
@@ -122,7 +122,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
               ),
               Form(
                 key: minorFormKey,
-                child: ChipCardFormField(
+                child: ChipCardFormField<Minor>(
                   placeholder: 'Add your minors',
                   searchHint: 'Search for your minors',
                   horizontalPadding: 30,

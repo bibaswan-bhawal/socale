@@ -5,7 +5,7 @@ part 'minor.freezed.dart';
 part 'minor.g.dart';
 
 @freezed
-class Minor with _$Minor {
+class Minor with _$Minor implements Comparable<Minor> {
   const Minor._();
 
   const factory Minor({
@@ -18,6 +18,7 @@ class Minor with _$Minor {
   @override
   String toString() => name;
 
+  @override
   int compareTo(Minor other) {
     return name.compareTo(other.name);
   }

@@ -120,7 +120,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
       switch (result) {
         case AuthFlowResult.success:
           try {
-            if (mounted) await ref.read(authServiceProvider).loginSuccessful(context);
+            if (mounted) await ref.read(authServiceProvider).loginSuccessful();
           } catch (e) {
             if (kDebugMode) print(e);
             if (mounted) {

@@ -26,6 +26,7 @@ class OnboardingUser with _$OnboardingUser {
     List<Major>? majors,
     List<Minor>? minors,
     @Default(false) bool isCollegeEmailVerified,
+    @Default(5) int numRegenLeft,
   }) = _OnboardingUser;
 
   factory OnboardingUser.fromJson(Map<String, dynamic> json) => _$OnboardingUserFromJson(json);

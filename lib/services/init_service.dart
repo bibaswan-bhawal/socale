@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_native_splash/flutter_native_splash.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -11,14 +10,18 @@ class InitService {
 
   InitService(this.ref);
 
-  Future<void> initialize(BuildContext context) async {
+  Future<void> initialize() async {
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
-      await Future.wait(
-          [ref.read(amplifyServiceProvider).configureAmplify(), ref.read(dbServiceProvider).configureDb()]);
+      await Future.wait([
+        ref.read(amplifyServiceProvider).configureAmplify(),
+        ref.read(dbServiceProvider).configureDb(),
+      ]);
 
       final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+
+      if (kDebugMode) print('isFirstTime: $isFirstTime');
 
       if (isFirstTime) {
         await prefs.setBool('isFirstTime', false);
@@ -26,7 +29,7 @@ class InitService {
         ref.read(appStateProvider.notifier).setAttemptAutoLogin();
         ref.read(appStateProvider.notifier).setAttemptAutoOnboard();
       } else {
-        if (context.mounted) await ref.read(amplifyServiceProvider).attemptAutoLogin(context);
+        await ref.read(amplifyServiceProvider).attemptAutoLogin();
       }
 
       FlutterNativeSplash.remove();

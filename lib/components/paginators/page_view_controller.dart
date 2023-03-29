@@ -36,7 +36,7 @@ class PageViewController extends StatelessWidget {
         bottom: 40 - MediaQuery.of(context).viewPadding.bottom,
         left: 30,
         right: 30,
-        top: 36,
+        top: 24,
       ),
       child: Row(
         mainAxisSize: MainAxisSize.max,
@@ -56,7 +56,7 @@ class PageViewController extends StatelessWidget {
               textStyle: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                color: currentPage == 0 ? ColorValues.socaleOrange : Colors.black,
+                color: currentPage == 0 ? ColorValues.secondaryOrange : Colors.black,
               ),
             ),
           ),
@@ -80,7 +80,7 @@ class PageViewController extends StatelessWidget {
               textStyle: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                color: currentPage == pageCount - 1 ? ColorValues.socaleOrange : Colors.black,
+                color: currentPage == pageCount - 1 ? ColorValues.secondaryOrange : Colors.black,
               ),
             ),
           ),

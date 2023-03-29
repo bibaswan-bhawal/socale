@@ -130,7 +130,7 @@ class _TextInputFieldState extends State<TextInputField> {
                   onChanged: widget.onChanged,
                   onSubmitted: widget.onSubmitted,
                   style: GoogleFonts.roboto(fontSize: 14, letterSpacing: -0.3),
-                  cursorColor: ColorValues.socaleOrange,
+                  cursorColor: ColorValues.secondaryOrange,
                   cursorRadius: const Radius.circular(1),
                   keyboardType: widget.textInputType,
                   textInputAction: widget.textInputAction,

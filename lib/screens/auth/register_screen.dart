@@ -71,7 +71,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
 
       switch (result) {
         case AuthFlowResult.success:
-          if (mounted) await ref.read(authServiceProvider).loginSuccessful(context);
+          if (mounted) await ref.read(authServiceProvider).loginSuccessful();
           return;
         case AuthFlowResult.unverified:
           goTo(AuthStepState.verifyEmail);
@@ -272,7 +272,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
                     isLoading: isLoading,
                     onPressed: onClickRegister,
                     text: 'Create an Account',
-                    linearGradient: ColorValues.purpleButtonGradient,
+                    linearGradient: ColorValues.blueButtonGradient,
                   ),
                 ],
               ),

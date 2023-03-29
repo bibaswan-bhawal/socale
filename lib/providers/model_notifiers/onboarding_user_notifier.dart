@@ -41,5 +41,7 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
   setIsCollegeEmailVerified(bool isCollegeEmailVerified) =>
       state = state.copyWith(isCollegeEmailVerified: isCollegeEmailVerified);
 
+  setNumRegenLeft(int numRegenLeft) => state = state.copyWith(numRegenLeft: numRegenLeft);
+
   disposeState() => disposeLink.close();
 }

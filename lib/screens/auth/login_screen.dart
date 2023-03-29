@@ -85,7 +85,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
   Future<bool> loginSuccessFlow() async {
     try {
-      await ref.read(authServiceProvider).loginSuccessful(context);
+      await ref.read(authServiceProvider).loginSuccessful();
       return true;
     } catch (e) {
       if (kDebugMode) print(e);
