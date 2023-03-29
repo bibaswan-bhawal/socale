@@ -8,11 +8,14 @@ class FadeThroughAnimation extends StatelessWidget {
   final Widget second;
   final double midPoint;
 
+  final Widget? background;
+
   const FadeThroughAnimation({
     super.key,
     required this.animation,
     required this.first,
     required this.second,
+    this.background,
     this.midPoint = 0.3,
   });
 
@@ -28,6 +31,7 @@ class FadeThroughAnimation extends StatelessWidget {
   Widget build(BuildContext context) {
     return Stack(
       children: [
+        if (background != null && !animation.isCompleted && !animation.isDismissed) background!,
         Opacity(
           opacity: firstVisAnimation.evaluate(animation),
           child: first,

@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socale/components/cards/chip_card_form_field.dart';
 import 'package:socale/components/section_tab_view/section_tab_bar.dart';
+import 'package:socale/components/text/gradient_headline.dart';
 import 'package:socale/models/major/major.dart';
 import 'package:socale/models/minor/minor.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/repositories/onboarding_options_repository.dart';
-import 'package:socale/screens/onboarding/base_onboarding/academic_info/academic_info_header.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
 class AcademicInfoScreen extends BaseOnboardingScreen {
@@ -23,76 +23,89 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
   GlobalKey<FormState> majorFormKey = GlobalKey<FormState>();
   GlobalKey<FormState> minorFormKey = GlobalKey<FormState>();
 
-  List<Major>? selectedMajors = [];
-  List<Minor>? selectedMinors = [];
-
-  saveMajors(List<dynamic>? value) => selectedMajors = value?.cast<Major>();
-
-  saveMinors(List<dynamic>? value) => selectedMinors = value?.cast<Minor>();
-
   @override
   void initState() {
     super.initState();
 
     tabController = TabController(length: 2, vsync: this);
+  }
 
-    // Save all on tab change
-    tabController.addListener(() {
-      if (tabController.index == 0) {
-        saveMinor();
+  void saveMajors(value) {
+    ref.read(onboardingUserProvider.notifier).setMajors(value);
+    majorFormKey.currentState!.validate();
+  }
+
+  void saveMinors(value) {
+    ref.read(onboardingUserProvider.notifier).setMinors(value);
+    minorFormKey.currentState!.validate();
+  }
+
+  String? majorValidator(List<Major>? value) =>
+      (value == null || value.isEmpty) ? 'Please select at least one major' : null;
+
+  String? minorValidator(List<Minor>? value) => null;
+
+  @override
+  Future<bool> onBack() async => true;
+
+  @override
+  Future<bool> onNext() async {
+    final onboardingUser = ref.read(onboardingUserProvider);
+
+    if (majorValidator(onboardingUser.majors) != null) {
+      if (tabController.index == 1) {
+        tabController.animateTo(0, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await Future.delayed(const Duration(milliseconds: 300), () => majorFormKey.currentState!.validate());
       } else {
-        saveMajor();
+        majorFormKey.currentState!.validate();
       }
-    });
 
-    selectedMajors = ref.read(onboardingUserProvider).majors ?? []; // Get selected majors from onboarding state
-    selectedMinors = ref.read(onboardingUserProvider).minors ?? []; // Get selected minors from onboarding state
-  }
+      return false;
+    }
 
-  bool validateMajor() {
-    final majorForm = majorFormKey.currentState;
-    if (majorForm == null) return true;
-    if (majorForm.validate()) return saveMajor();
-    return false;
-  }
+    if (minorValidator(onboardingUser.minors) != null) {
+      if (tabController.index == 0) {
+        tabController.animateTo(1, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
+        await Future.delayed(const Duration(milliseconds: 300), () => minorFormKey.currentState!.validate());
+      } else {
+        minorFormKey.currentState!.validate();
+      }
 
-  bool validateMinor() {
-    final minorForm = minorFormKey.currentState;
-    if (minorForm == null) return true;
-    if (minorForm.validate()) return saveMinor();
-    return false;
-  }
+      return false;
+    }
 
-  bool saveMajor() {
-    final majorForm = majorFormKey.currentState;
-    if (majorForm == null) return true;
-    majorForm.save();
-    ref.read(onboardingUserProvider.notifier).setMajors(selectedMajors);
     return true;
   }
-
-  bool saveMinor() {
-    final minorForm = minorFormKey.currentState;
-    if (minorForm == null) return true;
-    minorForm.save();
-    ref.read(onboardingUserProvider.notifier).setMinors(selectedMinors);
-    return true;
-  }
-
-  @override
-  Future<bool> onBack() async => saveMajor() && saveMinor();
-
-  @override
-  Future<bool> onNext() async => validateMajor() && validateMinor();
 
   @override
   Widget build(BuildContext context) {
     final majorsProvider = ref.watch(fetchMajorsProvider);
     final minorProvider = ref.watch(fetchMinorsProvider);
 
+    final onboardingUser = ref.watch(onboardingUserProvider);
+
     return Column(
       children: [
-        const Flexible(flex: 5, child: Hero(tag: 'academic_info_header', child: AcademicInfoHeader())),
+        Flexible(
+          flex: 5,
+          child: Hero(
+            tag: 'academic_info_header',
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              children: [
+                const Padding(
+                  padding: EdgeInsets.only(top: 36),
+                  child: GradientHeadline(
+                    headlinePlain: 'Let’s find you some',
+                    headlineColored: 'classmates',
+                    newLine: true,
+                  ),
+                ),
+                Expanded(child: Image.asset('assets/illustrations/illustration_2.png')),
+              ],
+            ),
+          ),
+        ),
         SectionTabBar(
           controller: tabController,
           tabs: const [SectionTab(title: 'Majors'), SectionTab(title: 'Minors')],
@@ -108,8 +121,9 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                   placeholder: 'Add your majors',
                   searchHint: 'Search for your majors',
                   horizontalPadding: 30,
-                  initialValue: selectedMajors,
-                  onSaved: saveMajors,
+                  initialValue: onboardingUser.majors,
+                  changed: saveMajors,
+                  validator: majorValidator,
                   options: majorsProvider.when(
                     data: (majors) => majors,
                     loading: () => null,
@@ -125,9 +139,10 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                 child: ChipCardFormField<Minor>(
                   placeholder: 'Add your minors',
                   searchHint: 'Search for your minors',
-                  horizontalPadding: 30,
-                  initialValue: selectedMinors,
-                  onSaved: saveMinors,
+                  horizontalPadding: 20,
+                  initialValue: onboardingUser.minors,
+                  changed: saveMinors,
+                  validator: minorValidator,
                   options: minorProvider.when(
                     data: (minors) => minors,
                     loading: () => null,

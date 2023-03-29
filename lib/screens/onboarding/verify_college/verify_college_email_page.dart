@@ -99,19 +99,21 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
     return false;
   }
 
-  bool shouldSendEmail() {
-    if (widget.email != email) return true;
-    if (!(widget.timerDuration.inSeconds < 150)) return true;
+  bool shouldSendNewEmail() {
+    if (widget.email != email || !(widget.timerDuration.inSeconds < 150)) return true;
 
     return false;
   }
 
   onSubmit() async {
     FocusManager.instance.primaryFocus?.unfocus();
+
     setState(() => isLoading = true);
 
-    if (!validateForm() || !shouldSendEmail() || !(await verifyCollegeEmail()) || !(await sendCode())) {
-      return setState(() => isLoading = false);
+    if (shouldSendNewEmail()) {
+      if (!validateForm() || !(await verifyCollegeEmail()) || !(await sendCode())) {
+        return setState(() => isLoading = false);
+      }
     }
 
     if (mounted) {

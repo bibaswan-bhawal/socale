@@ -6,14 +6,16 @@ import 'package:socale/components/buttons/icon_button.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/transitions/curves.dart';
 
-class ChipCard<T extends Comparable> extends StatefulWidget {
+class ChipCard<T> extends StatefulWidget {
   final double horizontalPadding;
   final String placeholder;
   final String searchHint;
   final List<T>? options;
   final List<T> initialOptions;
+  final bool hasError;
+  final String? errorText;
 
-  final Function(List<T>) onChanged;
+  final Function onChanged;
 
   const ChipCard({
     super.key,
@@ -23,28 +25,23 @@ class ChipCard<T extends Comparable> extends StatefulWidget {
     required this.placeholder,
     required this.searchHint,
     required this.onChanged,
+    required this.hasError,
+    this.errorText,
   });
 
   @override
   State<ChipCard> createState() => _ChipCardState<T>();
 }
 
-class _ChipCardState<T extends Comparable> extends State<ChipCard> with SingleTickerProviderStateMixin {
+class _ChipCardState<T> extends State<ChipCard> with SingleTickerProviderStateMixin {
   GlobalKey<_SelectionMenuState> menuKey = GlobalKey<_SelectionMenuState>();
 
   late double widgetHeight;
-
-  OverlayEntry? overlay;
-
   late AnimationController controller;
   late Animation<double> animation;
+  late List<T> selectedOptions;
 
-  List<T> selectedOptions = [];
-
-  setOptions(List options) {
-    setState(() => selectedOptions = options as List<T>);
-    widget.onChanged(selectedOptions);
-  }
+  OverlayEntry? overlay;
 
   bool showMain = true;
 
@@ -53,12 +50,20 @@ class _ChipCardState<T extends Comparable> extends State<ChipCard> with SingleTi
     super.initState();
 
     initializeAnimationController();
-    selectedOptions = widget.initialOptions as List<T>;
+    selectedOptions = (widget.initialOptions as List<T>).toList();
+  }
+
+  setOptions(options) {
+    widget.onChanged(options);
+    setState(() => selectedOptions = options);
   }
 
   void initializeAnimationController() {
     controller = AnimationController(
-        duration: const Duration(milliseconds: 500), reverseDuration: const Duration(milliseconds: 400), vsync: this);
+      duration: const Duration(milliseconds: 500),
+      reverseDuration: const Duration(milliseconds: 400),
+      vsync: this,
+    );
 
     animation = Tween<double>(begin: 0, end: 1).animate(controller)
       ..addListener(animationListener)
@@ -88,25 +93,17 @@ class _ChipCardState<T extends Comparable> extends State<ChipCard> with SingleTi
   List<Widget> chipListBuilder() {
     List<Widget> chips = [];
 
-    for (dynamic option in selectedOptions) {
+    for (T option in selectedOptions) {
       chips.add(
         Chip(
+          key: ValueKey(option.hashCode),
           visualDensity: VisualDensity.compact,
           padding: const EdgeInsets.all(4),
-          label: Text(
-            option.toString(),
-            style: GoogleFonts.roboto(
-              fontSize: 12,
-            ),
-          ),
-          onDeleted: () {
-            selectedOptions.removeAt(
-              selectedOptions.indexOf(option),
-            );
-
-            setState(() {});
+          label: Text(option.toString(), style: GoogleFonts.roboto(fontSize: 12)),
+          onDeleted: () => setState(() {
+            selectedOptions.removeAt(selectedOptions.indexOf(option));
             widget.onChanged(selectedOptions);
-          },
+          }),
         ),
       );
     }
@@ -120,6 +117,9 @@ class _ChipCardState<T extends Comparable> extends State<ChipCard> with SingleTi
       child: GestureDetector(
         onTap: () => selectedOptions.isEmpty ? createOverlay() : null,
         child: _ChipContainer(
+          hasError: widget.hasError,
+          errorText: widget.errorText,
+          horizontalPadding: widget.horizontalPadding,
           onAdd: () => createOverlay(),
           child: selectedOptions.isEmpty
               ? _ChipContentPlaceHolder(placeholderText: widget.placeholder)
@@ -179,14 +179,16 @@ class _ChipCardState<T extends Comparable> extends State<ChipCard> with SingleTi
         left: paddingAnimation.evaluate(animation),
         right: paddingAnimation.evaluate(animation),
         top: getVOffsetAnimation(offset.dy).evaluate(animation),
-        child: Container(
-          color: Colors.white,
-          child: FadeThroughAnimation(
-            animation: animation,
-            midPoint: 0.3,
-            first: mainWidgetBuilder(height: heightAnimation.evaluate(animation)),
-            second: secondaryWidgetBuilder(),
+        child: FadeThroughAnimation(
+          animation: animation,
+          midPoint: 0.3,
+          background: Container(
+            color: Colors.white,
+            height: heightAnimation.evaluate(animation),
+            width: double.infinity,
           ),
+          first: mainWidgetBuilder(height: heightAnimation.evaluate(animation)),
+          second: secondaryWidgetBuilder(),
         ),
       ),
     );
@@ -214,11 +216,34 @@ class _ChipCardState<T extends Comparable> extends State<ChipCard> with SingleTi
         maintainSize: true,
         child: Padding(
           padding: EdgeInsets.symmetric(horizontal: widget.horizontalPadding),
-          child: LayoutBuilder(
-            builder: (context, constraints) {
-              if (constraints.maxHeight == double.infinity) return mainWidgetBuilder();
-              return mainWidgetBuilder(height: constraints.maxHeight);
-            },
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                child: LayoutBuilder(
+                  builder: (context, constraints) {
+                    if (constraints.maxHeight == double.infinity) return mainWidgetBuilder();
+                    return mainWidgetBuilder(height: constraints.maxHeight);
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 16),
+                child: AnimatedOpacity(
+                  duration: const Duration(milliseconds: 300),
+                  opacity: widget.hasError ? 1 : 0,
+                  child: Text(
+                    widget.errorText ?? '',
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.roboto(
+                      color: Colors.red,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w400,
+                    ),
+                  ),
+                ),
+              ),
+            ],
           ),
         ),
       ),
@@ -243,56 +268,79 @@ class _ChipContainer extends StatelessWidget {
   final Widget child;
   final Function() onAdd;
 
-  const _ChipContainer({required this.child, required this.onAdd});
+  final bool hasError;
+  final String? errorText;
+
+  final double horizontalPadding;
+
+  const _ChipContainer({
+    required this.child,
+    required this.onAdd,
+    required this.hasError,
+    required this.horizontalPadding,
+    this.errorText,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: const EdgeInsets.all(8),
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.black, width: 2),
+        border: Border.all(color: hasError ? Colors.red : Colors.black, width: hasError ? 3 : 2),
         borderRadius: BorderRadius.circular(15),
         gradient: ColorValues.groupInputBackgroundGradient,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.25),
+            spreadRadius: 0,
+            blurRadius: 4,
+            offset: const Offset(0, 4),
+          ),
+        ],
       ),
       child: Material(
         type: MaterialType.transparency,
         borderRadius: BorderRadius.circular(15),
-        clipBehavior: Clip.antiAlias,
-        child: Stack(
-          children: [
-            Align(
-              alignment: Alignment.topRight,
-              child: InkResponse(
-                onTap: onAdd,
-                child: SizedBox(
-                  height: 24,
-                  width: 24,
-                  child: SvgPicture.asset(
-                    'assets/icons/add.svg',
-                    colorFilter: const ColorFilter.mode(
-                      Colors.black,
-                      BlendMode.srcIn,
+        clipBehavior: Clip.hardEdge,
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Stack(
+            children: [
+              Align(
+                alignment: Alignment.topRight,
+                child: InkResponse(
+                  onTap: onAdd,
+                  child: SizedBox(
+                    height: 24,
+                    width: 24,
+                    child: SvgPicture.asset(
+                      'assets/icons/add.svg',
+                      colorFilter: const ColorFilter.mode(
+                        Colors.black,
+                        BlendMode.srcIn,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-            child,
-          ],
+              child,
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _SelectionMenu<T extends Comparable> extends StatefulWidget {
+class _SelectionMenu<T> extends StatefulWidget {
   final Function() onPressed;
   final List<T> selectedOptions;
 
   final String searchHint;
   final List<T>? options;
 
-  final Function(List) onChanged;
+  final dynamic Function(List<T>) onChanged;
 
   const _SelectionMenu({
     required this.onPressed,
@@ -306,85 +354,59 @@ class _SelectionMenu<T extends Comparable> extends StatefulWidget {
   State<_SelectionMenu> createState() => _SelectionMenuState<T>();
 }
 
-class _SelectionMenuState<T extends Comparable> extends State<_SelectionMenu> {
-  late List<T>? options;
+class _SelectionMenuState<T> extends State<_SelectionMenu> {
+  late List<T> options;
   late List<T> filteredOptions;
+  late List<T> selectedOptions;
 
   String searchText = '';
-
-  List<T> selectedOptions = [];
 
   @override
   void initState() {
     super.initState();
 
-    selectedOptions = widget.selectedOptions as List<T>;
+    selectedOptions = (widget.selectedOptions as List<T>).toList();
 
-    if (widget.options == null || widget.options!.isEmpty) return; // no list provided hence loading state.
-
-    options = List.from(widget.options!);
-    options!.sort((a, b) => a.compareTo(b));
-    filteredOptions = options!;
+    options = (widget.options as List<T>?) ?? [];
+    options.sort((a, b) => (a as Comparable).compareTo(b));
+    filteredOptions = options;
 
     filteredOptions.removeWhere((element) => selectedOptions.contains(element));
   }
 
   void buildList() {
     if (searchText.isNotEmpty) {
-      List sortedFilteredList = options!.where((option) {
-        return option.toString().toLowerCase().contains(searchText.toLowerCase());
-      }).toList();
+      List<T> sortedFilteredList =
+          options.where((option) => option.toString().toLowerCase().contains(searchText.toLowerCase())).toList();
 
-      sortedFilteredList.sort((a, b) => a.compareTo(b));
+      sortedFilteredList.sort((a, b) => ((a as Comparable)).compareTo(b));
 
-      setState(() => filteredOptions = sortedFilteredList as List<T>);
+      setState(() => filteredOptions = sortedFilteredList);
     } else {
-      options!.sort((a, b) => a.compareTo(b));
-      setState(() => filteredOptions = options!);
+      options.sort((a, b) => (a as Comparable).compareTo(b));
+      setState(() => filteredOptions = options);
     }
   }
 
   void onSelected(index) {
-    selectedOptions.add(filteredOptions[index]);
-    options!.removeWhere((element) => selectedOptions.contains(element));
+    T selectedOption = filteredOptions[index];
+    options.remove(selectedOption); // remove from list
+    buildList(); // rebuild list
+    setState(() => selectedOptions.add(selectedOption)); // update state
+    widget.onChanged(selectedOptions);
+  }
+
+  void onDeleted(index) {
+    T selectedOption = selectedOptions[index];
+    if (mounted) setState(() => selectedOptions.remove(selectedOption));
+    options.add(selectedOption);
     buildList();
-  }
-
-  List<Widget> _buildChipList() {
-    List<Widget> chips = [];
-
-    for (int i = 0; i < selectedOptions.length; i++) {
-      chips.add(
-        Chip(
-          visualDensity: VisualDensity.compact,
-          padding: const EdgeInsets.all(4),
-          label: Text(
-            selectedOptions[i].toString(),
-            style: GoogleFonts.roboto(
-              fontSize: 12,
-            ),
-          ),
-          onDeleted: () {
-            options!.add(selectedOptions[i]);
-            selectedOptions.removeAt(i);
-            buildList();
-          },
-        ),
-      );
-    }
-
-    return chips;
-  }
-
-  onBack() {
     widget.onChanged(selectedOptions);
-    widget.onPressed();
   }
 
-  onSave() {
-    widget.onChanged(selectedOptions);
-    widget.onPressed();
-  }
+  onBack() => widget.onPressed();
+
+  onSave() => widget.onPressed();
 
   @override
   Widget build(BuildContext context) {
@@ -443,7 +465,18 @@ class _SelectionMenuState<T extends Comparable> extends State<_SelectionMenu> {
                       direction: Axis.horizontal,
                       spacing: 8,
                       runSpacing: 4,
-                      children: _buildChipList(),
+                      children: selectedOptions
+                          .map(
+                            (option) => Chip(
+                              key: ValueKey(option),
+                              visualDensity: VisualDensity.compact,
+                              padding: const EdgeInsets.all(4),
+                              label: Text(option.toString(), style: GoogleFonts.roboto(fontSize: 12)),
+                              onDeleted: () => onDeleted(selectedOptions.indexOf(option)),
+                              clipBehavior: Clip.antiAlias,
+                            ),
+                          )
+                          .toList(),
                     ),
                   ),
                 ),
@@ -469,8 +502,13 @@ class _SelectionMenuState<T extends Comparable> extends State<_SelectionMenu> {
                                 child: ListView.separated(
                                   padding: const EdgeInsets.only(top: 8),
                                   itemCount: filteredOptions.length,
+                                  findChildIndexCallback: (Key key) {
+                                    int index = filteredOptions.indexOf((key as ValueKey).value);
+                                    return index == -1 ? null : index;
+                                  },
                                   itemBuilder: (context, index) {
                                     return ListTile(
+                                      key: ValueKey(filteredOptions[index]),
                                       dense: true,
                                       onTap: () => onSelected(index),
                                       title: Text(filteredOptions[index].toString()),

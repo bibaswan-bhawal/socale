@@ -1,7 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/base_onboarding_pages.dart';
 import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/base_onboarding_route_path.dart';
-import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/intro_page.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
 class BaseOnboardingRouterDelegate extends RouterDelegate<BaseOnboardingRoutePath>
@@ -15,6 +13,7 @@ class BaseOnboardingRouterDelegate extends RouterDelegate<BaseOnboardingRoutePat
     const BasicInfoPage(),
     const AcademicInfoPage(),
     const AvatarSelectionPage(),
+    const ExtraSelectionPage()
   ];
 
   int currentPage = 0;
@@ -42,9 +41,7 @@ class BaseOnboardingRouterDelegate extends RouterDelegate<BaseOnboardingRoutePat
     notifyListeners();
   }
 
-  bool isLast() {
-    return currentPage == pages.length - 1;
-  }
+  bool isLast() => currentPage == pages.length - 1;
 
   List<Page> buildPageList() {
     List<Page> pagesToAdd = [];

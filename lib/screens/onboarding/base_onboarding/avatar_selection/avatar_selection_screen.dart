@@ -43,7 +43,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
 
   @override
   Future<bool> onNext() async {
-    return false;
+    return true;
   }
 
   Future<void> regenProfile() async {
@@ -75,6 +75,8 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
     final size = MediaQuery.of(context).size;
 
     return Column(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      mainAxisSize: MainAxisSize.max,
       children: [
         Padding(
           padding: EdgeInsets.only(top: size.height * 0.05),
@@ -127,8 +129,11 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
         Flexible(
           flex: 10,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 32, top: 32),
-            child: profileImage,
+            padding: const EdgeInsets.only(bottom: 24, top: 24),
+            child: Container(
+              constraints: BoxConstraints(maxWidth: size.width * 0.6, maxHeight: size.width * 0.6),
+              child: profileImage,
+            ),
           ),
         ),
         Row(

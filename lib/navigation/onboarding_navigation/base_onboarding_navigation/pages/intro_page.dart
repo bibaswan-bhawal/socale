@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/onboarding_page_interface.dart';
 import 'package:socale/screens/onboarding/base_onboarding/intro/intro_screen.dart';
-import 'package:socale/transitions/slide_horizontal_transition.dart';
 
 class OnboardingIntroPage extends BaseOnboardingPage {
   const OnboardingIntroPage({super.key = const ValueKey('onboarding_intro_page')});

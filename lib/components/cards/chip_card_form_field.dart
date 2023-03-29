@@ -6,6 +6,7 @@ class ChipCardFormField<T extends Comparable> extends FormField<List<T>> {
   final String searchHint;
   final double horizontalPadding;
   final List<T>? options;
+  final Function(List<T>?)? changed;
 
   ChipCardFormField({
     Key? key,
@@ -13,6 +14,7 @@ class ChipCardFormField<T extends Comparable> extends FormField<List<T>> {
     required this.searchHint,
     required this.horizontalPadding,
     this.options,
+    this.changed,
     List<T>? initialValue,
     FormFieldSetter<List<T>>? onSaved,
     FormFieldValidator<List<T>>? validator,
@@ -28,7 +30,12 @@ class ChipCardFormField<T extends Comparable> extends FormField<List<T>> {
               options: options,
               initialOptions: initialValue ?? [],
               searchHint: searchHint,
-              onChanged: state.didChange,
+              onChanged: (value) {
+                changed?.call(value);
+                state.didChange(value);
+              },
+              hasError: state.hasError,
+              errorText: state.errorText,
             );
           },
         );

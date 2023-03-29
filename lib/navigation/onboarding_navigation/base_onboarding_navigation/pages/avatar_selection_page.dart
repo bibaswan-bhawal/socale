@@ -1,7 +1,5 @@
-import 'package:flutter/material.dart';
 import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/onboarding_page_interface.dart';
 import 'package:socale/screens/onboarding/base_onboarding/avatar_selection/avatar_selection_screen.dart';
-import 'package:socale/transitions/slide_horizontal_transition.dart';
 
 class AvatarSelectionPage extends BaseOnboardingPage {
   const AvatarSelectionPage({super.key = const ValueKey('avatar_selection_page')});

@@ -100,6 +100,8 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
           width: size.width,
           height: size.height,
           child: Column(
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Align(
                 alignment: Alignment.centerLeft,
@@ -130,32 +132,37 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
               ),
               Flexible(
                 flex: 3,
+                fit: FlexFit.tight,
                 child: Center(
                   child: Image.asset('assets/illustrations/illustration_6.png'),
                 ),
               ),
               Flexible(
                 flex: 4,
-                child: PageView(
-                  controller: pageController,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    VerifyCollegeEmailPage(
-                      email: email,
-                      next: next,
-                      timerDuration: timeLeft,
-                      saveEmail: saveEmail,
-                      saveCollege: saveCollege,
-                      startTimer: startTimer,
-                    ),
-                    VerifyCollegeCodePage(
-                      next: next,
-                      email: email,
-                      college: college,
-                      timerDuration: timeLeft,
-                      startTimer: startTimer,
-                    ),
-                  ],
+                fit: FlexFit.loose,
+                child: Container(
+                  constraints: const BoxConstraints(maxHeight: 350),
+                  child: PageView(
+                    controller: pageController,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      VerifyCollegeEmailPage(
+                        email: email,
+                        next: next,
+                        timerDuration: timeLeft,
+                        saveEmail: saveEmail,
+                        saveCollege: saveCollege,
+                        startTimer: startTimer,
+                      ),
+                      VerifyCollegeCodePage(
+                        next: next,
+                        email: email,
+                        college: college,
+                        timerDuration: timeLeft,
+                        startTimer: startTimer,
+                      ),
+                    ],
+                  ),
                 ),
               ),
             ],
