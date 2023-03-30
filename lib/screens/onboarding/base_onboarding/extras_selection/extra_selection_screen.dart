@@ -38,7 +38,7 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  'Meet your new',
+                  'Add more stuff',
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: size.width * (24 / 414),
@@ -49,25 +49,25 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Text(
+                      'to your ',
+                      style: GoogleFonts.poppins(
+                        color: Colors.black,
+                        fontSize: size.width * (24 / 414),
+                        fontWeight: FontWeight.bold,
+                        letterSpacing: -0.3,
+                      ),
+                    ),
                     ShaderMask(
                       shaderCallback: (bounds) => ColorValues.orangeTextGradient.createShader(bounds),
                       child: Text(
-                        'anonymous ',
+                        'profile',
                         style: GoogleFonts.poppins(
                           fontSize: size.width * (24 / 414),
                           fontWeight: FontWeight.bold,
                           color: Colors.white,
                           letterSpacing: -0.3,
                         ),
-                      ),
-                    ),
-                    Text(
-                      'avatar',
-                      style: GoogleFonts.poppins(
-                        color: Colors.black,
-                        fontSize: size.width * (24 / 414),
-                        fontWeight: FontWeight.bold,
-                        letterSpacing: -0.3,
                       ),
                     ),
                   ],
