@@ -115,7 +115,7 @@ class _ChipCardState<T> extends State<ChipCard> with SingleTickerProviderStateMi
     return SizedBox(
       height: height,
       child: GestureDetector(
-        onTap: () => selectedOptions.isEmpty ? createOverlay() : null,
+        onTap: () => createOverlay(),
         child: _ChipContainer(
           hasError: widget.hasError,
           errorText: widget.errorText,
@@ -199,6 +199,15 @@ class _ChipCardState<T> extends State<ChipCard> with SingleTickerProviderStateMi
 
   Future<void> removeOverlay() async {
     await controller.reverse();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+
+    if (overlay != null) {
+      Overlay.of(context, rootOverlay: true).setState(() {});
+    }
   }
 
   @override
