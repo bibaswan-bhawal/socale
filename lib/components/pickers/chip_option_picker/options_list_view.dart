@@ -152,23 +152,25 @@ class ChipOptionListViewScreenState<T> extends State<ChipOptionListViewScreen<T>
           ],
           scrolledUnderElevation: 0,
         ),
-        body: Column(
-          mainAxisSize: MainAxisSize.max,
-          children: [
-            if (selectedOptions.isNotEmpty)
-              ConstrainedBox(
-                constraints: BoxConstraints(maxHeight: 130, minWidth: size.width),
-                child: SingleChildScrollView(
-                  padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
-                  child: Wrap(
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: selectedOptions.map(buildChip).toList(),
+        body: SafeArea(
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              if (selectedOptions.isNotEmpty)
+                ConstrainedBox(
+                  constraints: BoxConstraints(maxHeight: 130, minWidth: size.width),
+                  child: SingleChildScrollView(
+                    padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 4),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 4,
+                      children: selectedOptions.map(buildChip).toList(),
+                    ),
                   ),
                 ),
-              ),
-            buildListView(),
-          ],
+              buildListView(),
+            ],
+          ),
         ),
       ),
     );
