@@ -1,7 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:socale/components/cards/chip_card_form_field.dart';
+import 'package:socale/components/pickers/chip_option_picker/chip_option_picker_form_field.dart';
 import 'package:socale/components/section_tab_view/section_tab_bar.dart';
 import 'package:socale/components/text/gradient_headline.dart';
 import 'package:socale/models/major/major.dart';
@@ -88,22 +88,19 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
       children: [
         Flexible(
           flex: 5,
-          child: Hero(
-            tag: 'academic_info_header',
-            child: Column(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                const Padding(
-                  padding: EdgeInsets.only(top: 36),
-                  child: GradientHeadline(
-                    headlinePlain: 'Let’s find you some',
-                    headlineColored: 'classmates',
-                    newLine: true,
-                  ),
+          child: Column(
+            mainAxisSize: MainAxisSize.max,
+            children: [
+              const Padding(
+                padding: EdgeInsets.only(top: 36),
+                child: GradientHeadline(
+                  headlinePlain: 'Let’s find you some',
+                  headlineColored: 'classmates',
+                  newLine: true,
                 ),
-                Expanded(child: Image.asset('assets/illustrations/illustration_2.png')),
-              ],
-            ),
+              ),
+              Expanded(child: Image.asset('assets/illustrations/illustration_2.png')),
+            ],
           ),
         ),
         SectionTabBar(
@@ -115,41 +112,47 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
           child: TabBarView(
             controller: tabController,
             children: [
-              Form(
-                key: majorFormKey,
-                child: ChipCardFormField<Major>(
-                  placeholder: 'Add your majors',
-                  searchHint: 'Search for your majors',
-                  horizontalPadding: 30,
-                  initialValue: onboardingUser.majors,
-                  changed: saveMajors,
-                  validator: majorValidator,
-                  options: majorsProvider.when(
-                    data: (majors) => majors,
-                    loading: () => null,
-                    error: (err, stack) {
-                      if (kDebugMode) print(err);
-                      return [];
-                    },
+              Padding(
+                padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
+                child: Form(
+                  key: majorFormKey,
+                  child: ChipOptionPickerFormField<Major>(
+                    placeholder: 'Add your majors',
+                    searchHint: 'Search for your majors',
+                    horizontalPadding: 30,
+                    initialValue: onboardingUser.majors,
+                    onChanged: saveMajors,
+                    validator: majorValidator,
+                    options: majorsProvider.when(
+                      data: (majors) => majors,
+                      loading: () => null,
+                      error: (err, stack) {
+                        if (kDebugMode) print(err);
+                        return [];
+                      },
+                    ),
                   ),
                 ),
               ),
-              Form(
-                key: minorFormKey,
-                child: ChipCardFormField<Minor>(
-                  placeholder: 'Add your minors',
-                  searchHint: 'Search for your minors',
-                  horizontalPadding: 20,
-                  initialValue: onboardingUser.minors,
-                  changed: saveMinors,
-                  validator: minorValidator,
-                  options: minorProvider.when(
-                    data: (minors) => minors,
-                    loading: () => null,
-                    error: (err, stack) {
-                      if (kDebugMode) print(err);
-                      return [];
-                    },
+              Padding(
+                padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
+                child: Form(
+                  key: minorFormKey,
+                  child: ChipOptionPickerFormField<Minor>(
+                    placeholder: 'Add your minors',
+                    searchHint: 'Search for your minors',
+                    horizontalPadding: 20,
+                    initialValue: onboardingUser.minors,
+                    onChanged: saveMinors,
+                    validator: minorValidator,
+                    options: minorProvider.when(
+                      data: (minors) => minors,
+                      loading: () => null,
+                      error: (err, stack) {
+                        if (kDebugMode) print(err);
+                        return [];
+                      },
+                    ),
                   ),
                 ),
               ),

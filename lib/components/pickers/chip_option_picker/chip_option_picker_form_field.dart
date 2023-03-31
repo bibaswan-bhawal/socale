@@ -1,21 +1,21 @@
 import 'package:flutter/material.dart';
-import 'package:socale/components/cards/chip_card.dart';
-import 'package:socale/models/data_model.dart';
+import 'package:socale/components/pickers/chip_option_picker/chip_option_picker.dart';
 
-class ChipCardFormField<T extends DataModel> extends FormField<List<T>> {
+class ChipOptionPickerFormField<T> extends FormField<List<T>> {
   final String placeholder;
   final String searchHint;
   final double horizontalPadding;
   final List<T>? options;
-  final Function(List<T>?)? changed;
 
-  ChipCardFormField({
+  final Function onChanged;
+
+  ChipOptionPickerFormField({
     Key? key,
     required this.placeholder,
     required this.searchHint,
     required this.horizontalPadding,
-    this.options,
-    this.changed,
+    required this.onChanged,
+    required this.options,
     List<T>? initialValue,
     FormFieldSetter<List<T>>? onSaved,
     FormFieldValidator<List<T>>? validator,
@@ -24,19 +24,18 @@ class ChipCardFormField<T extends DataModel> extends FormField<List<T>> {
           initialValue: initialValue,
           onSaved: onSaved,
           validator: validator,
-          builder: (FormFieldState<List> state) {
-            return ChipCard<T>(
-              horizontalPadding: horizontalPadding,
+          builder: (FormFieldState<List<T>> state) {
+            return ChipOptionPicker<T>(
+              data: options,
+              selectedData: initialValue ?? [],
               placeholder: placeholder,
-              options: options,
-              initialOptions: initialValue ?? [],
-              searchHint: searchHint,
-              onChanged: (value) {
-                state.didChange(value);
-                changed?.call(value);
-              },
+              searchHintText: searchHint,
               hasError: state.hasError,
               errorText: state.errorText,
+              onChanged: (value) {
+                state.didChange(value);
+                onChanged(value);
+              },
             );
           },
         );

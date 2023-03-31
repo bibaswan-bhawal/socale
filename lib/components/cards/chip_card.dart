@@ -3,6 +3,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/animations/fade_through_animation.dart';
 import 'package:socale/components/buttons/icon_button.dart';
+import 'package:socale/models/data_model.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/transitions/curves.dart';
 
@@ -166,9 +167,6 @@ class _ChipCardState<T> extends State<ChipCard> with SingleTickerProviderStateMi
 
   Animatable<double> get borderRadius => Tween(begin: 15.0, end: 2.0).chain(CurveTween(curve: emphasized));
 
-  Animatable<Color?> get borderColor =>
-      ColorTween(begin: Colors.black, end: Colors.transparent).chain(CurveTween(curve: emphasized));
-
   void createOverlay() {
     OverlayState overlayState = Overlay.of(context, rootOverlay: true);
     RenderBox? renderBox = context.findRenderObject() as RenderBox?;
@@ -181,7 +179,6 @@ class _ChipCardState<T> extends State<ChipCard> with SingleTickerProviderStateMi
         top: getVOffsetAnimation(offset.dy).evaluate(animation),
         child: FadeThroughAnimation(
           animation: animation,
-          midPoint: 0.3,
           background: Container(
             color: Colors.white,
             height: heightAnimation.evaluate(animation),
@@ -463,18 +460,18 @@ class _SelectionMenuState<T> extends State<_SelectionMenu> {
                       direction: Axis.horizontal,
                       spacing: 8,
                       runSpacing: 4,
-                      children: selectedOptions
-                          .map(
-                            (option) => Chip(
-                              key: ValueKey(option),
-                              visualDensity: VisualDensity.compact,
-                              padding: const EdgeInsets.all(4),
-                              label: Text(option.toString(), style: GoogleFonts.roboto(fontSize: 12)),
-                              onDeleted: () => onDeleted(selectedOptions.indexOf(option)),
-                              clipBehavior: Clip.antiAlias,
-                            ),
-                          )
-                          .toList(),
+                      children: selectedOptions.map((value) {
+                        T option = (value as DataModel).copyWith();
+
+                        return Chip(
+                          key: ValueKey(option),
+                          visualDensity: VisualDensity.compact,
+                          padding: const EdgeInsets.all(4),
+                          label: Text(option.toString(), style: GoogleFonts.roboto(fontSize: 12)),
+                          onDeleted: () => onDeleted(selectedOptions.indexOf(option)),
+                          clipBehavior: Clip.antiAlias,
+                        );
+                      }).toList(),
                     ),
                   ),
                 ),
@@ -500,21 +497,20 @@ class _SelectionMenuState<T> extends State<_SelectionMenu> {
                                 child: ListView.separated(
                                   padding: const EdgeInsets.only(top: 8),
                                   itemCount: filteredOptions.length,
+                                  separatorBuilder: (context, index) => const Divider(thickness: 0.4, height: 8),
                                   findChildIndexCallback: (Key key) {
                                     int index = filteredOptions.indexOf((key as ValueKey).value);
                                     return index == -1 ? null : index;
                                   },
                                   itemBuilder: (context, index) {
-                                    T filteredOptions[index].copyWith();
+                                    T option = (filteredOptions[index] as DataModel).copyWith();
+
                                     return ListTile(
-                                      key: ValueKey(filteredOptions[index]),
+                                      key: ValueKey(option),
                                       dense: true,
                                       onTap: () => onSelected(index),
-                                      title: Text(filteredOptions[index].toString()),
+                                      title: Text(option.toString()),
                                     );
-                                  },
-                                  separatorBuilder: (BuildContext context, int index) {
-                                    return const Divider(thickness: 0.4, height: 8);
                                   },
                                 ),
                               ),

@@ -4,8 +4,8 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:socale/components/pickers/android_date_picker.dart';
-import 'package:socale/components/pickers/ios_date_picker.dart';
+import 'package:socale/components/pickers/date_picker/android_date_picker.dart';
+import 'package:socale/components/pickers/date_picker/ios_date_picker.dart';
 import 'package:socale/resources/colors.dart';
 
 enum DatePickerDateMode { dayMonthYear, monthYear }

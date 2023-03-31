@@ -4,14 +4,21 @@ import 'package:socale/components/utils/screen_safe_area.dart';
 class ScreenScaffold extends StatelessWidget {
   final Widget body;
   final Widget? background;
+  final PreferredSizeWidget? appBar;
 
-  const ScreenScaffold({super.key, required this.body, this.background});
+  const ScreenScaffold({
+    super.key,
+    required this.body,
+    this.background,
+    this.appBar,
+  });
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,
+      appBar: appBar,
       body: Stack(
         children: [
           if (background != null) background!,
