@@ -197,18 +197,7 @@ class _ChipCardState<T> extends State<ChipCard> with SingleTickerProviderStateMi
     controller.forward();
   }
 
-  Future<void> removeOverlay() async {
-    await controller.reverse();
-  }
-
-  @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
-
-    if (overlay != null) {
-      Overlay.of(context, rootOverlay: true).setState(() {});
-    }
-  }
+  Future<void> removeOverlay() async => await controller.reverse();
 
   @override
   Widget build(BuildContext context) {
@@ -516,6 +505,7 @@ class _SelectionMenuState<T> extends State<_SelectionMenu> {
                                     return index == -1 ? null : index;
                                   },
                                   itemBuilder: (context, index) {
+                                    T filteredOptions[index].copyWith();
                                     return ListTile(
                                       key: ValueKey(filteredOptions[index]),
                                       dense: true,
