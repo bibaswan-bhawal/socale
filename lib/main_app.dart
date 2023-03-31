@@ -29,6 +29,7 @@ class _MainAppState extends ConsumerState<MainApp> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () => FocusManager.instance.primaryFocus?.unfocus(),
+      behavior: HitTestBehavior.opaque,
       child: MaterialApp.router(
         title: 'Socale',
         theme: ThemeData(useMaterial3: true),
