@@ -54,7 +54,7 @@ class DefaultInputForm extends StatelessWidget {
               color: errorMessage != null ? Colors.red : Colors.transparent,
               width: 2,
             ),
-            gradient: ColorValues.groupInputBackgroundGradient,
+            gradient: ColorValues.cardGradientBackground,
             boxShadow: [
               BoxShadow(
                 color: Colors.black.withOpacity(0.25),

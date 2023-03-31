@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/pickers/chip_option_picker/options_list_view.dart';
+import 'package:socale/components/pickers/options_list_view/options_list_view.dart';
 import 'package:socale/transitions/container_transform.dart';
 
 class ChipOptionPicker<T> extends StatefulWidget {

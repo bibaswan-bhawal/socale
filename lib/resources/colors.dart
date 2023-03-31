@@ -25,24 +25,28 @@ class ColorValues {
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [primaryOrange, secondaryOrange],
+    transform: GradientRotation((pi / 180) * -45),
   );
 
   static const LinearGradient purpleGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [primaryPurple, secondaryPurple],
+    transform: GradientRotation((pi / 180) * -45),
   );
 
   static const LinearGradient blueGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [primaryBlue, secondaryBlue],
+    transform: GradientRotation((pi / 180) * -45),
   );
 
   static const LinearGradient lightBlueGradient = LinearGradient(
     begin: Alignment.centerLeft,
     end: Alignment.centerRight,
     colors: [primaryLightBlue, secondaryLightBlue],
+    transform: GradientRotation((pi / 180) * -45),
   );
 
   static const LinearGradient transparentGradient = LinearGradient(
@@ -104,7 +108,7 @@ class ColorValues {
     transform: GradientRotation((pi / 180) * -80),
   );
 
-  static final Gradient groupInputBackgroundGradient = (const LinearGradient(
+  static final Gradient cardGradientBackground = (const LinearGradient(
     begin: Alignment.topLeft,
     end: Alignment.centerRight,
     colors: [
