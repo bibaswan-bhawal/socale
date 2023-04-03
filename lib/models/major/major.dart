@@ -1,12 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:socale/models/data_model.dart';
 
 part 'major.freezed.dart';
 
 part 'major.g.dart';
 
 @freezed
-class Major with _$Major implements DataModel<Major> {
+class Major with _$Major implements Comparable<Major> {
   const Major._();
 
   const factory Major({

@@ -1,12 +1,11 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:socale/models/data_model.dart';
 
 part 'minor.freezed.dart';
 
 part 'minor.g.dart';
 
 @freezed
-class Minor with _$Minor implements DataModel<Minor> {
+class Minor with _$Minor implements Comparable<Minor> {
   const Minor._();
 
   const factory Minor({
