@@ -121,7 +121,7 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
                                 style: GoogleFonts.roboto(
                                   fontWeight: FontWeight.w500,
                                   fontSize: 16,
-                                  color: ColorValues.secondaryOrange,
+                                  color: AppColors.secondaryOrange,
                                 ),
                               )
                             : SvgPicture.asset('assets/icons/back.svg', width: 28, height: 28, fit: BoxFit.contain),

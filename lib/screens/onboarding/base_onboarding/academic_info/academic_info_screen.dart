@@ -1,7 +1,8 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:socale/components/pickers/chip_option_picker/chip_option_picker_form_field.dart';
+import 'package:socale/components/input_fields/chip_card_input_field/chip_card_form_field.dart';
+import 'package:socale/components/pickers/list_input_picker/list_input_picker.dart';
 import 'package:socale/components/section_tab_view/section_tab_bar.dart';
 import 'package:socale/components/text/gradient_headline.dart';
 import 'package:socale/models/major/major.dart';
@@ -43,8 +44,6 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
   String? majorValidator(List<Major>? value) =>
       (value == null || value.isEmpty) ? 'Please select at least one major' : null;
 
-  String? minorValidator(List<Minor>? value) => null;
-
   @override
   Future<bool> onBack() async => true;
 
@@ -58,17 +57,6 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
         await Future.delayed(const Duration(milliseconds: 300), () => majorFormKey.currentState!.validate());
       } else {
         majorFormKey.currentState!.validate();
-      }
-
-      return false;
-    }
-
-    if (minorValidator(onboardingUser.minors) != null) {
-      if (tabController.index == 0) {
-        tabController.animateTo(1, duration: const Duration(milliseconds: 300), curve: Curves.easeInOut);
-        await Future.delayed(const Duration(milliseconds: 300), () => minorFormKey.currentState!.validate());
-      } else {
-        minorFormKey.currentState!.validate();
       }
 
       return false;
@@ -116,13 +104,24 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                 padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
                 child: Form(
                   key: majorFormKey,
-                  child: ChipOptionPickerFormField<Major>(
+                  child: ChipCardFormField<Major>(
                     placeholder: 'Add your majors',
                     searchHint: 'Search for your majors',
-                    horizontalPadding: 30,
                     initialValue: onboardingUser.majors,
                     onChanged: saveMajors,
                     validator: majorValidator,
+                    inputPicker: ListInputPickerBuilder<Major>(
+                      data: majorsProvider.when(
+                        data: (majors) => majors,
+                        loading: () => null,
+                        error: (err, stack) {
+                          if (kDebugMode) print(err);
+                          return [];
+                        },
+                      ),
+                      selectedData: onboardingUser.majors,
+                      searchHintText: 'Search for your Major',
+                    ),
                     options: majorsProvider.when(
                       data: (majors) => majors,
                       loading: () => null,
@@ -138,13 +137,23 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                 padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
                 child: Form(
                   key: minorFormKey,
-                  child: ChipOptionPickerFormField<Minor>(
+                  child: ChipCardFormField<Minor>(
                     placeholder: 'Add your minors',
                     searchHint: 'Search for your minors',
-                    horizontalPadding: 20,
                     initialValue: onboardingUser.minors,
+                    inputPicker: ListInputPickerBuilder<Minor>(
+                      data: minorProvider.when(
+                        data: (minors) => minors,
+                        loading: () => null,
+                        error: (err, stack) {
+                          if (kDebugMode) print(err);
+                          return [];
+                        },
+                      ),
+                      selectedData: onboardingUser.minors,
+                      searchHintText: 'Search for your minors',
+                    ),
                     onChanged: saveMinors,
-                    validator: minorValidator,
                     options: minorProvider.when(
                       data: (minors) => minors,
                       loading: () => null,

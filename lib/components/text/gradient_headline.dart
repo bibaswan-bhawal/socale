@@ -28,7 +28,7 @@ class GradientHeadline extends StatelessWidget {
           shaderCallback: (bounds) => const LinearGradient(
             begin: Alignment.bottomCenter,
             end: Alignment.topCenter,
-            colors: [ColorValues.primaryOrange, ColorValues.secondaryOrange],
+            colors: [AppColors.primaryOrange, AppColors.secondaryOrange],
           ).createShader(bounds),
           child: Text(
             headlineColored,

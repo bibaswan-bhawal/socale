@@ -62,7 +62,7 @@ class _OnboardingIntroScreenState extends BaseOnboardingScreenState {
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: 14,
-              color: ColorValues.textSubtitle,
+              color: AppColors.subtitle,
             ),
           ),
         ),
@@ -71,7 +71,7 @@ class _OnboardingIntroScreenState extends BaseOnboardingScreenState {
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
             fontSize: 12,
-            color: ColorValues.textLightSubtitle,
+            color: AppColors.lightSubtitle,
           ),
         ),
       ],

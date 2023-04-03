@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
-import 'package:socale/components/text_fields/form_fields/date_input_form_field.dart';
-import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
-import 'package:socale/components/text_fields/input_fields/date_input_field.dart';
-import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/components/forms/default_input_form.dart';
+import 'package:socale/components/input_fields/date_input_field/date_input_field.dart';
+import 'package:socale/components/input_fields/date_input_field/date_form_field.dart';
+import 'package:socale/components/input_fields/text_input_field/text_form_field.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/resources/colors.dart';
@@ -108,7 +108,7 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
                       shaderCallback: (bounds) => const LinearGradient(
                         begin: Alignment.bottomCenter,
                         end: Alignment.topCenter,
-                        colors: [ColorValues.primaryOrange, ColorValues.secondaryOrange],
+                        colors: [AppColors.primaryOrange, AppColors.secondaryOrange],
                       ).createShader(bounds),
                       child: Text(
                         'know',
@@ -137,75 +137,69 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
         ),
         Padding(
           padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 36),
-          child: Form(
+          child: DefaultInputForm(
             key: nameFormKey,
             onChanged: () => setState(() => nameErrorMessage = null),
-            child: DefaultInputForm(
-              errorMessage: nameErrorMessage,
-              children: [
-                TextInputFormField(
-                  hintText: 'First Name',
-                  onSaved: saveFirstName,
-                  textInputAction: TextInputAction.next,
-                  textCapitalization: TextCapitalization.words,
-                  initialValue: onboardingUser.firstName ?? '',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your first name';
-                    }
-                    return null;
-                  },
-                ),
-                TextInputFormField(
-                  hintText: 'Last Name',
-                  onSaved: saveLastName,
-                  textInputAction: TextInputAction.done,
-                  textCapitalization: TextCapitalization.words,
-                  initialValue: onboardingUser.lastName ?? '',
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Please enter your last name';
-                    }
-                    return null;
-                  },
-                ),
-              ],
-            ),
+            errorMessage: nameErrorMessage,
+            children: [
+              TextInputFormField(
+                hintText: 'First Name',
+                onSaved: saveFirstName,
+                textInputAction: TextInputAction.next,
+                textCapitalization: TextCapitalization.words,
+                initialValue: onboardingUser.firstName ?? '',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your first name';
+                  }
+                  return null;
+                },
+              ),
+              TextInputFormField(
+                hintText: 'Last Name',
+                onSaved: saveLastName,
+                textInputAction: TextInputAction.done,
+                textCapitalization: TextCapitalization.words,
+                initialValue: onboardingUser.lastName ?? '',
+                validator: (value) {
+                  if (value == null || value.isEmpty) {
+                    return 'Please enter your last name';
+                  }
+                  return null;
+                },
+              ),
+            ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 36, right: 36),
-          child: Form(
+          child: DefaultInputForm(
             key: dobFormKey,
-            child: DefaultInputForm(
-              labelText: 'Date of Birth',
-              children: [
-                DateInputFormField(
-                  initialDate: onboardingUser.dateOfBirth ?? DateTime(2000),
-                  minimumDate: DateTime(1900),
-                  maximumDate: DateTime.now(),
-                  onSaved: saveDateOfBirth,
-                ),
-              ],
-            ),
+            labelText: 'Date of Birth',
+            children: [
+              DateInputFormField(
+                initialDate: onboardingUser.dateOfBirth ?? DateTime(2000),
+                minimumDate: DateTime(1900),
+                maximumDate: DateTime.now(),
+                onSaved: saveDateOfBirth,
+              ),
+            ],
           ),
         ),
         Padding(
           padding: const EdgeInsets.only(left: 36, right: 36, top: 18),
-          child: Form(
+          child: DefaultInputForm(
             key: graduationDateFormKey,
-            child: DefaultInputForm(
-              labelText: 'Graduation Date',
-              children: [
-                DateInputFormField(
-                  dateMode: DatePickerDateMode.monthYear,
-                  initialDate: onboardingUser.graduationDate ?? DateTime(DateTime.now().year, DateTime.june),
-                  minimumDate: DateTime(1960),
-                  maximumDate: DateTime(2100, DateTime.june),
-                  onSaved: saveGraduationDate,
-                ),
-              ],
-            ),
+            labelText: 'Graduation Date',
+            children: [
+              DateInputFormField(
+                dateMode: DatePickerDateMode.monthYear,
+                initialDate: onboardingUser.graduationDate ?? DateTime(DateTime.now().year, DateTime.june),
+                minimumDate: DateTime(1960),
+                maximumDate: DateTime(2100, DateTime.june),
+                onSaved: saveGraduationDate,
+              ),
+            ],
           ),
         ),
         Expanded(child: Container()),

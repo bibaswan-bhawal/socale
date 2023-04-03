@@ -2,7 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
-class ColorValues {
+class AppColors {
   // App colors
   static const Color primaryOrange = Color(0xFFFD6C00);
   static const Color secondaryOrange = Color(0xFFFFA133);
@@ -16,8 +16,9 @@ class ColorValues {
   static const Color primaryLightBlue = Color(0xFF1A56C0);
   static const Color secondaryLightBlue = Color(0xFF39EDFF);
 
-  static const Color textSubtitle = Color(0xFF7A7A7A);
-  static const Color textLightSubtitle = Color(0xFFA7A7A7);
+  static const Color headline = Color(0xFF000000);
+  static const Color subtitle = Color(0xFF7A7A7A);
+  static const Color lightSubtitle = Color(0xFFA7A7A7);
 
   static const Color textHint = Color(0xFF808080);
 

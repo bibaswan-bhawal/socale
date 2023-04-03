@@ -2,9 +2,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/forms/default_input_form.dart';
+import 'package:socale/components/input_fields/text_input_field/text_form_field.dart';
 import 'package:socale/components/text/headline.dart';
-import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
-import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_view.dart';
@@ -115,7 +115,7 @@ class _ResetPasswordNewPassViewState extends ResetPasswordViewState {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontSize: (size.width * 0.034),
-                  color: ColorValues.textSubtitle,
+                  color: AppColors.subtitle,
                 ),
               ),
               Text(
@@ -124,7 +124,7 @@ class _ResetPasswordNewPassViewState extends ResetPasswordViewState {
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.bold,
                   fontSize: (size.width * 0.038),
-                  color: ColorValues.textSubtitle,
+                  color: AppColors.subtitle,
                 ),
               ),
             ],
@@ -134,47 +134,45 @@ class _ResetPasswordNewPassViewState extends ResetPasswordViewState {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36),
-              child: Form(
+              child: DefaultInputForm(
                 key: formKey,
-                child: DefaultInputForm(
-                  errorMessage: errorMessage,
-                  children: [
-                    TextInputFormField(
-                      hintText: 'New Password',
-                      textInputType: TextInputType.visiblePassword,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.password],
-                      prefixIcon: SvgPicture.asset(
-                        'assets/icons/lock.svg',
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF808080),
-                          BlendMode.srcIn,
-                        ),
-                        width: 16,
+                errorMessage: errorMessage,
+                children: [
+                  TextInputFormField(
+                    hintText: 'New Password',
+                    textInputType: TextInputType.visiblePassword,
+                    textInputAction: TextInputAction.next,
+                    autofillHints: const [AutofillHints.password],
+                    prefixIcon: SvgPicture.asset(
+                      'assets/icons/lock.svg',
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF808080),
+                        BlendMode.srcIn,
                       ),
-                      isObscured: true,
-                      onSaved: savePassword,
-                      validator: Validators.validatePassword,
+                      width: 16,
                     ),
-                    TextInputFormField(
-                      hintText: 'Confirm Password',
-                      textInputType: TextInputType.visiblePassword,
-                      textInputAction: TextInputAction.done,
-                      autofillHints: const [AutofillHints.password],
-                      prefixIcon: SvgPicture.asset(
-                        'assets/icons/lock.svg',
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF808080),
-                          BlendMode.srcIn,
-                        ),
-                        width: 16,
+                    isObscured: true,
+                    onSaved: savePassword,
+                    validator: Validators.validatePassword,
+                  ),
+                  TextInputFormField(
+                    hintText: 'Confirm Password',
+                    textInputType: TextInputType.visiblePassword,
+                    textInputAction: TextInputAction.done,
+                    autofillHints: const [AutofillHints.password],
+                    prefixIcon: SvgPicture.asset(
+                      'assets/icons/lock.svg',
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF808080),
+                        BlendMode.srcIn,
                       ),
-                      isObscured: true,
-                      onSaved: saveConfirmPassword,
-                      validator: Validators.validatePassword,
+                      width: 16,
                     ),
-                  ],
-                ),
+                    isObscured: true,
+                    onSaved: saveConfirmPassword,
+                    validator: Validators.validatePassword,
+                  ),
+                ],
               ),
             ),
           ),

@@ -13,7 +13,7 @@ class PageIndicator extends StatelessWidget {
     if (selectedPage == index) {
       return BoxDecoration(
         borderRadius: BorderRadius.circular(6),
-        gradient: ColorValues.orangeGradient,
+        gradient: AppColors.orangeGradient,
       );
     }
 

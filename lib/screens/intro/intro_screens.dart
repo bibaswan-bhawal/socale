@@ -75,7 +75,7 @@ class _IntroScreen extends StatelessWidget {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
                     fontSize: (size.width * 0.034),
-                    color: ColorValues.textSubtitle,
+                    color: AppColors.subtitle,
                   ),
                 ),
               ),

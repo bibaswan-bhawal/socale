@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:socale/components/text_fields/input_fields/date_input_field.dart';
+import 'package:socale/components/input_fields/date_input_field/date_input_field.dart';
 
 class DateInputFormField extends FormField<DateTime> {
   final DateTime initialDate;

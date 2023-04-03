@@ -110,7 +110,10 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
         widget.startTimer();
         return;
       case AuthResetPasswordResult.codeDeliveryFailure:
-        if (mounted) SystemUI.showSnackBar(message: 'There was problem sending your code, please try again', context: context);
+        if (mounted) {
+          SystemUI.showSnackBar(message: 'There was problem sending your code, please try again', context: context);
+        }
+
         return;
       case AuthResetPasswordResult.tooManyRequests:
         if (mounted) SystemUI.showSnackBar(message: 'Too many requests, please try again later', context: context);
@@ -158,7 +161,7 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontSize: (size.width * 0.034),
-                  color: ColorValues.textSubtitle,
+                  color: AppColors.subtitle,
                 ),
               ),
               Text(
@@ -167,7 +170,7 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.bold,
                   fontSize: (size.width * 0.038),
-                  color: ColorValues.textSubtitle,
+                  color: AppColors.subtitle,
                 ),
               ),
               Text(
@@ -175,7 +178,7 @@ class _ResetPasswordCodeViewState extends ResetPasswordViewState {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontSize: (size.width * 0.034),
-                  color: ColorValues.textSubtitle,
+                  color: AppColors.subtitle,
                 ),
               ),
             ],

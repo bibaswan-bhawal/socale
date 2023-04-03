@@ -1,0 +1,33 @@
+import 'package:flutter/material.dart';
+import 'package:socale/components/pickers/input_picker.dart';
+import 'package:socale/components/input_fields/chip_card_input_field/chip_card_input_field.dart';
+
+class ChipCardFormField<T> extends FormField<List<T>> {
+  ChipCardFormField({
+    super.key,
+    super.onSaved,
+    super.validator,
+    super.initialValue,
+    required InputPickerBuilder inputPicker,
+    required String placeholder,
+    required String searchHint,
+    required Function onChanged,
+    required List<T>? options,
+  }) : super(
+          builder: (FormFieldState<List<T>> state) {
+            return ChipCardInputField<T>(
+              data: options,
+              selectedData: initialValue ?? [],
+              placeholder: placeholder,
+              searchHintText: searchHint,
+              hasError: state.hasError,
+              errorText: state.errorText,
+              inputPicker: inputPicker,
+              onChanged: (value) {
+                state.didChange(value);
+                onChanged(value);
+              },
+            );
+          },
+        );
+}

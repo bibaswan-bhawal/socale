@@ -27,7 +27,7 @@ class _SectionTabBarState extends State<SectionTabBar> {
         controller: widget.controller,
         splashFactory: NoSplash.splashFactory,
         indicator: const UnderlineTabIndicator(
-          borderSide: BorderSide(color: ColorValues.secondaryOrange, width: 3),
+          borderSide: BorderSide(color: AppColors.secondaryOrange, width: 3),
           borderRadius: BorderRadius.all(Radius.circular(3)),
         ),
         indicatorSize: TabBarIndicatorSize.label,

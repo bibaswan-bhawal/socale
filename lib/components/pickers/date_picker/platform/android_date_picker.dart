@@ -7,7 +7,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:socale/components/pickers/date_picker/android_calendar_date_picker.dart';
+import 'package:socale/components/pickers/date_picker/platform/android_calendar_date_picker.dart';
 
 const Size _calendarPortraitDialogSizeM3 = Size(328.0, 512.0);
 const Duration _dialogSizeAnimationDuration = Duration(milliseconds: 200);

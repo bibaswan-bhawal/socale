@@ -8,7 +8,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
-import 'package:socale/components/pickers/date_picker/android_date_picker.dart';
+import 'package:socale/components/pickers/date_picker/platform/android_date_picker.dart';
 
 const Duration _monthScrollDuration = Duration(milliseconds: 200);
 

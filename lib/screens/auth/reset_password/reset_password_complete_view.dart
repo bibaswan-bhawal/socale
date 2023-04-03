@@ -48,7 +48,7 @@ class _ResetPasswordCompleteViewState extends ResetPasswordViewState {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.roboto(
                       fontSize: (size.width * 0.034),
-                      color: ColorValues.textSubtitle,
+                      color: AppColors.subtitle,
                     ),
                   ),
                   Text(
@@ -57,7 +57,7 @@ class _ResetPasswordCompleteViewState extends ResetPasswordViewState {
                     style: GoogleFonts.roboto(
                       fontWeight: FontWeight.bold,
                       fontSize: (size.width * 0.038),
-                      color: ColorValues.textSubtitle,
+                      color: AppColors.subtitle,
                     ),
                   ),
                   Text(
@@ -66,7 +66,7 @@ class _ResetPasswordCompleteViewState extends ResetPasswordViewState {
                     textAlign: TextAlign.center,
                     style: GoogleFonts.roboto(
                       fontSize: (size.width * 0.034),
-                      color: ColorValues.textSubtitle,
+                      color: AppColors.subtitle,
                     ),
                   ),
                 ],

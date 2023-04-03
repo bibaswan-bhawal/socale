@@ -23,8 +23,8 @@ class _ResetPasswordScreenState extends State<ResetPasswordScreen> {
   final Duration timerDuration = const Duration(seconds: 150);
 
   final List<LinearGradient> buttonBackground = [
-    ColorValues.blackButtonGradient,
-    ColorValues.orangeButtonGradient,
+    AppColors.blackButtonGradient,
+    AppColors.orangeButtonGradient,
   ];
 
   String email = '';

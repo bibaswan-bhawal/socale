@@ -3,15 +3,17 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/assets/svg_icons.dart';
 import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/link_button.dart';
-import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
-import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/components/forms/default_input_form.dart';
+import 'package:socale/components/input_fields/text_input_field/text_form_field.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
 import 'package:socale/resources/colors.dart';
+import 'package:socale/resources/styles.dart';
 import 'package:socale/types/auth/results/auth_flow_result.dart';
 import 'package:socale/types/auth/state/auth_step_state.dart';
 import 'package:socale/utils/validators.dart';
@@ -25,7 +27,10 @@ class RegisterScreen extends ConsumerStatefulWidget {
 }
 
 class _RegisterScreenState extends ConsumerState<RegisterScreen> {
-  GlobalKey<FormState> formState = GlobalKey<FormState>();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
+
+  TapGestureRecognizer tosTextGestureRecognizer = TapGestureRecognizer();
+  TapGestureRecognizer privacyTextGestureRecognizer = TapGestureRecognizer();
 
   bool isLoading = false;
 
@@ -53,7 +58,7 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
   }
 
   Future<void> onClickRegister() async {
-    final form = formState.currentState!;
+    final form = formKey.currentState!;
     if (isLoading) return;
     setState(() => isLoading = true);
 
@@ -92,193 +97,146 @@ class _RegisterScreenState extends ConsumerState<RegisterScreen> {
     if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
   }
 
-  showFormError(String message) {
-    setState(() {
-      errorMessage = message;
-      isLoading = false;
-    });
+  showFormError(String message) => setState(() {
+        errorMessage = message;
+        isLoading = false;
+      });
+
+  @override
+  void initState() {
+    super.initState();
+
+    tosTextGestureRecognizer.onTap =
+        () async => await launchUrl(Uri.parse('http://socale.co/privacypolicy'), mode: LaunchMode.externalApplication);
+    privacyTextGestureRecognizer.onTap =
+        () async => await launchUrl(Uri.parse('http://socale.co/tos'), mode: LaunchMode.externalApplication);
+  }
+
+  @override
+  void dispose() {
+    tosTextGestureRecognizer.dispose();
+    privacyTextGestureRecognizer.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
+    final Size size = MediaQuery.of(context).size;
+
+    final double topPadding = (size.height * 0.08 >= 54) ? size.height * 0.08 - 54 : 0;
+    final double bottomPadding = 40 - MediaQuery.of(context).viewPadding.bottom;
 
     return ScreenScaffold(
-      body: Center(
-        child: Column(
-          children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: Padding(
-                padding: const EdgeInsets.only(left: 30, top: 30),
-                child: SizedBox(
-                  width: 24,
-                  height: 24,
-                  child: InkResponse(
-                    radius: 20,
-                    splashFactory: InkRipple.splashFactory,
-                    child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
-                    onTap: () => Navigator.maybePop(context),
-                  ),
-                ),
-              ),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 16),
+            child: IconButton(
+              onPressed: () => Navigator.maybePop(context),
+              icon: SvgIcon.asset('assets/icons/back.svg', width: 24, height: 24),
             ),
-            Padding(
-              padding: EdgeInsets.only(top: size.height * 0.08 >= 54 ? size.height * 0.08 - 54 : 0),
+          ),
+          Center(
+            child: Padding(
+              padding: EdgeInsets.only(top: topPadding),
               child: SvgPicture.asset('assets/logo/color_logo.svg', width: 150),
             ),
-            Padding(
+          ),
+          Center(
+            child: Padding(
               padding: const EdgeInsets.only(top: 30),
-              child: Text(
-                'Hello There',
-                style: GoogleFonts.poppins(
-                  fontSize: 24,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Text(
-              'Sign up to start matching',
-              style: GoogleFonts.poppins(
-                fontSize: 14,
-                color: Colors.black.withOpacity(0.5),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 10),
-              child: Form(
-                key: formState,
-                child: DefaultInputForm(
-                  errorMessage: errorMessage,
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
                   children: [
-                    TextInputFormField(
-                      hintText: 'Email Address',
-                      textInputType: TextInputType.emailAddress,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.email],
-                      prefixIcon: SvgPicture.asset(
-                        'assets/icons/email.svg',
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF808080),
-                          BlendMode.srcIn,
-                        ),
-                        fit: BoxFit.contain,
-                      ),
-                      onSaved: saveEmail,
-                      validator: Validators.validateEmail,
-                    ),
-                    TextInputFormField(
-                      hintText: 'Password',
-                      textInputType: TextInputType.visiblePassword,
-                      textInputAction: TextInputAction.next,
-                      autofillHints: const [AutofillHints.newPassword],
-                      prefixIcon: SvgPicture.asset(
-                        'assets/icons/lock.svg',
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF808080),
-                          BlendMode.srcIn,
-                        ),
-                        fit: BoxFit.contain,
-                      ),
-                      isObscured: true,
-                      onSaved: savePassword,
-                      validator: Validators.validatePassword,
-                    ),
-                    TextInputFormField(
-                      hintText: 'Confirm Password',
-                      textInputType: TextInputType.visiblePassword,
-                      textInputAction: TextInputAction.done,
-                      autofillHints: const [AutofillHints.password],
-                      prefixIcon: SvgPicture.asset(
-                        'assets/icons/lock.svg',
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF808080),
-                          BlendMode.srcIn,
-                        ),
-                        fit: BoxFit.contain,
-                      ),
-                      isObscured: true,
-                      onSaved: saveConfirmPassword,
-                      validator: Validators.validatePassword,
-                    ),
+                    TextSpan(text: 'Hello There\n', style: AppTextStyle.h1),
+                    TextSpan(text: 'Sign up to start matching', style: AppTextStyle.h2),
                   ],
                 ),
               ),
             ),
-            Column(
+          ),
+          Padding(
+            padding: const EdgeInsets.only(top: 48, left: 30, right: 30),
+            child: DefaultInputForm(
+              key: formKey,
+              errorMessage: errorMessage,
               children: [
-                Text(
-                  'By signing up you agree to the Socale',
-                  style: GoogleFonts.poppins(
-                    fontSize: 12,
-                    fontWeight: FontWeight.w500,
-                    letterSpacing: -0.3,
-                    color: Colors.black,
-                  ),
+                TextInputFormField(
+                  hintText: 'Email Address',
+                  textInputAction: TextInputAction.next,
+                  textInputType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.email],
+                  prefixIcon: SvgIcon.asset('assets/icons/email.svg', color: AppColors.textHint),
+                  onSaved: saveEmail,
+                  validator: Validators.validateEmail,
                 ),
-                RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    style: GoogleFonts.poppins(
-                      fontSize: 12,
-                      fontWeight: FontWeight.w500,
-                      letterSpacing: -0.3,
-                      color: Colors.black,
-                    ),
-                    children: [
-                      TextSpan(
-                        text: 'Terms of service',
-                        style: const TextStyle(
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            await launchUrl(
-                              Uri.parse('http://socale.co/tos'),
-                              mode: LaunchMode.externalApplication,
-                            );
-                          },
-                      ),
-                      const TextSpan(text: ' & '),
-                      TextSpan(
-                        text: 'Privacy Policy',
-                        style: const TextStyle(
-                          decoration: TextDecoration.underline,
-                        ),
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () async {
-                            await launchUrl(
-                              Uri.parse('http://socale.co/privacypolicy'),
-                              mode: LaunchMode.externalApplication,
-                            );
-                          },
-                      ),
-                    ],
-                  ),
+                TextInputFormField(
+                  hintText: 'Password',
+                  isObscured: true,
+                  textInputAction: TextInputAction.next,
+                  textInputType: TextInputType.visiblePassword,
+                  autofillHints: const [AutofillHints.password],
+                  prefixIcon: SvgIcon.asset('assets/icons/lock.svg', color: AppColors.textHint),
+                  onSaved: savePassword,
+                  validator: Validators.validatePassword,
+                ),
+                TextInputFormField(
+                  hintText: 'Confirm Password',
+                  isObscured: true,
+                  textInputAction: TextInputAction.done,
+                  textInputType: TextInputType.visiblePassword,
+                  autofillHints: const [AutofillHints.password],
+                  prefixIcon: SvgIcon.asset('assets/icons/lock.svg', color: AppColors.textHint),
+                  onSaved: saveConfirmPassword,
+                  validator: Validators.validatePassword,
                 ),
               ],
             ),
-            Expanded(child: Container()),
-            Padding(
-              padding: EdgeInsets.only(bottom: 40 - MediaQuery.of(context).viewPadding.bottom),
-              child: ActionGroup(
-                actions: [
-                  LinkButton(
-                    onPressed: () => goTo(AuthStepState.login),
-                    text: 'Sign In',
-                    prefixText: 'Already have an account?',
+          ),
+          Center(
+            child: RichText(
+              textAlign: TextAlign.center,
+              text: TextSpan(
+                style: GoogleFonts.roboto(fontSize: 12, letterSpacing: -0.3, color: AppColors.subtitle),
+                children: [
+                  const TextSpan(text: 'By signing up you agree to the Socale\n'),
+                  TextSpan(
+                    text: 'Terms of service',
+                    recognizer: tosTextGestureRecognizer,
+                    style: const TextStyle(decoration: TextDecoration.underline),
                   ),
-                  GradientButton(
-                    isLoading: isLoading,
-                    onPressed: onClickRegister,
-                    text: 'Create an Account',
-                    linearGradient: ColorValues.blueButtonGradient,
+                  const TextSpan(text: ' & '),
+                  TextSpan(
+                    text: 'Privacy Policy',
+                    recognizer: privacyTextGestureRecognizer,
+                    style: const TextStyle(decoration: TextDecoration.underline),
                   ),
                 ],
               ),
             ),
-          ],
-        ),
+          ),
+          const Spacer(),
+          Padding(
+            padding: EdgeInsets.only(bottom: bottomPadding),
+            child: ActionGroup(
+              actions: [
+                LinkButton(
+                  text: 'Sign In',
+                  prefixText: 'Already have an account?',
+                  onPressed: () => goTo(AuthStepState.login),
+                ),
+                GradientButton(
+                  isLoading: isLoading,
+                  onPressed: onClickRegister,
+                  text: 'Create an Account',
+                  linearGradient: AppColors.blueButtonGradient,
+                ),
+              ],
+            ),
+          ),
+        ],
       ),
     );
   }

@@ -4,9 +4,9 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
+import 'package:socale/components/forms/default_input_form.dart';
+import 'package:socale/components/input_fields/text_input_field/text_form_field.dart';
 import 'package:socale/components/text/gradient_headline.dart';
-import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
-import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/models/college/college.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
@@ -139,7 +139,7 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: (size.width * 0.034),
-              color: ColorValues.textSubtitle,
+              color: AppColors.subtitle,
             ),
           ),
         ),
@@ -147,30 +147,28 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 18),
-              child: Form(
+              child: DefaultInputForm(
                 key: formKey,
-                child: DefaultInputForm(
-                  errorMessage: errorMessage,
-                  children: [
-                    TextInputFormField(
-                      hintText: 'Email Address',
-                      initialValue: widget.email ?? '',
-                      textInputType: TextInputType.emailAddress,
-                      autofillHints: const [AutofillHints.email],
-                      prefixIcon: SvgPicture.asset(
-                        'assets/icons/email.svg',
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF808080),
-                          BlendMode.srcIn,
-                        ),
-                        width: 16,
+                errorMessage: errorMessage,
+                children: [
+                  TextInputFormField(
+                    hintText: 'Email Address',
+                    initialValue: widget.email ?? '',
+                    textInputType: TextInputType.emailAddress,
+                    autofillHints: const [AutofillHints.email],
+                    prefixIcon: SvgPicture.asset(
+                      'assets/icons/email.svg',
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF808080),
+                        BlendMode.srcIn,
                       ),
-                      onSaved: saveEmail,
-                      validator: Validators.validateEmail,
-                      textInputAction: TextInputAction.next,
+                      width: 16,
                     ),
-                  ],
-                ),
+                    onSaved: saveEmail,
+                    validator: Validators.validateEmail,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ],
               ),
             ),
           ),
@@ -181,7 +179,7 @@ class _VerifyCollegeEmailPageState extends ConsumerState<VerifyCollegeEmailPage>
             text: 'Send Code',
             isLoading: isLoading,
             onPressed: onSubmit,
-            linearGradient: ColorValues.blackButtonGradient,
+            linearGradient: AppColors.blackButtonGradient,
           ),
         ),
       ],

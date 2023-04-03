@@ -130,7 +130,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
                 shaderCallback: (bounds) => const LinearGradient(
                   begin: Alignment.bottomCenter,
                   end: Alignment.topCenter,
-                  colors: [ColorValues.primaryOrange, ColorValues.secondaryOrange],
+                  colors: [AppColors.primaryOrange, AppColors.secondaryOrange],
                 ).createShader(bounds),
                 child: Text(
                   'student',
@@ -150,7 +150,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
                 textAlign: TextAlign.center,
                 style: GoogleFonts.roboto(
                   fontSize: (size.width * 0.034),
-                  color: ColorValues.textSubtitle,
+                  color: AppColors.subtitle,
                 ),
               ),
               Text(
@@ -159,7 +159,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
                 style: GoogleFonts.roboto(
                   fontWeight: FontWeight.bold,
                   fontSize: (size.width * 0.036),
-                  color: ColorValues.textSubtitle,
+                  color: AppColors.subtitle,
                 ),
               ),
             ],
@@ -223,7 +223,7 @@ class _VerifyCollegeCodePageState extends ConsumerState<VerifyCollegeCodePage> {
               text: 'Verify',
               isLoading: isLoading,
               onPressed: onSubmit,
-              linearGradient: ColorValues.blackButtonGradient,
+              linearGradient: AppColors.blackButtonGradient,
             ),
           ]),
         ),

@@ -3,12 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/assets/text_field_icons.dart';
+import 'package:socale/components/assets/svg_icons.dart';
 import 'package:socale/components/buttons/action_group.dart';
 import 'package:socale/components/buttons/gradient_button.dart';
 import 'package:socale/components/buttons/link_button.dart';
-import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
-import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
+import 'package:socale/components/forms/default_input_form.dart';
+import 'package:socale/components/input_fields/text_input_field/text_form_field.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/providers/state_providers.dart';
@@ -26,7 +26,7 @@ class LoginScreen extends ConsumerStatefulWidget {
 }
 
 class _LoginScreenState extends ConsumerState<LoginScreen> {
-  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final GlobalKey<DefaultInputFormState> formKey = GlobalKey<DefaultInputFormState>();
 
   String? email;
   String? password;
@@ -112,78 +112,80 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
 
     return ScreenScaffold(
       body: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisSize: MainAxisSize.max,
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Align(
-            alignment: Alignment.centerLeft,
+          Padding(
+            padding: const EdgeInsets.only(left: 16, top: 16),
+            child: IconButton(
+              onPressed: () => Navigator.maybePop(context),
+              icon: SvgIcon.asset('assets/icons/back.svg', width: 24, height: 24),
+            ),
+          ),
+          Center(
             child: Padding(
-              padding: const EdgeInsets.only(left: 30, top: 30),
-              child: SizedBox(
-                width: 24,
-                height: 24,
-                child: InkResponse(
-                  radius: 20,
-                  splashFactory: InkRipple.splashFactory,
-                  child: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.fill),
-                  onTap: () => Navigator.maybePop(context),
+              padding: EdgeInsets.only(top: size.height * 0.08 >= 54 ? size.height * 0.08 - 54 : 0),
+              child: SvgPicture.asset('assets/logo/color_logo.svg', width: 150),
+            ),
+          ),
+          Center(
+            child: Padding(
+              padding: const EdgeInsets.only(top: 30),
+              child: RichText(
+                textAlign: TextAlign.center,
+                text: TextSpan(
+                  children: [
+                    TextSpan(
+                      text: 'Welcome Back\n',
+                      style: GoogleFonts.poppins(
+                        fontSize: 24,
+                        letterSpacing: -0.3,
+                        fontWeight: FontWeight.w600,
+                        color: AppColors.headline,
+                      ),
+                    ),
+                    TextSpan(
+                      text: 'Login to start matching',
+                      style: GoogleFonts.roboto(
+                        fontSize: 14,
+                        letterSpacing: -0.3,
+                        color: AppColors.subtitle,
+                      ),
+                    ),
+                  ],
                 ),
               ),
             ),
           ),
           Padding(
-            padding: EdgeInsets.only(top: size.height * 0.08 >= 54 ? size.height * 0.08 - 54 : 0),
-            child: SvgPicture.asset('assets/logo/color_logo.svg', width: 150),
-          ),
-          Padding(
-            padding: const EdgeInsets.only(top: 30),
-            child: Text(
-              'Welcome Back',
-              style: GoogleFonts.poppins(
-                fontSize: 24,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ),
-          Text(
-            'Login to start matching',
-            style: GoogleFonts.poppins(
-              fontSize: 14,
-              color: Colors.black.withOpacity(0.5),
-            ),
-          ),
-          Padding(
             padding: const EdgeInsets.only(top: 48, left: 30, right: 30, bottom: 30),
-            child: Form(
+            child: DefaultInputForm(
               key: formKey,
-              child: DefaultInputForm(
-                errorMessage: errorMessage,
-                children: [
-                  TextInputFormField(
-                    hintText: 'Email Address',
-                    textInputType: TextInputType.emailAddress,
-                    autofillHints: const [AutofillHints.email],
-                    prefixIcon: AppAssets.textFieldIcon('assets/icons/email.svg'),
-                    onSaved: saveEmail,
-                    validator: Validators.validateEmail,
-                    textInputAction: TextInputAction.next,
-                  ),
-                  TextInputFormField(
-                    hintText: 'Password',
-                    textInputType: TextInputType.visiblePassword,
-                    autofillHints: const [AutofillHints.password],
-                    prefixIcon: AppAssets.textFieldIcon('assets/icons/lock.svg'),
-                    isObscured: true,
-                    onSaved: savePassword,
-                    onSubmitted: (_) => onSubmit(),
-                    validator: Validators.validatePassword,
-                    textInputAction: TextInputAction.done,
-                  ),
-                ],
-              ),
+              errorMessage: errorMessage,
+              children: [
+                TextInputFormField(
+                  hintText: 'Email Address',
+                  textInputAction: TextInputAction.next,
+                  textInputType: TextInputType.emailAddress,
+                  autofillHints: const [AutofillHints.email],
+                  prefixIcon: SvgIcon.asset('assets/icons/email.svg', color: AppColors.textHint),
+                  onSaved: saveEmail,
+                  validator: Validators.validateEmail,
+                ),
+                TextInputFormField(
+                  hintText: 'Password',
+                  isObscured: true,
+                  textInputAction: TextInputAction.done,
+                  textInputType: TextInputType.visiblePassword,
+                  autofillHints: const [AutofillHints.password],
+                  prefixIcon: SvgIcon.asset('assets/icons/lock.svg', color: AppColors.textHint),
+                  onSubmitted: (_) => onSubmit(),
+                  onSaved: savePassword,
+                  validator: Validators.validatePassword,
+                ),
+              ],
             ),
           ),
-          Expanded(child: Container()),
+          const Spacer(),
           ActionGroup(
             actions: [
               LinkButton(
@@ -195,7 +197,7 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 isLoading: isLoading,
                 onPressed: onSubmit,
                 text: 'Sign In',
-                linearGradient: ColorValues.orangeButtonGradient,
+                linearGradient: AppColors.orangeButtonGradient,
               ),
               LinkButton(
                 onPressed: () => goTo(AuthStepState.forgotPassword),

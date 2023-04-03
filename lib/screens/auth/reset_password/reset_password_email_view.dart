@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/forms/default_input_form.dart';
+import 'package:socale/components/input_fields/text_input_field/text_form_field.dart';
 import 'package:socale/components/text/headline.dart';
-import 'package:socale/components/text_fields/form_fields/text_input_form_field.dart';
-import 'package:socale/components/text_fields/input_forms/default_input_form.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/auth/reset_password/reset_password_view.dart';
@@ -62,7 +62,10 @@ class _ResetPasswordEmailViewState extends ResetPasswordViewState {
       case AuthResetPasswordResult.codeDeliverySuccessful:
         return true;
       case AuthResetPasswordResult.codeDeliveryFailure:
-        if (mounted) SystemUI.showSnackBar(message: 'There was problem sending your code, please try again', context: context);
+        if (mounted) {
+          SystemUI.showSnackBar(message: 'There was problem sending your code, please try again', context: context);
+        }
+
         return false;
       case AuthResetPasswordResult.tooManyRequests:
         if (mounted) SystemUI.showSnackBar(message: 'Too many requests, please try again later', context: context);
@@ -120,7 +123,7 @@ class _ResetPasswordEmailViewState extends ResetPasswordViewState {
             textAlign: TextAlign.center,
             style: GoogleFonts.roboto(
               fontSize: (size.width * 0.034),
-              color: ColorValues.textSubtitle,
+              color: AppColors.subtitle,
             ),
           ),
         ),
@@ -128,30 +131,28 @@ class _ResetPasswordEmailViewState extends ResetPasswordViewState {
           child: Center(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 36),
-              child: Form(
+              child: DefaultInputForm(
                 key: formKey,
-                child: DefaultInputForm(
-                  errorMessage: errorMessage,
-                  children: [
-                    TextInputFormField(
-                      hintText: 'Email Address',
-                      initialValue: email ?? '',
-                      textInputType: TextInputType.emailAddress,
-                      autofillHints: const [AutofillHints.email],
-                      prefixIcon: SvgPicture.asset(
-                        'assets/icons/email.svg',
-                        colorFilter: const ColorFilter.mode(
-                          Color(0xFF808080),
-                          BlendMode.srcIn,
-                        ),
-                        width: 16,
+                errorMessage: errorMessage,
+                children: [
+                  TextInputFormField(
+                    hintText: 'Email Address',
+                    initialValue: email ?? '',
+                    textInputType: TextInputType.emailAddress,
+                    autofillHints: const [AutofillHints.email],
+                    prefixIcon: SvgPicture.asset(
+                      'assets/icons/email.svg',
+                      colorFilter: const ColorFilter.mode(
+                        Color(0xFF808080),
+                        BlendMode.srcIn,
                       ),
-                      onSaved: saveEmail,
-                      validator: Validators.validateEmail,
-                      textInputAction: TextInputAction.next,
+                      width: 16,
                     ),
-                  ],
-                ),
+                    onSaved: saveEmail,
+                    validator: Validators.validateEmail,
+                    textInputAction: TextInputAction.next,
+                  ),
+                ],
               ),
             ),
           ),

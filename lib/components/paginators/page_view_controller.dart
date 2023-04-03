@@ -58,7 +58,7 @@ class PageViewController extends StatelessWidget {
               textStyle: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                color: currentPage == 0 ? ColorValues.secondaryOrange : Colors.black,
+                color: currentPage == 0 ? AppColors.secondaryOrange : Colors.black,
               ),
             ),
           ),
@@ -82,7 +82,7 @@ class PageViewController extends StatelessWidget {
               textStyle: GoogleFonts.roboto(
                 fontWeight: FontWeight.w500,
                 fontSize: 16,
-                color: currentPage == pageCount - 1 ? ColorValues.secondaryOrange : Colors.black,
+                color: currentPage == pageCount - 1 ? AppColors.secondaryOrange : Colors.black,
               ),
             ),
           ),

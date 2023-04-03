@@ -100,7 +100,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     ShaderMask(
-                      shaderCallback: (bounds) => ColorValues.orangeTextGradient.createShader(bounds),
+                      shaderCallback: (bounds) => AppColors.orangeTextGradient.createShader(bounds),
                       child: Text(
                         'anonymous ',
                         style: GoogleFonts.poppins(
@@ -140,7 +140,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             ShaderMask(
-              shaderCallback: (bounds) => ColorValues.lightBlueTextGradient.createShader(bounds),
+              shaderCallback: (bounds) => AppColors.lightBlueTextGradient.createShader(bounds),
               child: Text(
                 adjective,
                 style: GoogleFonts.poppins(
@@ -172,7 +172,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
             style: GoogleFonts.roboto(
               fontSize: size.width * (14 / 414),
               letterSpacing: -0.3,
-              color: ColorValues.textSubtitle,
+              color: AppColors.subtitle,
             ),
           ),
         ),
@@ -184,7 +184,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
           style: GoogleFonts.roboto(
             fontSize: size.width * (12 / 414),
             letterSpacing: -0.3,
-            color: ColorValues.textSubtitle,
+            color: AppColors.subtitle,
           ),
         ),
         Padding(

@@ -99,7 +99,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                     textAlign: TextAlign.center,
                     style: GoogleFonts.roboto(
                       fontSize: (size.width * 0.034),
-                      color: ColorValues.textSubtitle,
+                      color: AppColors.subtitle,
                     ),
                   ),
                 ),
@@ -113,7 +113,7 @@ class _GetStartedScreenState extends ConsumerState<GetStartedScreen> with Single
                 GradientButton(
                   text: 'Sign In',
                   onPressed: goToLogin,
-                  linearGradient: ColorValues.orangeButtonGradient,
+                  linearGradient: AppColors.orangeButtonGradient,
                 ),
                 OutlineButton(
                   text: 'Register',

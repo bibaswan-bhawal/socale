@@ -1,11 +1,11 @@
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
-import 'package:socale/components/pickers/date_picker/android_date_picker.dart';
-import 'package:socale/components/pickers/date_picker/ios_date_picker.dart';
+import 'package:socale/components/assets/svg_icons.dart';
+import 'package:socale/components/pickers/date_picker/platform/android_date_picker.dart';
+import 'package:socale/components/pickers/date_picker/platform/ios_date_picker.dart';
 import 'package:socale/resources/colors.dart';
 
 enum DatePickerDateMode { dayMonthYear, monthYear }
@@ -95,7 +95,7 @@ class _DateInputFieldState extends State<DateInputField> {
   get _textStyle => GoogleFonts.roboto(
         fontSize: 13,
         letterSpacing: -0.3,
-        color: ColorValues.textHint,
+        color: AppColors.textHint,
       );
 
   _dayBuilder() {
@@ -110,14 +110,7 @@ class _DateInputFieldState extends State<DateInputField> {
   }
 
   _monthBuilder() {
-    return Expanded(
-      child: Center(
-        child: Text(
-          DateFormat(DateFormat.MONTH).format(currentDate),
-          style: _textStyle,
-        ),
-      ),
-    );
+    return Expanded(child: Center(child: Text(DateFormat(DateFormat.MONTH).format(currentDate), style: _textStyle)));
   }
 
   _yearBuilder() {
@@ -170,34 +163,23 @@ class _DateInputFieldState extends State<DateInputField> {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: _showDatePicker,
-      behavior: HitTestBehavior.opaque,
+      behavior: HitTestBehavior.translucent,
       child: SizedBox(
         height: 36,
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            return Row(
-              mainAxisSize: MainAxisSize.max,
-              children: [
-                Expanded(
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: dateBuilder(),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 8),
-                  child: SvgPicture.asset(
-                    'assets/icons/picker.svg',
-                    colorFilter: const ColorFilter.mode(
-                      Color(0xFF808080),
-                      BlendMode.srcIn,
-                    ),
-                    fit: BoxFit.contain,
-                  ),
-                ),
-              ],
-            );
-          },
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: [
+            Expanded(
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: dateBuilder(),
+              ),
+            ),
+            Padding(
+              padding: const EdgeInsets.only(left: 8),
+              child: SvgIcon.asset('assets/icons/picker.svg', color: const Color(0xFF808080)),
+            ),
+          ],
         ),
       ),
     );

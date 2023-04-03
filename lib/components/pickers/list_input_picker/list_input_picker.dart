@@ -1,28 +1,48 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:socale/components/assets/svg_icons.dart';
+import 'package:socale/components/pickers/input_picker.dart';
 
-class ChipOptionListViewScreen<T> extends StatefulWidget {
-  final Function onClosedCallback;
+class ListInputPickerBuilder<T> extends InputPickerBuilder {
+  late List<T>? data;
+  late List<T>? selectedData;
+  late String searchHintText;
 
-  final List<T>? data;
-  final List<T> selectedData;
+  ListInputPickerBuilder({
+    required this.data,
+    required this.selectedData,
+    required this.searchHintText,
+  });
 
-  final String searchHintText;
+  @override
+  ListInputPicker<S> build<S>() {
+    return ListInputPicker<S>(
+      data: data as List<S>,
+      selectedData: (selectedData ?? []) as List<S>,
+      searchHintText: searchHintText,
+      onClosedCallback: onClosedCallback,
+    );
+  }
+}
 
-  const ChipOptionListViewScreen({
+class ListInputPicker<T> extends InputPicker<T> {
+  const ListInputPicker({
     super.key,
     required this.data,
     required this.selectedData,
     required this.searchHintText,
-    required this.onClosedCallback,
+    required super.onClosedCallback,
   });
 
+  final List<T>? data;
+  final List<T> selectedData;
+  final String searchHintText;
+
   @override
-  State<ChipOptionListViewScreen<T>> createState() => ChipOptionListViewScreenState<T>();
+  State<StatefulWidget> createState() => ListInputPickerState<T>();
 }
 
-class ChipOptionListViewScreenState<T> extends State<ChipOptionListViewScreen<T>> {
+class ListInputPickerState<T> extends State<ListInputPicker<T>> {
   late List<T> filteredOptions;
   late List<T> selectedOptions;
 
@@ -128,6 +148,7 @@ class ChipOptionListViewScreenState<T> extends State<ChipOptionListViewScreen<T>
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
+
     return WillPopScope(
       onWillPop: onClose,
       child: Scaffold(
@@ -142,12 +163,12 @@ class ChipOptionListViewScreenState<T> extends State<ChipOptionListViewScreen<T>
           ),
           leading: IconButton(
             onPressed: onClose,
-            icon: SvgPicture.asset('assets/icons/back.svg', fit: BoxFit.contain, width: 28, height: 28),
+            icon: SvgIcon.asset('assets/icons/back.svg', width: 28, height: 28),
           ),
           actions: [
             IconButton(
               onPressed: onClose,
-              icon: SvgPicture.asset('assets/icons/check.svg', fit: BoxFit.contain, width: 28, height: 28),
+              icon: SvgIcon.asset('assets/icons/check.svg', width: 28, height: 28),
             ),
           ],
           scrolledUnderElevation: 0,

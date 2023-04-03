@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:socale/components/text_fields/input_fields/text_input_field.dart';
+import 'package:socale/components/input_fields/text_input_field/text_input_field.dart';
 
 class TextInputFormField extends FormField<String> {
   final String hintText;

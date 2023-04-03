@@ -174,7 +174,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
                     fontSize: (size.width * 0.034),
-                    color: ColorValues.textSubtitle,
+                    color: AppColors.subtitle,
                   ),
                 ),
                 Text(
@@ -183,7 +183,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   style: GoogleFonts.roboto(
                     fontWeight: FontWeight.bold,
                     fontSize: (size.width * 0.036),
-                    color: ColorValues.textSubtitle,
+                    color: AppColors.subtitle,
                   ),
                 ),
                 Text(
@@ -191,7 +191,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                   textAlign: TextAlign.center,
                   style: GoogleFonts.roboto(
                     fontSize: (size.width * 0.034),
-                    color: ColorValues.textSubtitle,
+                    color: AppColors.subtitle,
                   ),
                 ),
               ],
@@ -230,7 +230,7 @@ class _VerifyEmailScreenState extends ConsumerState<VerifyEmailScreen> {
                 isLoading: isLoading,
                 onPressed: confirmEmail,
                 text: 'Continue',
-                linearGradient: ColorValues.orangeButtonGradient,
+                linearGradient: AppColors.orangeButtonGradient,
               ),
               LinkButton(
                 onPressed: () => Navigator.pop(context),

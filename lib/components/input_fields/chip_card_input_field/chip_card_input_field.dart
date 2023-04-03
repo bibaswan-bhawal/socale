@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:socale/components/pickers/options_list_view/options_list_view.dart';
+import 'package:socale/components/assets/svg_icons.dart';
+import 'package:socale/components/pickers/input_picker.dart';
 import 'package:socale/transitions/container_transform.dart';
 
-class ChipOptionPicker<T> extends StatefulWidget {
+class ChipCardInputField<T> extends StatefulWidget {
   final String placeholder;
   final String searchHintText;
   final List<T>? data;
@@ -15,7 +15,9 @@ class ChipOptionPicker<T> extends StatefulWidget {
 
   final Function onChanged;
 
-  const ChipOptionPicker({
+  final InputPickerBuilder inputPicker;
+
+  const ChipCardInputField({
     super.key,
     required this.data,
     required this.selectedData,
@@ -23,14 +25,15 @@ class ChipOptionPicker<T> extends StatefulWidget {
     required this.searchHintText,
     required this.onChanged,
     required this.hasError,
+    required this.inputPicker,
     this.errorText,
   });
 
   @override
-  State<ChipOptionPicker> createState() => _ChipOptionPickerState<T>();
+  State<ChipCardInputField> createState() => _ChipCardInputFieldState<T>();
 }
 
-class _ChipOptionPickerState<T> extends State<ChipOptionPicker<T>> {
+class _ChipCardInputFieldState<T> extends State<ChipCardInputField<T>> {
   late List<T> selectedData;
 
   @override
@@ -53,42 +56,33 @@ class _ChipOptionPickerState<T> extends State<ChipOptionPicker<T>> {
       );
 
   Widget buildParent(context, openContainerCallback) {
-    return LayoutBuilder(
-      builder: (context, constraint) {
-        return GestureDetector(
-          onTap: openContainerCallback,
-          behavior: HitTestBehavior.opaque,
-          child: Stack(
-            children: [
-              Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  icon: SvgPicture.asset(
-                    'assets/icons/add.svg',
-                    colorFilter: const ColorFilter.mode(Colors.black, BlendMode.srcIn),
-                    height: 28,
-                    width: 28,
-                  ),
-                  onPressed: openContainerCallback,
-                ),
-              ),
-              if (selectedData.isEmpty)
-                Center(child: Text(widget.placeholder))
-              else
-                SingleChildScrollView(
-                  padding: const EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 40),
-                  scrollDirection: Axis.vertical,
-                  child: Wrap(
-                    direction: Axis.horizontal,
-                    spacing: 8,
-                    runSpacing: 4,
-                    children: selectedData.map(buildChip).toList(),
-                  ),
-                ),
-            ],
+    return GestureDetector(
+      onTap: openContainerCallback,
+      behavior: HitTestBehavior.opaque,
+      child: Stack(
+        children: [
+          Align(
+            alignment: Alignment.topRight,
+            child: IconButton(
+              icon: SvgIcon.asset('assets/icons/add.svg', color: Colors.black, height: 28, width: 28),
+              onPressed: openContainerCallback,
+            ),
           ),
-        );
-      },
+          if (selectedData.isEmpty)
+            Center(child: Text(widget.placeholder))
+          else
+            SingleChildScrollView(
+              padding: const EdgeInsets.only(top: 8, bottom: 8, left: 12, right: 40),
+              scrollDirection: Axis.vertical,
+              child: Wrap(
+                direction: Axis.horizontal,
+                spacing: 8,
+                runSpacing: 4,
+                children: selectedData.map(buildChip).toList(),
+              ),
+            ),
+        ],
+      ),
     );
   }
 
@@ -113,12 +107,12 @@ class _ChipOptionPickerState<T> extends State<ChipOptionPicker<T>> {
   }
 
   Widget buildChild(BuildContext context, Function closeContainer) {
-    return ChipOptionListViewScreen(
-      data: widget.data,
-      selectedData: selectedData,
-      searchHintText: widget.searchHintText,
-      onClosedCallback: closeContainer,
-    );
+    InputPickerBuilder pickerBuilder = widget.inputPicker;
+    pickerBuilder.onClosedCallback = closeContainer;
+
+    InputPicker<T> picker = pickerBuilder.build<T>();
+
+    return picker;
   }
 
   void onClosedCallback(List<T>? selectedData) {
@@ -137,8 +131,8 @@ class _ChipOptionPickerState<T> extends State<ChipOptionPicker<T>> {
             parentBuilder: buildParent,
             backgroundBuilder: buildBackground,
             onClosed: onClosedCallback,
-            transitionDuration: const Duration(milliseconds: 500),
             useRootNavigator: true,
+            transitionDuration: const Duration(milliseconds: 500),
           ),
         ),
         Padding(
