@@ -7,7 +7,6 @@ import 'package:socale/transitions/container_transform.dart';
 class ChipCardInputField<T> extends StatefulWidget {
   final String placeholder;
   final String searchHintText;
-  final List<T>? data;
   final List<T> selectedData;
 
   final bool hasError;
@@ -19,7 +18,6 @@ class ChipCardInputField<T> extends StatefulWidget {
 
   const ChipCardInputField({
     super.key,
-    required this.data,
     required this.selectedData,
     required this.placeholder,
     required this.searchHintText,
@@ -108,7 +106,9 @@ class _ChipCardInputFieldState<T> extends State<ChipCardInputField<T>> {
 
   Widget buildChild(BuildContext context, Function closeContainer) {
     InputPickerBuilder pickerBuilder = widget.inputPicker;
+
     pickerBuilder.onClosedCallback = closeContainer;
+    pickerBuilder.selectedOptions = selectedData;
 
     InputPicker<T> picker = pickerBuilder.build<T>();
 

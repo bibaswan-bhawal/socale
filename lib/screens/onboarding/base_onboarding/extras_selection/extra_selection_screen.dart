@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'package:socale/models/options/language/language.dart';
+import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/components/pickers/list_input_picker/list_input_picker.dart';
 import 'package:socale/components/input_fields/grid_item_input_field/grid_item_form_field.dart';
@@ -14,6 +18,8 @@ class ExtraSelectionScreen extends BaseOnboardingScreen {
 }
 
 class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
+  void saveLanguages(value) => ref.read(onboardingUserProvider.notifier).setLanguages(value);
+
   @override
   Future<bool> onBack() async {
     return true;
@@ -26,6 +32,10 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
 
   @override
   Widget build(BuildContext context) {
+    final languagesProvider = ref.watch(fetchLanguagesProvider);
+
+    final onboardingUser = ref.watch(onboardingUserProvider);
+
     final size = MediaQuery.of(context).size;
 
     return Column(
@@ -89,41 +99,40 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                 childAspectRatio: 124 / 165,
                 physics: const NeverScrollableScrollPhysics(),
                 children: [
-                  GridItemFormField(
+                  GridItemFormField<Language>(
                     title: 'Languages',
                     icon: Image.asset('assets/illustrations/illustration_10.png'),
                     borderGradient: AppColors.purpleGradient,
-                    inputPicker: ListInputPickerBuilder<String>(
-                      selectedData: const ['English'],
-                      data: const ['English', 'Spanish', 'French'],
+                    onChanged: saveLanguages,
+                    initialData: onboardingUser.languages,
+                    inputPicker: ListInputPickerBuilder<Language>(
+                      data: languagesProvider.when(
+                        data: (data) => data,
+                        error: (err, stack) => [],
+                        loading: () => null,
+                      ),
                       searchHintText: 'Search languages',
                     ),
-                    initialData: const ['English'],
-                    data: const ['English', 'Spanish', 'French'],
                   ),
                   GridItemFormField(
                     title: 'Interests',
                     icon: Image.asset('assets/illustrations/illustration_9.png'),
                     borderGradient: AppColors.lightBlueGradient,
                     inputPicker: ListInputPickerBuilder<String>(
-                      selectedData: const [],
                       data: const ['English', 'Spanish', 'French'],
                       searchHintText: 'Search languages',
                     ),
                     initialData: const [],
-                    data: const ['English', 'Spanish', 'French'],
                   ),
                   GridItemFormField(
                     title: 'clubs',
                     icon: Image.asset('assets/illustrations/illustration_11.png'),
                     borderGradient: AppColors.orangeGradient,
                     inputPicker: ListInputPickerBuilder<String>(
-                      selectedData: const [],
                       data: const ['English', 'Spanish', 'French'],
                       searchHintText: 'Search languages',
                     ),
                     initialData: const [],
-                    data: const ['English', 'Spanish', 'French'],
                   ),
                 ],
               ),

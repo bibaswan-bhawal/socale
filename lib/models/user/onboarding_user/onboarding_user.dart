@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:socale/models/college/college.dart';
-import 'package:socale/models/major/major.dart';
-import 'package:socale/models/minor/minor.dart';
+import 'package:socale/models/options/language/language.dart';
+import 'package:socale/models/options/major/major.dart';
+import 'package:socale/models/options/minor/minor.dart';
 
 part 'onboarding_user.freezed.dart';
 
@@ -24,6 +25,7 @@ class OnboardingUser with _$OnboardingUser {
     DateTime? dateOfBirth,
     List<Major>? majors,
     List<Minor>? minors,
+    List<Language>? languages,
     @Default(5) int numRegenLeft,
     @Default(false) bool isCollegeEmailVerified,
     @_ProfileConverter() Image? anonymousProfileImage,

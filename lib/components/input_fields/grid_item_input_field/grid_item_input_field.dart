@@ -10,7 +10,6 @@ class GridItemInputField<T> extends StatefulWidget {
     super.key,
     required this.icon,
     required this.title,
-    required this.data,
     required this.initialData,
     required this.inputPicker,
     required this.onChanged,
@@ -33,9 +32,6 @@ class GridItemInputField<T> extends StatefulWidget {
 
   /// Border gradient of card
   final LinearGradient borderGradient;
-
-  /// List of options
-  final List<T> data;
 
   /// List of selected options
   final List<T> initialData;
@@ -178,7 +174,9 @@ class _GridItemInputFieldState<T> extends State<GridItemInputField<T>> {
 
   Widget buildChild(BuildContext context, Function closeContainer) {
     InputPickerBuilder pickerBuilder = widget.inputPicker;
+
     pickerBuilder.onClosedCallback = closeContainer;
+    pickerBuilder.selectedOptions = selectedOptions;
 
     InputPicker<T> picker = pickerBuilder.build<T>();
 

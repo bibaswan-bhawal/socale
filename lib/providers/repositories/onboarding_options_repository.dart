@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
-import 'package:socale/models/major/major.dart';
-import 'package:socale/models/minor/minor.dart';
+import 'package:socale/models/options/language/language.dart';
+import 'package:socale/models/options/major/major.dart';
+import 'package:socale/models/options/minor/minor.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 
@@ -58,4 +59,25 @@ Future<List<Minor>> fetchMinors(FetchMinorsRef ref) async {
   }
 
   return minors;
+}
+
+@riverpod
+Future<List<Language>> fetchLanguages(FetchLanguagesRef ref) async {
+  final List<Language> languages = [];
+
+  final apiService = ref.read(apiServiceProvider);
+
+  final response = await apiService.sendGetRequest(endpoint: 'app/getLanguages');
+
+  if (response.statusCode == 200) {
+    final body = jsonDecode(response.body);
+
+    body.forEach((language) {
+      languages.add(Language.fromJson(language));
+    });
+  } else {
+    throw Exception('Failed to fetch languages');
+  }
+
+  return languages;
 }

@@ -5,8 +5,8 @@ import 'package:socale/components/input_fields/chip_card_input_field/chip_card_f
 import 'package:socale/components/pickers/list_input_picker/list_input_picker.dart';
 import 'package:socale/components/section_tab_view/section_tab_bar.dart';
 import 'package:socale/components/text/gradient_headline.dart';
-import 'package:socale/models/major/major.dart';
-import 'package:socale/models/minor/minor.dart';
+import 'package:socale/models/options/major/major.dart';
+import 'package:socale/models/options/minor/minor.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
@@ -111,6 +111,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                     onChanged: saveMajors,
                     validator: majorValidator,
                     inputPicker: ListInputPickerBuilder<Major>(
+                      searchHintText: 'Search for your Major',
                       data: majorsProvider.when(
                         data: (majors) => majors,
                         loading: () => null,
@@ -119,16 +120,6 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                           return [];
                         },
                       ),
-                      selectedData: onboardingUser.majors,
-                      searchHintText: 'Search for your Major',
-                    ),
-                    options: majorsProvider.when(
-                      data: (majors) => majors,
-                      loading: () => null,
-                      error: (err, stack) {
-                        if (kDebugMode) print(err);
-                        return [];
-                      },
                     ),
                   ),
                 ),
@@ -142,6 +133,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                     searchHint: 'Search for your minors',
                     initialValue: onboardingUser.minors,
                     inputPicker: ListInputPickerBuilder<Minor>(
+                      searchHintText: 'Search for your minors',
                       data: minorProvider.when(
                         data: (minors) => minors,
                         loading: () => null,
@@ -150,18 +142,8 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                           return [];
                         },
                       ),
-                      selectedData: onboardingUser.minors,
-                      searchHintText: 'Search for your minors',
                     ),
                     onChanged: saveMinors,
-                    options: minorProvider.when(
-                      data: (minors) => minors,
-                      loading: () => null,
-                      error: (err, stack) {
-                        if (kDebugMode) print(err);
-                        return [];
-                      },
-                    ),
                   ),
                 ),
               ),

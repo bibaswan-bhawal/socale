@@ -11,25 +11,26 @@ class GridItemFormField<T> extends FormField<List<T>> {
     super.initialValue,
     required Widget icon,
     required String title,
-    required List<T> data,
     required List<T>? initialData,
     required InputPickerBuilder inputPicker,
     double? borderSize,
     double? borderRadius,
     LinearGradient? borderGradient,
+    Function? onChanged,
   }) : super(
           builder: (FormFieldState<List<T>> state) {
             return GridItemInputField<T>(
-              icon: icon,
-              title: title,
-              data: data,
-              initialData: initialData ?? [],
-              borderSize: borderSize ?? 2,
-              borderRadius: borderRadius ?? 15,
-              borderGradient: borderGradient ?? AppColors.orangeGradient,
-              inputPicker: inputPicker,
-              onChanged: state.didChange,
-            );
+                icon: icon,
+                title: title,
+                initialData: initialData ?? [],
+                borderSize: borderSize ?? 2,
+                borderRadius: borderRadius ?? 15,
+                borderGradient: borderGradient ?? AppColors.orangeGradient,
+                inputPicker: inputPicker,
+                onChanged: (value) {
+                  state.didChange(value);
+                  onChanged?.call(value);
+                });
           },
         );
 }

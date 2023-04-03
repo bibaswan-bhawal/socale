@@ -4,21 +4,19 @@ import 'package:socale/components/assets/svg_icons.dart';
 import 'package:socale/components/pickers/input_picker.dart';
 
 class ListInputPickerBuilder<T> extends InputPickerBuilder {
-  late List<T>? data;
-  late List<T>? selectedData;
   late String searchHintText;
+  late List<T>? data;
 
   ListInputPickerBuilder({
     required this.data,
-    required this.selectedData,
     required this.searchHintText,
   });
 
   @override
   ListInputPicker<S> build<S>() {
     return ListInputPicker<S>(
-      data: data as List<S>,
-      selectedData: (selectedData ?? []) as List<S>,
+      data: data as List<S>?,
+      selectedData: (selectedOptions ?? []) as List<S>,
       searchHintText: searchHintText,
       onClosedCallback: onClosedCallback,
     );
@@ -43,8 +41,8 @@ class ListInputPicker<T> extends InputPicker<T> {
 }
 
 class ListInputPickerState<T> extends State<ListInputPicker<T>> {
-  late List<T> filteredOptions;
-  late List<T> selectedOptions;
+  List<T> filteredOptions = [];
+  List<T> selectedOptions = [];
 
   String searchQuery = '';
 
@@ -78,10 +76,12 @@ class ListInputPickerState<T> extends State<ListInputPicker<T>> {
       case null:
         return buildLoading();
       case []:
-        return Center(
-          child: Text(
-            'There was a problem loading all the options',
-            style: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
+        return Expanded(
+          child: Center(
+            child: Text(
+              'There was a problem\nloading all the options',
+              style: GoogleFonts.roboto(fontSize: 16, fontWeight: FontWeight.w500),
+            ),
           ),
         );
       default:
@@ -129,7 +129,7 @@ class ListInputPickerState<T> extends State<ListInputPicker<T>> {
     }
   }
 
-  Widget buildLoading() => const Center(child: CircularProgressIndicator());
+  Widget buildLoading() => const Expanded(child: Center(child: CircularProgressIndicator()));
 
   Chip buildChip(T option) => Chip(
         key: ValueKey(option),

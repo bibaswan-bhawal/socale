@@ -12,11 +12,9 @@ class ChipCardFormField<T> extends FormField<List<T>> {
     required String placeholder,
     required String searchHint,
     required Function onChanged,
-    required List<T>? options,
   }) : super(
           builder: (FormFieldState<List<T>> state) {
             return ChipCardInputField<T>(
-              data: options,
               selectedData: initialValue ?? [],
               placeholder: placeholder,
               searchHintText: searchHint,
