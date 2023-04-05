@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/pickers/categorical_input_picker/categorical_input_picker.dart';
+import 'package:socale/models/options/interests/interests.dart';
 import 'package:socale/models/options/language/language.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/repositories/onboarding_options_repository.dart';
@@ -37,6 +38,8 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
     SystemUI.setSystemUIDark();
 
     final languagesProvider = ref.watch(fetchLanguagesProvider);
+    final interestsProvider = ref.watch(fetchInterestsProvider);
+
     final onboardingUser = ref.watch(onboardingUserProvider);
 
     final size = MediaQuery.of(context).size;
@@ -117,19 +120,33 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                       searchHintText: 'Search languages',
                     ),
                   ),
-                  GridItemFormField(
+                  GridItemFormField<Interest>(
                     title: 'Interests',
                     icon: Image.asset('assets/illustrations/illustration_9.png'),
                     borderGradient: AppColors.lightBlueGradient,
                     initialData: const [],
-                    inputPicker: CategoricalInputPickerBuilder(),
+                    inputPicker: CategoricalInputPickerBuilder<Interest>(
+                      searchHintText: 'Search interests',
+                      data: interestsProvider.when(
+                        data: (data) => data,
+                        error: (err, stack) => [],
+                        loading: () => null,
+                      ),
+                    ),
                   ),
-                  GridItemFormField(
+                  GridItemFormField<Interest>(
                     title: 'clubs',
                     icon: Image.asset('assets/illustrations/illustration_11.png'),
                     borderGradient: AppColors.orangeGradient,
                     initialData: const [],
-                    inputPicker: CategoricalInputPickerBuilder(),
+                    inputPicker: CategoricalInputPickerBuilder<Interest>(
+                      searchHintText: 'Search clubs',
+                      data: interestsProvider.when(
+                        data: (data) => data,
+                        error: (err, stack) => [],
+                        loading: () => null,
+                      ),
+                    ),
                   ),
                 ],
               ),

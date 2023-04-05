@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:socale/transitions/curves.dart';
-import 'package:socale/utils/system_ui.dart';
 
 typedef ClosedCallback<S> = void Function(S data);
 typedef CloseContainerActionCallback<S> = void Function({S? returnValue});
@@ -311,7 +310,8 @@ class _OpenChildRoute<T> extends ModalRoute<T> {
   void closeContainer({T? returnValue}) => Navigator.of(subtreeContext!).pop(returnValue);
 
   Widget _buildContent(Animation<double> animation, Rect rect) {
-    final Animatable<double> firstVisAnimation = Tween<double>(begin: 1, end: 0).chain(CurveTween(curve: const Interval(0, 0.3)));
+    final Animatable<double> firstVisAnimation =
+        Tween<double>(begin: 1, end: 0).chain(CurveTween(curve: const Interval(0, 0.3)));
 
     final Animatable<double> secondVisAnimation =
         Tween<double>(begin: 0, end: 1).chain(CurveTween(curve: const Interval(0.3, 1)));

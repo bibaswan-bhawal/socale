@@ -5,8 +5,8 @@ import 'package:socale/components/pickers/input_picker.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class ListInputPickerBuilder<T> extends InputPickerBuilder {
-  late String searchHintText;
-  late List<T>? data;
+  final String searchHintText;
+  final List<T>? data;
 
   ListInputPickerBuilder({
     required this.data,

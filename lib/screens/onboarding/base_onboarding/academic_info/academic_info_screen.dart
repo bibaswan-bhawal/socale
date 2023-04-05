@@ -41,7 +41,8 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
     minorFormKey.currentState!.validate();
   }
 
-  String? majorValidator(List<Major>? value) => (value == null || value.isEmpty) ? 'Please select at least one major' : null;
+  String? majorValidator(List<Major>? value) =>
+      (value == null || value.isEmpty) ? 'Please select at least one major' : null;
 
   @override
   Future<bool> onBack() async => true;
@@ -99,7 +100,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
         ),
         Container(
           height: size.height * 0.28,
-          constraints: const BoxConstraints(maxHeight: 230, minHeight: 150),
+          constraints: const BoxConstraints(maxHeight: 200, minHeight: 150),
           child: TabBarView(
             controller: tabController,
             children: [

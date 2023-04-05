@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:socale/models/options/interests/interests.dart';
 import 'package:socale/models/options/language/language.dart';
 import 'package:socale/models/options/major/major.dart';
 import 'package:socale/models/options/minor/minor.dart';
@@ -80,4 +81,25 @@ Future<List<Language>> fetchLanguages(FetchLanguagesRef ref) async {
   }
 
   return languages;
+}
+
+@riverpod
+Future<List<Interest>> fetchInterests(FetchInterestsRef ref) async {
+  final List<Interest> interests = [];
+
+  final apiService = ref.read(apiServiceProvider);
+
+  final response = await apiService.sendGetRequest(endpoint: 'app/getInterests');
+
+  if (response.statusCode == 200) {
+    final body = jsonDecode(response.body);
+
+    body.forEach((interest) {
+      interests.add(Interest.fromJson(interest));
+    });
+  } else {
+    throw Exception('Failed to fetch interests');
+  }
+
+  return interests;
 }
