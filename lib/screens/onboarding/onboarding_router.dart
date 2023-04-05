@@ -51,6 +51,8 @@ class _OnboardingRouterState extends ConsumerState<OnboardingRouter> {
 
   @override
   Widget build(BuildContext context) {
+    SystemUI.setSystemUIDark();
+
     ref.listen(onboardingUserProvider, onboardingUserStateListener);
 
     return PageTransitionSwitcher(

@@ -6,7 +6,6 @@ import 'package:socale/transitions/container_transform.dart';
 
 class ChipCardInputField<T> extends StatefulWidget {
   final String placeholder;
-  final String searchHintText;
   final List<T> selectedData;
 
   final bool hasError;
@@ -20,7 +19,6 @@ class ChipCardInputField<T> extends StatefulWidget {
     super.key,
     required this.selectedData,
     required this.placeholder,
-    required this.searchHintText,
     required this.onChanged,
     required this.hasError,
     required this.inputPicker,
@@ -124,6 +122,8 @@ class _ChipCardInputFieldState<T> extends State<ChipCardInputField<T>> {
   Widget build(BuildContext context) {
     return Column(
       mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
           child: ContainerTransform<List<T>>(
@@ -136,7 +136,7 @@ class _ChipCardInputFieldState<T> extends State<ChipCardInputField<T>> {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 16),
+          padding: const EdgeInsets.only(left: 14, top: 4),
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 300),
             opacity: widget.hasError ? 1 : 0,

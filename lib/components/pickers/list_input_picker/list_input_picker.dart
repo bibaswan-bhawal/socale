@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/assets/svg_icons.dart';
 import 'package:socale/components/pickers/input_picker.dart';
+import 'package:socale/utils/system_ui.dart';
 
 class ListInputPickerBuilder<T> extends InputPickerBuilder {
   late String searchHintText;
@@ -147,6 +148,8 @@ class ListInputPickerState<T> extends State<ListInputPicker<T>> {
 
   @override
   Widget build(BuildContext context) {
+    SystemUI.setSystemUIDark();
+
     final size = MediaQuery.of(context).size;
 
     return WillPopScope(

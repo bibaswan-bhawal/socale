@@ -101,6 +101,7 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
                       style: GoogleFonts.poppins(
                         color: Colors.black,
                         fontSize: size.width * 0.058,
+                        letterSpacing: -0.3,
                         fontWeight: FontWeight.bold,
                       ),
                     ),
@@ -113,7 +114,11 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
                       child: Text(
                         'know',
                         style: GoogleFonts.poppins(
-                            fontSize: size.width * 0.058, fontWeight: FontWeight.bold, color: Colors.white),
+                          fontSize: size.width * 0.058,
+                          letterSpacing: -0.3,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                   ],
@@ -128,6 +133,7 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
                   style: GoogleFonts.poppins(
                     color: Colors.black,
                     fontSize: size.width * 0.058,
+                    letterSpacing: -0.3,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
@@ -136,7 +142,7 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 36),
+          padding: const EdgeInsets.only(left: 36, right: 36, top: 36),
           child: DefaultInputForm(
             key: nameFormKey,
             onChanged: () => setState(() => nameErrorMessage = null),
@@ -172,7 +178,7 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 36, right: 36),
+          padding: const EdgeInsets.only(left: 36, right: 36, top: 16),
           child: DefaultInputForm(
             key: dobFormKey,
             labelText: 'Date of Birth',
@@ -187,7 +193,7 @@ class _BasicInfoScreenState extends BaseOnboardingScreenState {
           ),
         ),
         Padding(
-          padding: const EdgeInsets.only(left: 36, right: 36, top: 18),
+          padding: const EdgeInsets.only(left: 36, right: 36, top: 16),
           child: DefaultInputForm(
             key: graduationDateFormKey,
             labelText: 'Graduation Date',

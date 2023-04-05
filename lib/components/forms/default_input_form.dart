@@ -23,6 +23,7 @@ class DefaultInputForm extends Form {
             shrinkWrap: true,
             itemCount: children.length,
             padding: const EdgeInsets.only(top: 0, bottom: 0),
+            physics: const NeverScrollableScrollPhysics(),
             separatorBuilder: (BuildContext context, int index) =>
                 const Divider(height: 1.25, thickness: 1.25, color: Color(0x1A000000)),
             itemBuilder: (BuildContext context, int index) {

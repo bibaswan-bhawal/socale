@@ -31,15 +31,11 @@ class PageViewController extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final bottomViewPadding = MediaQuery.of(context).viewPadding.bottom;
+    final double bottomViewPadding = MediaQuery.of(context).viewPadding.bottom;
+    final double bottomPadding = bottomViewPadding == 0 ? 20 : 40 - bottomViewPadding;
 
     return Padding(
-      padding: EdgeInsets.only(
-        bottom: bottomViewPadding == 0 ? 20 : 40 - bottomViewPadding,
-        left: 30,
-        right: 30,
-        top: 24,
-      ),
+      padding: EdgeInsets.only(bottom: bottomPadding, left: 30, right: 30, top: 16),
       child: Row(
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.center,

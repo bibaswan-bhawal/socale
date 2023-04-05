@@ -16,7 +16,6 @@ class _AuthRouterState extends ConsumerState<AuthRouter> {
   @override
   void initState() {
     super.initState();
-    SystemUI.setSystemUIDark();
   }
 
   @override
@@ -27,6 +26,8 @@ class _AuthRouterState extends ConsumerState<AuthRouter> {
 
   @override
   Widget build(BuildContext context) {
+    SystemUI.setSystemUIDark();
+
     _backButtonDispatcher?.takePriority();
 
     return Router(

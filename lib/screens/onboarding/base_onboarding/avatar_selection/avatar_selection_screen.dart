@@ -127,9 +127,9 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
           ),
         ),
         Flexible(
-          flex: 10,
+          flex: 6,
           child: Padding(
-            padding: const EdgeInsets.only(bottom: 24, top: 24),
+            padding: const EdgeInsets.only(bottom: 18, top: 18),
             child: Container(
               constraints: BoxConstraints(maxWidth: size.width * 0.6, maxHeight: size.width * 0.6),
               child: profileImage,

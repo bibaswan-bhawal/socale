@@ -22,7 +22,6 @@ class _IntroRouterState extends ConsumerState<IntroRouter> {
   void initState() {
     super.initState();
     _routerDelegate.addListener(updateState);
-    SystemUI.setSystemUIDark();
   }
 
   @override
@@ -59,6 +58,8 @@ class _IntroRouterState extends ConsumerState<IntroRouter> {
 
   @override
   Widget build(BuildContext context) {
+    SystemUI.setSystemUIDark();
+
     _backButtonDispatcher?.takePriority();
 
     return ScreenScaffold(

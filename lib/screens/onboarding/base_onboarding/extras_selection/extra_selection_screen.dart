@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'package:socale/components/pickers/categorical_input_picker/categorical_input_picker.dart';
 import 'package:socale/models/options/language/language.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/repositories/onboarding_options_repository.dart';
@@ -9,6 +10,7 @@ import 'package:socale/resources/colors.dart';
 import 'package:socale/components/pickers/list_input_picker/list_input_picker.dart';
 import 'package:socale/components/input_fields/grid_item_input_field/grid_item_form_field.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
+import 'package:socale/utils/system_ui.dart';
 
 class ExtraSelectionScreen extends BaseOnboardingScreen {
   const ExtraSelectionScreen({super.key});
@@ -32,8 +34,9 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
 
   @override
   Widget build(BuildContext context) {
-    final languagesProvider = ref.watch(fetchLanguagesProvider);
+    SystemUI.setSystemUIDark();
 
+    final languagesProvider = ref.watch(fetchLanguagesProvider);
     final onboardingUser = ref.watch(onboardingUserProvider);
 
     final size = MediaQuery.of(context).size;
@@ -90,7 +93,7 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
         ),
         Expanded(
           child: Padding(
-            padding: const EdgeInsets.only(left: 48, right: 48, top: 36),
+            padding: EdgeInsets.only(left: 48, right: 48, top: (size.height * 0.03).clamp(8, 36)),
             child: Form(
               child: GridView.count(
                 crossAxisCount: 2,
@@ -118,21 +121,15 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                     title: 'Interests',
                     icon: Image.asset('assets/illustrations/illustration_9.png'),
                     borderGradient: AppColors.lightBlueGradient,
-                    inputPicker: ListInputPickerBuilder<String>(
-                      data: const ['English', 'Spanish', 'French'],
-                      searchHintText: 'Search languages',
-                    ),
                     initialData: const [],
+                    inputPicker: CategoricalInputPickerBuilder(),
                   ),
                   GridItemFormField(
                     title: 'clubs',
                     icon: Image.asset('assets/illustrations/illustration_11.png'),
                     borderGradient: AppColors.orangeGradient,
-                    inputPicker: ListInputPickerBuilder<String>(
-                      data: const ['English', 'Spanish', 'French'],
-                      searchHintText: 'Search languages',
-                    ),
                     initialData: const [],
+                    inputPicker: CategoricalInputPickerBuilder(),
                   ),
                 ],
               ),
@@ -144,8 +141,7 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
           'profile from the account tab at any time.',
           textAlign: TextAlign.center,
           style: GoogleFonts.roboto(
-            letterSpacing: -0.3,
-            fontSize: size.width * (12 / 414),
+            fontSize: 12,
             color: AppColors.subtitle,
           ),
         ),

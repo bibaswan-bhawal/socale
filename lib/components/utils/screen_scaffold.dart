@@ -15,18 +15,18 @@ class ScreenScaffold extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      resizeToAvoidBottomInset: false,
-      backgroundColor: Colors.transparent,
-      appBar: appBar,
-      body: Stack(
-        children: [
-          if (background != null) background!,
-          ScreenSafeArea(
+    return Stack(
+      children: [
+        if (background != null) background!,
+        Scaffold(
+          resizeToAvoidBottomInset: false,
+          backgroundColor: Colors.transparent,
+          appBar: appBar,
+          body: ScreenSafeArea(
             body: body,
           ),
-        ],
-      ),
+        ),
+      ],
     );
   }
 }

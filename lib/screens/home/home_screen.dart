@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
+import 'package:socale/utils/system_ui.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -11,6 +12,8 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
+    SystemUI.setSystemUILight();
+
     return ScreenScaffold(
       background: Container(
         color: Colors.black,

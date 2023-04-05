@@ -41,8 +41,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
     minorFormKey.currentState!.validate();
   }
 
-  String? majorValidator(List<Major>? value) =>
-      (value == null || value.isEmpty) ? 'Please select at least one major' : null;
+  String? majorValidator(List<Major>? value) => (value == null || value.isEmpty) ? 'Please select at least one major' : null;
 
   @override
   Future<bool> onBack() async => true;
@@ -72,9 +71,12 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
 
     final onboardingUser = ref.watch(onboardingUserProvider);
 
+    final size = MediaQuery.of(context).size;
+
     return Column(
+      mainAxisSize: MainAxisSize.max,
       children: [
-        Flexible(
+        Expanded(
           flex: 5,
           child: Column(
             mainAxisSize: MainAxisSize.max,
@@ -95,23 +97,23 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
           controller: tabController,
           tabs: const [SectionTab(title: 'Majors'), SectionTab(title: 'Minors')],
         ),
-        Flexible(
-          flex: 2,
+        Container(
+          height: size.height * 0.28,
+          constraints: const BoxConstraints(maxHeight: 230, minHeight: 150),
           child: TabBarView(
             controller: tabController,
             children: [
               Padding(
-                padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
+                padding: const EdgeInsets.only(left: 36, right: 36),
                 child: Form(
                   key: majorFormKey,
                   child: ChipCardFormField<Major>(
                     placeholder: 'Add your majors',
-                    searchHint: 'Search for your majors',
                     initialValue: onboardingUser.majors,
                     onChanged: saveMajors,
                     validator: majorValidator,
                     inputPicker: ListInputPickerBuilder<Major>(
-                      searchHintText: 'Search for your Major',
+                      searchHintText: 'Search for your majors',
                       data: majorsProvider.when(
                         data: (majors) => majors,
                         loading: () => null,
@@ -125,12 +127,11 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                 ),
               ),
               Padding(
-                padding: const EdgeInsets.only(top: 10, left: 36, right: 36),
+                padding: const EdgeInsets.only(left: 36, right: 36),
                 child: Form(
                   key: minorFormKey,
                   child: ChipCardFormField<Minor>(
                     placeholder: 'Add your minors',
-                    searchHint: 'Search for your minors',
                     initialValue: onboardingUser.minors,
                     inputPicker: ListInputPickerBuilder<Minor>(
                       searchHintText: 'Search for your minors',
