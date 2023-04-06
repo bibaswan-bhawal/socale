@@ -133,9 +133,13 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                     initialData: onboardingUser.interests,
                     onChanged: saveInterests,
                     inputPicker: CategoricalInputPickerBuilder<Interest>(
-                      searchHintText: 'Search interests',
+                      searchHintText: 'Search Interests',
                       data: interestsProvider.when(
-                        data: (data) => data,
+                        data: (data) {
+                          print(data);
+
+                          return data;
+                        },
                         error: (err, stack) => [],
                         loading: () => null,
                       ),

@@ -20,9 +20,7 @@ Future<List<Major>> fetchMajors(FetchMajorsRef ref) async {
 
   if (onboardingUser.college == null) throw Exception('College is null!');
 
-  final response = await apiService.sendGetRequest(
-    endpoint: 'colleges/${onboardingUser.college!.id}/majors',
-  );
+  final response = await apiService.sendGetRequest(endpoint: 'colleges/${onboardingUser.college!.id}/majors');
 
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
@@ -46,9 +44,7 @@ Future<List<Minor>> fetchMinors(FetchMinorsRef ref) async {
 
   if (onboardingUser.college == null) throw Exception('College is null!');
 
-  final response = await apiService.sendGetRequest(
-    endpoint: 'colleges/${onboardingUser.college!.id}/minors',
-  );
+  final response = await apiService.sendGetRequest(endpoint: 'colleges/${onboardingUser.college!.id}/minors');
 
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
@@ -95,6 +91,8 @@ Future<List<Interest>> fetchInterests(FetchInterestsRef ref) async {
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
 
+    print('body: $body');
+
     body.forEach((interest) {
       interests.add(Interest.fromJson(interest));
     });
@@ -114,9 +112,7 @@ Future<List<Club>> fetchClubs(FetchClubsRef ref) async {
 
   if (onboardingUser.college == null) throw Exception('College is null!');
 
-  final response = await apiService.sendGetRequest(
-    endpoint: 'colleges/${onboardingUser.college!.id}/clubs',
-  );
+  final response = await apiService.sendGetRequest(endpoint: 'colleges/${onboardingUser.college!.id}/clubs');
 
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
@@ -125,7 +121,7 @@ Future<List<Club>> fetchClubs(FetchClubsRef ref) async {
       clubs.add(Club.fromJson(interest));
     });
   } else {
-    throw Exception('Failed to fetch interests');
+    throw Exception('Failed to fetch clubs');
   }
 
   return clubs;

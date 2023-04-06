@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/paginators/page_view_controller.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/navigation_providers.dart';
+import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/utils/system_ui.dart';
 
@@ -15,25 +16,6 @@ class BaseOnboardingRouter extends ConsumerStatefulWidget {
 
 class _BaseOnboardingRouterState extends ConsumerState<BaseOnboardingRouter> {
   ChildBackButtonDispatcher? _backButtonDispatcher;
-
-  @override
-  void initState() {
-    super.initState();
-    fetchOnboardingOptions();
-  }
-
-  /*
-   * Initialize the onboarding repository with
-   * with data from the server. As soon as we have
-   * the user's college we can start downloading all
-   * the data.
-   *
-   * Some of it doesn't require the user's college
-   * so we can asyncronously download that data.
-   * while we wait for the user's college info to
-   * become available.
-   */
-  fetchOnboardingOptions() async {}
 
   @override
   void didChangeDependencies() {
@@ -65,6 +47,12 @@ class _BaseOnboardingRouterState extends ConsumerState<BaseOnboardingRouter> {
   @override
   Widget build(BuildContext context) {
     SystemUI.setSystemUIDark();
+
+    ref.watch(fetchMajorsProvider);
+    ref.watch(fetchMinorsProvider);
+    ref.watch(fetchLanguagesProvider);
+    ref.watch(fetchInterestsProvider);
+    ref.watch(fetchClubsProvider);
 
     final delegate = ref.watch(baseOnboardingRouterDelegateProvider);
     final currentPage = delegate.currentPage;
