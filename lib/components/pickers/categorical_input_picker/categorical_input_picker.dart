@@ -182,6 +182,12 @@ class CategoricalInputPickerState<T> extends State<CategoricalInputPicker<T>> {
                 contentPadding: const EdgeInsets.all(0),
                 border: InputBorder.none,
               ),
+              style: GoogleFonts.roboto(
+                fontSize: 16,
+                fontWeight: FontWeight.w400,
+                letterSpacing: -0.3,
+                color: Colors.black,
+              ),
               onChanged: (value) => setState(() {
                 searchQuery = value;
                 selectedCategory = null;
@@ -210,12 +216,7 @@ class CategoricalInputPickerState<T> extends State<CategoricalInputPicker<T>> {
             ),
           ),
           body: SingleChildScrollView(
-            padding: EdgeInsets.only(
-              left: 16,
-              right: 16,
-              top: 0,
-              bottom: MediaQuery.of(context).padding.bottom,
-            ),
+            padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: MediaQuery.of(context).padding.bottom),
             child: Column(
               children: [
                 for (String category in showCategoriesKeys)

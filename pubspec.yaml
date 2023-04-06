@@ -22,8 +22,8 @@ dependencies:
   amplify_auth_cognito: ^1.0.0-next.7
 
   # Firebase libraries
-  firebase_core: ^2.8.0
-  firebase_messaging: ^14.3.0
+  firebase_core: ^2.9.0
+  firebase_messaging: ^14.4.0
 
   # Local notifications libraries
   flutter_local_notifications: ^13.0.0
@@ -33,7 +33,7 @@ dependencies:
   riverpod_annotation: ^2.0.2
 
   # Local database libraries
-  shared_preferences: ^2.0.20
+  shared_preferences: ^2.1.0
 
   # UI libraries
   flutter_svg: ^2.0.4
@@ -51,13 +51,13 @@ dependencies:
 
   freezed_annotation: ^2.2.0
   json_annotation: ^4.8.0
-  dio: ^5.0.3
+  dio: ^5.1.1
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  test: ^1.23.1
+  test: ^1.24.1
   flutter_lints: ^2.0.1
   riverpod_generator: ^2.1.4
   build_runner: ^2.3.3
