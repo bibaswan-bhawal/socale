@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/college/college.dart';
+import 'package:socale/models/options/clubs/clubs.dart';
+import 'package:socale/models/options/interests/interests.dart';
 import 'package:socale/models/options/language/language.dart';
 import 'package:socale/models/options/major/major.dart';
 import 'package:socale/models/options/minor/minor.dart';
@@ -35,6 +37,10 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
   setMinors(List<Minor>? minors) => state = state.copyWith(minors: minors);
 
   setLanguages(List<Language>? languages) => state = state.copyWith(languages: languages);
+
+  setInterests(List<Interest>? interests) => state = state.copyWith(interests: interests);
+
+  setClubs(List<Club>? clubs) => state = state.copyWith(clubs: clubs);
 
   setAnonymousUsername(String? anonymousUsername) => state = state.copyWith(anonymousUsername: anonymousUsername);
 

@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:riverpod_annotation/riverpod_annotation.dart';
+import 'package:socale/models/options/clubs/clubs.dart';
 import 'package:socale/models/options/interests/interests.dart';
 import 'package:socale/models/options/language/language.dart';
 import 'package:socale/models/options/major/major.dart';
@@ -102,4 +103,30 @@ Future<List<Interest>> fetchInterests(FetchInterestsRef ref) async {
   }
 
   return interests;
+}
+
+@riverpod
+Future<List<Club>> fetchClubs(FetchClubsRef ref) async {
+  final List<Club> clubs = [];
+
+  final onboardingUser = ref.read(onboardingUserProvider);
+  final apiService = ref.read(apiServiceProvider);
+
+  if (onboardingUser.college == null) throw Exception('College is null!');
+
+  final response = await apiService.sendGetRequest(
+    endpoint: 'colleges/${onboardingUser.college!.id}/clubs',
+  );
+
+  if (response.statusCode == 200) {
+    final body = jsonDecode(response.body);
+
+    body.forEach((interest) {
+      clubs.add(Club.fromJson(interest));
+    });
+  } else {
+    throw Exception('Failed to fetch interests');
+  }
+
+  return clubs;
 }

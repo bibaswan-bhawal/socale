@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
 import 'package:socale/components/pickers/categorical_input_picker/categorical_input_picker.dart';
+import 'package:socale/models/options/clubs/clubs.dart';
 import 'package:socale/models/options/interests/interests.dart';
 import 'package:socale/models/options/language/language.dart';
 import 'package:socale/providers/model_providers.dart';
@@ -23,6 +24,10 @@ class ExtraSelectionScreen extends BaseOnboardingScreen {
 class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
   void saveLanguages(value) => ref.read(onboardingUserProvider.notifier).setLanguages(value);
 
+  void saveInterests(value) => ref.read(onboardingUserProvider.notifier).setInterests(value);
+
+  void saveClubs(value) => ref.read(onboardingUserProvider.notifier).setClubs(value);
+
   @override
   Future<bool> onBack() async {
     return true;
@@ -39,6 +44,7 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
 
     final languagesProvider = ref.watch(fetchLanguagesProvider);
     final interestsProvider = ref.watch(fetchInterestsProvider);
+    final clubsProvider = ref.watch(fetchClubsProvider);
 
     final onboardingUser = ref.watch(onboardingUserProvider);
 
@@ -112,19 +118,20 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                     onChanged: saveLanguages,
                     initialData: onboardingUser.languages,
                     inputPicker: ListInputPickerBuilder<Language>(
+                      searchHintText: 'Search languages',
                       data: languagesProvider.when(
                         data: (data) => data,
                         error: (err, stack) => [],
                         loading: () => null,
                       ),
-                      searchHintText: 'Search languages',
                     ),
                   ),
                   GridItemFormField<Interest>(
                     title: 'Interests',
                     icon: Image.asset('assets/illustrations/illustration_9.png'),
                     borderGradient: AppColors.lightBlueGradient,
-                    initialData: const [],
+                    initialData: onboardingUser.interests,
+                    onChanged: saveInterests,
                     inputPicker: CategoricalInputPickerBuilder<Interest>(
                       searchHintText: 'Search interests',
                       data: interestsProvider.when(
@@ -134,14 +141,15 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                       ),
                     ),
                   ),
-                  GridItemFormField<Interest>(
+                  GridItemFormField<Club>(
                     title: 'clubs',
                     icon: Image.asset('assets/illustrations/illustration_11.png'),
                     borderGradient: AppColors.orangeGradient,
-                    initialData: const [],
-                    inputPicker: CategoricalInputPickerBuilder<Interest>(
+                    initialData: onboardingUser.clubs,
+                    onChanged: saveClubs,
+                    inputPicker: CategoricalInputPickerBuilder<Club>(
                       searchHintText: 'Search clubs',
-                      data: interestsProvider.when(
+                      data: clubsProvider.when(
                         data: (data) => data,
                         error: (err, stack) => [],
                         loading: () => null,

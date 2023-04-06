@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:socale/models/college/college.dart';
+import 'package:socale/models/options/clubs/clubs.dart';
+import 'package:socale/models/options/interests/interests.dart';
 import 'package:socale/models/options/language/language.dart';
 import 'package:socale/models/options/major/major.dart';
 import 'package:socale/models/options/minor/minor.dart';
@@ -26,6 +28,8 @@ class OnboardingUser with _$OnboardingUser {
     List<Major>? majors,
     List<Minor>? minors,
     List<Language>? languages,
+    List<Interest>? interests,
+    List<Club>? clubs,
     @Default(5) int numRegenLeft,
     @Default(false) bool isCollegeEmailVerified,
     @_ProfileConverter() Image? anonymousProfileImage,
