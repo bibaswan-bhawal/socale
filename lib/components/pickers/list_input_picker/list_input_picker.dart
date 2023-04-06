@@ -121,7 +121,13 @@ class ListInputPickerState<T> extends State<ListInputPicker<T>> {
               return ListTile(
                 dense: true,
                 key: ValueKey(filteredOptions[index]),
-                title: Text(filteredOptions[index].toString()),
+                title: Text(
+                  filteredOptions[index].toString(),
+                  style: GoogleFonts.roboto(
+                    fontSize: 14,
+                    letterSpacing: -0.3,
+                  ),
+                ),
                 onTap: () => onSelected(index),
               );
             },
@@ -136,7 +142,13 @@ class ListInputPickerState<T> extends State<ListInputPicker<T>> {
         key: ValueKey(option),
         visualDensity: VisualDensity.compact,
         padding: const EdgeInsets.all(4),
-        label: Text(option.toString(), style: GoogleFonts.roboto(fontSize: 12)),
+        label: Text(
+          option.toString(),
+          style: GoogleFonts.roboto(
+            fontSize: 12,
+            letterSpacing: -0.3,
+          ),
+        ),
         onDeleted: () => onDeleted(selectedOptions.indexOf(option)),
         clipBehavior: Clip.antiAlias,
       );
@@ -160,8 +172,17 @@ class ListInputPickerState<T> extends State<ListInputPicker<T>> {
             onChanged: onSearch,
             decoration: InputDecoration(
               hintText: widget.searchHintText,
+              hintStyle: GoogleFonts.roboto(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                letterSpacing: -0.3,
+              ),
               contentPadding: const EdgeInsets.all(0),
               border: InputBorder.none,
+            ),
+            style: GoogleFonts.roboto(
+              fontSize: 16,
+              letterSpacing: -0.3,
             ),
           ),
           leading: IconButton(

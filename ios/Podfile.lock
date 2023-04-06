@@ -16,19 +16,19 @@ PODS:
   - AWSPluginsCore (1.29.1):
     - Amplify (= 1.29.1)
     - AWSCore (~> 2.30.1)
-  - Firebase/CoreOnly (10.6.0):
-    - FirebaseCore (= 10.6.0)
-  - Firebase/Messaging (10.6.0):
+  - Firebase/CoreOnly (10.7.0):
+    - FirebaseCore (= 10.7.0)
+  - Firebase/Messaging (10.7.0):
     - Firebase/CoreOnly
-    - FirebaseMessaging (~> 10.6.0)
-  - firebase_core (2.8.0):
-    - Firebase/CoreOnly (= 10.6.0)
+    - FirebaseMessaging (~> 10.7.0)
+  - firebase_core (2.9.0):
+    - Firebase/CoreOnly (= 10.7.0)
     - Flutter
-  - firebase_messaging (14.3.0):
-    - Firebase/Messaging (= 10.6.0)
+  - firebase_messaging (14.4.0):
+    - Firebase/Messaging (= 10.7.0)
     - firebase_core
     - Flutter
-  - FirebaseCore (10.6.0):
+  - FirebaseCore (10.7.0):
     - FirebaseCoreInternal (~> 10.0)
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/Logger (~> 7.8)
@@ -39,7 +39,7 @@ PODS:
     - GoogleUtilities/Environment (~> 7.8)
     - GoogleUtilities/UserDefaults (~> 7.8)
     - PromisesObjC (~> 2.1)
-  - FirebaseMessaging (10.6.0):
+  - FirebaseMessaging (10.7.0):
     - FirebaseCore (~> 10.0)
     - FirebaseInstallations (~> 10.0)
     - GoogleDataTransport (~> 9.2)
@@ -154,13 +154,13 @@ SPEC CHECKSUMS:
   amplify_secure_storage: 501cbdac671a050090d48dfcc002d5637d3f4a55
   AWSCore: 19b8233fe2d0ed3ccf5cff833a615814282cdc90
   AWSPluginsCore: d2c3685072cf896a05f09b55686af476db7c0596
-  Firebase: f13680471b021937f2230ea8503c7809d8c29806
-  firebase_core: 58542d7399889ebdbb034baa72d081e54c5c814d
-  firebase_messaging: 01a8db2962f81ea190d08db767aba2e7e805e647
-  FirebaseCore: fa80ad16a62d52f67274b5b88304c3a318bbf9a4
+  Firebase: 0219acf760880eeec8ce479895bd7767466d9f81
+  firebase_core: d85432877e814811e040e7659f9c82faeab66e04
+  firebase_messaging: 45c0514ca78426630338a42fb7b55af962c7ccd2
+  FirebaseCore: e317665b9d744727a97e623edbbed009320afdd7
   FirebaseCoreInternal: 8845798510aae74703467480f71ac613788d0696
   FirebaseInstallations: 59c0e4c7a816a0f76710d83f77e5369b3e45eb96
-  FirebaseMessaging: fd93783258c53ae5cdb9b41bf0c51606a677f2d5
+  FirebaseMessaging: ac9062bcc35ed56e15a0241d8fd317022499baf8
   Flutter: f04841e97a9d0b0a8025694d0796dd46242b2854
   flutter_local_notifications: 0c0b1ae97e741e1521e4c1629a459d04b9aec743
   flutter_native_splash: 52501b97d1c0a5f898d687f1646226c1f93c56ef
