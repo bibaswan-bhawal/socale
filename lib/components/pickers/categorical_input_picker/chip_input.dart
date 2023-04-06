@@ -18,9 +18,12 @@ class ChipInput extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        color: selected ? null : Colors.black12.withOpacity(0.08),
         gradient: selected ? AppColors.orangeGradient : null,
         borderRadius: BorderRadius.circular(20),
+        border: Border.all(
+          color: selected ? Colors.transparent : Colors.black12.withOpacity(0.2),
+          width: 1,
+        ),
       ),
       child: Material(
         type: MaterialType.transparency,
@@ -34,7 +37,7 @@ class ChipInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           splashFactory: InkRipple.splashFactory,
           child: Padding(
-            padding: EdgeInsets.only(left: 12, top: 6, bottom: 6, right: selected ? 6 : 12),
+            padding: EdgeInsets.only(left: 12, top: 4, bottom: 4, right: selected ? 5 : 12),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
@@ -48,10 +51,10 @@ class ChipInput extends StatelessWidget {
                 ),
                 if (selected)
                   const Padding(
-                    padding: EdgeInsets.only(left: 4),
+                    padding: EdgeInsets.only(left: 5),
                     child: Icon(
                       Icons.cancel,
-                      size: 18,
+                      size: 16,
                       color: Colors.white,
                     ),
                   )
