@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/assets/svg_icons.dart';
-import 'package:socale/components/pickers/input_picker.dart';
+import 'package:socale/components/pickers/input_picker_screen.dart';
 import 'package:socale/transitions/container_transform.dart';
 
 class ChipCardInputField<T> extends StatefulWidget {
@@ -13,7 +13,7 @@ class ChipCardInputField<T> extends StatefulWidget {
 
   final Function onChanged;
 
-  final InputPickerBuilder inputPicker;
+  final InputPickerScreenBuilder inputPicker;
 
   const ChipCardInputField({
     super.key,
@@ -103,12 +103,11 @@ class _ChipCardInputFieldState<T> extends State<ChipCardInputField<T>> {
   }
 
   Widget buildChild(BuildContext context, Function closeContainer) {
-    InputPickerBuilder pickerBuilder = widget.inputPicker;
+    InputPickerScreenBuilder pickerBuilder = widget.inputPicker;
 
     pickerBuilder.onClosedCallback = closeContainer;
-    pickerBuilder.selectedOptions = selectedData;
 
-    InputPicker<T> picker = pickerBuilder.build<T>();
+    InputPickerScreen picker = pickerBuilder.build();
 
     return picker;
   }

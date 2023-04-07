@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:socale/components/input_fields/grid_item_input_field/grid_item_input_field.dart';
-import 'package:socale/components/pickers/input_picker.dart';
+import 'package:socale/components/pickers/input_picker_screen.dart';
 import 'package:socale/resources/colors.dart';
 
 class GridItemFormField<T> extends FormField<List<T>> {
@@ -12,7 +12,7 @@ class GridItemFormField<T> extends FormField<List<T>> {
     required Widget icon,
     required String title,
     required List<T>? initialData,
-    required InputPickerBuilder inputPicker,
+    required InputPickerScreenBuilder inputPicker,
     double? borderSize,
     double? borderRadius,
     LinearGradient? borderGradient,

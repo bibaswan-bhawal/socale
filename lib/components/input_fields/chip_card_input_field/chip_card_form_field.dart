@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:socale/components/pickers/input_picker.dart';
 import 'package:socale/components/input_fields/chip_card_input_field/chip_card_input_field.dart';
+import 'package:socale/components/pickers/input_picker_screen.dart';
 
 class ChipCardFormField<T> extends FormField<List<T>> {
   ChipCardFormField({
@@ -8,7 +8,7 @@ class ChipCardFormField<T> extends FormField<List<T>> {
     super.onSaved,
     super.validator,
     super.initialValue,
-    required InputPickerBuilder inputPicker,
+    required InputPickerScreenBuilder inputPicker,
     required String placeholder,
     required Function onChanged,
   }) : super(

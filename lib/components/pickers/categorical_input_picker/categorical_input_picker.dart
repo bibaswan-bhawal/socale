@@ -9,26 +9,6 @@ import 'package:socale/components/pickers/input_picker.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/models/options/categorical/categorical.dart';
 
-class CategoricalInputPickerBuilder<T> extends InputPickerBuilder {
-  final List<T>? data;
-  final String searchHintText;
-
-  CategoricalInputPickerBuilder({
-    required this.data,
-    required this.searchHintText,
-  });
-
-  @override
-  InputPicker<S> build<S>() {
-    return CategoricalInputPicker<S>(
-      data: data as List<S>?,
-      selectedData: (selectedOptions ?? []) as List<S>,
-      searchHintText: searchHintText,
-      onClosedCallback: onClosedCallback,
-    );
-  }
-}
-
 class CategoricalInputPicker<T> extends InputPicker<T> {
   const CategoricalInputPicker({
     super.key,

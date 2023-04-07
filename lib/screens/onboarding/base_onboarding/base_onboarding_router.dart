@@ -3,7 +3,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/paginators/page_view_controller.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/navigation_providers.dart';
-import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/utils/system_ui.dart';
 
@@ -47,12 +46,6 @@ class _BaseOnboardingRouterState extends ConsumerState<BaseOnboardingRouter> {
   @override
   Widget build(BuildContext context) {
     SystemUI.setSystemUIDark();
-
-    ref.watch(fetchMajorsProvider);
-    ref.watch(fetchMinorsProvider);
-    ref.watch(fetchLanguagesProvider);
-    ref.watch(fetchInterestsProvider);
-    ref.watch(fetchClubsProvider);
 
     final delegate = ref.watch(baseOnboardingRouterDelegateProvider);
     final currentPage = delegate.currentPage;

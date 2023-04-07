@@ -15,6 +15,12 @@ part 'onboarding_options_repository.g.dart';
 Future<List<Major>> fetchMajors(FetchMajorsRef ref) async {
   final List<Major> majors = [];
 
+  final keepAliveLink = ref.keepAlive();
+
+  Future.delayed(const Duration(minutes: 1), () {
+    keepAliveLink.close();
+  });
+
   final onboardingUser = ref.read(onboardingUserProvider);
   final apiService = ref.read(apiServiceProvider);
 
@@ -38,6 +44,12 @@ Future<List<Major>> fetchMajors(FetchMajorsRef ref) async {
 @riverpod
 Future<List<Minor>> fetchMinors(FetchMinorsRef ref) async {
   final List<Minor> minors = [];
+
+  final keepAliveLink = ref.keepAlive();
+
+  Future.delayed(const Duration(minutes: 1), () {
+    keepAliveLink.close();
+  });
 
   final onboardingUser = ref.read(onboardingUserProvider);
   final apiService = ref.read(apiServiceProvider);
@@ -63,6 +75,12 @@ Future<List<Minor>> fetchMinors(FetchMinorsRef ref) async {
 Future<List<Language>> fetchLanguages(FetchLanguagesRef ref) async {
   final List<Language> languages = [];
 
+  final keepAliveLink = ref.keepAlive();
+
+  Future.delayed(const Duration(minutes: 1), () {
+    keepAliveLink.close();
+  });
+
   final apiService = ref.read(apiServiceProvider);
 
   final response = await apiService.sendGetRequest(endpoint: 'app/getLanguages');
@@ -84,14 +102,18 @@ Future<List<Language>> fetchLanguages(FetchLanguagesRef ref) async {
 Future<List<Interest>> fetchInterests(FetchInterestsRef ref) async {
   final List<Interest> interests = [];
 
+  final keepAliveLink = ref.keepAlive();
+
+  Future.delayed(const Duration(minutes: 1), () {
+    keepAliveLink.close();
+  });
+
   final apiService = ref.read(apiServiceProvider);
 
   final response = await apiService.sendGetRequest(endpoint: 'app/getInterests');
 
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
-
-    print('body: $body');
 
     body.forEach((interest) {
       interests.add(Interest.fromJson(interest));
@@ -106,6 +128,12 @@ Future<List<Interest>> fetchInterests(FetchInterestsRef ref) async {
 @riverpod
 Future<List<Club>> fetchClubs(FetchClubsRef ref) async {
   final List<Club> clubs = [];
+
+  final keepAliveLink = ref.keepAlive();
+
+  Future.delayed(const Duration(minutes: 1), () {
+    keepAliveLink.close();
+  });
 
   final onboardingUser = ref.read(onboardingUserProvider);
   final apiService = ref.read(apiServiceProvider);

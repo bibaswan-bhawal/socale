@@ -1,14 +1,12 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:socale/components/input_fields/chip_card_input_field/chip_card_form_field.dart';
-import 'package:socale/components/pickers/list_input_picker/list_input_picker.dart';
 import 'package:socale/components/section_tab_view/section_tab_bar.dart';
 import 'package:socale/components/text/gradient_headline.dart';
 import 'package:socale/models/options/major/major.dart';
 import 'package:socale/models/options/minor/minor.dart';
 import 'package:socale/providers/model_providers.dart';
-import 'package:socale/providers/repositories/onboarding_options_repository.dart';
+import 'package:socale/screens/onboarding/base_onboarding/academic_info/select_majors_screen.dart';
+import 'package:socale/screens/onboarding/base_onboarding/academic_info/select_minors_screen.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
 class AcademicInfoScreen extends BaseOnboardingScreen {
@@ -41,8 +39,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
     minorFormKey.currentState!.validate();
   }
 
-  String? majorValidator(List<Major>? value) =>
-      (value == null || value.isEmpty) ? 'Please select at least one major' : null;
+  String? majorValidator(List<Major>? value) => (value == null || value.isEmpty) ? 'Please select at least one major' : null;
 
   @override
   Future<bool> onBack() async => true;
@@ -67,9 +64,6 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
 
   @override
   Widget build(BuildContext context) {
-    final majorsProvider = ref.watch(fetchMajorsProvider);
-    final minorProvider = ref.watch(fetchMinorsProvider);
-
     final onboardingUser = ref.watch(onboardingUserProvider);
 
     final size = MediaQuery.of(context).size;
@@ -113,17 +107,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                     initialValue: onboardingUser.majors,
                     onChanged: saveMajors,
                     validator: majorValidator,
-                    inputPicker: ListInputPickerBuilder<Major>(
-                      searchHintText: 'Search for your majors',
-                      data: majorsProvider.when(
-                        data: (majors) => majors,
-                        loading: () => null,
-                        error: (err, stack) {
-                          if (kDebugMode) print(err);
-                          return [];
-                        },
-                      ),
-                    ),
+                    inputPicker: MajorPickerScreenBuilder(selectedOptions: onboardingUser.majors ?? []),
                   ),
                 ),
               ),
@@ -133,19 +117,9 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                   key: minorFormKey,
                   child: ChipCardFormField<Minor>(
                     placeholder: 'Add your minors',
-                    initialValue: onboardingUser.minors,
-                    inputPicker: ListInputPickerBuilder<Minor>(
-                      searchHintText: 'Search for your minors',
-                      data: minorProvider.when(
-                        data: (minors) => minors,
-                        loading: () => null,
-                        error: (err, stack) {
-                          if (kDebugMode) print(err);
-                          return [];
-                        },
-                      ),
-                    ),
                     onChanged: saveMinors,
+                    initialValue: onboardingUser.minors,
+                    inputPicker: MinorPickerScreenBuilder(selectedOptions: onboardingUser.minors ?? []),
                   ),
                 ),
               ),

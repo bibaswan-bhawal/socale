@@ -4,26 +4,6 @@ import 'package:socale/components/assets/svg_icons.dart';
 import 'package:socale/components/pickers/input_picker.dart';
 import 'package:socale/utils/system_ui.dart';
 
-class ListInputPickerBuilder<T> extends InputPickerBuilder {
-  final String searchHintText;
-  final List<T>? data;
-
-  ListInputPickerBuilder({
-    required this.data,
-    required this.searchHintText,
-  });
-
-  @override
-  ListInputPicker<S> build<S>() {
-    return ListInputPicker<S>(
-      data: data as List<S>?,
-      selectedData: (selectedOptions ?? []) as List<S>,
-      searchHintText: searchHintText,
-      onClosedCallback: onClosedCallback,
-    );
-  }
-}
-
 class ListInputPicker<T> extends InputPicker<T> {
   const ListInputPicker({
     super.key,

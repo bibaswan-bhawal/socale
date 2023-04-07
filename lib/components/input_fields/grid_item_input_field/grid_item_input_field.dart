@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/assets/svg_icons.dart';
-import 'package:socale/components/pickers/input_picker.dart';
+import 'package:socale/components/pickers/input_picker_screen.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/transitions/container_transform.dart';
 
@@ -36,7 +36,7 @@ class GridItemInputField<T> extends StatefulWidget {
   /// List of selected options
   final List<T> initialData;
 
-  final InputPickerBuilder inputPicker;
+  final InputPickerScreenBuilder inputPicker;
 
   final Function onChanged;
 
@@ -173,12 +173,11 @@ class _GridItemInputFieldState<T> extends State<GridItemInputField<T>> {
   }
 
   Widget buildChild(BuildContext context, Function closeContainer) {
-    InputPickerBuilder pickerBuilder = widget.inputPicker;
+    InputPickerScreenBuilder pickerBuilder = widget.inputPicker;
 
     pickerBuilder.onClosedCallback = closeContainer;
-    pickerBuilder.selectedOptions = selectedOptions;
 
-    InputPicker<T> picker = pickerBuilder.build<T>();
+    InputPickerScreen picker = pickerBuilder.build();
 
     return picker;
   }
