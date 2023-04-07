@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:socale/models/options/categorical/categorical.dart';
 
-part 'interests.freezed.dart';
+part 'interest.freezed.dart';
 
-part 'interests.g.dart';
+part 'interest.g.dart';
 
 @freezed
 class Interest with _$Interest implements Categorical<Interest> {

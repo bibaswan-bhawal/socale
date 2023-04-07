@@ -39,7 +39,8 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
     minorFormKey.currentState!.validate();
   }
 
-  String? majorValidator(List<Major>? value) => (value == null || value.isEmpty) ? 'Please select at least one major' : null;
+  String? majorValidator(List<Major>? value) =>
+      (value == null || value.isEmpty) ? 'Please select at least one major' : null;
 
   @override
   Future<bool> onBack() async => true;
@@ -107,7 +108,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                     initialValue: onboardingUser.majors,
                     onChanged: saveMajors,
                     validator: majorValidator,
-                    inputPicker: MajorPickerScreenBuilder(selectedOptions: onboardingUser.majors ?? []),
+                    inputPicker: MajorPickerScreenBuilder(),
                   ),
                 ),
               ),
@@ -119,7 +120,7 @@ class _AcademicInfoMajorScreenState extends BaseOnboardingScreenState with Singl
                     placeholder: 'Add your minors',
                     onChanged: saveMinors,
                     initialValue: onboardingUser.minors,
-                    inputPicker: MinorPickerScreenBuilder(selectedOptions: onboardingUser.minors ?? []),
+                    inputPicker: MinorPickerScreenBuilder(),
                   ),
                 ),
               ),

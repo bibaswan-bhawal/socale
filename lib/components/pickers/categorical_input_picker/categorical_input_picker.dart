@@ -5,22 +5,23 @@ import 'package:socale/components/assets/svg_icons.dart';
 import 'package:socale/components/backgrounds/light_background.dart';
 import 'package:socale/components/pickers/categorical_input_picker/chip_input.dart';
 import 'package:socale/components/pickers/categorical_input_picker/tab_chip.dart';
-import 'package:socale/components/pickers/input_picker.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/models/options/categorical/categorical.dart';
 
-class CategoricalInputPicker<T> extends InputPicker<T> {
+class CategoricalInputPicker<T> extends StatefulWidget {
   const CategoricalInputPicker({
     super.key,
     required this.data,
     required this.selectedData,
     required this.searchHintText,
-    required super.onClosedCallback,
+    required this.onClosedCallback,
   });
 
   final List<T>? data;
   final List<T> selectedData;
   final String searchHintText;
+
+  final Function onClosedCallback;
 
   @override
   State<CategoricalInputPicker<T>> createState() => CategoricalInputPickerState<T>();
@@ -33,85 +34,144 @@ class CategoricalInputPickerState<T> extends State<CategoricalInputPicker<T>> {
 
   String searchQuery = '';
 
-  int? selectedCategory;
+  String? selectedTab;
 
   @override
   void initState() {
     super.initState();
 
     selectedOptions = widget.selectedData.toList();
-
-    createCategories();
   }
 
-  List<String> get filteredCategories {
-    List<String> categories = filteredOptions.keys.toList();
-    categories.sort();
-    return categories;
-  }
+  void onTabChanged(String? tab) => setState(() => selectedTab = tab);
 
-  // Creates the list of options from the initial data and the search filter
-  void createCategories() {
-    if (widget.data == null) return;
+  void onSearchChanged(String value) => setState(() => searchQuery = value);
 
-    categories = [];
-    filteredOptions = {};
+  Map<String, List<Categorical>> createOptionsMap(List<Categorical>? options) {
+    Map<String, List<Categorical>> optionsMap = {};
 
-    for (Categorical option in widget.data! as List<Categorical>) {
-      // Build the list of categories for tha tabs
-      if (!categories.contains(option.getCategory())) categories.add(option.getCategory());
+    if (options == null) return optionsMap;
 
-      // Filter the options based on the search query
-      if (searchQuery.isNotEmpty && !option.toString().toLowerCase().contains(searchQuery.toLowerCase())) continue;
-
-      // Add the option to the filtered options list
-      filteredOptions.addEntries([
+    for (Categorical option in options) {
+      optionsMap.addEntries([
         MapEntry(
           option.getCategory(),
-          filteredOptions[option.getCategory()] == null
-              ? [option]
-              : [...?filteredOptions[option.getCategory()]?.where((element) => element != option).toList(), option],
+          optionsMap[option.getCategory()] == null ? [option] : [...?optionsMap[option.getCategory()], option],
         ),
       ]);
     }
 
-    // Sort the options alphabetically
-    filteredOptions = filteredOptions.map((key, value) {
-      return MapEntry(key, value..sort((a, b) => (a).compareTo(b)));
-    });
+    for (List<Categorical> values in optionsMap.values) {
+      values.sort();
+    }
+
+    return optionsMap;
   }
 
-  // Build the tabs under the app bar
-  List<Widget> buildTabs() {
-    List<Widget> tabs = [];
+  Widget createPage() {
+    if (widget.data == null) return _LoadingPage();
+    if (widget.data!.isEmpty) return _ErrorPage();
 
-    tabs.add(
-      Padding(
-        padding: const EdgeInsets.only(left: 8, right: 4),
-        child: TabChip(
-          label: 'All',
-          onTap: () => setState(() => selectedCategory = null),
-          selected: selectedCategory == null,
-        ),
-      ),
-    );
+    Map<String, List<Categorical>> showCategories = createOptionsMap(widget.data as List<Categorical>?);
+    List<String> showCategoriesKeys = showCategories.keys.toList();
+    showCategoriesKeys.sort();
 
-    categories.sort();
+    if (searchQuery.isNotEmpty) {
+      List<Categorical> filteredData = widget.data!
+          .where((element) => element.toString().toLowerCase().contains(searchQuery.toLowerCase()))
+          .cast<Categorical>()
+          .toList();
 
-    for (String category in categories) {
-      tabs.add(
-        Padding(
-          padding: EdgeInsets.only(left: 4, right: categories.last == category ? 8 : 4),
-          child: TabChip(
-            label: category,
-            onTap: () => setState(() => selectedCategory = categories.indexOf(category)),
-            selected: selectedCategory == categories.indexOf(category),
+      if (filteredData.isEmpty) {
+        return Center(child: Text('No results ${selectedTab == null ? '' : 'in $selectedTab'}'));
+      }
+
+      showCategories = createOptionsMap(filteredData);
+      showCategoriesKeys = showCategories.keys.toList();
+      showCategoriesKeys.sort();
+    }
+
+    if (selectedTab != null) {
+      if (showCategories[selectedTab!] == null) return Center(child: Text('No results in $selectedTab'));
+
+      return SingleChildScrollView(
+        padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: MediaQuery.of(context).padding.bottom),
+        child: SizedBox(
+          width: double.infinity,
+          child: Padding(
+            padding: const EdgeInsets.only(top: 8),
+            child: Wrap(
+              spacing: 8,
+              runSpacing: 8,
+              children: [
+                for (Categorical option in showCategories[selectedTab] as List<Categorical>)
+                  ChipInput(
+                    name: option.toString(),
+                    selected: selectedOptions.contains(option),
+                    onTap: () => setState(() {
+                      if (!selectedOptions.contains(option)) {
+                        selectedOptions.add(option as T);
+                      } else {
+                        selectedOptions.remove(option);
+                      }
+                    }),
+                  ),
+              ],
+            ),
           ),
         ),
       );
     }
 
-    return tabs;
+    return SingleChildScrollView(
+      padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: MediaQuery.of(context).padding.bottom),
+      child: Column(
+        children: [
+          for (String category in showCategoriesKeys)
+            Container(
+              margin: const EdgeInsets.symmetric(vertical: 16),
+              width: double.infinity,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Text(
+                    category,
+                    textAlign: TextAlign.start,
+                    style: GoogleFonts.poppins(
+                      fontSize: 14,
+                      letterSpacing: -0.3,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 8),
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: [
+                        for (Categorical option in showCategories[category] as List<Categorical>)
+                          ChipInput(
+                            name: option.toString(),
+                            selected: selectedOptions.contains(option),
+                            onTap: () => setState(() {
+                              if (!selectedOptions.contains(option)) {
+                                selectedOptions.add(option as T);
+                              } else {
+                                selectedOptions.remove(option);
+                              }
+                            }),
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
+        ],
+      ),
+    );
   }
 
   // return the selected items on close
@@ -122,24 +182,7 @@ class CategoricalInputPickerState<T> extends State<CategoricalInputPicker<T>> {
 
   @override
   Widget build(BuildContext context) {
-    // Build the list of options to show based on the selected category
-    Map<String, List<Categorical>> showCategories = {};
-
-    // if category is selected show the options for that category else show the full list with headings
-    if (selectedCategory != null) {
-      showCategories.addEntries([
-        MapEntry(
-          categories[selectedCategory!],
-          filteredOptions[categories[selectedCategory!]]!,
-        ),
-      ]);
-    } else {
-      showCategories = filteredOptions;
-    }
-
-    // sorted the list of categories to show alphabetically
-    List<String> showCategoriesKeys = showCategories.keys.toList();
-    showCategoriesKeys.sort();
+    Map<String, List<Categorical>> optionsMap = createOptionsMap(widget.data as List<Categorical>?);
 
     return WillPopScope(
       onWillPop: onClose,
@@ -168,11 +211,7 @@ class CategoricalInputPickerState<T> extends State<CategoricalInputPicker<T>> {
                 letterSpacing: -0.3,
                 color: Colors.black,
               ),
-              onChanged: (value) => setState(() {
-                searchQuery = value;
-                selectedCategory = null;
-                createCategories();
-              }),
+              onChanged: onSearchChanged,
             ),
             leading: IconButton(
               onPressed: onClose,
@@ -184,69 +223,133 @@ class CategoricalInputPickerState<T> extends State<CategoricalInputPicker<T>> {
                 icon: SvgIcon.asset('assets/icons/check.svg', width: 28, height: 28),
               ),
             ],
-            bottom: PreferredSize(
-              preferredSize: const Size(double.infinity, 36),
-              child: SingleChildScrollView(
-                scrollDirection: Axis.horizontal,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: buildTabs(),
-                ),
-              ),
-            ),
-          ),
-          body: SingleChildScrollView(
-            padding: EdgeInsets.only(left: 16, right: 16, top: 0, bottom: MediaQuery.of(context).padding.bottom),
-            child: Column(
-              children: [
-                for (String category in showCategoriesKeys)
-                  Container(
-                    margin: const EdgeInsets.symmetric(vertical: 16),
-                    width: double.infinity,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        if (selectedCategory == null)
-                          Text(
-                            category,
-                            textAlign: TextAlign.start,
-                            style: GoogleFonts.poppins(
-                              fontSize: 14,
-                              letterSpacing: -0.3,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        Padding(
-                          padding: const EdgeInsets.only(top: 8),
-                          child: Wrap(
-                            spacing: 8,
-                            runSpacing: 8,
-                            children: [
-                              for (Categorical option in showCategories[category] as List<Categorical>)
-                                ChipInput(
-                                  name: option.toString(),
-                                  selected: selectedOptions.contains(option),
-                                  onTap: () => setState(() {
-                                    if (!selectedOptions.contains(option)) {
-                                      selectedOptions.add(option as T);
-                                    } else {
-                                      selectedOptions.remove(option);
-                                    }
-                                  }),
-                                ),
-                            ],
-                          ),
-                        ),
-                      ],
+            bottom: widget.data != null && widget.data!.isNotEmpty
+                ? PreferredSize(
+                    preferredSize: Size(MediaQuery.of(context).size.width, 36),
+                    child: SingleChildScrollView(
+                      scrollDirection: Axis.horizontal,
+                      child: _Tabs(
+                        selectedOption: selectedTab,
+                        options: optionsMap,
+                        onTap: onTabChanged,
+                      ),
                     ),
-                  ),
-              ],
-            ),
+                  )
+                : null,
           ),
+          body: createPage(),
         ),
       ),
+    );
+  }
+}
+
+class _ErrorPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Text(
+        'There was an error\nloading all the options',
+        style: GoogleFonts.roboto(
+          fontSize: 16,
+          fontWeight: FontWeight.w400,
+          letterSpacing: -0.3,
+          color: Colors.black,
+        ),
+      ),
+    );
+  }
+}
+
+class _LoadingPage extends StatelessWidget {
+  @override
+  Widget build(BuildContext context) {
+    return const Center(
+      child: CircularProgressIndicator(),
+    );
+  }
+}
+
+class _Tabs extends StatelessWidget {
+  const _Tabs({
+    required this.options,
+    required this.selectedOption,
+    required this.onTap,
+  });
+
+  final Map<String, List<Categorical>> options;
+  final String? selectedOption;
+
+  final Function(String?) onTap;
+
+  List<Widget> get tabs {
+    List<String> categories = options.keys.toList();
+    List<Widget> tabs = [];
+
+    categories.sort();
+
+    tabs.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 8, right: 4),
+        child: TabChip(
+          label: 'All',
+          onTap: () => onTap(null),
+          selected: selectedOption == null,
+        ),
+      ),
+    );
+
+    for (String category in categories) {
+      tabs.add(
+        Padding(
+          padding: EdgeInsets.only(left: 4, right: categories.last == category ? 8 : 4),
+          child: TabChip(
+            label: category,
+            onTap: () => onTap(category),
+            selected: selectedOption == category,
+          ),
+        ),
+      );
+    }
+
+    return tabs;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> categories = options.keys.toList();
+    List<Widget> tabs = [];
+
+    categories.sort();
+
+    tabs.add(
+      Padding(
+        padding: const EdgeInsets.only(left: 8, right: 4),
+        child: TabChip(
+          label: 'All',
+          onTap: () => onTap(null),
+          selected: selectedOption == null,
+        ),
+      ),
+    );
+
+    for (String category in categories) {
+      tabs.add(
+        Padding(
+          padding: EdgeInsets.only(left: 4, right: categories.last == category ? 8 : 4),
+          child: TabChip(
+            label: category,
+            onTap: () => onTap(category),
+            selected: selectedOption == category,
+          ),
+        ),
+      );
+    }
+
+    return Row(
+      mainAxisSize: MainAxisSize.max,
+      mainAxisAlignment: MainAxisAlignment.start,
+      children: tabs,
     );
   }
 }

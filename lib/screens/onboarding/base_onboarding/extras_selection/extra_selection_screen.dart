@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:simple_shadow/simple_shadow.dart';
+import 'package:socale/components/input_fields/grid_item_input_field/grid_item_form_field.dart';
+import 'package:socale/models/options/club/club.dart';
+import 'package:socale/models/options/interest/interest.dart';
+import 'package:socale/models/options/language/language.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
+import 'package:socale/screens/onboarding/base_onboarding/extras_selection/select_clubs_screen.dart';
+import 'package:socale/screens/onboarding/base_onboarding/extras_selection/select_interests_screen.dart';
+import 'package:socale/screens/onboarding/base_onboarding/extras_selection/select_languages_screen.dart';
 import 'package:socale/utils/system_ui.dart';
 
 class ExtraSelectionScreen extends BaseOnboardingScreen {
@@ -98,52 +105,31 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
                 crossAxisSpacing: 32,
                 childAspectRatio: 124 / 165,
                 physics: const NeverScrollableScrollPhysics(),
-                children: const [
-                  // GridItemFormField<Language>(
-                  //   title: 'Languages',
-                  //   icon: Image.asset('assets/illustrations/illustration_10.png'),
-                  //   borderGradient: AppColors.purpleGradient,
-                  //   onChanged: saveLanguages,
-                  //   initialData: onboardingUser.languages,
-                  //   inputPicker: ListInputPickerBuilder<Language>(
-                  //     searchHintText: 'Search languages',
-                  //     data: languagesProvider.when(
-                  //       data: (data) => data,
-                  //       error: (err, stack) => [],
-                  //       loading: () => null,
-                  //     ),
-                  //   ),
-                  // ),
-                  // GridItemFormField<Interest>(
-                  //   title: 'Interests',
-                  //   icon: Image.asset('assets/illustrations/illustration_9.png'),
-                  //   borderGradient: AppColors.lightBlueGradient,
-                  //   initialData: onboardingUser.interests,
-                  //   onChanged: saveInterests,
-                  //   inputPicker: CategoricalInputPickerBuilder<Interest>(
-                  //     searchHintText: 'Search Interests',
-                  //     data: interestsProvider.when(
-                  //       data: (data) => data,
-                  //       error: (err, stack) => [],
-                  //       loading: () => null,
-                  //     ),
-                  //   ),
-                  // ),
-                  // GridItemFormField<Club>(
-                  //   title: 'clubs',
-                  //   icon: Image.asset('assets/illustrations/illustration_11.png'),
-                  //   borderGradient: AppColors.orangeGradient,
-                  //   initialData: onboardingUser.clubs,
-                  //   onChanged: saveClubs,
-                  //   inputPicker: CategoricalInputPickerBuilder<Club>(
-                  //     searchHintText: 'Search clubs',
-                  //     data: clubsProvider.when(
-                  //       data: (data) => data,
-                  //       error: (err, stack) => [],
-                  //       loading: () => null,
-                  //     ),
-                  //   ),
-                  // ),
+                children: [
+                  GridItemFormField<Language>(
+                    title: 'Languages',
+                    icon: Image.asset('assets/illustrations/illustration_10.png'),
+                    borderGradient: AppColors.purpleGradient,
+                    onChanged: saveLanguages,
+                    initialData: onboardingUser.languages,
+                    inputPicker: LanguagePickerScreenBuilder(),
+                  ),
+                  GridItemFormField<Interest>(
+                    title: 'Interests',
+                    icon: Image.asset('assets/illustrations/illustration_9.png'),
+                    borderGradient: AppColors.lightBlueGradient,
+                    initialData: onboardingUser.interests,
+                    onChanged: saveInterests,
+                    inputPicker: InterestsPickerScreenBuilder(),
+                  ),
+                  GridItemFormField<Club>(
+                    title: 'clubs',
+                    icon: Image.asset('assets/illustrations/illustration_11.png'),
+                    borderGradient: AppColors.orangeGradient,
+                    initialData: onboardingUser.clubs,
+                    onChanged: saveClubs,
+                    inputPicker: ClubsPickerScreenBuilder(),
+                  ),
                 ],
               ),
             ),

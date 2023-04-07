@@ -1,21 +1,22 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/assets/svg_icons.dart';
-import 'package:socale/components/pickers/input_picker.dart';
 import 'package:socale/utils/system_ui.dart';
 
-class ListInputPicker<T> extends InputPicker<T> {
+class ListInputPicker<T> extends StatefulWidget {
   const ListInputPicker({
     super.key,
     required this.data,
     required this.selectedData,
     required this.searchHintText,
-    required super.onClosedCallback,
+    required this.onClosedCallback,
   });
 
   final List<T>? data;
   final List<T> selectedData;
   final String searchHintText;
+
+  final Function onClosedCallback;
 
   @override
   State<StatefulWidget> createState() => ListInputPickerState<T>();

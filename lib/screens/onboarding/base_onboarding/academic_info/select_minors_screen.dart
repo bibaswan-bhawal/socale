@@ -3,28 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/pickers/input_picker_screen.dart';
 import 'package:socale/components/pickers/list_input_picker/list_input_picker.dart';
 import 'package:socale/models/options/minor/minor.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 
 class MinorPickerScreenBuilder extends InputPickerScreenBuilder {
-  MinorPickerScreenBuilder({required this.selectedOptions});
-
-  final List<Minor> selectedOptions;
+  MinorPickerScreenBuilder();
 
   @override
-  InputPickerScreen build() => MinorPickerScreen(
-        onClosedCallback: onClosedCallback,
-        selectedOptions: selectedOptions,
-      );
+  InputPickerScreen build() => MinorPickerScreen(onClosedCallback: onClosedCallback);
 }
 
 class MinorPickerScreen extends InputPickerScreen {
   const MinorPickerScreen({
     super.key,
-    required this.selectedOptions,
     required super.onClosedCallback,
   });
-
-  final List<Minor> selectedOptions;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MinorPickerScreenState();
@@ -32,8 +25,15 @@ class MinorPickerScreen extends InputPickerScreen {
 
 class _MinorPickerScreenState extends ConsumerState<MinorPickerScreen> {
   @override
+  void initState() {
+    super.initState();
+    ref.read(fetchMinorsProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final minor = ref.watch(fetchMinorsProvider);
+    final onboardingUser = ref.watch(onboardingUserProvider);
 
     return ListInputPicker<Minor>(
       data: minor.when(
@@ -42,7 +42,7 @@ class _MinorPickerScreenState extends ConsumerState<MinorPickerScreen> {
         error: (error, stack) => [],
       ),
       searchHintText: 'Search minors',
-      selectedData: widget.selectedOptions,
+      selectedData: onboardingUser.minors ?? [],
       onClosedCallback: widget.onClosedCallback,
     );
   }

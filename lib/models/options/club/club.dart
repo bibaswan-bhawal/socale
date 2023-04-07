@@ -1,9 +1,9 @@
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:socale/models/options/categorical/categorical.dart';
 
-part 'clubs.freezed.dart';
+part 'club.freezed.dart';
 
-part 'clubs.g.dart';
+part 'club.g.dart';
 
 @freezed
 class Club with _$Club implements Categorical<Club> {

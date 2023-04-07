@@ -3,28 +3,21 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/pickers/input_picker_screen.dart';
 import 'package:socale/components/pickers/list_input_picker/list_input_picker.dart';
 import 'package:socale/models/options/major/major.dart';
+import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 
 class MajorPickerScreenBuilder extends InputPickerScreenBuilder {
-  MajorPickerScreenBuilder({required this.selectedOptions});
-
-  final List<Major> selectedOptions;
+  MajorPickerScreenBuilder();
 
   @override
-  InputPickerScreen build() => MajorPickerScreen(
-        onClosedCallback: onClosedCallback,
-        selectedOptions: selectedOptions,
-      );
+  InputPickerScreen build() => MajorPickerScreen(onClosedCallback: onClosedCallback);
 }
 
 class MajorPickerScreen extends InputPickerScreen {
   const MajorPickerScreen({
     super.key,
-    required this.selectedOptions,
     required super.onClosedCallback,
   });
-
-  final List<Major> selectedOptions;
 
   @override
   ConsumerState<ConsumerStatefulWidget> createState() => _MajorsPickerScreenState();
@@ -32,8 +25,15 @@ class MajorPickerScreen extends InputPickerScreen {
 
 class _MajorsPickerScreenState extends ConsumerState<MajorPickerScreen> {
   @override
+  void initState() {
+    super.initState();
+    ref.read(fetchMajorsProvider);
+  }
+
+  @override
   Widget build(BuildContext context) {
     final majors = ref.watch(fetchMajorsProvider);
+    final onboardingUser = ref.watch(onboardingUserProvider);
 
     return ListInputPicker<Major>(
       data: majors.when(
@@ -42,7 +42,7 @@ class _MajorsPickerScreenState extends ConsumerState<MajorPickerScreen> {
         error: (error, stack) => const [],
       ),
       searchHintText: 'Search majors',
-      selectedData: widget.selectedOptions,
+      selectedData: onboardingUser.majors ?? [],
       onClosedCallback: widget.onClosedCallback,
     );
   }
