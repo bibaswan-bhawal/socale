@@ -17,7 +17,7 @@ Future<List<Major>> fetchMajors(FetchMajorsRef ref) async {
 
   final keepAliveLink = ref.keepAlive();
 
-  Future.delayed(const Duration(minutes: 1), () {
+  Future.delayed(const Duration(minutes: 10), () {
     keepAliveLink.close();
   });
 
@@ -47,7 +47,7 @@ Future<List<Minor>> fetchMinors(FetchMinorsRef ref) async {
 
   final keepAliveLink = ref.keepAlive();
 
-  Future.delayed(const Duration(minutes: 1), () {
+  Future.delayed(const Duration(minutes: 10), () {
     keepAliveLink.close();
   });
 
@@ -77,7 +77,7 @@ Future<List<Language>> fetchLanguages(FetchLanguagesRef ref) async {
 
   final keepAliveLink = ref.keepAlive();
 
-  Future.delayed(const Duration(minutes: 1), () {
+  Future.delayed(const Duration(minutes: 10), () {
     keepAliveLink.close();
   });
 
@@ -104,7 +104,7 @@ Future<List<Interest>> fetchInterests(FetchInterestsRef ref) async {
 
   final keepAliveLink = ref.keepAlive();
 
-  Future.delayed(const Duration(minutes: 1), () {
+  Future.delayed(const Duration(minutes: 10), () {
     keepAliveLink.close();
   });
 
@@ -131,7 +131,7 @@ Future<List<Club>> fetchClubs(FetchClubsRef ref) async {
 
   final keepAliveLink = ref.keepAlive();
 
-  Future.delayed(const Duration(minutes: 1), () {
+  Future.delayed(const Duration(minutes: 10), () {
     keepAliveLink.close();
   });
 

@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/components/paginators/page_view_controller.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/navigation_providers.dart';
+import 'package:socale/providers/repositories/onboarding_options_repository.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/utils/system_ui.dart';
 
@@ -15,6 +16,21 @@ class BaseOnboardingRouter extends ConsumerStatefulWidget {
 
 class _BaseOnboardingRouterState extends ConsumerState<BaseOnboardingRouter> {
   ChildBackButtonDispatcher? _backButtonDispatcher;
+
+  @override
+  void initState() {
+    super.initState();
+
+    initOnboardingOptionsData();
+  }
+
+  void initOnboardingOptionsData() {
+    ref.read(fetchMajorsProvider);
+    ref.read(fetchMinorsProvider);
+    ref.read(fetchInterestsProvider);
+    ref.read(fetchLanguagesProvider);
+    ref.read(fetchClubsProvider);
+  }
 
   @override
   void didChangeDependencies() {
