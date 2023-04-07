@@ -31,10 +31,13 @@ Future<List<Major>> fetchMajors(FetchMajorsRef ref) async {
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
 
+    if (body == null || body.isEmpty) keepAliveLink.close();
+
     body.forEach((major) {
       majors.add(Major.fromJson(major));
     });
   } else {
+    keepAliveLink.close();
     throw Exception('Failed to fetch majors');
   }
 
@@ -60,6 +63,8 @@ Future<List<Minor>> fetchMinors(FetchMinorsRef ref) async {
 
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
+
+    if (body == null || body.isEmpty) keepAliveLink.close();
 
     body.forEach((minor) {
       minors.add(Minor.fromJson(minor));
@@ -88,10 +93,13 @@ Future<List<Language>> fetchLanguages(FetchLanguagesRef ref) async {
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
 
+    if (body == null || body.isEmpty) keepAliveLink.close();
+
     body.forEach((language) {
       languages.add(Language.fromJson(language));
     });
   } else {
+    keepAliveLink.close();
     throw Exception('Failed to fetch languages');
   }
 
@@ -114,6 +122,8 @@ Future<List<Interest>> fetchInterests(FetchInterestsRef ref) async {
 
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
+
+    if (body == null || body.isEmpty) keepAliveLink.close();
 
     body.forEach((interest) {
       interests.add(Interest.fromJson(interest));
@@ -145,10 +155,13 @@ Future<List<Club>> fetchClubs(FetchClubsRef ref) async {
   if (response.statusCode == 200) {
     final body = jsonDecode(response.body);
 
+    if (body == null || body.isEmpty) keepAliveLink.close();
+
     body.forEach((interest) {
       clubs.add(Club.fromJson(interest));
     });
   } else {
+    keepAliveLink.close();
     throw Exception('Failed to fetch clubs');
   }
 
