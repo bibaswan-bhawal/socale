@@ -5,7 +5,6 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/models/college/college.dart';
-import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
 import 'package:socale/resources/colors.dart';
 import 'package:socale/screens/onboarding/verify_college/verify_college_code_page.dart';
@@ -71,11 +70,6 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
   }
 
   next() {
-    // user verified as student
-    if (pageController.page == 1) {
-      ref.read(onboardingUserProvider.notifier).setCollegeEmail(email!);
-    }
-
     // go to code page
     pageController.nextPage(duration: const Duration(milliseconds: 500), curve: emphasized);
     setState(() => currentPage = (currentPage + 1).clamp(0, 1));
@@ -155,7 +149,6 @@ class _VerifyCollegeScreenState extends ConsumerState<VerifyCollegeScreen> {
                         startTimer: startTimer,
                       ),
                       VerifyCollegeCodePage(
-                        next: next,
                         email: email,
                         college: college,
                         timerDuration: timeLeft,

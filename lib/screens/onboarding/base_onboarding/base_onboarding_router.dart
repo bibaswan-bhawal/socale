@@ -38,14 +38,7 @@ class _BaseOnboardingRouterState extends ConsumerState<BaseOnboardingRouter> {
     _backButtonDispatcher = Router.of(context).backButtonDispatcher!.createChildBackButtonDispatcher();
   }
 
-  void next() {
-    final currentPage = ref.read(baseOnboardingRouterDelegateProvider).currentPage;
-    final maxPages = ref.read(baseOnboardingRouterDelegateProvider).pages.length;
-
-    if (currentPage == maxPages - 1) return;
-
-    ref.read(baseOnboardingRouterDelegateProvider).nextPage();
-  }
+  void next() => ref.read(baseOnboardingRouterDelegateProvider).nextPage();
 
   void back() {
     final currentPage = ref.read(baseOnboardingRouterDelegateProvider).currentPage;

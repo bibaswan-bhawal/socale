@@ -23,11 +23,8 @@ class VerifyCollegeCodePage extends ConsumerStatefulWidget {
 
   final Function startTimer;
 
-  final Function() next;
-
   const VerifyCollegeCodePage({
     super.key,
-    required this.next,
     required this.email,
     required this.college,
     required this.timerDuration,

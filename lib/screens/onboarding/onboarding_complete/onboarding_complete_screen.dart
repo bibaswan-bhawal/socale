@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
 class OnboardingCompleteScreen extends BaseOnboardingScreen {
@@ -21,12 +22,10 @@ class _OnboardingCompleteScreenState extends BaseOnboardingScreenState {
 
   @override
   Widget build(BuildContext context) {
-    return const Column(
-      mainAxisSize: MainAxisSize.max,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text('Welcome To Socale'),
-      ],
+    return const ScreenScaffold(
+      body: Center(
+        child: Text('Welcome To Socale'),
+      ),
     );
   }
 }

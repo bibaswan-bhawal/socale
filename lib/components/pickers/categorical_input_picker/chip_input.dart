@@ -37,14 +37,14 @@ class ChipInput extends StatelessWidget {
           borderRadius: BorderRadius.circular(20),
           splashFactory: InkRipple.splashFactory,
           child: Padding(
-            padding: EdgeInsets.only(left: 12, top: 4, bottom: 4, right: selected ? 5 : 12),
+            padding: EdgeInsets.only(left: 12, top: 5, bottom: 5, right: selected ? 5 : 12),
             child: Row(
               mainAxisSize: MainAxisSize.min,
               children: [
                 Text(
                   name,
                   style: GoogleFonts.roboto(
-                    fontSize: 12,
+                    fontSize: 13,
                     letterSpacing: -0.3,
                     color: selected ? Colors.white : Colors.black,
                   ),
@@ -54,7 +54,7 @@ class ChipInput extends StatelessWidget {
                     padding: EdgeInsets.only(left: 5),
                     child: Icon(
                       Icons.cancel,
-                      size: 16,
+                      size: 17,
                       color: Colors.white,
                     ),
                   )

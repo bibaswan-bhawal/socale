@@ -34,7 +34,9 @@ class _ExtraSelectionScreenState extends BaseOnboardingScreenState {
 
   @override
   Future<bool> onNext() async {
-    return true;
+    print('ExtraSelectionScreen onNext');
+    ref.read(onboardingUserProvider.notifier).setIsOnboardingComplete(true);
+    return false;
   }
 
   @override

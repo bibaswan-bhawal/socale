@@ -32,6 +32,7 @@ class OnboardingUser with _$OnboardingUser {
     List<Club>? clubs,
     @Default(5) int numRegenLeft,
     @Default(false) bool isCollegeEmailVerified,
+    @Default(false) bool isOnboardingComplete,
     @_ProfileConverter() Image? anonymousProfileImage,
   }) = _OnboardingUser;
 

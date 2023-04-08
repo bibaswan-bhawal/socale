@@ -1,5 +1,5 @@
 import 'package:socale/navigation/onboarding_navigation/base_onboarding_navigation/pages/base_onboarding_pages.dart';
-import 'package:socale/screens/onboarding/base_onboarding/onboarding_complete/onboarding_complete_screen.dart';
+import 'package:socale/screens/onboarding/onboarding_complete/onboarding_complete_screen.dart';
 
 class OnboardingCompletePage extends BaseOnboardingPage {
   const OnboardingCompletePage({super.key = const ValueKey('onboarding_complete_page')});

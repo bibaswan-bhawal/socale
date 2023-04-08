@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:amplify_auth_cognito/amplify_auth_cognito.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/college/college.dart';
@@ -69,6 +70,9 @@ class OnboardingService {
 
   Future<void> addUserToCollege() async {
     final onboardingUser = ref.read(onboardingUserProvider);
+    final currentUser = ref.read(currentUserProvider);
+
+    if (currentUser.idToken!.groups.contains(onboardingUser.college!.id)) return;
 
     final response = await ref
         .read(apiServiceProvider)
@@ -105,6 +109,7 @@ class OnboardingService {
 
   Future<void> onboardUser() async {
     final onboardingUser = ref.read(onboardingUserProvider);
+
     if (kDebugMode) print(onboardingUser);
 
     await ref.read(apiServiceProvider).sendPostRequest(endpoint: 'user/onboard');
