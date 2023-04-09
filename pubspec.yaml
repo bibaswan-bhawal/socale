@@ -6,7 +6,7 @@ publish_to: "none"
 version: 0.2.2+6
 
 environment:
-  sdk: '>=3.0.0-290.0.dev <4.0.0'
+  sdk: '>=3.0.0-290.3.beta <4.0.0'
 
 dependencies:
   #Flutter sdk
@@ -57,7 +57,6 @@ dev_dependencies:
   flutter_test:
     sdk: flutter
 
-  test: ^1.24.1
   flutter_lints: ^2.0.1
   riverpod_generator: ^2.1.4
   build_runner: ^2.3.3

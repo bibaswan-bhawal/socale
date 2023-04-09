@@ -6,16 +6,14 @@ class ErrorScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
+    return Scaffold(
       body: Stack(
         children: [
-          LightBackground(),
+          const LightBackground(),
           Column(
             mainAxisAlignment: MainAxisAlignment.center,
             mainAxisSize: MainAxisSize.max,
-            children: [
-              Text('Error'),
-            ],
+            children: const [Text('Error')],
           )
         ],
       ),
