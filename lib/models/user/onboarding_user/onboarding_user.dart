@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import 'package:socale/models/college/college.dart';
 import 'package:socale/models/options/club/club.dart';
@@ -11,7 +10,7 @@ part 'onboarding_user.freezed.dart';
 
 part 'onboarding_user.g.dart';
 
-@freezed
+@Freezed(toJson: false)
 class OnboardingUser with _$OnboardingUser {
   const OnboardingUser._();
 
@@ -22,6 +21,7 @@ class OnboardingUser with _$OnboardingUser {
     String? lastName,
     College? college,
     String? collegeEmail,
+    String? anonymousProfileImage,
     String? anonymousUsername,
     DateTime? graduationDate,
     DateTime? dateOfBirth,
@@ -33,18 +33,24 @@ class OnboardingUser with _$OnboardingUser {
     @Default(5) int numRegenLeft,
     @Default(false) bool isCollegeEmailVerified,
     @Default(false) bool isOnboardingComplete,
-    @_ProfileConverter() Image? anonymousProfileImage,
   }) = _OnboardingUser;
 
   factory OnboardingUser.fromJson(Map<String, dynamic> json) => _$OnboardingUserFromJson(json);
-}
 
-class _ProfileConverter implements JsonConverter<Image, String> {
-  const _ProfileConverter();
-
-  @override
-  Image fromJson(String json) => Image.network(json);
-
-  @override
-  String toJson(Image object) => (object.image as NetworkImage).url;
+  Map<String, dynamic> toJson() => {
+        'id': id,
+        'email': email,
+        'collegeEmail': collegeEmail,
+        'firstName': firstName,
+        'lastName': lastName,
+        'birthDate': '${dateOfBirth?.toString()}Z',
+        'graduationDate': '${graduationDate?.toString()}Z',
+        'anonymousProfileImage': anonymousProfileImage,
+        'anonymousUsername': anonymousUsername,
+        'majors': majors?.map((major) => major.id).toList() ?? [],
+        'minors': minors?.map((minor) => minor.id).toList() ?? [],
+        'languages': languages?.map((language) => language.id).toList() ?? [],
+        'interests': interests?.map((interest) => interest.id).toList() ?? [],
+        'clubs': clubs?.map((club) => club.id).toList() ?? [],
+      };
 }

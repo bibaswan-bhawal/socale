@@ -16,44 +16,41 @@ class OnboardingUserNotifier extends StateNotifier<OnboardingUser> {
       : disposeLink = ref.keepAlive(),
         super(const OnboardingUser());
 
-  setId(String? id) => state = state.copyWith(id: id);
+  setId(String? value) => state = state.copyWith(id: value);
 
-  setCollege(College? college) => state = state.copyWith(college: college);
+  setCollege(College? value) => state = state.copyWith(college: value);
 
-  setEmail(String? email) => state = state.copyWith(email: email);
+  setEmail(String? value) => state = state.copyWith(email: value);
 
-  setCollegeEmail(String? collegeEmail) => state = state.copyWith(collegeEmail: collegeEmail);
+  setCollegeEmail(String? value) => state = state.copyWith(collegeEmail: value);
 
-  setFirstName(String? firstName) => state = state.copyWith(firstName: firstName);
+  setFirstName(String? value) => state = state.copyWith(firstName: value);
 
-  setLastName(String? lastName) => state = state.copyWith(lastName: lastName);
+  setLastName(String? value) => state = state.copyWith(lastName: value);
 
-  setDateOfBirth(DateTime? dateOfBirth) => state = state.copyWith(dateOfBirth: dateOfBirth);
+  setDateOfBirth(DateTime? value) => state = state.copyWith(dateOfBirth: value);
 
-  setGraduationDate(DateTime? graduationDate) => state = state.copyWith(graduationDate: graduationDate);
+  setGraduationDate(DateTime? value) => state = state.copyWith(graduationDate: value);
 
-  setMajors(List<Major>? majors) => state = state.copyWith(majors: majors);
+  setMajors(List<Major>? value) => state = state.copyWith(majors: value);
 
-  setMinors(List<Minor>? minors) => state = state.copyWith(minors: minors);
+  setMinors(List<Minor>? value) => state = state.copyWith(minors: value);
 
-  setLanguages(List<Language>? languages) => state = state.copyWith(languages: languages);
+  setLanguages(List<Language>? value) => state = state.copyWith(languages: value);
 
-  setInterests(List<Interest>? interests) => state = state.copyWith(interests: interests);
+  setInterests(List<Interest>? value) => state = state.copyWith(interests: value);
 
-  setClubs(List<Club>? clubs) => state = state.copyWith(clubs: clubs);
+  setClubs(List<Club>? value) => state = state.copyWith(clubs: value);
 
-  setAnonymousUsername(String? anonymousUsername) => state = state.copyWith(anonymousUsername: anonymousUsername);
+  setAnonymousUsername(String? value) => state = state.copyWith(anonymousUsername: value);
 
-  setAnonymousProfileImage(String? anonymousProfileImage) => state = state.copyWith(
-      anonymousProfileImage: anonymousProfileImage != null ? Image.network(anonymousProfileImage) : null);
+  setAnonymousProfileImage(String? value) => state = state.copyWith(anonymousProfileImage: value);
 
-  setIsCollegeEmailVerified(bool isCollegeEmailVerified) =>
-      state = state.copyWith(isCollegeEmailVerified: isCollegeEmailVerified);
+  setIsCollegeEmailVerified(bool value) => state = state.copyWith(isCollegeEmailVerified: value);
 
-  setIsOnboardingComplete(bool isOnboardingComplete) =>
-      state = state.copyWith(isOnboardingComplete: isOnboardingComplete);
+  setIsOnboardingComplete(bool value) => state = state.copyWith(isOnboardingComplete: value);
 
-  setNumRegenLeft(int numRegenLeft) => state = state.copyWith(numRegenLeft: numRegenLeft);
+  setNumRegenLeft(int value) => state = state.copyWith(numRegenLeft: value);
 
   disposeState() => disposeLink.close();
 }

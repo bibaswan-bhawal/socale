@@ -21,8 +21,6 @@ class InitService {
 
       final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
 
-      if (kDebugMode) print('isFirstTime: $isFirstTime');
-
       if (isFirstTime) {
         await prefs.setBool('isFirstTime', false);
         ref.read(appStateProvider.notifier).showIntro(true);

@@ -37,9 +37,7 @@ class _OnboardingRouterState extends ConsumerState<OnboardingRouter> {
   Widget build(BuildContext context) {
     SystemUI.setSystemUIDark();
 
-    final onboardingUser = ref.watch(onboardingUserProvider);
-
-    print('OnboardingRouter rebuild: ${onboardingUser.isCollegeEmailVerified} ${onboardingUser.isOnboardingComplete}');
+    ref.watch(onboardingUserProvider);
 
     return PageTransitionSwitcher(
       duration: const Duration(milliseconds: 500),

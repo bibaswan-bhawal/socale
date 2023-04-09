@@ -16,40 +16,14 @@ class AvatarSelectionScreen extends BaseOnboardingScreen {
 }
 
 class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
-  late String adjective;
-  late String noun;
-  late Image profileImage;
+  @override
+  Future<bool> onBack() async => true;
 
   @override
-  void initState() {
-    super.initState();
-
-    final onboardingUser = ref.read(onboardingUserProvider);
-
-    if (onboardingUser.anonymousUsername != null) {
-      adjective = onboardingUser.anonymousUsername!.split(' ')[0];
-      noun = onboardingUser.anonymousUsername!.split(' ')[1];
-    }
-
-    if (onboardingUser.anonymousProfileImage != null) {
-      profileImage = onboardingUser.anonymousProfileImage!;
-    }
-  }
-
-  @override
-  Future<bool> onBack() async {
-    return true;
-  }
-
-  @override
-  Future<bool> onNext() async {
-    return true;
-  }
+  Future<bool> onNext() async => true;
 
   Future<void> regenProfile() async {
-    if (ref.read(onboardingUserProvider).numRegenLeft < 1) {
-      return;
-    }
+    if (ref.read(onboardingUserProvider).numRegenLeft < 1) return;
 
     final (String username, String profileImage) = await ref.read(onboardingServiceProvider).generateProfile();
 
@@ -58,19 +32,9 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
     ref.read(onboardingUserProvider.notifier).setNumRegenLeft(ref.read(onboardingUserProvider).numRegenLeft - 1);
   }
 
-  void updateState(_, state) {
-    if (state.anonymousUsername != null) {
-      setState(() {
-        adjective = state.anonymousUsername!.split(' ')[0];
-        noun = state.anonymousUsername!.split(' ')[1];
-        profileImage = state.anonymousProfileImage!;
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    ref.listen(onboardingUserProvider, updateState);
+    final onboardingUser = ref.watch(onboardingUserProvider);
 
     final size = MediaQuery.of(context).size;
 
@@ -133,7 +97,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
             child: SizedBox(
               width: size.width * 0.6,
               height: size.width * 0.6,
-              child: profileImage,
+              child: Image.network(onboardingUser.anonymousProfileImage!),
             ),
           ),
         ),
@@ -143,7 +107,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
             ShaderMask(
               shaderCallback: (bounds) => AppColors.lightBlueTextGradient.createShader(bounds),
               child: Text(
-                adjective,
+                onboardingUser.anonymousUsername!.split(' ')[0],
                 style: GoogleFonts.poppins(
                   fontSize: size.width * (24 / 414),
                   fontWeight: FontWeight.bold,
@@ -153,7 +117,7 @@ class _AvatarSelectionScreenState extends BaseOnboardingScreenState {
               ),
             ),
             Text(
-              ' $noun',
+              ' ${onboardingUser.anonymousUsername!.split(' ')[1]}',
               style: GoogleFonts.poppins(
                 fontSize: size.width * (24 / 414),
                 letterSpacing: -0.3,
