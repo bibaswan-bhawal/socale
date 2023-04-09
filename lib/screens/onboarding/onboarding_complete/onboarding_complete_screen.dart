@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/model_providers.dart';
@@ -28,7 +29,9 @@ class _OnboardingCompleteScreenState extends BaseOnboardingScreenState {
     Map<String, dynamic> data = onboardingUser.toJson();
 
     for (var key in data.keys) {
-      print('$key: ${data[key]}');
+      if (kDebugMode) {
+        print('$key: ${data[key]}');
+      }
     }
 
     return const ScreenScaffold(

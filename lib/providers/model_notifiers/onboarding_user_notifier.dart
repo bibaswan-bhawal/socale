@@ -1,4 +1,3 @@
-import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/models/college/college.dart';
 import 'package:socale/models/options/club/club.dart';
