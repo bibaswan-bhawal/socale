@@ -11,6 +11,8 @@ class InitService {
   InitService(this.ref);
 
   Future<void> initialize() async {
+    DateTime startTime = DateTime.now();
+
     try {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
 
@@ -28,6 +30,10 @@ class InitService {
         ref.read(appStateProvider.notifier).setAttemptAutoOnboard();
       } else {
         await ref.read(amplifyServiceProvider).attemptAutoLogin();
+      }
+
+      if (kDebugMode) {
+        print('InitService.initialize() took ${DateTime.now().difference(startTime).inMilliseconds}ms');
       }
 
       FlutterNativeSplash.remove();

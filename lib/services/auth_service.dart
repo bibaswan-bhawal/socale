@@ -15,15 +15,14 @@ class AuthService {
 
   const AuthService(this.ref);
 
+
   Future<void> loginSuccessful() async {
-    final userId = (await Amplify.Auth.getCurrentUser()).userId;
-    final email = (await Amplify.Auth.fetchUserAttributes())
-        .firstWhere((element) => element.userAttributeKey == CognitoUserAttributeKey.email)
-        .value;
+    final (idToken, _, _) = await getAuthTokens();
+
+    final userId = idToken.userId;
+    final email = idToken.email;
 
     final currentUser = ref.read(currentUserProvider.notifier);
-
-    await getAuthTokens();
 
     currentUser.setId(userId);
     currentUser.setEmail(email);
@@ -37,7 +36,6 @@ class AuthService {
       final result = await Amplify.Auth.fetchAuthSession();
 
       if (result.isSignedIn) return AuthFlowResult.success;
-
       return AuthFlowResult.notAuthorized;
     } on AuthException {
       return AuthFlowResult.genericError;
@@ -64,6 +62,7 @@ class AuthService {
   Future<AuthFlowResult> signInUser(String email, String password) async {
     try {
       final result = await Amplify.Auth.signIn(username: email, password: password);
+
       if (result.nextStep.signInStep == AuthSignInStep.confirmSignUp) return AuthFlowResult.unverified;
       return AuthFlowResult.success;
     } on AuthNotAuthorizedException {
@@ -88,10 +87,10 @@ class AuthService {
     String refreshToken = authTokens.refreshToken;
 
     ref.read(currentUserProvider.notifier).setTokens(
-          idToken: idToken,
-          accessToken: accessToken,
-          refreshToken: refreshToken,
-        );
+      idToken: idToken,
+      accessToken: accessToken,
+      refreshToken: refreshToken,
+    );
 
     return (idToken, accessToken, refreshToken);
   }

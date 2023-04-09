@@ -23,14 +23,14 @@ class SocaleApi {
     return response;
   }
 
-  Future<http.Response> sendPostRequest({required String endpoint, Map<String, String>? headers}) async {
+  Future<http.Response> sendPostRequest({required String endpoint, Map<String, String>? headers, Object? body}) async {
     final (idToken, _, _) = await ref.read(authServiceProvider).getAuthTokens();
 
     Map<String, String> requestHeader = {HttpHeaders.authorizationHeader: 'Bearer ${idToken.raw}'};
 
     if (headers != null) requestHeader.addAll(headers);
 
-    final response = await http.post(Uri.parse('$_baseUrl/api/$endpoint'), headers: requestHeader);
+    final response = await http.post(Uri.parse('$_baseUrl/api/$endpoint'), headers: requestHeader, body: body);
 
     return response;
   }

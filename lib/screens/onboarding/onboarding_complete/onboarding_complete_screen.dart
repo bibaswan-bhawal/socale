@@ -1,7 +1,7 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/providers/model_providers.dart';
+import 'package:socale/providers/service_providers.dart';
 import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
 
 class OnboardingCompleteScreen extends BaseOnboardingScreen {
@@ -24,19 +24,25 @@ class _OnboardingCompleteScreenState extends BaseOnboardingScreenState {
 
   @override
   Widget build(BuildContext context) {
-    final onboardingUser = ref.watch(onboardingUserProvider);
+    return ScreenScaffold(
+      body: Column(
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          const Text('Welcome To Socale'),
+          ElevatedButton(
+              onPressed: () {
+                final onboardingUser = ref.read(onboardingUserProvider);
 
-    Map<String, dynamic> data = onboardingUser.toJson();
+                print(onboardingUser);
 
-    for (var key in data.keys) {
-      if (kDebugMode) {
-        print('$key: ${data[key]}');
-      }
-    }
+                final onboardingService = ref.read(onboardingServiceProvider);
 
-    return const ScreenScaffold(
-      body: Center(
-        child: Text('Welcome To Socale'),
+                onboardingService.onboardUser();
+              },
+              child: const Text('Create User')),
+        ],
       ),
     );
   }
