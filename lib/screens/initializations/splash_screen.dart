@@ -9,6 +9,6 @@ class SplashScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     SystemUI.setSystemUILight();
-    return ScreenScaffold(body: Stack(children: const [LightBackground()]));
+    return const ScreenScaffold(body: Stack(children: [LightBackground()]));
   }
 }
