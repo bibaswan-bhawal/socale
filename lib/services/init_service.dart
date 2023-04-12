@@ -32,9 +32,8 @@ class InitService {
         await ref.read(amplifyServiceProvider).attemptAutoLogin();
       }
 
-      if (kDebugMode) {
-        print('InitService.initialize() took ${DateTime.now().difference(startTime).inMilliseconds}ms');
-      }
+      // ignore: avoid_print
+      print('InitService.initialize() took ${DateTime.now().difference(startTime).inMilliseconds}ms');
 
       FlutterNativeSplash.remove();
     } catch (e) {

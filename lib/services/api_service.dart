@@ -30,7 +30,11 @@ class SocaleApi {
 
     if (headers != null) requestHeader.addAll(headers);
 
-    final response = await http.post(Uri.parse('$_baseUrl/api/$endpoint'), headers: requestHeader, body: body);
+    final response = await http.post(
+      Uri.parse('$_baseUrl/api/$endpoint'),
+      headers: requestHeader,
+      body: {'data': body},
+    );
 
     return response;
   }

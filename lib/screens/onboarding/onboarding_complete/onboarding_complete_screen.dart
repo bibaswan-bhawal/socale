@@ -1,48 +1,58 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:socale/components/utils/screen_scaffold.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:socale/providers/model_providers.dart';
 import 'package:socale/providers/service_providers.dart';
-import 'package:socale/screens/onboarding/base_onboarding/base_onboarding_screen_interface.dart';
+import 'package:socale/resources/colors.dart';
 
-class OnboardingCompleteScreen extends BaseOnboardingScreen {
+class OnboardingCompleteScreen extends ConsumerStatefulWidget {
   const OnboardingCompleteScreen({super.key});
 
   @override
-  BaseOnboardingScreenState createState() => _OnboardingCompleteScreenState();
+  ConsumerState<OnboardingCompleteScreen> createState() => _OnboardingCompleteScreenState();
 }
 
-class _OnboardingCompleteScreenState extends BaseOnboardingScreenState {
+class _OnboardingCompleteScreenState extends ConsumerState<OnboardingCompleteScreen> {
   @override
-  Future<bool> onBack() async {
-    return true;
+  void initState() {
+    super.initState();
   }
 
-  @override
-  Future<bool> onNext() async {
-    return false;
+  Future<bool> createUser() async {
+    final onboardingService = ref.read(onboardingServiceProvider);
+
+    try {
+      await onboardingService.onboardUser();
+
+      const snackBar = SnackBar(content: Text('User Created'));
+      if (mounted) ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      return true;
+    } catch (e) {
+      if (kDebugMode) print('Error: $e');
+
+      const snackBar = SnackBar(content: Text('Failed to create new user'));
+      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+
+      return false;
+    }
   }
 
   @override
   Widget build(BuildContext context) {
-    return ScreenScaffold(
-      body: Column(
-        mainAxisSize: MainAxisSize.max,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          const Text('Welcome To Socale'),
-          ElevatedButton(
-              onPressed: () {
-                final onboardingUser = ref.read(onboardingUserProvider);
+    return WillPopScope(
+      onWillPop: () async {
+        ref.read(onboardingUserProvider.notifier).setIsOnboardingComplete(false);
 
-                print(onboardingUser);
-
-                final onboardingService = ref.read(onboardingServiceProvider);
-
-                onboardingService.onboardUser();
-              },
-              child: const Text('Create User')),
-        ],
+        return false;
+      },
+      child: Scaffold(
+        body: AnimatedContainer(
+          decoration: const BoxDecoration(
+            gradient: AppColors.orangeGradient,
+          ),
+          duration: const Duration(milliseconds: 500),
+        ),
       ),
     );
   }

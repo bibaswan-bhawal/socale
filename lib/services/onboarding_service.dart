@@ -170,8 +170,19 @@ class OnboardingService {
   Future<void> onboardUser() async {
     final onboardingUser = ref.read(onboardingUserProvider);
 
-    if (kDebugMode) print(jsonEncode(onboardingUser));
+    try {
+      final response = await ref.read(apiServiceProvider).sendPostRequest(
+        endpoint: 'user/onboard',
+        headers: {'collegeId': onboardingUser.college!.id},
+        body: jsonEncode(onboardingUser.toJson()),
+      );
 
-    await ref.read(apiServiceProvider).sendPostRequest(endpoint: 'user/onboard', body: jsonEncode(onboardingUser));
+      if (response.statusCode != 200) {
+        throw Exception('Error(onboardUser): Server responded with ${response.statusCode}.'
+            ' Failed to onboard user');
+      }
+    } catch (e) {
+      rethrow;
+    }
   }
 }

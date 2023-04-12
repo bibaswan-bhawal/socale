@@ -26,12 +26,11 @@ apply plugin: 'kotlin-android'
 apply from: "$flutterRoot/packages/flutter_tools/gradle/flutter.gradle"
 
 android {
-    compileSdk 33
-    compileSdkPreview 'UpsideDownCake'
-
-    ndkVersion "25.1.8937393"
-
     namespace 'co.socale.socale'
+
+    compileSdk flutter.compileSdkVersion
+    ndkVersion flutter.ndkVersion
+    compileSdkPreview 'UpsideDownCake'
 
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
@@ -48,11 +47,14 @@ android {
 
     defaultConfig {
         applicationId "co.socale.socale"
+
         minSdkVersion 24
         targetSdkVersion 33
+
+        multiDexEnabled true
+
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
-        multiDexEnabled true
         versionNameSuffix '-wild-cat-dev'
     }
 
