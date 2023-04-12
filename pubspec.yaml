@@ -3,7 +3,7 @@ description: Discover And Build Your College Network.
 
 publish_to: "none"
 
-version: 0.2.2+6
+version: 1.0.0+1
 
 environment:
   sdk: '>=3.0.0-290.3.beta <4.0.0'
@@ -18,8 +18,8 @@ dependencies:
   rive: ^0.10.3
 
   # Amplify libraries
-  amplify_flutter: ^1.0.0-next.7
-  amplify_auth_cognito: ^1.0.0-next.7
+  amplify_flutter: ^1.0.0-next.8
+  amplify_auth_cognito: ^1.0.0-next.8
 
   # Firebase libraries
   firebase_core: ^2.9.0
@@ -29,14 +29,14 @@ dependencies:
   flutter_local_notifications: ^13.0.0
 
   # Riverpod libraries
-  flutter_riverpod: ^2.3.2
-  riverpod_annotation: ^2.0.2
+  flutter_riverpod: ^2.3.4
+  riverpod_annotation: ^2.0.4
 
   # Local database libraries
   shared_preferences: ^2.1.0
 
   # UI libraries
-  flutter_svg: ^2.0.4
+  flutter_svg: ^2.0.5
   animations: ^2.0.7
   simple_shadow: ^0.3.1
   google_fonts: ^4.0.3
@@ -58,7 +58,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.1
-  riverpod_generator: ^2.1.4
+  riverpod_generator: ^2.1.6
   build_runner: ^2.3.3
   freezed: ^2.3.2
   json_serializable: ^6.6.1

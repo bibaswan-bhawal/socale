@@ -18,8 +18,8 @@ class CurrentUser with _$CurrentUser {
     String? collegeEmail,
     String? firstName,
     String? lastName,
-    @JsonWebTokenSerializer() JsonWebToken? idToken,
-    @JsonWebTokenSerializer() JsonWebToken? accessToken,
+    @JsonWebTokenConverter() JsonWebToken? idToken,
+    @JsonWebTokenConverter() JsonWebToken? accessToken,
     String? refreshToken,
   }) = _CurrentUser;
 
@@ -27,6 +27,8 @@ class CurrentUser with _$CurrentUser {
 }
 
 class JsonWebTokenConverter extends JsonConverter<JsonWebToken, String> {
+  const JsonWebTokenConverter();
+
   @override
   JsonWebToken fromJson(String json) {
     return JsonWebToken.parse(json);
