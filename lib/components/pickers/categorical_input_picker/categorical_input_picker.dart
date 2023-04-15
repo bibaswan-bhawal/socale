@@ -3,8 +3,8 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:socale/components/assets/svg_icons.dart';
 import 'package:socale/components/backgrounds/light_background.dart';
-import 'package:socale/components/pickers/categorical_input_picker/chip_input.dart';
-import 'package:socale/components/pickers/categorical_input_picker/tab_chip.dart';
+import 'package:socale/components/chips/selectable%20chips/chip_input.dart';
+import 'package:socale/components/chips/selectable%20chips/tab_chip.dart';
 import 'package:socale/components/utils/screen_scaffold.dart';
 import 'package:socale/models/options/categorical/categorical.dart';
 
