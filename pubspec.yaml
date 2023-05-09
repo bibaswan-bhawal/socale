@@ -13,24 +13,24 @@ dependencies:
   flutter:
     sdk: flutter
 
-  http: ^0.13.5
+  http: ^0.13.6
 
-  rive: ^0.10.3
+  rive: ^0.10.4
 
   # Amplify libraries
-  amplify_flutter: ^1.0.0-next.8
-  amplify_auth_cognito: ^1.0.0-next.8
+  amplify_flutter: ^1.0.1
+  amplify_auth_cognito: ^1.0.1
 
   # Firebase libraries
-  firebase_core: ^2.9.0
-  firebase_messaging: ^14.4.0
+  firebase_core: ^2.10.0
+  firebase_messaging: ^14.4.1
 
   # Local notifications libraries
-  flutter_local_notifications: ^13.0.0
+  flutter_local_notifications: ^14.0.0+1
 
   # Riverpod libraries
-  flutter_riverpod: ^2.3.4
-  riverpod_annotation: ^2.0.4
+  flutter_riverpod: ^2.3.6
+  riverpod_annotation: ^2.1.1
 
   # Local database libraries
   shared_preferences: ^2.1.0
@@ -39,12 +39,12 @@ dependencies:
   flutter_svg: ^2.0.5
   animations: ^2.0.7
   simple_shadow: ^0.3.1
-  google_fonts: ^4.0.3
+  google_fonts: ^4.0.4
 
   # Service libraries
   url_launcher: ^6.1.10
   pin_code_fields: ^7.4.0
-  intl: ^0.18.0
+  intl: ^0.18.1
 
   flutter_native_splash: ^2.2.19
   flextras: ^1.0.0
@@ -58,7 +58,7 @@ dev_dependencies:
     sdk: flutter
 
   flutter_lints: ^2.0.1
-  riverpod_generator: ^2.1.6
+  riverpod_generator: ^2.2.1
   build_runner: ^2.3.3
   freezed: ^2.3.2
   json_serializable: ^6.6.1
