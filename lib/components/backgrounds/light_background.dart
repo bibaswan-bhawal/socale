@@ -6,7 +6,7 @@ class LightBackground extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
-
+			
     return Positioned(
       top: -5,
       left: -5,

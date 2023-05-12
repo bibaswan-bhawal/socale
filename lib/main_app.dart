@@ -24,7 +24,7 @@ class _MainAppState extends ConsumerState<MainApp> {
 
     ref.read(initServiceProvider).initialize();
   }
-
+	
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
